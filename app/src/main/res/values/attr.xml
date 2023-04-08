@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="outlineAttrs">
+        <attr name="outlineColor" format="color" />
+        <attr name="outlineTextColor" format="color" />
+        <attr name="outlineWidth" format="float" />
+        <attr name="outlineMaxLine" format="integer" />
+        <attr name="outlineTextSize" format="float" />
+    </declare-styleable>
+    <declare-styleable name="DashLineView">
+        <attr name="dlv_dotCount" format="integer" />
+        <attr name="dlv_dotColor" format="color" />
+        <attr name="dlv_isMirror" format="boolean" />
+    </declare-styleable>
+</resources>

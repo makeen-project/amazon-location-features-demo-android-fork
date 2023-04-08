@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_map_style_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/dp_240"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_amazon_logo_map_style"
+        android:layout_width="@dimen/dp_118"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_amazon_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_amazon_info_map_style"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_4"
+        android:src="@drawable/ic_info"
+        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_map_style"
+        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_map_style"
+        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_map_style" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_search_map_style"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_map_style">
+
+        <View
+            android:id="@+id/view_sheet_map_style"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_5"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/dp_7"
+            android:background="@drawable/bottom_sheet_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_map_style_close"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_14"
+            app:cardBackgroundColor="@color/number_bg_color"
+            app:cardCornerRadius="@dimen/dp_30"
+            app:cardElevation="@dimen/dp_0"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@android:color/transparent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_close" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_map_style"
+            style="@style/SP20BoldMediumBlackTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_13"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/label_map_style"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_sheet_map_style" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_map_style_description"
+            style="@style/SP13HintRegularTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/label_map_style_description"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_map_style" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_map_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_16"
+            android:overScrollMode="never"
+            app:layout_constraintTop_toBottomOf="@+id/tv_map_style_description" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

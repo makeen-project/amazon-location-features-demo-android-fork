@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/cl_main"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/dp_20">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_search_location"
+        android:layout_width="@dimen/dp_20"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_12"
+        android:src="@drawable/icon_search"
+        app:layout_constraintBottom_toBottomOf="@id/tv_region"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_place_name" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_place_name"
+        style="@style/SP16HintRegularTextStyle"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        app:layout_constraintBottom_toTopOf="@id/tv_region"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_search_location"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="Mike’s Wings London" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_distance"
+        style="@style/SP13HintRegularTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/tv_region"
+        app:layout_constraintStart_toEndOf="@id/barrier_title"
+        app:layout_constraintTop_toTopOf="@id/tv_region"
+        tools:text="52m" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/tv_dot"
+        android:layout_width="@dimen/dp_3"
+        android:layout_height="@dimen/dp_3"
+        android:layout_marginHorizontal="@dimen/dp_4"
+        app:cardBackgroundColor="@color/color_hint_text"
+        app:cardCornerRadius="@dimen/dp_30"
+        app:layout_constraintBottom_toBottomOf="@id/tv_distance"
+        app:layout_constraintEnd_toStartOf="@id/tv_region"
+        app:layout_constraintStart_toEndOf="@id/tv_distance"
+        app:layout_constraintTop_toTopOf="@id/tv_distance" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_region"
+        style="@style/SP13HintRegularTextStyle"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_dot"
+        app:layout_constraintTop_toBottomOf="@id/tv_place_name"
+        tools:text="Mike’s Wings London" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_title"
+        app:barrierDirection="start"
+        app:constraint_referenced_ids="tv_place_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tv_distance,tv_dot" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_marginTop="@dimen/dp_12"
+        android:background="@color/color_view"
+        app:layout_constraintTop_toBottomOf="@id/tv_region" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

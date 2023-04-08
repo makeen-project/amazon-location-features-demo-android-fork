@@ -1,0 +1,47 @@
+default_platform(:android)
+
+platform :android do
+  desc "Build APK"
+  lane :build_apk do |options|
+      android_set_version_code(
+        version_code: options[:version_code],
+      )
+      gradle(
+        task: 'assemble',
+        build_type: options[:build_type]
+      )
+  end
+
+  desc "Build AAB"
+  lane :build_aab do |options|
+      android_set_version_code(
+        version_code: options[:version_code],
+      )
+      gradle(
+        task: 'bundle',
+        build_type: options[:build_type]
+      )
+  end
+
+  desc "Distribute AAB to Firebase"
+  lane :distribute_firebase do |options|
+      firebase_app_distribution(
+          app: options[:app_id],
+          android_artifact_path: options[:aab_path],
+          firebase_cli_token: options[:firebase_cli_token],
+          android_artifact_type: "AAB",
+          groups: "main",
+          release_notes: options[:changelog]
+      )
+  end
+
+  desc "Distribute AAB to Google Play Alpha"
+  lane :distribute_play_store do |options|
+      upload_to_play_store(
+        package_name: options[:package_name],
+        json_key: options[:json_key],
+        track: options[:track],
+        aab: options[:aab_path]
+      )
+  end
+end

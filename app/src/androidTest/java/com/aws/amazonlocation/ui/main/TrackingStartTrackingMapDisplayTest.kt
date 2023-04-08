@@ -1,0 +1,178 @@
+package com.aws.amazonlocation.ui.main
+
+import android.location.Location
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.rule.ActivityTestRule
+import androidx.test.rule.GrantPermissionRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
+import com.amplifyframework.geo.maplibre.view.MapLibreView
+import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
+import com.aws.amazonlocation.ACCESS_FINE_LOCATION
+import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.DELAY_1000
+import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
+import com.aws.amazonlocation.DELAY_5000
+import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_NO_TRACKING_HISTORY
+import com.aws.amazonlocation.TRACKING
+import com.aws.amazonlocation.di.AppModule
+import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.mockLocationsExit
+import com.google.android.material.card.MaterialCardView
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
+import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.location.LocationComponent
+import com.mapbox.mapboxsdk.maps.MapboxMap
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert
+import org.junit.Rule
+import org.junit.Test
+
+@UninstallModules(AppModule::class)
+@HiltAndroidTest
+class TrackingStartTrackingMapDisplayTest {
+
+    @get:Rule
+    var hiltRule = HiltAndroidRule(this)
+
+    @get:Rule
+    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+        ACCESS_FINE_LOCATION,
+        ACCESS_COARSE_LOCATION
+    )
+
+    @get:Rule
+    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+
+    private val uiDevice = UiDevice.getInstance(getInstrumentation())
+
+    @Test
+    fun showStartTrackingTest() {
+        try {
+            var mapbox: MapboxMap? = null
+            enableGPS(ApplicationProvider.getApplicationContext())
+            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+            Thread.sleep(DELAY_1000)
+
+            val mapView = mActivityRule.activity.findViewById<MapLibreView>(R.id.mapView)
+            mapView.getMapAsync {
+                mapbox = it
+            }
+            val tracking = uiDevice.findObject(By.text(TRACKING))
+            tracking.click()
+            uiDevice.wait(
+                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker))),
+                DELAY_1000
+            )
+            val labelContinue =
+                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker)))
+            labelContinue?.click()
+
+            uiDevice.wait(
+                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracking))),
+                DELAY_1000
+            )
+
+            val clEnableTracking =
+                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
+            if (clEnableTracking.visibility == View.VISIBLE) {
+                val btnEnableTracking =
+                    mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
+                mActivityRule.activity.runOnUiThread {
+                    btnEnableTracking.performClick()
+                }
+            }
+            Thread.sleep(DELAY_5000)
+            val rvTracking =
+                mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_tracking)
+            val itemCount = rvTracking.adapter?.itemCount ?: 0
+            uiDevice.wait(
+                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking))),
+                DELAY_1000
+            )
+            val labelStartTracking =
+                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking)))
+            labelStartTracking?.click()
+            var idCount = 0
+            mapbox?.getStyle { style ->
+                var isImageFind = false
+                while (isImageFind) {
+                    val image = style.getImage("tracker$idCount")
+                    if (image == null) {
+                        isImageFind = true
+                    } else {
+                        idCount++
+                    }
+                }
+            }
+
+            for (mockLocation in mockLocationsExit) {
+                mapbox?.let {
+                    mActivityRule.activity.runOnUiThread {
+                        val locationComponent: LocationComponent = it.locationComponent
+                        locationComponent.isLocationComponentEnabled = true
+
+                        val lastKnownLocation = Location("gps")
+                        lastKnownLocation.latitude = mockLocation.latitude
+                        lastKnownLocation.longitude = mockLocation.longitude
+                        lastKnownLocation.time = System.currentTimeMillis()
+                        lastKnownLocation.accuracy = 1.0f
+                        it.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                LatLng(
+                                    lastKnownLocation.latitude,
+                                    lastKnownLocation.longitude
+                                ),
+                                14.0
+                            )
+                        )
+
+                        it.locationComponent.forceLocationUpdate(lastKnownLocation)
+                    }
+                }
+                runBlocking {
+                    delay(DELAY_3000) // Sleep for the specified delay time
+                }
+                val latLng = LatLng(
+                    mockLocation.latitude,
+                    mockLocation.longitude
+                )
+                (mActivityRule.activity as MainActivity).mTrackingUtils?.updateLatLngOnMap(
+                    latLng
+                )
+            }
+            Thread.sleep(DELAY_20000)
+            if (rvTracking.adapter?.itemCount != null) {
+                rvTracking.adapter?.itemCount?.let {
+                    if (itemCount < it) {
+                        mapbox?.getStyle { style ->
+                            mActivityRule.activity.runOnUiThread {
+                                idCount++
+                                val image = style.getImage("tracker$idCount")
+                                Assert.assertTrue(image != null)
+                            }
+                        }
+                    }
+                }
+            } else {
+                Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)
+            }
+        } catch (_: Exception) {
+            Assert.fail(TEST_FAILED)
+        }
+    }
+}
