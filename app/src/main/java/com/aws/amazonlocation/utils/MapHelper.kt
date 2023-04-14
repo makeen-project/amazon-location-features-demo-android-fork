@@ -137,7 +137,6 @@ class MapHelper(private val appContext: Context) {
         mLocationEngine?.getLastLocation(locationListener)
 
         if (setCurrentLocation) {
-//            mLocationEngine?.requestLocationUpdates(request, initialLocationListener, Looper.getMainLooper())
             mLocationEngine?.getLastLocation(initialLocationListener)
         } else {
             mLocationEngine?.requestLocationUpdates(request, locationListener, Looper.getMainLooper())
@@ -228,7 +227,6 @@ class MapHelper(private val appContext: Context) {
 
     private val initialLocationListener = object : LocationEngineCallback<LocationEngineResult> {
         override fun onSuccess(result: LocationEngineResult?) {
-            println("Iniitial Location: Success")
             mMapboxMap?.moveCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().zoom(DEFAULT_CAMERA_ZOOM).padding(
@@ -246,11 +244,13 @@ class MapHelper(private val appContext: Context) {
                     ).build()
                 )
             )
-            mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
+            try{
+                mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
+            }
+            catch (_:Exception){}
         }
 
         override fun onFailure(exception: Exception) {
-            println("Iniitial Location: Failure")
         }
     }
 
