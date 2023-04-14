@@ -2,8 +2,8 @@
     <string name="app_name">Amazon Location</string>
     <!-- bottom navigation -->
     <string name="menu_explore">Explore</string>
-    <string name="menu_tracking">Tracking</string>
-    <string name="menu_geofence">Geofence</string>
+    <string name="menu_tracking">Trackers</string>
+    <string name="menu_geofence">Geofences</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_more">More</string>
 
@@ -26,8 +26,7 @@
     <string name="you_are_connected">You are connected</string>
     <string name="continue_to_explore">Continue to Explore</string>
     <string name="aws_cloudformation_required">Connect AWS Account</string>
-    <string name="geofencing_and_tracking_features">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account.
-Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
+    <string name="geofencing_and_tracking_features">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="connect">Connect</string>
     <string name="how_to_connect">How to connect:</string>
     <string name="how_to_connect_1_1">Click here to run a CloudFormation template to securely create required resources.</string>
@@ -39,7 +38,7 @@ Log out if you wish to continue running the Demo App using resources in AWS’s 
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">Login using the generated user credentials.</string>
-    <string name="how_to_connect_3_2">Now you should be able to use the tracking and geofencing features using data stored in your account.</string>
+    <string name="how_to_connect_3_2">Now you should be able to use the trackers and geofences features using data stored in your account.</string>
     <string name="three">3</string>
     <string name="identityPoolId">IdentityPoolld</string>
     <string name="user_pool_client_id">UserPoolClientid</string>
@@ -140,15 +139,15 @@ Log out if you wish to continue running the Demo App using resources in AWS’s 
     <string name="label_connected_title_3">Connect the Amazon Location app with the created resources</string>
     <string name="label_connected_title_4">Please enter the following required fields into the Location.</string>
     <string name="label_tracking_history">Tracking History</string>
-    <string name="label_tracking_your_activity">Tracking your activity</string>
+    <string name="label_tracking_your_activity">Tracking your device location</string>
     <string name="label_enable_tracking">Enable Tracking</string>
     <string name="label_enable_tracker">Enable Tracker</string>
     <string name="label_enable_tracker_description">You can use any data provider except Esri for your asset management or tracking use cases. If you want to use Esri for your asset management or tracking use case, please read terms and conditions</string>
     <string name="label_enable_tracker_view_terms">View Terms and Conditions</string>
     <string name="label_enable_tracker_continue_to_tracker">Continue</string>
-    <string name="label_enable_tracking_detail">Tracking allows us to send you geofence messages when you enter and leave locations</string>
+    <string name="label_enable_tracking_detail">Enabling the feature will allow you to track your device and get notified when the device enters or exits any of your geofences.</string>
     <string name="label_check_your_internet_connection_and_try_again">Check your internet connection and try again</string>
-    <string name="label_not_tracking_your_activity">Not tracking your activity</string>
+    <string name="label_not_tracking_your_activity">Not tracking your device location</string>
     <string name="label_start_tracking">Start Tracking</string>
     <string name="label_stop_tracking">Stop Tracking</string>
     <string name="label_today">Today</string>

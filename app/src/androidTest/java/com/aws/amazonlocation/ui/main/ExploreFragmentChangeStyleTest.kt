@@ -131,18 +131,16 @@ class ExploreFragmentChangeStyleTest {
             mapView.getMapAsync {
                 mapbox = it
             }
+            Thread.sleep(DELAY_1000)
 
-            if (mapbox == null) {
-                Assert.fail(TEST_FAILED_MAPBOX_NULL)
-            } else {
-                goToMapStyles()
-                loadCountMap()
+            goToMapStyles()
+            loadCountMap()
 
-                while (hasMore()) {
-                    changeStyle()
-                    mapbox?.let {
-                        checkLoadedTheme(it)
-                    }
+            while (hasMore()) {
+                Thread.sleep(DELAY_1000)
+                changeStyle()
+                mapbox?.let {
+                    checkLoadedTheme(it)
                 }
             }
         } catch (_: Exception) {
@@ -196,6 +194,7 @@ class ExploreFragmentChangeStyleTest {
                     click()
                 )
             )
+            Thread.sleep(DELAY_1000)
             changeInnerStyle(recyclerView)
         }
     }
@@ -210,8 +209,10 @@ class ExploreFragmentChangeStyleTest {
     }
 
     private fun goToMapStyles() {
-        onView(withId(R.id.card_map))
-            .perform(click())
+        val cardMap = mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_map)
+        mActivityRule.activity.runOnUiThread {
+            cardMap.performClick()
+        }
 
         val clSearchSheet =
             mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_map_style)

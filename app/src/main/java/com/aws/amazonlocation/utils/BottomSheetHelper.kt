@@ -360,6 +360,9 @@ class BottomSheetHelper {
     fun isDirectionSheetVisible() =
         mBottomSheetDirections.state != BottomSheetBehavior.STATE_HIDDEN
 
+    fun isNavigationSheetVisible() =
+        mNavigationBottomSheet.state != BottomSheetBehavior.STATE_HIDDEN
+
     fun hideSearchBottomSheet(isHide: Boolean) {
         if (!isHide) {
             exportFragment?.setUserProfile()

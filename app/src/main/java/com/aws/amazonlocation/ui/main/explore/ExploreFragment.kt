@@ -619,44 +619,46 @@ class ExploreFragment :
 
     private val mRouteUpDate = object : UpdateRouteInterface {
         override fun updateRoute(latLng: Location, bearing: Float?) {
-            if (mViewModel.mNavigationResponse != null) {
-                mViewModel.mDestinationLatLng?.latitude?.let { latitude ->
-                    mViewModel.mDestinationLatLng?.longitude?.let { longitude ->
-                        val destinationLocation = Location("destination")
-                        destinationLocation.latitude = latitude
-                        destinationLocation.longitude = longitude
-                        val distance = destinationLocation.distanceTo(latLng)
-                        if (distance < DISTANCE_IN_METER_10) {
-                            mBottomSheetHelper.hideNavigationSheet()
-                            mBottomSheetHelper.expandNavigationCompleteSheet()
-                            mBinding.bottomSheetNavigationComplete.tvNavigationCompleteAddress.text =
-                                mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.label?.split(
-                                    ","
-                                )?.toTypedArray()?.get(0)
-                                    ?: mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.label
+            if (mBottomSheetHelper.isNavigationSheetVisible() && isLocationUpdatedNeeded) {
+                if (mViewModel.mNavigationResponse != null) {
+                    mViewModel.mDestinationLatLng?.latitude?.let { latitude ->
+                        mViewModel.mDestinationLatLng?.longitude?.let { longitude ->
+                            val destinationLocation = Location("destination")
+                            destinationLocation.latitude = latitude
+                            destinationLocation.longitude = longitude
+                            val distance = destinationLocation.distanceTo(latLng)
+                            if (distance < DISTANCE_IN_METER_10) {
+                                mBottomSheetHelper.hideNavigationSheet()
+                                mBottomSheetHelper.expandNavigationCompleteSheet()
+                                mBinding.bottomSheetNavigationComplete.tvNavigationCompleteAddress.text =
+                                    mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.label?.split(
+                                        ","
+                                    )?.toTypedArray()?.get(0)
+                                        ?: mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.label
 
-                            mBinding.bottomSheetNavigationComplete.sheetNavigationCompleteTvDirectionStreet.text =
-                                getRegion(
-                                    mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.region,
-                                    mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.subRegion,
-                                    mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.country
-                                )
+                                mBinding.bottomSheetNavigationComplete.sheetNavigationCompleteTvDirectionStreet.text =
+                                    getRegion(
+                                        mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.region,
+                                        mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.subRegion,
+                                        mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.country
+                                    )
 
-                            mBinding.cardNavigationTimeDialog.hide()
-                            mMapHelper.removeLine()
-                            mMapHelper.removeLocationListener()
-                        } else {
-                            bearing?.let { mMapHelper.bearingCamera(it, latLng) }
-                            CoroutineScope(Dispatchers.IO).launch {
-                                mViewModel.updateCalculateDistanceFromMode(
-                                    latLng.latitude,
-                                    latLng.longitude,
-                                    mViewModel.mDestinationLatLng?.latitude,
-                                    mViewModel.mDestinationLatLng?.longitude,
-                                    mIsAvoidFerries,
-                                    mIsAvoidTolls,
-                                    mTravelMode
-                                )
+                                mBinding.cardNavigationTimeDialog.hide()
+                                mMapHelper.removeLine()
+                                mMapHelper.removeLocationListener()
+                            } else {
+                                bearing?.let { mMapHelper.bearingCamera(it, latLng) }
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    mViewModel.updateCalculateDistanceFromMode(
+                                        latLng.latitude,
+                                        latLng.longitude,
+                                        mViewModel.mDestinationLatLng?.latitude,
+                                        mViewModel.mDestinationLatLng?.longitude,
+                                        mIsAvoidFerries,
+                                        mIsAvoidTolls,
+                                        mTravelMode
+                                    )
+                                }
                             }
                         }
                     }
@@ -1154,7 +1156,7 @@ class ExploreFragment :
                                 it1,
                                 true,
                                 isWalk,
-                                isLocationIcon = true
+                                isLocationIcon = mBottomSheetHelper.isNavigationSheetVisible()
                             )
                         }
 
@@ -1203,7 +1205,7 @@ class ExploreFragment :
                                         legs,
                                         isLineUpdate = false,
                                         isWalk = false,
-                                        isLocationIcon = true
+                                        isLocationIcon = false
                                     )
                                 }
                             }
@@ -1218,7 +1220,7 @@ class ExploreFragment :
                                         walkingData,
                                         isLineUpdate = false,
                                         isWalk = true,
-                                        isLocationIcon = true
+                                        isLocationIcon = false
                                     )
                                 }
                             }
@@ -1233,7 +1235,7 @@ class ExploreFragment :
                                         truckData,
                                         isLineUpdate = false,
                                         isWalk = false,
-                                        isLocationIcon = true
+                                        isLocationIcon = false
                                     )
                                 }
                             }
@@ -1363,13 +1365,10 @@ class ExploreFragment :
                     cardMapOption.hide()
                     layoutCardError.groupCardErrorNoSearchFound.show()
                     layoutCardError.root.show()
-                    val mapName =
-                        mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                     if (mapName == getString(R.string.map_esri)) {
-                        layoutCardError.tvCardError1.text =
-                            getString(R.string.distance_is_greater_than_400_km)
-                        layoutCardError.tvCardError2.text =
-                            getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
+                        layoutCardError.tvCardError1.text = getString(R.string.distance_is_greater_than_400_km)
+                        layoutCardError.tvCardError2.text = getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
                         layoutCardError.tvCardError2.show()
                     } else {
                         layoutCardError.tvCardError1.text = getString(R.string.no_route_found)
@@ -1674,15 +1673,14 @@ class ExploreFragment :
                 }
             }
 
-            bottomSheetSearch.edtSearchPlaces.textChanges().debounce(CLICK_DEBOUNCE)
-                .onEach { text ->
-                    updateSearchUI(text.isNullOrEmpty())
-                    if (mViewModel.mIsPlaceSuggestion) {
-                        if (!text.isNullOrEmpty()) {
-                            searchPlaces(text.toString())
-                        }
+            bottomSheetSearch.edtSearchPlaces.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+                updateSearchUI(text.isNullOrEmpty())
+                if (mViewModel.mIsPlaceSuggestion) {
+                    if (!text.isNullOrEmpty()) {
+                        searchPlaces(text.toString())
                     }
-                }.launchIn(lifecycleScope)
+                }
+            }.launchIn(lifecycleScope)
 
             bottomSheetNavigation.apply {
                 btnExit.setOnClickListener {
@@ -1975,8 +1973,7 @@ class ExploreFragment :
                         )
                     }
                     btnLearnMore.setOnClickListener {
-                        val mapName =
-                            mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                         if (mapName == getString(R.string.map_esri)) {
                             startActivity(
                                 Intent(
@@ -2674,6 +2671,7 @@ class ExploreFragment :
             tvNavigationDistance.text = ""
             tvNavigationTime.text = ""
         }
+        mMapHelper.addLiveLocationMarker(false)
         mBinding.tvDistance.text = ""
         mBinding.tvNavigationName.text = ""
         mBinding.bottomSheetDirectionSearch.clDrive.performClick()
@@ -3112,11 +3110,7 @@ class ExploreFragment :
                             mIsDirectionDataSet = true
                             if (edtSearchDirection.hasFocus()) {
                                 edtSearchDirection.setText(mPlaceList[position].text)
-                                edtSearchDirection.text?.length?.let {
-                                    edtSearchDirection.setSelection(
-                                        it
-                                    )
-                                }
+                                edtSearchDirection.text?.length?.let { edtSearchDirection.setSelection(it) }
                             } else {
                                 edtSearchDest.setText(mPlaceList[position].text)
                                 edtSearchDest.text?.length?.let { edtSearchDest.setSelection(it) }
@@ -3232,12 +3226,11 @@ class ExploreFragment :
     ) {
         setApiError()
         clearDirectionData()
-        val liveLocationLatLng: LatLng? =
-            if (isRunningTestLiveLocation || isRunningTest2LiveLocation || isRunningTest3LiveLocation) {
-                LatLng(22.995545, 72.534031)
-            } else {
-                mMapHelper.getLiveLocation()
-            }
+        val liveLocationLatLng: LatLng? = if (isRunningTestLiveLocation || isRunningTest2LiveLocation || isRunningTest3LiveLocation) {
+            LatLng(22.995545, 72.534031)
+        } else {
+            mMapHelper.getLiveLocation()
+        }
         mViewModel.calculateDistance(
             latitude = liveLocationLatLng?.latitude,
             longitude = liveLocationLatLng?.longitude,

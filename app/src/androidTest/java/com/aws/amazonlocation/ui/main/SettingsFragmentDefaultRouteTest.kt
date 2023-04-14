@@ -3,6 +3,7 @@ package com.aws.amazonlocation.ui.main
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.SwitchCompat
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
@@ -81,9 +82,9 @@ class SettingsFragmentDefaultRouteTest {
             Thread.sleep(DELAY_2000)
 
             goToDefaultRouteSettings()
-
+            Thread.sleep(DELAY_2000)
             toggleSwitch(R.id.switch_avoid_tools)
-
+            Thread.sleep(DELAY_2000)
             checkDefaultRouteOptions(avoidTollsShouldBe = true, avoidFerriesShouldBe = false)
         } catch (_: Exception) {
             Assert.fail(TEST_FAILED)
@@ -97,9 +98,9 @@ class SettingsFragmentDefaultRouteTest {
             Thread.sleep(DELAY_2000)
 
             goToDefaultRouteSettings()
-
+            Thread.sleep(DELAY_2000)
             toggleSwitch(R.id.switch_avoid_ferries)
-
+            Thread.sleep(DELAY_2000)
             checkDefaultRouteOptions(avoidTollsShouldBe = false, avoidFerriesShouldBe = true)
         } catch (_: Exception) {
             Assert.fail(TEST_FAILED)
@@ -124,24 +125,18 @@ class SettingsFragmentDefaultRouteTest {
     }
 
     private fun goToDefaultRouteSettings() {
-        onView(
-            allOf(
-                withText(SETTINGS),
-                isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
-        )
-            .perform(click())
+        val explorer = uiDevice.findObject(By.text(SETTINGS))
+        explorer.click()
 
         Thread.sleep(DELAY_1000)
 
-        onView(
-            allOf(
-                withId(R.id.cl_route_option),
-                isDisplayed()
-            )
-        )
-            .perform(click())
+        val clRouteOption =
+            mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_route_option)
+        if (clRouteOption.visibility == View.VISIBLE) {
+            mActivityRule.activity.runOnUiThread {
+                clRouteOption.performClick()
+            }
+        }
     }
 
     private fun toggleSwitch(@IdRes switchId: Int) {
@@ -150,19 +145,12 @@ class SettingsFragmentDefaultRouteTest {
                 withId(switchId),
                 isDisplayed()
             )
-        )
-            .perform(click())
+        ).perform(click())
     }
 
     private fun checkDefaultRouteOptions(avoidTollsShouldBe: Boolean, avoidFerriesShouldBe: Boolean) {
-        onView(
-            allOf(
-                withText(EXPLORE),
-                isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
-        )
-            .perform(click())
+        val explorer = uiDevice.findObject(By.text(EXPLORE))
+        explorer.click()
 
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         Thread.sleep(DELAY_2000)
@@ -173,8 +161,9 @@ class SettingsFragmentDefaultRouteTest {
             val cardDirectionTest =
                 onView(withId(R.id.card_direction)).check(ViewAssertions.matches(isDisplayed()))
             cardDirectionTest.perform(click())
+            Thread.sleep(DELAY_2000)
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_direction")),
+                Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/edt_search_direction")),
                 DELAY_5000
             )
             val edtSearchDirection =
@@ -182,9 +171,9 @@ class SettingsFragmentDefaultRouteTest {
             if (edtSearchDirection.visibility == View.VISIBLE) {
                 typeTextAndSelectSuggestion(R.id.edt_search_direction, SEARCH_TEST_WORD_1)
                 typeTextAndSelectSuggestion(R.id.edt_search_dest, SEARCH_TEST_WORD_2)
-
+                Thread.sleep(DELAY_2000)
                 uiDevice.wait(
-                    Until.hasObject(By.res("com.aws.amazonlocation:id/card_routing_option")),
+                    Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_routing_option")),
                     DELAY_10000
                 )
 
@@ -193,7 +182,7 @@ class SettingsFragmentDefaultRouteTest {
                 if (!optionsContainer.isVisible) {
                     onView(withId(R.id.card_routing_option)).perform(click())
                 }
-
+                Thread.sleep(DELAY_2000)
                 val switchAvoidToll = mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_tools)
                 val switchAvoidFerry = mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_ferries)
 
@@ -214,7 +203,7 @@ class SettingsFragmentDefaultRouteTest {
         onView(withId(viewId)).perform(ViewActions.replaceText(text))
         Thread.sleep(DELAY_2000)
         uiDevice.wait(
-            Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion_direction")),
+            Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion_direction")),
             DELAY_10000
         )
         val rvSearchPlacesSuggestionDirection =

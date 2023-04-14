@@ -503,11 +503,6 @@ class TrackingUtils(
                 mMapHelper?.removeLayer(data)
             }
         }
-        mGeofenceList.forEachIndexed { index, _ ->
-            mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index")
-            mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index")
-            mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index")
-        }
         trackingHistoryData.clear()
         if (adapter != null) {
             adapter?.notifyDataSetChanged()
