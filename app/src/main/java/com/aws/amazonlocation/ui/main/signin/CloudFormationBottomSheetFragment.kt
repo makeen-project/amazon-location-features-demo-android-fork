@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.URLUtil
+import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +19,6 @@ import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
 import com.aws.amazonlocation.databinding.BottomSheetCloudFormationBinding
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
-import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
@@ -44,6 +44,7 @@ import com.aws.amazonlocation.utils.validateUserPoolId
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -213,18 +214,31 @@ class CloudFormationBottomSheetFragment(
 
     private fun validateAWSAccountData() {
         if (!validateIdentityPoolId(mIdentityPoolId, regionData)) {
-            (activity as MainActivity).showError(getString(R.string.label_enter_identity_pool_id))
+            showError(getString(R.string.label_enter_identity_pool_id))
         } else if (!URLUtil.isValidUrl(mUserDomain)) {
-            (activity as MainActivity).showError(getString(R.string.label_enter_domain))
+            showError(getString(R.string.label_enter_domain))
         } else if (!validateUserPoolClientId(mUserPoolClientId)) {
-            (activity as MainActivity).showError(getString(R.string.label_enter_user_pool_client_id))
+            showError(getString(R.string.label_enter_user_pool_client_id))
         } else if (!validateUserPoolId(mUserPoolId)) {
-            (activity as MainActivity).showError(getString(R.string.label_enter_user_pool_id))
+            showError(getString(R.string.label_enter_user_pool_id))
         } else if (mWebSocketUrl.isNullOrEmpty()) {
-            (activity as MainActivity).showError(getString(R.string.label_enter_web_socket_url))
+            showError(getString(R.string.label_enter_web_socket_url))
         } else {
             storeDataAndRestartApp()
         }
+    }
+
+    fun showError(error: String) {
+        val snackBar = dialog?.window?.let {
+            Snackbar.make(
+                it.decorView,
+                error,
+                Snackbar.LENGTH_SHORT
+            )
+        }
+        val textView = snackBar?.view?.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        textView?.maxLines = 10
+        snackBar?.show()
     }
 
     private fun cloudFormationValidation() {
