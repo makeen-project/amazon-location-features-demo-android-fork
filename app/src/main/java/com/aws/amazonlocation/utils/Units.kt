@@ -28,7 +28,7 @@ object Units {
         val mSeconds = second.toInt().toLong()
         TimeUnit.SECONDS.toDays(mSeconds).toInt()
         val mHours: Long =
-            TimeUnit.SECONDS.toHours(mSeconds) - TimeUnit.SECONDS.toDays(mSeconds) * 24
+            TimeUnit.SECONDS.toHours(mSeconds)
         val mMinute: Long =
             TimeUnit.SECONDS.toMinutes(mSeconds) - TimeUnit.SECONDS.toHours(mSeconds) * 60
         val mSecondNew: Long =

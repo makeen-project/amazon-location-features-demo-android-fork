@@ -18,10 +18,10 @@ import com.amplifyframework.geo.maplibre.util.toJsonElement
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.amplifyframework.geo.models.MapStyle
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.*
+import com.aws.amazonlocation.data.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.response.SearchSuggestionData
-import com.aws.amazonlocation.domain.*
+import com.aws.amazonlocation.domain.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
@@ -44,7 +44,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.engine.*
+import com.mapbox.mapboxsdk.location.engine.* // ktlint-disable no-wildcard-imports
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.location.permissions.PermissionsManager
@@ -80,6 +80,7 @@ class MapHelper(private val appContext: Context) {
     private var mLocationEngine: LocationEngine? = null
     private var mLocationTrackingEngine: LocationEngine? = null
     private var mLastStoreLocation: Location? = null
+    private var mLastStoreTrackingLocation: Location? = null
     private var mRouteInterface: UpdateRouteInterface? = null
     private var mTrackingInterface: UpdateTrackingInterface? = null
     private var mOriginSymbol: Symbol? = null
@@ -139,14 +140,9 @@ class MapHelper(private val appContext: Context) {
 //            mLocationEngine?.requestLocationUpdates(request, initialLocationListener, Looper.getMainLooper())
             mLocationEngine?.getLastLocation(initialLocationListener)
         } else {
-            mLocationEngine?.requestLocationUpdates(
-                request,
-                locationListener,
-                Looper.getMainLooper()
-            )
+            mLocationEngine?.requestLocationUpdates(request, locationListener, Looper.getMainLooper())
             mLocationEngine?.getLastLocation(locationListener)
         }
-
     }
 
     @SuppressLint("MissingPermission")
@@ -193,7 +189,7 @@ class MapHelper(private val appContext: Context) {
                 mLastStoreLocation = result?.lastLocation
             } else {
                 mLastStoreLocation?.let {
-                    val distance = it.distanceTo(result?.lastLocation!!)
+                    val distance = it.distanceTo(result?.lastLocation)
                     if (distance > DISTANCE_IN_METER_20) {
                         mLastStoreLocation = result?.lastLocation
                         mRouteInterface?.updateRoute(it, result?.lastLocation?.bearing)
@@ -210,13 +206,13 @@ class MapHelper(private val appContext: Context) {
         override fun onSuccess(result: LocationEngineResult?) {
             try {
                 mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
-                if (mLastStoreLocation == null) {
-                    mLastStoreLocation = result?.lastLocation
+                if (mLastStoreTrackingLocation == null) {
+                    mLastStoreTrackingLocation = result?.lastLocation
                 } else {
-                    mLastStoreLocation?.let {
-                        val distance = it.distanceTo(result?.lastLocation!!)
+                    mLastStoreTrackingLocation?.let {
+                        val distance = it.distanceTo(result?.lastLocation)
                         if (distance > DISTANCE_IN_METER_30) {
-                            mLastStoreLocation = result?.lastLocation
+                            mLastStoreTrackingLocation = result?.lastLocation
                             mTrackingInterface?.updateRoute(it, result?.lastLocation?.bearing)
                         }
                     }
@@ -298,118 +294,6 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
-    fun addDirectionMarker(
-        activity: Activity,
-        markerType: MarkerEnum,
-        currentPlace: SearchSuggestionData?,
-        isFromMapClick: Boolean
-    ) {
-        mMapboxMap?.getStyle { style ->
-            val list = ArrayList<LatLng>()
-            currentPlace?.amazonLocationPlace?.let { amazonLocationPlace ->
-                setMarkerData(
-                    amazonLocationPlace,
-                    style,
-                    activity,
-                    markerType,
-                    currentPlace,
-                    list,
-                    isFromMapClick
-                )
-                adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
-            }
-        }
-    }
-
-    private fun setMarkerData(
-        amazonLocationPlace: AmazonLocationPlace,
-        style: Style,
-        activity: Activity,
-        markerType: MarkerEnum,
-        currentPlace: SearchSuggestionData,
-        list: ArrayList<LatLng>,
-        isFromMapClick: Boolean
-    ) {
-        val latLng = LatLng(
-            amazonLocationPlace.coordinates.latitude,
-            amazonLocationPlace.coordinates.longitude
-        )
-        style.addImage(
-            amazonLocationPlace.label.toString(),
-            convertLayoutToBitmap(
-                activity,
-                markerType,
-                currentPlace,
-                isFromMapClick = isFromMapClick
-            )
-        )
-        mSymbolManager?.textAllowOverlap = false
-        mSymbolManager?.iconAllowOverlap = true
-        mSymbolManager?.iconIgnorePlacement = false
-        val symbolOptions = SymbolOptions()
-            .withLatLng(latLng)
-            .withData(amazonLocationPlace.toJsonElement())
-            .withIconImage(
-                amazonLocationPlace.label.toString()
-            )
-            .withIconAnchor(Property.ICON_ANCHOR_LEFT)
-
-        if (markerType == MarkerEnum.ORIGIN_ICON) {
-            mOriginSymbol = mSymbolManager?.create(symbolOptions)
-        } else {
-            mSymbolManager?.create(symbolOptions)
-        }
-
-        list.add(
-            LatLng(
-                amazonLocationPlace.coordinates.latitude,
-                amazonLocationPlace.coordinates.longitude
-            )
-        )
-    }
-
-    fun setMarker(
-        latitude: Double,
-        longitude: Double,
-        activity: Activity,
-        markerType: MarkerEnum,
-        name: String
-    ) {
-        val list = ArrayList<LatLng>()
-        val latLng = LatLng(
-            latitude,
-            longitude
-        )
-        mMapboxMap?.getStyle { style ->
-            style.addImage(
-                name,
-                convertLayoutToBitmap(activity, markerType, null, name)
-            )
-            mSymbolManager?.textAllowOverlap = false
-            mSymbolManager?.iconAllowOverlap = true
-            mSymbolManager?.iconIgnorePlacement = false
-            val symbolOptions = SymbolOptions()
-                .withLatLng(latLng)
-                .withIconImage(
-                    name
-                )
-                .withIconAnchor(Property.ICON_ANCHOR_LEFT)
-
-            if (markerType == MarkerEnum.ORIGIN_ICON) {
-                mOriginSymbol = mSymbolManager?.create(symbolOptions)
-            } else {
-                mSymbolManager?.create(symbolOptions)
-            }
-
-            list.add(
-                LatLng(
-                    latitude,
-                    longitude
-                )
-            )
-            adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
-        }
-    }
     fun setDirectionMarker(
         latitude: Double,
         longitude: Double,
@@ -436,6 +320,105 @@ class MapHelper(private val appContext: Context) {
                     name
                 )
                 .withIconAnchor(Property.ICON_ANCHOR_CENTER)
+
+            if (markerType == MarkerEnum.ORIGIN_ICON) {
+                mOriginSymbol = mSymbolManager?.create(symbolOptions)
+            } else {
+                mSymbolManager?.create(symbolOptions)
+            }
+
+            list.add(
+                LatLng(
+                    latitude,
+                    longitude
+                )
+            )
+            adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
+        }
+    }
+
+    fun addDirectionMarker(
+        activity: Activity,
+        markerType: MarkerEnum,
+        currentPlace: SearchSuggestionData?,
+        isFromMapClick: Boolean
+    ) {
+        mMapboxMap?.getStyle { style ->
+            val list = ArrayList<LatLng>()
+            currentPlace?.amazonLocationPlace?.let { amazonLocationPlace ->
+                setMarkerData(amazonLocationPlace, style, activity, markerType, currentPlace, list, isFromMapClick)
+                adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
+            }
+        }
+    }
+
+    private fun setMarkerData(
+        amazonLocationPlace: AmazonLocationPlace,
+        style: Style,
+        activity: Activity,
+        markerType: MarkerEnum,
+        currentPlace: SearchSuggestionData,
+        list: ArrayList<LatLng>,
+        isFromMapClick: Boolean
+    ) {
+        val latLng = LatLng(
+            amazonLocationPlace.coordinates.latitude,
+            amazonLocationPlace.coordinates.longitude
+        )
+        style.addImage(
+            amazonLocationPlace.label.toString(),
+            convertLayoutToBitmap(activity, markerType, currentPlace, isFromMapClick = isFromMapClick)
+        )
+        mSymbolManager?.textAllowOverlap = false
+        mSymbolManager?.iconAllowOverlap = true
+        mSymbolManager?.iconIgnorePlacement = false
+        val symbolOptions = SymbolOptions()
+            .withLatLng(latLng)
+            .withData(amazonLocationPlace.toJsonElement())
+            .withIconImage(
+                amazonLocationPlace.label.toString()
+            )
+            .withIconAnchor(Property.ICON_ANCHOR_LEFT)
+
+        if (markerType == MarkerEnum.ORIGIN_ICON) {
+            mOriginSymbol = mSymbolManager?.create(symbolOptions)
+        } else {
+            mSymbolManager?.create(symbolOptions)
+        }
+
+        list.add(
+            LatLng(
+                amazonLocationPlace.coordinates.latitude,
+                amazonLocationPlace.coordinates.longitude
+            )
+        )
+    }
+    fun setMarker(
+        latitude: Double,
+        longitude: Double,
+        activity: Activity,
+        markerType: MarkerEnum,
+        name: String
+    ) {
+        val list = ArrayList<LatLng>()
+        val latLng = LatLng(
+            latitude,
+            longitude
+        )
+        mMapboxMap?.getStyle { style ->
+            style.addImage(
+                name,
+                convertLayoutToBitmap(activity, markerType, null, name)
+            )
+            mSymbolManager?.textAllowOverlap = false
+            mSymbolManager?.iconAllowOverlap = true
+            mSymbolManager?.iconIgnorePlacement = false
+            val symbolOptions = SymbolOptions()
+                .withLatLng(latLng)
+                .withIconImage(
+                    name
+                )
+                .withIconAnchor(Property.ICON_ANCHOR_LEFT)
 
             if (markerType == MarkerEnum.ORIGIN_ICON) {
                 mOriginSymbol = mSymbolManager?.create(symbolOptions)
@@ -1094,7 +1077,6 @@ class MapHelper(private val appContext: Context) {
         clMain.draw(canvas)
         return bitmap
     }
-
     interface IsMapLoadedInterface {
         fun mapLoadedSuccess()
     }
@@ -1124,16 +1106,13 @@ class MapHelper(private val appContext: Context) {
             val sources = JSONObject(style.json).getJSONObject(JSON_KEY_STYLE_SOURCES)
             when {
                 sources.has(JSON_KEY_STYLE_ESRI) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_ESRI)
-                        .optDouble(JSON_KEY_STYLE_MINZOOM, MapboxConstants.MINIMUM_ZOOM.toDouble())
+                    sources.getJSONObject(JSON_KEY_STYLE_ESRI).optDouble(JSON_KEY_STYLE_MINZOOM, MapboxConstants.MINIMUM_ZOOM.toDouble())
                 }
                 sources.has(JSON_KEY_STYLE_HERE) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_HERE)
-                        .optDouble(JSON_KEY_STYLE_MINZOOM, MapboxConstants.MINIMUM_ZOOM.toDouble())
+                    sources.getJSONObject(JSON_KEY_STYLE_HERE).optDouble(JSON_KEY_STYLE_MINZOOM, MapboxConstants.MINIMUM_ZOOM.toDouble())
                 }
                 sources.has(JSON_KEY_STYLE_RASTER) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_RASTER)
-                        .optDouble(JSON_KEY_STYLE_MINZOOM, MapboxConstants.MINIMUM_ZOOM.toDouble())
+                    sources.getJSONObject(JSON_KEY_STYLE_RASTER).optDouble(JSON_KEY_STYLE_MINZOOM, MapboxConstants.MINIMUM_ZOOM.toDouble())
                 }
                 else -> {
                     MapboxConstants.MINIMUM_ZOOM.toDouble()
@@ -1149,16 +1128,13 @@ class MapHelper(private val appContext: Context) {
             val sources = JSONObject(style.json).getJSONObject(JSON_KEY_STYLE_SOURCES)
             when {
                 sources.has(JSON_KEY_STYLE_ESRI) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_ESRI)
-                        .optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
+                    sources.getJSONObject(JSON_KEY_STYLE_ESRI).optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
                 }
                 sources.has(JSON_KEY_STYLE_HERE) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_HERE)
-                        .optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
+                    sources.getJSONObject(JSON_KEY_STYLE_HERE).optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
                 }
                 sources.has(JSON_KEY_STYLE_RASTER) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_RASTER)
-                        .optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
+                    sources.getJSONObject(JSON_KEY_STYLE_RASTER).optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
                 }
                 else -> {
                     MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM
@@ -1168,5 +1144,4 @@ class MapHelper(private val appContext: Context) {
             MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM
         }
     }
-
 }

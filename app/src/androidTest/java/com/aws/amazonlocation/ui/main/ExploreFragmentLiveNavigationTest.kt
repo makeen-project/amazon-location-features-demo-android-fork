@@ -9,7 +9,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -19,12 +19,14 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
+import com.aws.amazonlocation.TEST_FAILED_LIST
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
@@ -65,22 +67,23 @@ class ExploreFragmentLiveNavigationTest {
         edtSearch.perform(click())
         onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
         uiDevice.wait(
-            Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
+            Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion")),
             DELAY_10000
         )
         val rvSearchPlaceSuggestion =
             mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
         rvSearchPlaceSuggestion.adapter?.itemCount?.let {
             if (it > 0) {
+                Thread.sleep(DELAY_2000)
                 onView(withId(R.id.rv_search_places_suggestion)).perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         0,
                         click()
                     )
                 )
-
+                Thread.sleep(DELAY_2000)
                 uiDevice.wait(
-                    Until.hasObject(By.res("com.aws.amazonlocation:id/tv_direction_time")),
+                    Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/tv_direction_time")),
                     DELAY_5000
                 )
 
@@ -97,7 +100,7 @@ class ExploreFragmentLiveNavigationTest {
                         ?.click()
                 }
                 uiDevice.wait(
-                    Until.hasObject(By.res("com.aws.amazonlocation:id/card_drive_go")),
+                    Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_drive_go")),
                     DELAY_5000
                 )
 
@@ -109,15 +112,21 @@ class ExploreFragmentLiveNavigationTest {
                     }
 
                     uiDevice.wait(
-                        Until.hasObject(By.res("com.aws.amazonlocation:id/rv_navigation_list")),
+                        Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_navigation_list")),
                         DELAY_5000
                     )
 
                     val rvNavigationList =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_navigation_list)
                     Thread.sleep(DELAY_2000)
-                    val itemCount = rvNavigationList.adapter?.itemCount ?: 0
-                    Assert.assertTrue(itemCount > 0)
+                    if (rvNavigationList.visibility == View.VISIBLE) {
+                        mActivityRule.activity.runOnUiThread {
+                            val itemCount = rvNavigationList.adapter?.itemCount ?: 0
+                            Assert.assertTrue(itemCount > 0)
+                        }
+                    } else {
+                        Assert.fail(TEST_FAILED_LIST)
+                    }
                 } else {
                     Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                 }

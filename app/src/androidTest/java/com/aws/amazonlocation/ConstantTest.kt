@@ -51,6 +51,7 @@ const val TEST_FAILED_CARD_DRIVE_GO = "Test failed due to card drive go not visi
 const val TEST_FAILED_BUTTON_DIRECTION = "Test failed due to button direction not visible"
 const val TEST_FAILED_SEARCH_DIRECTION = "Test failed due to search direction not visible"
 const val TEST_FAILED_ZOOM_LEVEL = "Test failed due to zoom level not available"
+const val TEST_FAILED_LIST = "Test failed due to list not visible"
 
 const val TEST_FAILED_SETTINGS_ALL_OPTIONS_NOT_VISIBLE = "Test failed due to settings all options not visible"
 
