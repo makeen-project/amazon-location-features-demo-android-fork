@@ -503,6 +503,7 @@ class GeofenceUtils {
         mBindingAddGeofence?.edtAddGeofenceSearch?.clearFocus()
         mBottomSheetAddGeofenceBehavior?.isHideable = false
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
     }
 
     fun expandAddGeofenceBottomSheet() {
@@ -558,6 +559,10 @@ class GeofenceUtils {
             removeGeofenceMarker()
             mBindingAddGeofence?.edtAddGeofenceSearch?.setText(getLatLngStr(latLng))
         }
+    }
+
+    fun setSearchText(placeName: String) {
+        mBindingAddGeofence?.edtAddGeofenceSearch?.setText(placeName)
     }
 
     fun getLatLngStr(latLng: LatLng): String {
