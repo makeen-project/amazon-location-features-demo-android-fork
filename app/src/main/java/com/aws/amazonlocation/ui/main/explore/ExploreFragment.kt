@@ -3925,12 +3925,14 @@ class ExploreFragment :
                 ""
             )
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
+            return true
         }
         if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
             mBaseActivity?.mGeofenceUtils?.mapClick(point)
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
+            return true
         }
-        return true
+        return false
     }
 
     override fun mapLoadedSuccess() {

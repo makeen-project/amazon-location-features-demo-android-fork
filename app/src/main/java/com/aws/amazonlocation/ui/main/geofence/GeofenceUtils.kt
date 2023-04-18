@@ -20,6 +20,7 @@ import com.aws.amazonlocation.databinding.BottomSheetAddGeofenceBinding
 import com.aws.amazonlocation.databinding.BottomSheetGeofenceListBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
+import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
@@ -594,7 +595,18 @@ class GeofenceUtils {
             mGeofenceList.forEach { data ->
                 mMapHelper?.addGeofenceMarker(
                     mActivity!!,
-                    data
+                    data,
+                    object : MarkerClickInterface {
+                        override fun markerClick(placeData: String) {
+                            mGeofenceList.forEachIndexed { index, data ->
+                                if (data.geofenceId == placeData) {
+                                    if (checkInternetConnection()) {
+                                        editGeofenceBottomSheet(index, data)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 )
                 mLatLngList.add(
                     LatLng(
