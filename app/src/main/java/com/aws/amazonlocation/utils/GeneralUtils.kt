@@ -47,14 +47,14 @@ import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.mapbox.mapboxsdk.geometry.LatLng
-import java.util.Locale
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
+import java.util.Locale
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -497,6 +497,7 @@ fun Activity.restartApplication() {
 }
 
 fun Context.isInternetAvailable(): Boolean {
+    if (mockedInternetAvailability != null) return mockedInternetAvailability as Boolean
     var result = false
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     cm.run {
@@ -540,3 +541,5 @@ fun validateUserPoolClientId(mUserPoolClientId: String?): Boolean {
     val matcher: Matcher = pattern.matcher(mUserPoolClientId)
     return matcher.matches()
 }
+
+var mockedInternetAvailability: Boolean? = null
