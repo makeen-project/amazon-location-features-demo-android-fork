@@ -15,6 +15,10 @@ const val AVOID_TOLLS = true
 const val ESRI = "Esri"
 const val HERE = "HERE"
 
+const val SIGN_IN_SUCCESS = "Sign in Successfully"
+const val SIGN_OUT_SUCCESS = "Sign out successfully"
+const val NO_BROWSERS_INSTALLED = "No browsers installed."
+
 const val TRACKING_HISTORY_START_DATE = "Thu Apr 14 00:00:00 GMT+05:30 2022"
 const val TRACKING_HISTORY_END_DATE = "Fri Apr 14 23:59:59 GMT+05:30 2023"
 const val TRACKING_HISTORY_TODAY_START_DATE = "Fri Apr 14 00:00:00 GMT+05:30 2023"
@@ -35,6 +39,8 @@ const val TEST_FAILED_DUE_TO_DATA_NOT_EMPTY = "Test failed due to data not empty
 const val TEST_FAILED_DUE_TO_INCORRECT_DATA_SIZE = "Test failed due to incorrect data size"
 const val TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE = "Test failed due to incorrect error message"
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_INTERNET_ERROR = "Test failed due to incorrect no internet error"
+const val TEST_FAILED_DUE_TO_LOGIN_NOT_SUCCESS = "Test failed due to login not success"
+const val TEST_FAILED_DUE_TO_SIGN_OUT_NOT_SUCCESS = "Test failed due to sign out not success"
 
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED = "Test failed due to incorrect no of providers loaded"
 const val TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_ESRI = "Test failed due to incorrect style name for Esri"

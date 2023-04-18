@@ -497,7 +497,6 @@ fun Activity.restartApplication() {
 }
 
 fun Context.isInternetAvailable(): Boolean {
-    if (mockedInternetAvailability != null) return mockedInternetAvailability!!
     var result = false
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     cm.run {
@@ -541,5 +540,3 @@ fun validateUserPoolClientId(mUserPoolClientId: String?): Boolean {
     val matcher: Matcher = pattern.matcher(mUserPoolClientId)
     return matcher.matches()
 }
-
-var mockedInternetAvailability: Boolean? = null

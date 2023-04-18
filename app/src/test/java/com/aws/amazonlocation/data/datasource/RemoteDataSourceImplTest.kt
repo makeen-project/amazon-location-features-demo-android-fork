@@ -4,11 +4,11 @@ import android.content.Context
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
+import com.aws.amazonlocation.setConnectivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.PreferenceManager
-import com.aws.amazonlocation.utils.mockedInternetAvailability
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -42,7 +42,7 @@ class RemoteDataSourceImplTest : BaseTest() {
 
         doNothing().`when`(mainActivity).handleException(anyOrNull(), anyOrNull())
         awsLocationHelper.initAWSMobileClient(mainActivity)
-        mockedInternetAvailability = true
+        setConnectivity(true)
     }
 
     @Test

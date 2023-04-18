@@ -3,6 +3,7 @@ package com.aws.amazonlocation.mock
 import com.amazonaws.services.geo.model.* // ktlint-disable no-wildcard-imports
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.data.response.*
 import java.util.Date
 
@@ -500,5 +501,13 @@ object Responses {
     val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST_NO_ERROR = GeofenceData(
         message = null,
         geofenceList = arrayListOf(),
+    )
+
+    val RESPONSE_SIGN_IN = LoginResponse(
+        name = BuildConfig.USER_LOGIN_NAME,
+        email = null,
+        success = SIGN_IN_SUCCESS,
+        provider = "cognito-idp.us-east-1.amazonaws.com/us-east-1_48VeDo2Uw",
+        idToken = "Mock Token",
     )
 }
