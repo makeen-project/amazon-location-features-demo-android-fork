@@ -7,14 +7,14 @@ plugins {
 
 android {
     namespace 'com.aws.amazonlocation'
-    compileSdk 32
+    compileSdk 33
     def customConfig = new Properties()
     customConfig.load(project.rootProject.file("custom.properties").newDataInputStream())
     defaultConfig {
         applicationId "com.aws.amazonlocation"
         minSdk 24
         //noinspection OldTargetApi
-        targetSdk 32
+        targetSdk 33
         versionCode 43
         versionName "1.0.0"
         testInstrumentationRunner "com.aws.amazonlocation.AmazonLocationRunner"
@@ -116,15 +116,15 @@ dependencies {
     testImplementation "org.mockito:mockito-inline:3.11.1"
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     // hilt test
-    testImplementation "com.google.dagger:hilt-android-testing:2.42"
-    kaptTest 'com.google.dagger:hilt-android-compiler:2.42'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.42'
-    androidTestImplementation "com.google.dagger:hilt-android-testing:2.42"
+    testImplementation "com.google.dagger:hilt-android-testing:2.45"
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.45'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.45'
+    androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
 
     // noinspection GradleDependency
-    implementation 'com.google.dagger:hilt-android:2.42'
+    implementation 'com.google.dagger:hilt-android:2.45'
     // noinspection GradleDependency
-    kapt 'com.google.dagger:hilt-android-compiler:2.42'
+    kapt 'com.google.dagger:hilt-android-compiler:2.45'
     // noinspection GradleDependency
     implementation 'androidx.activity:activity-ktx:1.5.1'
     // pref
@@ -142,6 +142,7 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-iot:2.63.0'
     implementation "androidx.navigation:navigation-fragment-ktx:2.0.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.0.0"
+    implementation "androidx.fragment:fragment-ktx:1.5.6"
     // Support for Java 8 features
     // noinspection GradleDependency
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'

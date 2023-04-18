@@ -188,10 +188,12 @@ class MapHelper(private val appContext: Context) {
                 mLastStoreLocation = result?.lastLocation
             } else {
                 mLastStoreLocation?.let {
-                    val distance = it.distanceTo(result?.lastLocation)
-                    if (distance > DISTANCE_IN_METER_20) {
-                        mLastStoreLocation = result?.lastLocation
-                        mRouteInterface?.updateRoute(it, result?.lastLocation?.bearing)
+                    val distance = result?.lastLocation?.let { it1 -> it.distanceTo(it1) }
+                    if (distance != null) {
+                        if (distance > DISTANCE_IN_METER_20) {
+                            mLastStoreLocation = result.lastLocation
+                            mRouteInterface?.updateRoute(it, result.lastLocation?.bearing)
+                        }
                     }
                 }
             }
@@ -209,10 +211,12 @@ class MapHelper(private val appContext: Context) {
                     mLastStoreTrackingLocation = result?.lastLocation
                 } else {
                     mLastStoreTrackingLocation?.let {
-                        val distance = it.distanceTo(result?.lastLocation)
-                        if (distance > DISTANCE_IN_METER_30) {
-                            mLastStoreTrackingLocation = result?.lastLocation
-                            mTrackingInterface?.updateRoute(it, result?.lastLocation?.bearing)
+                        val distance = result?.lastLocation?.let { it1 -> it.distanceTo(it1) }
+                        if (distance != null) {
+                            if (distance > DISTANCE_IN_METER_30) {
+                                mLastStoreTrackingLocation = result.lastLocation
+                                mTrackingInterface?.updateRoute(it, result.lastLocation?.bearing)
+                            }
                         }
                     }
                 }
