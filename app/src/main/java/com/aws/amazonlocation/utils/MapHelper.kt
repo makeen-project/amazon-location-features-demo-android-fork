@@ -246,7 +246,9 @@ class MapHelper(private val appContext: Context) {
             )
             try {
                 mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
-            } catch (_: Exception) {}
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         override fun onFailure(exception: Exception) {

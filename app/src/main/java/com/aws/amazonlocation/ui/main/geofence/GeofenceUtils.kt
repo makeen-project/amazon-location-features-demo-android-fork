@@ -593,21 +593,23 @@ class GeofenceUtils {
             checkGeofenceList(false)
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEach { data ->
-                mMapHelper?.addGeofenceMarker(
-                    mActivity!!,
-                    data,
-                    object : MarkerClickInterface {
-                        override fun markerClick(placeData: String) {
-                            mGeofenceList.forEachIndexed { index, data ->
-                                if (data.geofenceId == placeData) {
-                                    if (checkInternetConnection()) {
-                                        editGeofenceBottomSheet(index, data)
+                mActivity?.let {
+                    mMapHelper?.addGeofenceMarker(
+                        it,
+                        data,
+                        object : MarkerClickInterface {
+                            override fun markerClick(placeData: String) {
+                                mGeofenceList.forEachIndexed { index, data ->
+                                    if (data.geofenceId == placeData) {
+                                        if (checkInternetConnection()) {
+                                            editGeofenceBottomSheet(index, data)
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                )
+                    )
+                }
                 mLatLngList.add(
                     LatLng(
                         data.geometry.circle.center[1],
@@ -615,10 +617,12 @@ class GeofenceUtils {
                     )
                 )
             }
-            mMapHelper?.adjustMapBounds(
-                mLatLngList,
-                mActivity?.resources?.getDimension(R.dimen.dp_100)?.toInt()!!
-            )
+            mActivity?.resources?.getDimension(R.dimen.dp_100)?.toInt()?.let {
+                mMapHelper?.adjustMapBounds(
+                    mLatLngList,
+                    it
+                )
+            }
             mGeofenceListAdapter?.notifyDataSetChanged()
         } else {
             checkGeofenceList(true)
