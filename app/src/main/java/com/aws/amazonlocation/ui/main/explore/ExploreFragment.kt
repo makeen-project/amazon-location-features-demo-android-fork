@@ -77,13 +77,13 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import java.util.*
-import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
+import java.util.*
+import kotlin.math.roundToInt
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -244,19 +244,19 @@ class ExploreFragment :
         val connectivityManager =
             context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerDefaultNetworkCallback(object :
-            ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                if (mMapHelper.mSymbolManager == null) {
-                    activity?.runOnUiThread {
-                        mBinding.groupMapLoad.show()
-                        mBinding.mapView.getMapAsync(this@ExploreFragment)
+                ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: Network) {
+                    if (mMapHelper.mSymbolManager == null) {
+                        activity?.runOnUiThread {
+                            mBinding.groupMapLoad.show()
+                            mBinding.mapView.getMapAsync(this@ExploreFragment)
+                        }
                     }
                 }
-            }
 
-            override fun onLost(network: Network) {
-            }
-        })
+                override fun onLost(network: Network) {
+                }
+            })
         (activity as MainActivity).showBottomBar()
     }
 
@@ -360,7 +360,7 @@ class ExploreFragment :
                     }
                 }.onError {
                     if (it.messageResource.toString()
-                            .contains(resources.getString(R.string.unable_to_execute_request))
+                        .contains(resources.getString(R.string.unable_to_execute_request))
                     ) {
                         showError(resources.getString(R.string.check_your_internet_connection_and_try_again))
                     }
@@ -464,6 +464,10 @@ class ExploreFragment :
                     else -> {}
                 }
             }
+        }
+
+        override fun openAddGeofenceBottomSheet(point: LatLng) {
+            mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
         }
     }
     private val mTrackingInterface = object : TrackingInterface {
@@ -1274,83 +1278,118 @@ class ExploreFragment :
         lifecycleScope.launchWhenStarted {
             mViewModel.addressLineData.collect { handleResult ->
                 handleResult.onLoading {}.onSuccess {
-                    val searchSuggestionData = SearchSuggestionData()
-                    if (!it.searchPlaceIndexForPositionResult?.results.isNullOrEmpty()) {
-                        it.searchPlaceIndexForPositionResult?.let { searchPlaceIndexForPositionResult ->
+                    if (!mBottomSheetHelper.isSearchPlaceSheetVisible() || mBottomSheetHelper.isDirectionSheetVisible()) {
+                        val searchSuggestionData = SearchSuggestionData()
+                        if (!it.searchPlaceIndexForPositionResult?.results.isNullOrEmpty()) {
+                            it.searchPlaceIndexForPositionResult?.let { searchPlaceIndexForPositionResult ->
+                                searchSuggestionData.text =
+                                    searchPlaceIndexForPositionResult.results[0].place.label
+                                searchSuggestionData.searchText =
+                                    searchPlaceIndexForPositionResult.results[0].place.label
+                                searchSuggestionData.distance =
+                                    searchPlaceIndexForPositionResult.results[0].distance
+                                searchSuggestionData.isDestination = true
+                                searchSuggestionData.placeId =
+                                    searchPlaceIndexForPositionResult.results[0].placeId
+                                searchSuggestionData.isPlaceIndexForPosition = false
+                                val coordinates = Coordinates(
+                                    searchPlaceIndexForPositionResult.results[0].place.geometry.point[1],
+                                    searchPlaceIndexForPositionResult.results[0].place.geometry.point[0]
+                                )
+                                val amazonLocationPlace = AmazonLocationPlace(
+                                    coordinates = coordinates,
+                                    label = searchPlaceIndexForPositionResult.results[0].place.label,
+                                    addressNumber = searchPlaceIndexForPositionResult.results[0].place.addressNumber,
+                                    street = searchPlaceIndexForPositionResult.results[0].place.street,
+                                    country = searchPlaceIndexForPositionResult.results[0].place.country,
+                                    region = searchPlaceIndexForPositionResult.results[0].place.region,
+                                    subRegion = searchPlaceIndexForPositionResult.results[0].place.subRegion,
+                                    municipality = searchPlaceIndexForPositionResult.results[0].place.municipality,
+                                    neighborhood = searchPlaceIndexForPositionResult.results[0].place.neighborhood,
+                                    postalCode = searchPlaceIndexForPositionResult.results[0].place.postalCode
+                                )
+                                searchSuggestionData.amazonLocationPlace = amazonLocationPlace
+                            }
+                        } else {
                             searchSuggestionData.text =
-                                searchPlaceIndexForPositionResult.results[0].place.label
+                                String.format(STRING_FORMAT, it.latitude, it.longitude)
                             searchSuggestionData.searchText =
-                                searchPlaceIndexForPositionResult.results[0].place.label
-                            searchSuggestionData.distance =
-                                searchPlaceIndexForPositionResult.results[0].distance
+                                String.format(STRING_FORMAT, it.latitude, it.longitude)
+                            searchSuggestionData.distance = null
                             searchSuggestionData.isDestination = true
-                            searchSuggestionData.placeId =
-                                searchPlaceIndexForPositionResult.results[0].placeId
+                            searchSuggestionData.placeId = "11"
                             searchSuggestionData.isPlaceIndexForPosition = false
-                            val coordinates = Coordinates(
-                                searchPlaceIndexForPositionResult.results[0].place.geometry.point[1],
-                                searchPlaceIndexForPositionResult.results[0].place.geometry.point[0]
-                            )
-                            val amazonLocationPlace = AmazonLocationPlace(
-                                coordinates = coordinates,
-                                label = searchPlaceIndexForPositionResult.results[0].place.label,
-                                addressNumber = searchPlaceIndexForPositionResult.results[0].place.addressNumber,
-                                street = searchPlaceIndexForPositionResult.results[0].place.street,
-                                country = searchPlaceIndexForPositionResult.results[0].place.country,
-                                region = searchPlaceIndexForPositionResult.results[0].place.region,
-                                subRegion = searchPlaceIndexForPositionResult.results[0].place.subRegion,
-                                municipality = searchPlaceIndexForPositionResult.results[0].place.municipality,
-                                neighborhood = searchPlaceIndexForPositionResult.results[0].place.neighborhood,
-                                postalCode = searchPlaceIndexForPositionResult.results[0].place.postalCode
-                            )
-                            searchSuggestionData.amazonLocationPlace = amazonLocationPlace
-                        }
-                    } else {
-                        searchSuggestionData.text =
-                            String.format(STRING_FORMAT, it.latitude, it.longitude)
-                        searchSuggestionData.searchText =
-                            String.format(STRING_FORMAT, it.latitude, it.longitude)
-                        searchSuggestionData.distance = null
-                        searchSuggestionData.isDestination = true
-                        searchSuggestionData.placeId = "11"
-                        searchSuggestionData.isPlaceIndexForPosition = false
-                        val coordinates = it.longitude?.let { it1 ->
-                            it.latitude?.let { it2 ->
-                                Coordinates(
-                                    it2,
-                                    it1
+                            val coordinates = it.longitude?.let { it1 ->
+                                it.latitude?.let { it2 ->
+                                    Coordinates(
+                                        it2,
+                                        it1
+                                    )
+                                }
+                            }
+                            val amazonLocationPlace = coordinates?.let { it1 ->
+                                AmazonLocationPlace(
+                                    coordinates = it1,
+                                    label = String.format(STRING_FORMAT, it.latitude, it.longitude),
+                                    addressNumber = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    street = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    country = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    region = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    subRegion = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    municipality = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    neighborhood = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    ),
+                                    postalCode = String.format(
+                                        STRING_FORMAT,
+                                        it.latitude,
+                                        it.longitude
+                                    )
                                 )
                             }
+                            searchSuggestionData.amazonLocationPlace = amazonLocationPlace
                         }
-                        val amazonLocationPlace = coordinates?.let { it1 ->
-                            AmazonLocationPlace(
-                                coordinates = it1,
-                                label = String.format(STRING_FORMAT, it.latitude, it.longitude),
-                                addressNumber = String.format(
-                                    STRING_FORMAT,
-                                    it.latitude,
-                                    it.longitude
-                                ),
-                                street = String.format(STRING_FORMAT, it.latitude, it.longitude),
-                                country = String.format(STRING_FORMAT, it.latitude, it.longitude),
-                                region = String.format(STRING_FORMAT, it.latitude, it.longitude),
-                                subRegion = String.format(STRING_FORMAT, it.latitude, it.longitude),
-                                municipality = String.format(
-                                    STRING_FORMAT,
-                                    it.latitude,
-                                    it.longitude
-                                ),
-                                neighborhood = String.format(
-                                    STRING_FORMAT,
-                                    it.latitude,
-                                    it.longitude
-                                ),
-                                postalCode = String.format(STRING_FORMAT, it.latitude, it.longitude)
-                            )
-                        }
-                        searchSuggestionData.amazonLocationPlace = amazonLocationPlace
+                        setDirectionData(searchSuggestionData, true)
+                        return@onSuccess
                     }
-                    setDirectionData(searchSuggestionData, true)
+                    it.searchPlaceIndexForPositionResult?.let { searchPlaceIndexForPositionResult ->
+                        val label = searchPlaceIndexForPositionResult.results[0].place.label
+                        if (label != null) {
+                            if (label.contains(",")) {
+                                val index = label.indexOf(",")
+                                val result: String = index.let { it1 -> label.substring(0, it1) }
+                                mBaseActivity?.mGeofenceUtils?.setSearchText(result)
+                            } else {
+                                mBaseActivity?.mGeofenceUtils?.setSearchText(label)
+                            }
+                        }
+                    }
                 }.onError {
                     showError(it.messageResource.toString())
                 }
@@ -2097,7 +2136,7 @@ class ExploreFragment :
                 .onEach { text ->
                     if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
                         if (text.toString()
-                                .isEmpty()
+                            .isEmpty()
                         ) {
                             mMapboxMap?.removeOnMapClickListener(this@ExploreFragment)
                             mBaseActivity?.mGeofenceUtils?.showAddGeofenceDefaultUI()
@@ -2549,7 +2588,7 @@ class ExploreFragment :
             clMyLocation.root.hide()
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                 if (edtSearchDest.text.toString().trim()
-                        .isNotEmpty() && mViewModel.mSearchDirectionDestinationData != null
+                    .isNotEmpty() && mViewModel.mSearchDirectionDestinationData != null
                 ) {
                     mViewModel.mSearchDirectionDestinationData?.let { it1 ->
                         showCurrentLocationDestinationRoute(
@@ -2561,7 +2600,7 @@ class ExploreFragment :
                 }
             } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
                 if (edtSearchDirection.text.toString().trim()
-                        .isNotEmpty() && mViewModel.mSearchDirectionOriginData != null
+                    .isNotEmpty() && mViewModel.mSearchDirectionOriginData != null
                 ) {
                     mViewModel.mSearchDirectionOriginData?.let { it1 ->
                         showCurrentLocationOriginRoute(
@@ -3882,7 +3921,10 @@ class ExploreFragment :
             )
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
         }
-        mBaseActivity?.mGeofenceUtils?.mapClick(point)
+        if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
+            mBaseActivity?.mGeofenceUtils?.mapClick(point)
+            mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
+        }
         return true
     }
 

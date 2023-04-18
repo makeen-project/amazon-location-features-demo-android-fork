@@ -13,4 +13,5 @@ interface GeofenceInterface {
     fun deleteGeofence(position: Int, data: ListGeofenceResponseEntry) {}
     fun geofenceSearchPlaceIndexForText(searchText: String) {}
     fun hideShowBottomNavigationBar(isHide: Boolean = false, type: GeofenceBottomSheetEnum)
+    fun openAddGeofenceBottomSheet(point: LatLng)
 }
