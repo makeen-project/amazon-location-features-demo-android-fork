@@ -20,6 +20,7 @@ import com.aws.amazonlocation.databinding.BottomSheetAddGeofenceBinding
 import com.aws.amazonlocation.databinding.BottomSheetGeofenceListBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
+import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
@@ -592,10 +593,23 @@ class GeofenceUtils {
             checkGeofenceList(false)
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEach { data ->
-                mMapHelper?.addGeofenceMarker(
-                    mActivity!!,
-                    data
-                )
+                mActivity?.let {
+                    mMapHelper?.addGeofenceMarker(
+                        it,
+                        data,
+                        object : MarkerClickInterface {
+                            override fun markerClick(placeData: String) {
+                                mGeofenceList.forEachIndexed { index, data ->
+                                    if (data.geofenceId == placeData) {
+                                        if (checkInternetConnection()) {
+                                            editGeofenceBottomSheet(index, data)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
                 mLatLngList.add(
                     LatLng(
                         data.geometry.circle.center[1],
@@ -603,10 +617,12 @@ class GeofenceUtils {
                     )
                 )
             }
-            mMapHelper?.adjustMapBounds(
-                mLatLngList,
-                mActivity?.resources?.getDimension(R.dimen.dp_100)?.toInt()!!
-            )
+            mActivity?.resources?.getDimension(R.dimen.dp_100)?.toInt()?.let {
+                mMapHelper?.adjustMapBounds(
+                    mLatLngList,
+                    it
+                )
+            }
             mGeofenceListAdapter?.notifyDataSetChanged()
         } else {
             checkGeofenceList(true)

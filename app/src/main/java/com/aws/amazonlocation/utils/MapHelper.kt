@@ -18,10 +18,10 @@ import com.amplifyframework.geo.maplibre.util.toJsonElement
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.amplifyframework.geo.models.MapStyle
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.data.*
 import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.response.SearchSuggestionData
-import com.aws.amazonlocation.domain.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
@@ -44,7 +44,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions
 import com.mapbox.mapboxsdk.location.LocationComponentOptions
-import com.mapbox.mapboxsdk.location.engine.* // ktlint-disable no-wildcard-imports
+import com.mapbox.mapboxsdk.location.engine.*
 import com.mapbox.mapboxsdk.location.modes.CameraMode
 import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.location.permissions.PermissionsManager
@@ -188,10 +188,12 @@ class MapHelper(private val appContext: Context) {
                 mLastStoreLocation = result?.lastLocation
             } else {
                 mLastStoreLocation?.let {
-                    val distance = it.distanceTo(result?.lastLocation)
-                    if (distance > DISTANCE_IN_METER_20) {
-                        mLastStoreLocation = result?.lastLocation
-                        mRouteInterface?.updateRoute(it, result?.lastLocation?.bearing)
+                    val distance = result?.lastLocation?.let { it1 -> it.distanceTo(it1) }
+                    if (distance != null) {
+                        if (distance > DISTANCE_IN_METER_20) {
+                            mLastStoreLocation = result.lastLocation
+                            mRouteInterface?.updateRoute(it, result.lastLocation?.bearing)
+                        }
                     }
                 }
             }
@@ -209,10 +211,12 @@ class MapHelper(private val appContext: Context) {
                     mLastStoreTrackingLocation = result?.lastLocation
                 } else {
                     mLastStoreTrackingLocation?.let {
-                        val distance = it.distanceTo(result?.lastLocation)
-                        if (distance > DISTANCE_IN_METER_30) {
-                            mLastStoreTrackingLocation = result?.lastLocation
-                            mTrackingInterface?.updateRoute(it, result?.lastLocation?.bearing)
+                        val distance = result?.lastLocation?.let { it1 -> it.distanceTo(it1) }
+                        if (distance != null) {
+                            if (distance > DISTANCE_IN_METER_30) {
+                                mLastStoreTrackingLocation = result.lastLocation
+                                mTrackingInterface?.updateRoute(it, result.lastLocation?.bearing)
+                            }
                         }
                     }
                 }
@@ -244,10 +248,11 @@ class MapHelper(private val appContext: Context) {
                     ).build()
                 )
             )
-            try{
+            try {
                 mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            catch (_:Exception){}
         }
 
         override fun onFailure(exception: Exception) {
@@ -945,7 +950,8 @@ class MapHelper(private val appContext: Context) {
 
     fun addGeofenceMarker(
         activity: Activity,
-        data: ListGeofenceResponseEntry
+        data: ListGeofenceResponseEntry,
+        markerClick: MarkerClickInterface
     ) {
         mMapboxMap?.getStyle { style ->
             val location = data.geometry.circle.center
@@ -964,6 +970,10 @@ class MapHelper(private val appContext: Context) {
                 .withIconAnchor(Property.ICON_ANCHOR_LEFT)
             mGeofenceSM?.create(symbolOptions)?.let { symbol ->
                 mSymbolOptionList.add(symbol)
+            }
+            mGeofenceSM?.addClickListener {
+                markerClick.markerClick(it.iconImage)
+                true
             }
         }
     }

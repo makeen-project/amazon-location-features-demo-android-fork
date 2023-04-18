@@ -15,7 +15,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.TypedValue
-import android.view.*
+import android.view.* // ktlint-disable no-wildcard-imports
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -27,6 +27,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import aws.sdk.kotlin.services.location.model.TravelMode
+import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.services.geo.model.CalculateRouteResult
 import com.amazonaws.services.geo.model.Leg
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
@@ -258,6 +259,10 @@ class ExploreFragment :
                 }
             })
         (activity as MainActivity).showBottomBar()
+        if (!checkSessionValid(mPreferenceManager)) {
+            AWSMobileClient.getInstance().signOut()
+            activity?.userSignOutDialog()
+        }
     }
 
     private fun initGeofenceObserver() {
@@ -3920,12 +3925,14 @@ class ExploreFragment :
                 ""
             )
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
+            return true
         }
         if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
             mBaseActivity?.mGeofenceUtils?.mapClick(point)
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
+            return true
         }
-        return true
+        return false
     }
 
     override fun mapLoadedSuccess() {
