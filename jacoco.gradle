@@ -59,7 +59,9 @@ ext.excludes = [
         '**/*_MembersInjector.class',
         '**/*_Factory*.*',
         '**/*_Provide*Factory*.*',
-        '**/*Extensions*.*'
+        '**/*Extensions*.*',
+        'hilt_aggregated_deps',
+        '**/*hilt*'
 ]
 def createVariantCoverage(variant) {
     def variantName = variant.name
