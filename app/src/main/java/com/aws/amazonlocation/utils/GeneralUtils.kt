@@ -35,6 +35,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.amazonaws.auth.CognitoCredentialsProvider
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.amazonaws.mobile.client.UserState
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoAccessToken
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoRefreshToken
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.geo.model.Place
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
@@ -47,14 +53,14 @@ import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.mapbox.mapboxsdk.geometry.LatLng
-import java.util.Locale
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
+import java.util.Locale
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -539,4 +545,20 @@ fun validateUserPoolClientId(mUserPoolClientId: String?): Boolean {
     val pattern: Pattern = Pattern.compile(userPoolClientId)
     val matcher: Matcher = pattern.matcher(mUserPoolClientId)
     return matcher.matches()
+}
+
+fun checkSessionValid(mPreferenceManager: PreferenceManager): Boolean {
+    if (AWSMobileClient.getInstance().currentUserState().userState.name == UserState.SIGNED_IN.name) {
+        val accessToken = mPreferenceManager.getValue(KEY_ACCESS_TOKEN, "")
+        val refreshToken = mPreferenceManager.getValue(KEY_REFRESH_TOKEN, "")
+        val idToken = mPreferenceManager.getValue(KEY_ID_TOKEN, "")
+        val cipSession = CognitoUserSession(
+            CognitoIdToken(idToken),
+            CognitoAccessToken(accessToken),
+            CognitoRefreshToken(refreshToken)
+        )
+
+        return cipSession.isValid
+    }
+    return true
 }

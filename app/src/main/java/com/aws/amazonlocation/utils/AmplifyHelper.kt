@@ -95,61 +95,7 @@ class AmplifyHelper(
             )
         }
 
-        val mAuthStatus = mPreferenceManager.getValue(
-            KEY_CLOUD_FORMATION_STATUS,
-            AuthEnum.DEFAULT.name
-        )
-
-        if (mAuthStatus == AuthEnum.SIGNED_IN.name) {
-            val userPool = CognitoUserPool(
-                mContext,
-                mUserPoolId,
-                mAppClientId,
-                null,
-                Regions.fromName(mRegion)
-            )
-
-            userPool.currentUser.getSession(object : AuthenticationHandler {
-                override fun onSuccess(
-                    userSession: CognitoUserSession?,
-                    newDevice: CognitoDevice?
-                ) {
-                    mPreferenceManager.setValue(
-                        KEY_ACCESS_TOKEN,
-                        userSession?.accessToken?.jwtToken!!
-                    )
-                    mPreferenceManager.setValue(
-                        KEY_REFRESH_TOKEN,
-                        userSession.refreshToken?.token!!
-                    )
-
-                    mPreferenceManager.setValue(
-                        KEY_ID_TOKEN,
-                        userSession.idToken.jwtToken
-                    )
-                }
-
-                override fun getAuthenticationDetails(
-                    authenticationContinuation: AuthenticationContinuation?,
-                    userId: String?
-                ) {
-                }
-
-                override fun getMFACode(continuation: MultiFactorAuthenticationContinuation?) {
-                }
-
-                override fun authenticationChallenge(continuation: ChallengeContinuation?) {
-                }
-
-                override fun onFailure(exception: java.lang.Exception) {
-                    mPreferenceManager.removeValue(KEY_USER_DETAILS)
-                    mPreferenceManager.setValue(
-                        KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.AWS_CONNECTED.name
-                    )
-                }
-            })
-        }
+        checkCurrentUserSession(mUserPoolId, mAppClientId, mRegion)
 
         AWSMobileClient.getInstance()
             .initialize(
@@ -218,6 +164,63 @@ class AmplifyHelper(
             Amplify.configure(mAmplifyConfiguration, mContext)
         } catch (e: AmplifyException) {
             e.printStackTrace()
+        }
+    }
+
+    private fun checkCurrentUserSession(
+        mUserPoolId: String?,
+        mAppClientId: String?,
+        mRegion: String?
+    ) {
+        val mAuthStatus = mPreferenceManager.getValue(
+            KEY_CLOUD_FORMATION_STATUS,
+            AuthEnum.DEFAULT.name
+        )
+
+        if (mAuthStatus == AuthEnum.SIGNED_IN.name) {
+            val userPool = CognitoUserPool(
+                mContext,
+                mUserPoolId,
+                mAppClientId,
+                null,
+                Regions.fromName(mRegion)
+            )
+
+            userPool.currentUser.getSession(object : AuthenticationHandler {
+                override fun onSuccess(
+                    userSession: CognitoUserSession?,
+                    newDevice: CognitoDevice?
+                ) {
+                    mPreferenceManager.setValue(
+                        KEY_ACCESS_TOKEN,
+                        userSession?.accessToken?.jwtToken!!
+                    )
+                    mPreferenceManager.setValue(
+                        KEY_REFRESH_TOKEN,
+                        userSession.refreshToken?.token!!
+                    )
+
+                    mPreferenceManager.setValue(
+                        KEY_ID_TOKEN,
+                        userSession.idToken.jwtToken
+                    )
+                }
+
+                override fun getAuthenticationDetails(
+                    authenticationContinuation: AuthenticationContinuation?,
+                    userId: String?
+                ) {
+                }
+
+                override fun getMFACode(continuation: MultiFactorAuthenticationContinuation?) {
+                }
+
+                override fun authenticationChallenge(continuation: ChallengeContinuation?) {
+                }
+
+                override fun onFailure(exception: java.lang.Exception) {
+                }
+            })
         }
     }
 }

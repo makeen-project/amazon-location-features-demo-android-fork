@@ -199,4 +199,6 @@
     <string name="label_software_attribution">Software Attribution</string>
     <string name="label_click_learn_more_for_software_attribution">Click learn more for software attribution</string>
     <string name="label_app_version">App version:</string>
+    <string name="label_warning">Warning</string>
+    <string name="label_session_expired">The session has expired. Please sign in again to access all features.</string>
 </resources>
