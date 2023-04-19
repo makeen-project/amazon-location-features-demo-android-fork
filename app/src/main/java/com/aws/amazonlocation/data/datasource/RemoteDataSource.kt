@@ -86,8 +86,6 @@ interface RemoteDataSource {
         mGeofenceAPIInterface: GeofenceAPIInterface
     )
 
-    suspend fun associateTrackerWithGeofence(trackerName: String, consumerArn: String)
-
     suspend fun batchUpdateDevicePosition(
         trackerName: String,
         position: List<Double>,

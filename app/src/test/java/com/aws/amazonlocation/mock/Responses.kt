@@ -1,10 +1,13 @@
 package com.aws.amazonlocation.mock
 
+import com.amazonaws.services.geo.model.BatchDeleteDevicePositionHistoryResult
 import com.amazonaws.services.geo.model.CalculateRouteResult
 import com.amazonaws.services.geo.model.CalculateRouteSummary
 import com.amazonaws.services.geo.model.Circle
+import com.amazonaws.services.geo.model.DevicePosition
 import com.amazonaws.services.geo.model.DistanceUnit
 import com.amazonaws.services.geo.model.GeofenceGeometry
+import com.amazonaws.services.geo.model.GetDevicePositionHistoryResult
 import com.amazonaws.services.geo.model.Leg
 import com.amazonaws.services.geo.model.LegGeometry
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
@@ -16,17 +19,16 @@ import com.amazonaws.services.geo.model.SearchPlaceIndexForPositionSummary
 import com.amazonaws.services.geo.model.Step
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
+import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.data.response.DeleteLocationHistoryResponse
 import com.aws.amazonlocation.data.response.GeofenceData
+import com.aws.amazonlocation.data.response.LocationHistoryResponse
+import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.data.response.NavigationResponse
 import com.aws.amazonlocation.data.response.SearchResponse
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
-import com.amazonaws.services.geo.model.* // ktlint-disable no-wildcard-imports
-import com.amplifyframework.geo.location.models.AmazonLocationPlace
-import com.amplifyframework.geo.models.Coordinates
-import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.data.response.*
 import java.util.Date
 
 object Responses {

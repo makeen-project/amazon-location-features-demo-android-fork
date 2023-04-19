@@ -243,10 +243,6 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         mGeofenceAPIInterface.deleteGeofence(response)
     }
 
-    override suspend fun associateTrackerWithGeofence(trackerName: String, consumerArn: String) {
-        mAWSLocationHelper.associateTrackerWithGeofence(trackerName, consumerArn)
-    }
-
     override suspend fun batchUpdateDevicePosition(
         trackerName: String,
         position: List<Double>,

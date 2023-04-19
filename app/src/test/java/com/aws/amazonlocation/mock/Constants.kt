@@ -47,3 +47,6 @@ const val TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_ESRI = "Test failed due to
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI = "Test failed due to incorrect no of styles loaded for Esri"
 const val TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_HERE = "Test failed due to incorrect style name for HERE"
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE = "Test failed due to incorrect no of styles loaded for HERE"
+
+const val TEST_FAILED_CLIENT_NOT_INITIALIZE = "Test failed- client not initialize"
+const val TEST_FAILED_COGNITO_CREDENTIALS_PROVIDER_NOT_INITIALIZE = "Test failed- cognitoCredentialsProvider not initialize"

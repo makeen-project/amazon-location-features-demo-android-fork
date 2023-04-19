@@ -44,8 +44,6 @@ interface GeofenceRepository {
         searchPlace: SearchPlaceInterface
     )
 
-    suspend fun associateTrackerWithGeofence(trackerName: String, consumerArn: String)
-
     suspend fun batchUpdateDevicePosition(
         trackerName: String,
         position: List<Double>,
