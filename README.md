@@ -1,8 +1,8 @@
-# Amazon location demo
+# Amazon location showcase
 
 ## Introduction
 
-A demo application contains features like map, searching points of interest, calculating routes, geocode, tracking devices, and triggering geofences using [Amazon Location Service](https://docs.aws.amazon.com/location/latest/developerguide/welcome.html).
+A showcase application contains features like map, searching points of interest, calculating routes, geocode, tracking devices, and triggering geofences using [Amazon Location Service](https://docs.aws.amazon.com/location/latest/developerguide/welcome.html).
 
 
 ## Pre-requisites

@@ -35,6 +35,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.amazonaws.auth.CognitoCredentialsProvider
+import com.amazonaws.mobile.client.AWSMobileClient
+import com.amazonaws.mobile.client.UserState
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoAccessToken
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoIdToken
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.tokens.CognitoRefreshToken
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.geo.model.Place
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
@@ -540,6 +546,22 @@ fun validateUserPoolClientId(mUserPoolClientId: String?): Boolean {
     val pattern: Pattern = Pattern.compile(userPoolClientId)
     val matcher: Matcher = pattern.matcher(mUserPoolClientId)
     return matcher.matches()
+}
+
+fun checkSessionValid(mPreferenceManager: PreferenceManager): Boolean {
+    if (AWSMobileClient.getInstance().currentUserState().userState.name == UserState.SIGNED_IN.name) {
+        val accessToken = mPreferenceManager.getValue(KEY_ACCESS_TOKEN, "")
+        val refreshToken = mPreferenceManager.getValue(KEY_REFRESH_TOKEN, "")
+        val idToken = mPreferenceManager.getValue(KEY_ID_TOKEN, "")
+        val cipSession = CognitoUserSession(
+            CognitoIdToken(idToken),
+            CognitoAccessToken(accessToken),
+            CognitoRefreshToken(refreshToken)
+        )
+
+        return cipSession.isValid
+    }
+    return true
 }
 
 var mockedInternetAvailability: Boolean? = null

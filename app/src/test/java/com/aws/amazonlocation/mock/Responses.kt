@@ -22,6 +22,11 @@ import com.aws.amazonlocation.data.response.NavigationResponse
 import com.aws.amazonlocation.data.response.SearchResponse
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
+import com.amazonaws.services.geo.model.* // ktlint-disable no-wildcard-imports
+import com.amplifyframework.geo.location.models.AmazonLocationPlace
+import com.amplifyframework.geo.models.Coordinates
+import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.data.response.*
 import java.util.Date
 
 object Responses {
@@ -462,4 +467,103 @@ object Responses {
                 .withMaxResults(1)
                 .withPosition(72.83468000000005, 18.921880000000044)
         )
+
+    val RESPONSE_LOCATION_HISTORY = LocationHistoryResponse(
+        errorMessage = null,
+        response = GetDevicePositionHistoryResult()
+            .withDevicePositions(
+                DevicePosition()
+                    .withDeviceId("662f86eddc909886")
+                    .withPosition(72.83373, 18.92216)
+                    .withPositionProperties(
+                        mapOf(
+                            "id" to "c83280ad-a374-4dee-870c-ef695daf2bc1",
+                            "region" to "us-east-1",
+                        ),
+                    )
+                    .withReceivedTime(Date(2023, 4, 14, 12, 22, 17))
+                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15)),
+            ),
+    )
+
+    val RESPONSE_LOCATION_HISTORY_TODAY = LocationHistoryResponse(
+        errorMessage = null,
+        response = GetDevicePositionHistoryResult()
+            .withDevicePositions(
+                DevicePosition()
+                    .withDeviceId("662f86eddc909886")
+                    .withPosition(72.83373, 18.92216)
+                    .withPositionProperties(
+                        mapOf(
+                            "id" to "c83280ad-a374-4dee-870c-ef695daf2bc1",
+                            "region" to "us-east-1",
+                        ),
+                    )
+                    .withReceivedTime(Date(2023, 4, 14, 12, 22, 17))
+                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15)),
+            ),
+    )
+
+    val RESPONSE_ERROR_LOCATION_HISTORY = LocationHistoryResponse(
+        errorMessage = MOCK_ERROR,
+        response = null,
+    )
+
+    val RESPONSE_ERROR_LOCATION_HISTORY_NO_ERROR = LocationHistoryResponse(
+        errorMessage = null,
+        response = null,
+    )
+
+    val RESPONSE_DELETE_TRACKING_HISTORY = DeleteLocationHistoryResponse(
+        errorMessage = null,
+        response = BatchDeleteDevicePositionHistoryResult()
+            .withErrors(),
+    )
+
+    val RESPONSE_ERROR_DELETE_TRACKING_HISTORY = DeleteLocationHistoryResponse(
+        errorMessage = MOCK_ERROR,
+        response = null,
+    )
+
+    val RESPONSE_ERROR_DELETE_TRACKING_HISTORY_NO_ERROR = DeleteLocationHistoryResponse(
+        errorMessage = null,
+        response = null,
+    )
+
+    val RESPONSE_TRACKER_GEOFENCE_LIST = GeofenceData(
+        message = null,
+        geofenceList = arrayListOf(
+            ListGeofenceResponseEntry()
+                .withGeofenceId("bb")
+                .withStatus("ACTIVE")
+                .withCreateTime(Date(2023, 4, 14, 13, 13, 54))
+                .withUpdateTime(Date(2023, 4, 14, 13, 13, 54))
+                .withGeometry(
+                    GeofenceGeometry()
+                        .withCircle(
+                            Circle()
+                                .withCenter(72.530537125, 23.0147063)
+                                .withRadius(778.0),
+                        ),
+                ),
+        ),
+    )
+
+    val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST = GeofenceData(
+        message = MOCK_ERROR,
+        geofenceList = arrayListOf(),
+    )
+
+    val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST_NO_ERROR = GeofenceData(
+        message = null,
+        geofenceList = arrayListOf(),
+    )
+
+    val RESPONSE_SIGN_IN = LoginResponse(
+        name = BuildConfig.USER_LOGIN_NAME,
+        email = null,
+        success = SIGN_IN_SUCCESS,
+        provider = "cognito-idp.us-east-1.amazonaws.com/us-east-1_48VeDo2Uw",
+        idToken = "Mock Token",
+    )
 }
