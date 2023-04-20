@@ -12,8 +12,12 @@ import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.data.response.DeleteGeofence
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.mock.NO_DATA_FOUND
+import com.aws.amazonlocation.mock.TEST_DATA_7
+import com.aws.amazonlocation.mock.TEST_DATA_8
+import com.aws.amazonlocation.mock.TEST_DATA_LAT_1
+import com.aws.amazonlocation.mock.TEST_DATA_LNG_1
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
-import java.util.Date
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -23,6 +27,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.kotlin.anyOrNull
 import org.robolectric.RobolectricTestRunner
+import java.util.Date
 
 @RunWith(RobolectricTestRunner::class)
 class GeofenceVMGeofenceDeleteTest : BaseTest() {
@@ -61,13 +66,13 @@ class GeofenceVMGeofenceDeleteTest : BaseTest() {
             callback.deleteGeofence(
                 DeleteGeofence(
                     position = 1,
-                    data = ListGeofenceResponseEntry().withCreateTime(Date()).withGeofenceId("jj")
-                        .withStatus("ACTIVE").withUpdateTime(Date())
+                    data = ListGeofenceResponseEntry().withCreateTime(Date()).withGeofenceId(TEST_DATA_8)
+                        .withStatus(TEST_DATA_7).withUpdateTime(Date())
                         .withGeometry(
                             GeofenceGeometry().withCircle(
                                 Circle().withCenter(
-                                    -122.084,
-                                    37.421998333333335
+                                    TEST_DATA_LAT_1,
+                                    TEST_DATA_LNG_1
                                 )
                             )
                         )
@@ -78,13 +83,13 @@ class GeofenceVMGeofenceDeleteTest : BaseTest() {
         mGeofenceViewModel.mDeleteGeofence.test {
             mGeofenceViewModel.deleteGeofence(
                 1,
-                ListGeofenceResponseEntry().withCreateTime(Date()).withGeofenceId("jj")
-                    .withStatus("ACTIVE").withUpdateTime(Date())
+                ListGeofenceResponseEntry().withCreateTime(Date()).withGeofenceId(TEST_DATA_8)
+                    .withStatus(TEST_DATA_7).withUpdateTime(Date())
                     .withGeometry(
                         GeofenceGeometry().withCircle(
                             Circle().withCenter(
-                                -122.084,
-                                37.421998333333335
+                                TEST_DATA_LAT_1,
+                                TEST_DATA_LNG_1
                             )
                         )
                     )
@@ -108,27 +113,27 @@ class GeofenceVMGeofenceDeleteTest : BaseTest() {
         ).thenAnswer {
             val callback: GeofenceAPIInterface = it.arguments[2] as GeofenceAPIInterface
             callback.deleteGeofence(
-                DeleteGeofence(data = null, errorMessage = "No data found")
+                DeleteGeofence(data = null, errorMessage = NO_DATA_FOUND)
             )
         }
 
         mGeofenceViewModel.mDeleteGeofence.test {
             mGeofenceViewModel.deleteGeofence(
                 1,
-                ListGeofenceResponseEntry().withCreateTime(Date()).withGeofenceId("jj")
-                    .withStatus("ACTIVE").withUpdateTime(Date())
+                ListGeofenceResponseEntry().withCreateTime(Date()).withGeofenceId(TEST_DATA_8)
+                    .withStatus(TEST_DATA_7).withUpdateTime(Date())
                     .withGeometry(
                         GeofenceGeometry().withCircle(
                             Circle().withCenter(
-                                -122.084,
-                                37.421998333333335
+                                TEST_DATA_LAT_1,
+                                TEST_DATA_LNG_1
                             )
                         )
                     )
             )
             val result = awaitItem()
             assert(result is HandleResult.Error)
-            (result as HandleResult.Error).exception.messageResource?.equals("No data found")
+            (result as HandleResult.Error).exception.messageResource?.equals(NO_DATA_FOUND)
                 ?.let { assert(it) }
             cancelAndIgnoreRemainingEvents()
         }

@@ -9,10 +9,11 @@ import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.mock.DEFAULT_LOCATION
+import com.aws.amazonlocation.mock.NO_DATA_FOUND
 import com.aws.amazonlocation.mock.Responses
 import com.aws.amazonlocation.mock.SEARCH_TEXT_RIO_TINTO
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
-import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -65,7 +66,7 @@ class GeofenceVMSearchTest : BaseTest() {
         mGeofenceViewModel.mGeofenceSearchLocationList.test {
             mGeofenceViewModel.geofenceSearchPlaceIndexForText(
                 SEARCH_TEXT_RIO_TINTO,
-                LatLng(49.281174, -123.116823)
+                DEFAULT_LOCATION
             )
             val result = awaitItem()
             assert(result is HandleResult.Success)
@@ -86,13 +87,13 @@ class GeofenceVMSearchTest : BaseTest() {
             )
         ).thenAnswer {
             val callback: SearchPlaceInterface = it.arguments[3] as SearchPlaceInterface
-            callback.error(SearchSuggestionResponse(error = "No data found"))
+            callback.error(SearchSuggestionResponse(error = NO_DATA_FOUND))
         }
 
         mGeofenceViewModel.mGeofenceSearchLocationList.test {
             mGeofenceViewModel.geofenceSearchPlaceIndexForText(
                 SEARCH_TEXT_RIO_TINTO,
-                LatLng(49.281174, -123.116823)
+                DEFAULT_LOCATION
             )
             val result = awaitItem()
             assert(result is HandleResult.Error)

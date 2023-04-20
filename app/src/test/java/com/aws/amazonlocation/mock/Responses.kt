@@ -37,7 +37,7 @@ object Responses {
         text = "rio tinto",
         maxResults = 5,
         language = "en",
-        dataSource = "Esri",
+        dataSource = ESRI,
         data = arrayListOf(
             SearchSuggestionData(
                 placeId = "AQAAAIAACg_vXCRfx8HI5rtgk0Mmnd6PPxpnkNiPXtNOQK-wtPFoIHEB39lZ9bAxMIy5uXFWjHYaOiaMYcI38eByA0ztmt4BmQMA3CvJArxga_45fdoDEIJWlnAfeXv9ExWR1Z32Bwo6K4xtfdSN3EgYLLwjiUEnbyUjTOJdJuy_iwZ8O1p_uCOJDEvvzA5WYaEkFFmGXzTcMxZuYRyKpxlC6EPvWA",
@@ -147,7 +147,7 @@ object Responses {
         text = "Rio Tinto",
         maxResults = 15,
         language = "en",
-        dataSource = "Esri",
+        dataSource = ESRI,
         data = arrayListOf(
             SearchSuggestionData(
                 placeId = null,
@@ -233,7 +233,7 @@ object Responses {
         )
         .withSummary(
             CalculateRouteSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withDistance(0.19504914469655174)
                 .withDistanceUnit(DistanceUnit.Kilometers)
                 .withDurationSeconds(49.556657883)
@@ -282,7 +282,7 @@ object Responses {
         )
         .withSummary(
             CalculateRouteSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withDistance(0.19504914469655174)
                 .withDistanceUnit(DistanceUnit.Kilometers)
                 .withDurationSeconds(140.439713998)
@@ -330,7 +330,7 @@ object Responses {
         )
         .withSummary(
             CalculateRouteSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withDistance(0.19504914469655174)
                 .withDistanceUnit(DistanceUnit.Kilometers)
                 .withDurationSeconds(49.556657883)
@@ -386,25 +386,25 @@ object Responses {
         geofenceList = arrayListOf(
             ListGeofenceResponseEntry().withCreateTime(Date())
                 .withGeofenceId("fdf")
-                .withStatus("ACTIVE")
+                .withStatus(TEST_DATA_7)
                 .withUpdateTime(Date())
                 .withGeometry(
                     GeofenceGeometry().withCircle(
                         Circle().withCenter(
-                            -122.084,
-                            37.421998333333335
+                            TEST_DATA_LAT_1,
+                            TEST_DATA_LNG_1
                         )
                     )
                 ),
             ListGeofenceResponseEntry().withCreateTime(Date())
                 .withGeofenceId("gg")
-                .withStatus("ACTIVE")
+                .withStatus(TEST_DATA_7)
                 .withUpdateTime(Date())
                 .withGeometry(
                     GeofenceGeometry().withCircle(
                         Circle().withCenter(
-                            -122.084,
-                            37.421998333333335
+                            TEST_DATA_LAT_1,
+                            TEST_DATA_LNG_1
                         )
                     )
                 )
@@ -413,7 +413,7 @@ object Responses {
     )
 
     val ERROR_RESPONSE_GEOFENCE_LIST = GeofenceData(
-        message = "No data found"
+        message = NO_DATA_FOUND
     )
 
     val SEARCH_RESPONSE_TAJ = SearchResponse(
@@ -426,7 +426,7 @@ object Responses {
                             .withCountry("IND")
                             .withGeometry(
                                 PlaceGeometry()
-                                    .withPoint(72.83312000000006, 18.92169000000007)
+                                    .withPoint(TEST_DATA_LAT, TEST_DATA_LNG)
                             )
                             .withInterpolated(false)
                             .withLabel("The Taj, Mumbai, Mahārāshtra, IND")
@@ -436,13 +436,13 @@ object Responses {
             )
             .withSummary(
                 SearchPlaceIndexForPositionSummary()
-                    .withDataSource("Esri")
+                    .withDataSource(ESRI)
                     .withLanguage("en")
                     .withMaxResults(1)
-                    .withPosition(72.83312000000006, 18.92169000000007)
+                    .withPosition(TEST_DATA_LAT, TEST_DATA_LNG)
             ),
-        latitude = 18.92169000000007,
-        longitude = 72.83312000000006
+        latitude = TEST_DATA_LNG,
+        longitude = TEST_DATA_LAT
     )
 
     val RESPONSE_ADDRESS_LINE_FROM_LAT_LNG = SearchPlaceIndexForPositionResult()
@@ -464,7 +464,7 @@ object Responses {
         )
         .withSummary(
             SearchPlaceIndexForPositionSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withLanguage("en")
                 .withMaxResults(1)
                 .withPosition(72.83468000000005, 18.921880000000044)
@@ -480,12 +480,12 @@ object Responses {
                     .withPositionProperties(
                         mapOf(
                             "id" to "c83280ad-a374-4dee-870c-ef695daf2bc1",
-                            "region" to "us-east-1",
-                        ),
+                            "region" to "us-east-1"
+                        )
                     )
                     .withReceivedTime(Date(2023, 4, 14, 12, 22, 17))
-                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15)),
-            ),
+                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15))
+            )
     )
 
     val RESPONSE_LOCATION_HISTORY_TODAY = LocationHistoryResponse(
@@ -498,38 +498,38 @@ object Responses {
                     .withPositionProperties(
                         mapOf(
                             "id" to "c83280ad-a374-4dee-870c-ef695daf2bc1",
-                            "region" to "us-east-1",
-                        ),
+                            "region" to "us-east-1"
+                        )
                     )
                     .withReceivedTime(Date(2023, 4, 14, 12, 22, 17))
-                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15)),
-            ),
+                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15))
+            )
     )
 
     val RESPONSE_ERROR_LOCATION_HISTORY = LocationHistoryResponse(
         errorMessage = MOCK_ERROR,
-        response = null,
+        response = null
     )
 
     val RESPONSE_ERROR_LOCATION_HISTORY_NO_ERROR = LocationHistoryResponse(
         errorMessage = null,
-        response = null,
+        response = null
     )
 
     val RESPONSE_DELETE_TRACKING_HISTORY = DeleteLocationHistoryResponse(
         errorMessage = null,
         response = BatchDeleteDevicePositionHistoryResult()
-            .withErrors(),
+            .withErrors()
     )
 
     val RESPONSE_ERROR_DELETE_TRACKING_HISTORY = DeleteLocationHistoryResponse(
         errorMessage = MOCK_ERROR,
-        response = null,
+        response = null
     )
 
     val RESPONSE_ERROR_DELETE_TRACKING_HISTORY_NO_ERROR = DeleteLocationHistoryResponse(
         errorMessage = null,
-        response = null,
+        response = null
     )
 
     val RESPONSE_TRACKER_GEOFENCE_LIST = GeofenceData(
@@ -537,7 +537,7 @@ object Responses {
         geofenceList = arrayListOf(
             ListGeofenceResponseEntry()
                 .withGeofenceId("bb")
-                .withStatus("ACTIVE")
+                .withStatus(TEST_DATA_7)
                 .withCreateTime(Date(2023, 4, 14, 13, 13, 54))
                 .withUpdateTime(Date(2023, 4, 14, 13, 13, 54))
                 .withGeometry(
@@ -545,20 +545,20 @@ object Responses {
                         .withCircle(
                             Circle()
                                 .withCenter(72.530537125, 23.0147063)
-                                .withRadius(778.0),
-                        ),
-                ),
-        ),
+                                .withRadius(778.0)
+                        )
+                )
+        )
     )
 
     val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST = GeofenceData(
         message = MOCK_ERROR,
-        geofenceList = arrayListOf(),
+        geofenceList = arrayListOf()
     )
 
     val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST_NO_ERROR = GeofenceData(
         message = null,
-        geofenceList = arrayListOf(),
+        geofenceList = arrayListOf()
     )
 
     val RESPONSE_SIGN_IN = LoginResponse(
@@ -566,6 +566,6 @@ object Responses {
         email = null,
         success = SIGN_IN_SUCCESS,
         provider = "cognito-idp.us-east-1.amazonaws.com/us-east-1_48VeDo2Uw",
-        idToken = "Mock Token",
+        idToken = "Mock Token"
     )
 }

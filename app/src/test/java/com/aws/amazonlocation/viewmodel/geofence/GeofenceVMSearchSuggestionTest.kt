@@ -8,10 +8,10 @@ import com.aws.amazonlocation.data.datasource.RemoteDataSourceImpl
 import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.mock.DEFAULT_LOCATION
 import com.aws.amazonlocation.mock.Responses
 import com.aws.amazonlocation.mock.SEARCH_TEXT_RIO_TINTO
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
-import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -64,7 +64,7 @@ class GeofenceVMSearchSuggestionTest : BaseTest() {
         mGeofenceViewModel.mGeofenceSearchForSuggestionsResultList.test {
             mGeofenceViewModel.geofenceSearchPlaceSuggestion(
                 SEARCH_TEXT_RIO_TINTO,
-                LatLng(49.281174, -123.116823)
+                DEFAULT_LOCATION
             )
             val result = awaitItem()
             assert(result is HandleResult.Success)

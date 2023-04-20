@@ -8,6 +8,7 @@ import com.aws.amazonlocation.data.datasource.RemoteDataSourceImpl
 import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.mock.NO_DATA_FOUND
 import com.aws.amazonlocation.mock.Responses
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
 import com.aws.amazonlocation.utils.GeofenceCons
@@ -77,7 +78,7 @@ class GeofenceVMGeofenceListTest : BaseTest() {
             assert(result is HandleResult.Loading)
             result = awaitItem()
             assert(result is HandleResult.Error)
-            (result as HandleResult.Error).exception.messageResource?.equals("No data found")
+            (result as HandleResult.Error).exception.messageResource?.equals(NO_DATA_FOUND)
                 ?.let { assert(it) }
             cancelAndIgnoreRemainingEvents()
         }

@@ -6,19 +6,37 @@ import com.amazonaws.services.geo.model.CalculateRouteResult
 import com.amazonaws.services.geo.model.SearchPlaceIndexForPositionResult
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.data.common.DataSourceException
+import com.aws.amazonlocation.data.response.AddGeofenceResponse
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.domain.`interface`.DistanceInterface
+import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
 import com.aws.amazonlocation.domain.`interface`.NavigationDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
+import com.aws.amazonlocation.mock.DEFAULT_LOCATION
+import com.aws.amazonlocation.mock.DELAY_5000
+import com.aws.amazonlocation.mock.FAKE_LAT_LNG
 import com.aws.amazonlocation.mock.Responses
+import com.aws.amazonlocation.mock.SEARCH_TEXT_TINTO
+import com.aws.amazonlocation.mock.TEST_DATA_9
+import com.aws.amazonlocation.mock.TEST_DATA_LAT_2
+import com.aws.amazonlocation.mock.TEST_DATA_LAT_3
+import com.aws.amazonlocation.mock.TEST_DATA_LAT_4
+import com.aws.amazonlocation.mock.TEST_DATA_LNG_2
+import com.aws.amazonlocation.mock.TEST_DATA_LNG_3
+import com.aws.amazonlocation.mock.TEST_DATA_LNG_4
+import com.aws.amazonlocation.mock.TEST_FAILED_INTERNET_ERROR
+import com.aws.amazonlocation.mock.TEST_FAILED_RECEIVED_ERROR
+import com.aws.amazonlocation.mock.TEST_FAILED_RESPONSE_ERROR
 import com.aws.amazonlocation.setConnectivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
+import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.mockedInternetAvailability
+import com.mapbox.mapboxsdk.geometry.LatLng
 import org.junit.Assert
 import org.junit.FixMethodOrder
 import org.junit.Test
@@ -57,10 +75,8 @@ class RemoteDataSourceImplTest : BaseTest() {
 
     override fun setUp() {
         super.setUp()
-
         doNothing().`when`(mainActivity).handleException(anyOrNull(), anyOrNull())
         awsLocationHelper.initAWSMobileClient(mainActivity)
-
         setConnectivity(true)
     }
 
@@ -76,7 +92,7 @@ class RemoteDataSourceImplTest : BaseTest() {
         mRemoteDataSourceImpl.searchPlaceSuggestions(
             loc?.latitude,
             loc?.longitude,
-            "Tinto",
+            SEARCH_TEXT_TINTO,
             object : SearchPlaceInterface {
                 override fun getSearchPlaceSuggestionResponse(suggestionResponse: SearchSuggestionResponse?) {
                     response = suggestionResponse
@@ -84,25 +100,25 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun error(searchResponse: SearchSuggestionResponse) {
-                    Assert.fail("Received error")
+                    Assert.fail(TEST_FAILED_RECEIVED_ERROR)
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(error: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
             }
         )
 
-        latch.await(5000, TimeUnit.MILLISECONDS)
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
 
         if (response == null) {
-            Assert.fail("Response is null")
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
         }
 
         if (response?.error != null) {
-            Assert.fail("Received error")
+            Assert.fail(TEST_FAILED_RECEIVED_ERROR)
         }
     }
 
@@ -114,10 +130,10 @@ class RemoteDataSourceImplTest : BaseTest() {
         var response: CalculateRouteResult? = null
 
         mRemoteDataSourceImpl.calculateRoute(
-            23.013019,
-            72.521230,
-            23.013533,
-            72.525653,
+            TEST_DATA_LAT_2,
+            TEST_DATA_LNG_2,
+            TEST_DATA_LAT_3,
+            TEST_DATA_LNG_3,
             isAvoidFerries = true,
             isAvoidTolls = true,
             distanceType = TravelMode.Walking.value,
@@ -128,25 +144,25 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun distanceFailed(exception: DataSourceException) {
-                    Assert.fail("Received error")
+                    Assert.fail(TEST_FAILED_RECEIVED_ERROR)
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(exception: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
             }
         )
 
-        latch.await(5000, TimeUnit.MILLISECONDS)
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
 
         if (response == null) {
-            Assert.fail("Response is null")
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
         }
 
         if (response == null) {
-            Assert.fail("Received error")
+            Assert.fail(TEST_FAILED_RECEIVED_ERROR)
         }
     }
 
@@ -158,10 +174,10 @@ class RemoteDataSourceImplTest : BaseTest() {
         var response: CalculateRouteResult? = null
 
         mRemoteDataSourceImpl.calculateRoute(
-            23.013019,
-            72.521230,
-            23.013533,
-            72.525653,
+            TEST_DATA_LAT_2,
+            TEST_DATA_LNG_2,
+            TEST_DATA_LAT_3,
+            TEST_DATA_LNG_3,
             isAvoidFerries = true,
             isAvoidTolls = true,
             distanceType = TravelMode.Car.value,
@@ -172,25 +188,25 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun distanceFailed(exception: DataSourceException) {
-                    Assert.fail("Received error")
+                    Assert.fail(TEST_FAILED_RECEIVED_ERROR)
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(exception: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
             }
         )
 
-        latch.await(5000, TimeUnit.MILLISECONDS)
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
 
         if (response == null) {
-            Assert.fail("Response is null")
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
         }
 
         if (response == null) {
-            Assert.fail("Received error")
+            Assert.fail(TEST_FAILED_RECEIVED_ERROR)
         }
     }
 
@@ -202,10 +218,10 @@ class RemoteDataSourceImplTest : BaseTest() {
         var response: CalculateRouteResult? = null
 
         mRemoteDataSourceImpl.calculateRoute(
-            23.013019,
-            72.521230,
-            23.013533,
-            72.525653,
+            TEST_DATA_LAT_2,
+            TEST_DATA_LNG_2,
+            TEST_DATA_LAT_3,
+            TEST_DATA_LNG_3,
             isAvoidFerries = true,
             isAvoidTolls = true,
             distanceType = TravelMode.Truck.value,
@@ -216,25 +232,25 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun distanceFailed(exception: DataSourceException) {
-                    Assert.fail("Received error")
+                    Assert.fail(TEST_FAILED_RECEIVED_ERROR)
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(exception: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
             }
         )
 
-        latch.await(5000, TimeUnit.MILLISECONDS)
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
 
         if (response == null) {
-            Assert.fail("Response is null")
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
         }
 
         if (response == null) {
-            Assert.fail("Received error")
+            Assert.fail(TEST_FAILED_RECEIVED_ERROR)
         }
     }
 
@@ -245,9 +261,9 @@ class RemoteDataSourceImplTest : BaseTest() {
 
         mRemoteDataSourceImpl.calculateRoute(
             23013.019,
-            72.521230,
-            23.013533,
-            72.525653,
+            TEST_DATA_LNG_2,
+            TEST_DATA_LAT_3,
+            TEST_DATA_LNG_3,
             isAvoidFerries = true,
             isAvoidTolls = true,
             distanceType = TravelMode.Truck.value,
@@ -258,14 +274,14 @@ class RemoteDataSourceImplTest : BaseTest() {
 
                 override fun distanceFailed(exception: DataSourceException) {
                     Assert.assertTrue(
-                        "Received error",
+                        TEST_FAILED_RECEIVED_ERROR,
                         exception.messageResource.toString() == TravelMode.Truck.value
                     )
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(exception: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
             }
@@ -279,10 +295,10 @@ class RemoteDataSourceImplTest : BaseTest() {
         val latch = CountDownLatch(1)
 
         mRemoteDataSourceImpl.calculateRoute(
-            23.013019,
-            72.521230,
-            23.013533,
-            72.525653,
+            TEST_DATA_LAT_2,
+            TEST_DATA_LNG_2,
+            TEST_DATA_LAT_3,
+            TEST_DATA_LNG_3,
             isAvoidFerries = true,
             isAvoidTolls = true,
             distanceType = TravelMode.Truck.value,
@@ -293,14 +309,14 @@ class RemoteDataSourceImplTest : BaseTest() {
 
                 override fun distanceFailed(exception: DataSourceException) {
                     Assert.assertTrue(
-                        "Received error",
+                        TEST_FAILED_RECEIVED_ERROR,
                         exception.messageResource.toString() == TravelMode.Truck.value
                     )
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(exception: String) {
-                    Assert.assertTrue("Received error", exception.isNotEmpty())
+                    Assert.assertTrue(TEST_FAILED_RECEIVED_ERROR, exception == "")
                     latch.countDown()
                 }
             }
@@ -328,20 +344,20 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun internetConnectionError(error: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
             }
         )
 
-        latch.await(5000, TimeUnit.MILLISECONDS)
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
 
         if (response == null) {
-            Assert.fail("Response is null")
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
         }
 
         if (response == null) {
-            Assert.fail("Received error")
+            Assert.fail(TEST_FAILED_RECEIVED_ERROR)
         }
     }
 
@@ -364,7 +380,7 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun internetConnectionError(error: String) {
-                    Assert.assertTrue("Received error", error.isNotEmpty())
+                    Assert.assertTrue(TEST_FAILED_RECEIVED_ERROR, error == "")
                     latch.countDown()
                 }
             }
@@ -378,8 +394,8 @@ class RemoteDataSourceImplTest : BaseTest() {
 
         var response: SearchPlaceIndexForPositionResult? = null
         mRemoteDataSourceImpl.searPlaceIndexForPosition(
-            23.013019,
-            72.521230,
+            TEST_DATA_LAT_2,
+            TEST_DATA_LNG_2,
             object : SearchDataInterface {
                 override fun getAddressData(searchPlaceIndexForPositionResult: SearchPlaceIndexForPositionResult) {
                     response = searchPlaceIndexForPositionResult
@@ -387,25 +403,25 @@ class RemoteDataSourceImplTest : BaseTest() {
                 }
 
                 override fun internetConnectionError(error: String) {
-                    Assert.fail("Internet connection error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
 
                 override fun error(error: String) {
-                    Assert.fail("Received error")
+                    Assert.fail(TEST_FAILED_RECEIVED_ERROR)
                     latch.countDown()
                 }
             }
         )
 
-        latch.await(5000, TimeUnit.MILLISECONDS)
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
 
         if (response == null) {
-            Assert.fail("Response is null")
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
         }
 
         if (response == null) {
-            Assert.fail("Received error")
+            Assert.fail(TEST_FAILED_RECEIVED_ERROR)
         }
     }
 
@@ -416,20 +432,20 @@ class RemoteDataSourceImplTest : BaseTest() {
         val latch = CountDownLatch(1)
 
         mRemoteDataSourceImpl.searPlaceIndexForPosition(
-            23.013019,
-            72.521230,
+            TEST_DATA_LAT_2,
+            TEST_DATA_LNG_2,
             object : SearchDataInterface {
                 override fun getAddressData(searchPlaceIndexForPositionResult: SearchPlaceIndexForPositionResult) {
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(error: String) {
-                    Assert.assertTrue("Received error", error.isNotEmpty())
+                    Assert.assertTrue(TEST_FAILED_RECEIVED_ERROR, error == "")
                     latch.countDown()
                 }
 
                 override fun error(error: String) {
-                    Assert.fail("Received error")
+                    Assert.fail(TEST_FAILED_RECEIVED_ERROR)
                     latch.countDown()
                 }
             }
@@ -442,23 +458,73 @@ class RemoteDataSourceImplTest : BaseTest() {
         val latch = CountDownLatch(1)
 
         mRemoteDataSourceImpl.searPlaceIndexForPosition(
-            230130.19,
-            725212.30,
+            TEST_DATA_LAT_4,
+            TEST_DATA_LNG_4,
             object : SearchDataInterface {
                 override fun getAddressData(searchPlaceIndexForPositionResult: SearchPlaceIndexForPositionResult) {
                     latch.countDown()
                 }
 
                 override fun internetConnectionError(error: String) {
-                    Assert.fail("Internet error")
+                    Assert.fail(TEST_FAILED_INTERNET_ERROR)
                     latch.countDown()
                 }
 
                 override fun error(error: String) {
-                    Assert.assertTrue("Received error", error.isNotEmpty())
+                    Assert.assertTrue(TEST_FAILED_RECEIVED_ERROR, error.isNotEmpty())
                     latch.countDown()
                 }
             }
         )
+    }
+
+    @Test
+    fun testKAddGeofence() {
+        mockedInternetAvailability = true
+        val latch = CountDownLatch(1)
+        var addGeofenceResponse: AddGeofenceResponse? = null
+        mRemoteDataSourceImpl.addGeofence(
+            TEST_DATA_9,
+            GeofenceCons.GEOFENCE_COLLECTION,
+            80.toDouble(),
+            DEFAULT_LOCATION,
+            object : GeofenceAPIInterface {
+                override fun addGeofence(response: AddGeofenceResponse) {
+                    addGeofenceResponse = response
+                    Assert.assertTrue(TEST_FAILED_RECEIVED_ERROR, response.isGeofenceDataAdded)
+                }
+            }
+        )
+
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
+
+        if (addGeofenceResponse == null) {
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
+        }
+    }
+
+    @Test
+    fun testLAddGeofenceFail() {
+        mockedInternetAvailability = true
+        val latch = CountDownLatch(1)
+        var addGeofenceResponse: AddGeofenceResponse? = null
+        mRemoteDataSourceImpl.addGeofence(
+            "",
+            GeofenceCons.GEOFENCE_COLLECTION,
+            0.toDouble(),
+            FAKE_LAT_LNG,
+            object : GeofenceAPIInterface {
+                override fun addGeofence(response: AddGeofenceResponse) {
+                    addGeofenceResponse = response
+                    Assert.assertTrue(TEST_FAILED_RECEIVED_ERROR, !response.isGeofenceDataAdded)
+                }
+            }
+        )
+
+        latch.await(DELAY_5000, TimeUnit.MILLISECONDS)
+
+        if (addGeofenceResponse == null) {
+            Assert.fail(TEST_FAILED_RESPONSE_ERROR)
+        }
     }
 }

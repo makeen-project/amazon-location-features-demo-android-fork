@@ -72,7 +72,7 @@ interface RemoteDataSource {
 
     suspend fun getGeofenceList(collectionName: String, mGeofenceAPIInterface: GeofenceAPIInterface)
 
-    suspend fun addGeofence(
+    fun addGeofence(
         geofenceId: String,
         collectionName: String,
         radius: Double?,

@@ -9,9 +9,11 @@ import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.data.response.AddGeofenceResponse
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.mock.DEFAULT_LOCATION
+import com.aws.amazonlocation.mock.NO_DATA_FOUND
+import com.aws.amazonlocation.mock.TEST_DATA_9
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
 import com.aws.amazonlocation.utils.GeofenceCons
-import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -68,10 +70,10 @@ class GeofenceVMGeofenceAddTest : BaseTest() {
 
         mGeofenceViewModel.mAddGeofence.test {
             mGeofenceViewModel.addGeofence(
-                "11",
+                TEST_DATA_9,
                 GeofenceCons.GEOFENCE_COLLECTION,
                 80.toDouble(),
-                LatLng(49.281174, -123.116823)
+                DEFAULT_LOCATION
             )
             val result = awaitItem()
             assert(result is HandleResult.Success)
@@ -96,21 +98,21 @@ class GeofenceVMGeofenceAddTest : BaseTest() {
             callback.addGeofence(
                 AddGeofenceResponse(
                     isGeofenceDataAdded = false,
-                    errorMessage = "No data found"
+                    errorMessage = NO_DATA_FOUND
                 )
             )
         }
 
         mGeofenceViewModel.mAddGeofence.test {
             mGeofenceViewModel.addGeofence(
-                "11",
+                TEST_DATA_9,
                 GeofenceCons.GEOFENCE_COLLECTION,
                 80.toDouble(),
-                LatLng(49.281174, -123.116823)
+                DEFAULT_LOCATION
             )
             val result = awaitItem()
             assert(result is HandleResult.Error)
-            (result as HandleResult.Error).exception.messageResource?.equals("No data found")
+            (result as HandleResult.Error).exception.messageResource?.equals(NO_DATA_FOUND)
                 ?.let { assert(it) }
             cancelAndIgnoreRemainingEvents()
         }
