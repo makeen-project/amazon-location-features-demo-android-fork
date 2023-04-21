@@ -102,6 +102,15 @@ val isRunningTest3LiveLocation: Boolean by lazy {
     }
 }
 
+val isRunningRemoteDataSourceImplTest: Boolean by lazy {
+    try {
+        Class.forName("com.aws.amazonlocation.data.datasource.RemoteDataSourceImplTest")
+        true
+    } catch (e: ClassNotFoundException) {
+        false
+    }
+}
+
 @Suppress("DEPRECATION")
 fun Activity.makeTransparentStatusBar() {
     if (Build.VERSION.SDK_INT in 21..29) {
@@ -503,6 +512,7 @@ fun Activity.restartApplication() {
 }
 
 fun Context.isInternetAvailable(): Boolean {
+    if (mockedInternetAvailability != null) return mockedInternetAvailability as Boolean
     var result = false
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     cm.run {
@@ -562,3 +572,5 @@ fun checkSessionValid(mPreferenceManager: PreferenceManager): Boolean {
     }
     return true
 }
+
+var mockedInternetAvailability: Boolean? = null

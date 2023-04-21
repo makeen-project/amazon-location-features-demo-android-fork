@@ -1,10 +1,34 @@
 package com.aws.amazonlocation.mock
 
-import com.amazonaws.services.geo.model.* // ktlint-disable no-wildcard-imports
+import com.amazonaws.services.geo.model.BatchDeleteDevicePositionHistoryResult
+import com.amazonaws.services.geo.model.CalculateRouteResult
+import com.amazonaws.services.geo.model.CalculateRouteSummary
+import com.amazonaws.services.geo.model.Circle
+import com.amazonaws.services.geo.model.DevicePosition
+import com.amazonaws.services.geo.model.DistanceUnit
+import com.amazonaws.services.geo.model.GeofenceGeometry
+import com.amazonaws.services.geo.model.GetDevicePositionHistoryResult
+import com.amazonaws.services.geo.model.Leg
+import com.amazonaws.services.geo.model.LegGeometry
+import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
+import com.amazonaws.services.geo.model.Place
+import com.amazonaws.services.geo.model.PlaceGeometry
+import com.amazonaws.services.geo.model.SearchForPositionResult
+import com.amazonaws.services.geo.model.SearchPlaceIndexForPositionResult
+import com.amazonaws.services.geo.model.SearchPlaceIndexForPositionSummary
+import com.amazonaws.services.geo.model.Step
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.data.response.*
+import com.aws.amazonlocation.data.response.DeleteLocationHistoryResponse
+import com.aws.amazonlocation.data.response.GeofenceData
+import com.aws.amazonlocation.data.response.LocationHistoryResponse
+import com.aws.amazonlocation.data.response.LoginResponse
+import com.aws.amazonlocation.data.response.NavigationData
+import com.aws.amazonlocation.data.response.NavigationResponse
+import com.aws.amazonlocation.data.response.SearchResponse
+import com.aws.amazonlocation.data.response.SearchSuggestionData
+import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import java.util.Date
 
 object Responses {
@@ -13,7 +37,7 @@ object Responses {
         text = "rio tinto",
         maxResults = 5,
         language = "en",
-        dataSource = "Esri",
+        dataSource = ESRI,
         data = arrayListOf(
             SearchSuggestionData(
                 placeId = "AQAAAIAACg_vXCRfx8HI5rtgk0Mmnd6PPxpnkNiPXtNOQK-wtPFoIHEB39lZ9bAxMIy5uXFWjHYaOiaMYcI38eByA0ztmt4BmQMA3CvJArxga_45fdoDEIJWlnAfeXv9ExWR1Z32Bwo6K4xtfdSN3EgYLLwjiUEnbyUjTOJdJuy_iwZ8O1p_uCOJDEvvzA5WYaEkFFmGXzTcMxZuYRyKpxlC6EPvWA",
@@ -32,8 +56,8 @@ object Responses {
                     subRegion = "Gondomar",
                     municipality = "Gondomar",
                     neighborhood = "Rio Tinto",
-                    postalCode = null,
-                ),
+                    postalCode = null
+                )
             ),
             SearchSuggestionData(
                 placeId = "AQAAAIAA3iDmWtWuLicpbqS5M2Mx9Tu7cuOpnFlUvEAyG5bCiAUGHir-hC7W-WjEtmp2wanCf9N1tb0ucKUfTzGyi6OvHIeZHoRI9HkbSBdn-9ZciqUZOTL-c0RIRY4dAYh_V_HtdILotOYkVMLyS7oji7kb263UkGchZeBEs5Zd_Xa3xGJiqnNTsnCDEiIOlOEd3FcBgk8kyXbmj6nRYZylfZ_p7g",
@@ -52,8 +76,8 @@ object Responses {
                     subRegion = null,
                     municipality = "Rio Tinto",
                     neighborhood = null,
-                    postalCode = null,
-                ),
+                    postalCode = null
+                )
             ),
             SearchSuggestionData(
                 placeId = "AQAAAIAAou9Y0RuRsQLJHjkLYIPmxsL5eomLtjMTV77WmN9Kfqj4OaOGLrEeRX7_Vx5JJTXcRuvUQ1Mhm1xrfiXquEPkklYqRQYju-bjuKkUhINJ__xlmV5kguwifl0i3sc4LhUuyzzh_zNZbIROonF7eSeh98fIdklhNXnfH42u8UdkR2NYStBxd0nBDpNf7Sn6U8vp7SJ-a90A8eChHlyaB0PqWA",
@@ -72,8 +96,8 @@ object Responses {
                     subRegion = "Esposende",
                     municipality = "Esposende",
                     neighborhood = "Rio Tinto",
-                    postalCode = null,
-                ),
+                    postalCode = null
+                )
             ),
             SearchSuggestionData(
                 placeId = "AQAAAIAATDjvgdm8fMuOOTL4HjSgv90Oqll6po6NbNi8hRyf6Yq7BlxjBs_d0kC17taZ7uB9oy9ZU1zZlq-wFSDSxbW-N4x2vetQsKWyXKMmpK4P0psuyXse1DF3yQ-fG89rKTbv-BKVmkW1hbzS1-3YMKSHil0_4k2R-IrRQ3rUQp8SyFrkS46NGAk4Vb0AeQw3WRGcPxpC4BlQg_6Uap2xNlrDoA",
@@ -92,8 +116,8 @@ object Responses {
                     subRegion = "Amares",
                     municipality = "Amares",
                     neighborhood = "Rio Tinto",
-                    postalCode = null,
-                ),
+                    postalCode = null
+                )
             ),
             SearchSuggestionData(
                 placeId = "AQAAAIAAri9JPWCRlhRHXk7ZzGj8jZj3DT1OKUkNYCIl6SrSdZLpIeufCS1hhhvvnyQS9xc50ZGUvS3-Z-3GZLKzx6YAbrla6nGMwziPkligVgYAtGrJ4n9W2rTrRw3pLzdrh-Bns04nwIVR3CFvVIZu4m6kHIBENAIV_ApVFA2U9smvriVDR2lygNkdYXlUZ0gvwgMyXcnEJXmyakTuRmSvuj71Og",
@@ -112,18 +136,18 @@ object Responses {
                     subRegion = "Vagos",
                     municipality = "Vagos",
                     neighborhood = "Rio Tinto",
-                    postalCode = null,
-                ),
-            ),
+                    postalCode = null
+                )
+            )
         ),
-        error = null,
+        error = null
     )
 
     val RESPONSE_PLACE_INDEX_RIO_TINTO = SearchSuggestionResponse(
         text = "Rio Tinto",
         maxResults = 15,
         language = "en",
-        dataSource = "Esri",
+        dataSource = ESRI,
         data = arrayListOf(
             SearchSuggestionData(
                 placeId = null,
@@ -142,8 +166,8 @@ object Responses {
                     subRegion = "Gondomar",
                     municipality = "Gondomar",
                     neighborhood = "Rio Tinto",
-                    postalCode = null,
-                ),
+                    postalCode = null
+                )
             ),
             SearchSuggestionData(
                 placeId = null,
@@ -162,15 +186,15 @@ object Responses {
                     subRegion = null,
                     municipality = "Rio Tinto",
                     neighborhood = null,
-                    postalCode = null,
-                ),
-            ),
+                    postalCode = null
+                )
+            )
         ),
-        error = null,
+        error = null
     )
 
     var RESPONSE_PLACE_INDEX_RIO_TINTO_ERROR = SearchSuggestionResponse(
-        error = API_ERROR,
+        error = API_ERROR
     )
 
     val RESPONSE_CALCULATE_DISTANCE_CAR = CalculateRouteResult()
@@ -188,8 +212,8 @@ object Responses {
                             listOf(72.83318000545705, 18.92106999738339),
                             listOf(72.83317999485907, 18.92106998837811),
                             listOf(72.83324999683737, 18.921269989185305),
-                            listOf(72.83338298024672, 18.921575535610945),
-                        ),
+                            listOf(72.83338298024672, 18.921575535610945)
+                        )
                 )
                 .withStartPosition(72.83371801248408, 18.922163986834548)
                 .withSteps(
@@ -204,12 +228,12 @@ object Responses {
                         .withDurationSeconds(16.70485124)
                         .withEndPosition(72.83338298024672, 18.921575535610945)
                         .withGeometryOffset(4)
-                        .withStartPosition(72.83317999485907, 18.921069988378113),
-                ),
+                        .withStartPosition(72.83317999485907, 18.921069988378113)
+                )
         )
         .withSummary(
             CalculateRouteSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withDistance(0.19504914469655174)
                 .withDistanceUnit(DistanceUnit.Kilometers)
                 .withDurationSeconds(49.556657883)
@@ -217,8 +241,8 @@ object Responses {
                     72.83317999485907,
                     18.92106998837811,
                     72.83371801248408,
-                    18.922163986834548,
-                ),
+                    18.922163986834548
+                )
         )
 
     val RESPONSE_CALCULATE_DISTANCE_WALKING = CalculateRouteResult()
@@ -237,8 +261,8 @@ object Responses {
                             listOf(72.83318000545705, 18.92106999738339),
                             listOf(72.83317999485907, 18.92106998837811),
                             listOf(72.83324999683737, 18.921269989185305),
-                            listOf(72.83338298024672, 18.921575535610945),
-                        ),
+                            listOf(72.83338298024672, 18.921575535610945)
+                        )
                 )
                 .withStartPosition(72.83371801248408, 18.922163986834548)
                 .withSteps(
@@ -253,12 +277,12 @@ object Responses {
                         .withDurationSeconds(43.24049524)
                         .withEndPosition(72.83338298024672, 18.921575535610945)
                         .withGeometryOffset(5)
-                        .withStartPosition(72.83317999485907, 18.92106998837811),
-                ),
+                        .withStartPosition(72.83317999485907, 18.92106998837811)
+                )
         )
         .withSummary(
             CalculateRouteSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withDistance(0.19504914469655174)
                 .withDistanceUnit(DistanceUnit.Kilometers)
                 .withDurationSeconds(140.439713998)
@@ -266,8 +290,8 @@ object Responses {
                     72.83317999485907,
                     18.92106998837811,
                     72.83371801248408,
-                    18.922163986834548,
-                ),
+                    18.922163986834548
+                )
         )
 
     val RESPONSE_CALCULATE_DISTANCE_TRUCK = CalculateRouteResult()
@@ -285,8 +309,8 @@ object Responses {
                             listOf(72.83318000545705, 18.92106999738339),
                             listOf(72.83317999485907, 18.92106998837811),
                             listOf(72.83324999683737, 18.921269989185305),
-                            listOf(72.83338298024672, 18.921575535610945),
-                        ),
+                            listOf(72.83338298024672, 18.921575535610945)
+                        )
                 )
                 .withStartPosition(72.83371801248408, 18.922163986834548)
                 .withSteps(
@@ -301,12 +325,12 @@ object Responses {
                         .withDurationSeconds(16.70485124)
                         .withEndPosition(72.83338298024672, 18.921575535610945)
                         .withGeometryOffset(4)
-                        .withStartPosition(72.83317999485907, 18.92106998837811),
-                ),
+                        .withStartPosition(72.83317999485907, 18.92106998837811)
+                )
         )
         .withSummary(
             CalculateRouteSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withDistance(0.19504914469655174)
                 .withDistanceUnit(DistanceUnit.Kilometers)
                 .withDurationSeconds(49.556657883)
@@ -314,8 +338,8 @@ object Responses {
                     72.83317999485907,
                     18.92106998837811,
                     72.83371801248408,
-                    18.922163986834548,
-                ),
+                    18.922163986834548
+                )
         )
 
     val RESPONSE_NAVIGATION_DATA_CAR_STEP_1 = NavigationData(
@@ -328,7 +352,7 @@ object Responses {
         destinationAddress = "Prem Ramchandani Marg, Colaba, Mumbai, Maharashtra, 400005, IND",
         region = "Maharashtra",
         subRegion = "Mumbai",
-        country = "IND",
+        country = "IND"
     )
 
     val RESPONSE_NAVIGATION_DATA_CAR_STEP_2 = NavigationData(
@@ -341,7 +365,7 @@ object Responses {
         destinationAddress = "Jokim Alva Chowk, Colaba, Mumbai, Maharashtra, 400005, IND",
         region = "Maharashtra",
         subRegion = "Mumbai",
-        country = "IND",
+        country = "IND"
     )
 
     val RESPONSE_NAVIGATION_CAR = NavigationResponse(
@@ -354,8 +378,42 @@ object Responses {
         destinationAddress = null,
         navigationList = arrayListOf(
             RESPONSE_NAVIGATION_DATA_CAR_STEP_1,
-            RESPONSE_NAVIGATION_DATA_CAR_STEP_2,
+            RESPONSE_NAVIGATION_DATA_CAR_STEP_2
+        )
+    )
+
+    val RESPONSE_GEOFENCE_LIST = GeofenceData(
+        geofenceList = arrayListOf(
+            ListGeofenceResponseEntry().withCreateTime(Date())
+                .withGeofenceId("fdf")
+                .withStatus(TEST_DATA_7)
+                .withUpdateTime(Date())
+                .withGeometry(
+                    GeofenceGeometry().withCircle(
+                        Circle().withCenter(
+                            TEST_DATA_LAT_1,
+                            TEST_DATA_LNG_1
+                        )
+                    )
+                ),
+            ListGeofenceResponseEntry().withCreateTime(Date())
+                .withGeofenceId("gg")
+                .withStatus(TEST_DATA_7)
+                .withUpdateTime(Date())
+                .withGeometry(
+                    GeofenceGeometry().withCircle(
+                        Circle().withCenter(
+                            TEST_DATA_LAT_1,
+                            TEST_DATA_LNG_1
+                        )
+                    )
+                )
         ),
+        message = null
+    )
+
+    val ERROR_RESPONSE_GEOFENCE_LIST = GeofenceData(
+        message = NO_DATA_FOUND
     )
 
     val SEARCH_RESPONSE_TAJ = SearchResponse(
@@ -368,23 +426,23 @@ object Responses {
                             .withCountry("IND")
                             .withGeometry(
                                 PlaceGeometry()
-                                    .withPoint(72.83312000000006, 18.92169000000007),
+                                    .withPoint(TEST_DATA_LAT, TEST_DATA_LNG)
                             )
                             .withInterpolated(false)
                             .withLabel("The Taj, Mumbai, Mahārāshtra, IND")
                             .withRegion("Mahārāshtra")
-                            .withSubRegion("Mumbai"),
-                    ),
+                            .withSubRegion("Mumbai")
+                    )
             )
             .withSummary(
                 SearchPlaceIndexForPositionSummary()
-                    .withDataSource("Esri")
+                    .withDataSource(ESRI)
                     .withLanguage("en")
                     .withMaxResults(1)
-                    .withPosition(72.83312000000006, 18.92169000000007),
+                    .withPosition(TEST_DATA_LAT, TEST_DATA_LNG)
             ),
-        latitude = 18.92169000000007,
-        longitude = 72.83312000000006,
+        latitude = TEST_DATA_LNG,
+        longitude = TEST_DATA_LAT
     )
 
     val RESPONSE_ADDRESS_LINE_FROM_LAT_LNG = SearchPlaceIndexForPositionResult()
@@ -396,20 +454,20 @@ object Responses {
                         .withCountry("IND")
                         .withGeometry(
                             PlaceGeometry()
-                                .withPoint(72.83468000000005, 18.921880000000044),
+                                .withPoint(72.83468000000005, 18.921880000000044)
                         )
                         .withInterpolated(false)
                         .withLabel("Gateway of India, Mumbai, Mahārāshtra, IND")
                         .withRegion("Mahārāshtra")
-                        .withSubRegion("Mumbai"),
-                ),
+                        .withSubRegion("Mumbai")
+                )
         )
         .withSummary(
             SearchPlaceIndexForPositionSummary()
-                .withDataSource("Esri")
+                .withDataSource(ESRI)
                 .withLanguage("en")
                 .withMaxResults(1)
-                .withPosition(72.83468000000005, 18.921880000000044),
+                .withPosition(72.83468000000005, 18.921880000000044)
         )
 
     val RESPONSE_LOCATION_HISTORY = LocationHistoryResponse(
@@ -422,12 +480,12 @@ object Responses {
                     .withPositionProperties(
                         mapOf(
                             "id" to "c83280ad-a374-4dee-870c-ef695daf2bc1",
-                            "region" to "us-east-1",
-                        ),
+                            "region" to "us-east-1"
+                        )
                     )
                     .withReceivedTime(Date(2023, 4, 14, 12, 22, 17))
-                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15)),
-            ),
+                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15))
+            )
     )
 
     val RESPONSE_LOCATION_HISTORY_TODAY = LocationHistoryResponse(
@@ -440,38 +498,38 @@ object Responses {
                     .withPositionProperties(
                         mapOf(
                             "id" to "c83280ad-a374-4dee-870c-ef695daf2bc1",
-                            "region" to "us-east-1",
-                        ),
+                            "region" to "us-east-1"
+                        )
                     )
                     .withReceivedTime(Date(2023, 4, 14, 12, 22, 17))
-                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15)),
-            ),
+                    .withSampleTime(Date(2023, 4, 14, 12, 22, 15))
+            )
     )
 
     val RESPONSE_ERROR_LOCATION_HISTORY = LocationHistoryResponse(
         errorMessage = MOCK_ERROR,
-        response = null,
+        response = null
     )
 
     val RESPONSE_ERROR_LOCATION_HISTORY_NO_ERROR = LocationHistoryResponse(
         errorMessage = null,
-        response = null,
+        response = null
     )
 
     val RESPONSE_DELETE_TRACKING_HISTORY = DeleteLocationHistoryResponse(
         errorMessage = null,
         response = BatchDeleteDevicePositionHistoryResult()
-            .withErrors(),
+            .withErrors()
     )
 
     val RESPONSE_ERROR_DELETE_TRACKING_HISTORY = DeleteLocationHistoryResponse(
         errorMessage = MOCK_ERROR,
-        response = null,
+        response = null
     )
 
     val RESPONSE_ERROR_DELETE_TRACKING_HISTORY_NO_ERROR = DeleteLocationHistoryResponse(
         errorMessage = null,
-        response = null,
+        response = null
     )
 
     val RESPONSE_TRACKER_GEOFENCE_LIST = GeofenceData(
@@ -479,7 +537,7 @@ object Responses {
         geofenceList = arrayListOf(
             ListGeofenceResponseEntry()
                 .withGeofenceId("bb")
-                .withStatus("ACTIVE")
+                .withStatus(TEST_DATA_7)
                 .withCreateTime(Date(2023, 4, 14, 13, 13, 54))
                 .withUpdateTime(Date(2023, 4, 14, 13, 13, 54))
                 .withGeometry(
@@ -487,20 +545,20 @@ object Responses {
                         .withCircle(
                             Circle()
                                 .withCenter(72.530537125, 23.0147063)
-                                .withRadius(778.0),
-                        ),
-                ),
-        ),
+                                .withRadius(778.0)
+                        )
+                )
+        )
     )
 
     val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST = GeofenceData(
         message = MOCK_ERROR,
-        geofenceList = arrayListOf(),
+        geofenceList = arrayListOf()
     )
 
     val RESPONSE_ERROR_TRACKER_GEOFENCE_LIST_NO_ERROR = GeofenceData(
         message = null,
-        geofenceList = arrayListOf(),
+        geofenceList = arrayListOf()
     )
 
     val RESPONSE_SIGN_IN = LoginResponse(
@@ -508,6 +566,6 @@ object Responses {
         email = null,
         success = SIGN_IN_SUCCESS,
         provider = "cognito-idp.us-east-1.amazonaws.com/us-east-1_48VeDo2Uw",
-        idToken = "Mock Token",
+        idToken = "Mock Token"
     )
 }
