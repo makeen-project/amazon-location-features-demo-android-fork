@@ -1095,20 +1095,14 @@ class MapHelper(private val appContext: Context) {
         val cameraPosition = mMapboxMap?.cameraPosition
         val zoom = cameraPosition?.zoom
         val minZoom = minZoomLevel(style)
-        val maxZoom = maxZoomLevel(style)
         if (zoom != null) {
             if (zoom < minZoom) {
                 mMapboxMap?.cameraPosition = CameraPosition.Builder()
                     .zoom(minZoom)
                     .build()
-            } else if (zoom > maxZoom) {
-                mMapboxMap?.cameraPosition = CameraPosition.Builder()
-                    .zoom(maxZoom)
-                    .build()
             }
         }
         mMapboxMap?.setMinZoomPreference(minZoom)
-        mMapboxMap?.setMaxZoomPreference(maxZoom)
     }
 
     private fun minZoomLevel(style: Style): Double {
@@ -1130,28 +1124,6 @@ class MapHelper(private val appContext: Context) {
             }
         } catch (e: Exception) {
             MapboxConstants.MINIMUM_ZOOM.toDouble()
-        }
-    }
-
-    private fun maxZoomLevel(style: Style): Double {
-        return try {
-            val sources = JSONObject(style.json).getJSONObject(JSON_KEY_STYLE_SOURCES)
-            when {
-                sources.has(JSON_KEY_STYLE_ESRI) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_ESRI).optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
-                }
-                sources.has(JSON_KEY_STYLE_HERE) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_HERE).optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
-                }
-                sources.has(JSON_KEY_STYLE_RASTER) -> {
-                    sources.getJSONObject(JSON_KEY_STYLE_RASTER).optDouble(JSON_KEY_STYLE_MAXZOOM, MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM)
-                }
-                else -> {
-                    MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM
-                }
-            }
-        } catch (e: Exception) {
-            MapCameraZoom.DEFAULT_CAMERA_MAX_ZOOM
         }
     }
 }
