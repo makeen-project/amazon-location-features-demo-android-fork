@@ -81,7 +81,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@id/end_guideline"
         app:layout_constraintStart_toStartOf="@id/start_guideline"
-        app:layout_constraintTop_toBottomOf="@id/cl_about">
+        app:layout_constraintTop_toBottomOf="@id/cl_version">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_legal"
@@ -165,7 +165,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_about"
+        android:id="@+id/cl_version"
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
         android:visibility="visible"
@@ -174,37 +174,37 @@
         app:layout_constraintTop_toBottomOf="@id/cl_attribution">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_about"
+            android:id="@+id/tv_version"
             style="@style/SP16RegularWhiteTextStyle"
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/dp_22"
-            android:text="@string/label_about"
+            android:text="@string/label_version"
             android:textColor="@color/color_medium_black"
-            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_about"
+            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_version"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_back_arrow_about"
+            android:id="@+id/iv_back_arrow_version"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
             android:rotation="180"
             android:src="@drawable/ic_back"
             android:tint="@color/color_img_tint"
-            app:layout_constraintBottom_toBottomOf="@id/tv_about"
+            app:layout_constraintBottom_toBottomOf="@id/tv_version"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_about" />
+            app:layout_constraintTop_toTopOf="@id/tv_version" />
 
         <View
-            android:id="@+id/view_aws_about"
+            android:id="@+id/view_aws_version"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_1"
             android:background="@color/color_view_line"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_about" />
+            app:layout_constraintTop_toBottomOf="@id/tv_version" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

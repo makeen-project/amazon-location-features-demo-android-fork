@@ -39,7 +39,7 @@ class MoreFragment : BaseFragment() {
             clAttribution.setOnClickListener {
                 findNavController().navigate(R.id.attribution_fragment)
             }
-            clAbout.setOnClickListener {
+            clVersion.setOnClickListener {
                 findNavController().navigate(R.id.about_fragment)
             }
             clTermsConditions.setOnClickListener {
