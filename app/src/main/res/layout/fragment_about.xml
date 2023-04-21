@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_50"
         android:gravity="center"
-        android:text="@string/label_about"
+        android:text="@string/label_version"
         android:textColor="@color/color_medium_black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

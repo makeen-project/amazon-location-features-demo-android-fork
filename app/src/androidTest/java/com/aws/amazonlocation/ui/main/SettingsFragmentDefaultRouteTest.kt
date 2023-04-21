@@ -125,7 +125,8 @@ class SettingsFragmentDefaultRouteTest {
     }
 
     private fun goToDefaultRouteSettings() {
-        val explorer = uiDevice.findObject(By.text(SETTINGS))
+        val explorer =
+            uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_setting)))
         explorer.click()
 
         Thread.sleep(DELAY_1000)
@@ -149,7 +150,8 @@ class SettingsFragmentDefaultRouteTest {
     }
 
     private fun checkDefaultRouteOptions(avoidTollsShouldBe: Boolean, avoidFerriesShouldBe: Boolean) {
-        val explorer = uiDevice.findObject(By.text(EXPLORE))
+        val explorer =
+            uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_explore)))
         explorer.click()
 
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)

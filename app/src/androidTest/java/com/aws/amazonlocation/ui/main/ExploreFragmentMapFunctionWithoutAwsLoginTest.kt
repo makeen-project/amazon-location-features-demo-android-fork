@@ -26,7 +26,6 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.STREETS
 import com.aws.amazonlocation.TEST_FAILED_BUTTON_DIRECTION
 import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
@@ -86,7 +85,8 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
         btnCardMap?.perform(click())
         Thread.sleep(DELAY_1000)
 
-        uiDevice.findObject(By.text(STREETS))?.click()
+        uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.map_streets)))
+            ?.click()
 
         Thread.sleep(DELAY_2000)
         val cardMapStyleClose =

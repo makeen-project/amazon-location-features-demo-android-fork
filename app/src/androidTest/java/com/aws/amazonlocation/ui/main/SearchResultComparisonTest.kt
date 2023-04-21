@@ -27,7 +27,6 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
-import com.aws.amazonlocation.EXPLORE
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
@@ -122,7 +121,10 @@ class SearchResultComparisonTest {
                             val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =
                                 BottomSheetBehavior.from(clSearchSheet)
                             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
-                            uiDevice.wait(Until.hasObject(By.text(EXPLORE)), DELAY_5000)
+                            uiDevice.wait(
+                                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))),
+                                DELAY_5000
+                            )
                             val cardDirection =
                                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_direction)
                             if (cardDirection.visibility == View.VISIBLE) {

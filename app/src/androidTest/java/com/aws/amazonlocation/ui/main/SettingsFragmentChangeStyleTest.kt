@@ -189,7 +189,7 @@ class SettingsFragmentChangeStyleTest {
     private fun goToMapStyles() {
         onView(
             allOf(
-                withText(SETTINGS),
+                withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
                 isDisplayed()
             )

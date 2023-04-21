@@ -13,12 +13,10 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.DEFAULT_ROUTE_OPTIONS
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.SETTINGS
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -54,12 +52,14 @@ class SettingRouteOptionAvailableTest {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
             Thread.sleep(DELAY_1000)
 
-            val explorer = uiDevice.findObject(By.text(SETTINGS))
+            val explorer =
+                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_setting)))
             explorer.click()
 
             Thread.sleep(DELAY_1000)
 
-            val defaultRouteOption = uiDevice.findObject(By.text(DEFAULT_ROUTE_OPTIONS))
+            val defaultRouteOption =
+                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_default_route_options)))
             defaultRouteOption.click()
 
             uiDevice.wait(

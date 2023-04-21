@@ -5,7 +5,7 @@
     <string name="menu_tracking">Trackers</string>
     <string name="menu_geofence">Geofences</string>
     <string name="menu_setting">Settings</string>
-    <string name="menu_more">More</string>
+    <string name="menu_more">About</string>
 
     <!--Sign in screen -->
     <string name="sign_in">Sign in</string>
@@ -191,7 +191,7 @@
     <string name="text_terms_desc_coloured_2">AWS Acceptable Use Policy</string>
     <string name="text_terms_desc_coloured_3">AWS Privacy Notice</string>
     <string name="label_legal_and_privacy">Legal and Privacy</string>
-    <string name="label_about">About</string>
+    <string name="label_version">Version</string>
     <string name="label_sign_out">Sign out</string>
     <string name="distance_is_greater_than_400_km">Distance is greater than 400 km</string>
     <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">Can\'t calculate via Esri, kindly switch to \nHERE provider.</string>
