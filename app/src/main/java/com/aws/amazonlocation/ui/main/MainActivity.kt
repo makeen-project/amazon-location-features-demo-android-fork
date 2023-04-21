@@ -305,7 +305,7 @@ class MainActivity : BaseActivity() {
                 }
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
-                    mNavController.navigate(R.id.more_fragment)
+                    mNavController.navigate(R.id.about_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
                 }
@@ -439,9 +439,9 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         if (mNavController.currentDestination?.label == AWS_CLOUD_INFORMATION_FRAGMENT) {
             mNavController.popBackStack()
-        }else if (mNavController.currentDestination?.label == ABOUT_FRAGMENT) {
+        }else if (mNavController.currentDestination?.label == VERSION_FRAGMENT) {
             mNavController.popBackStack()
-        } else if (mNavController.currentDestination?.label == MORE_FRAGMENT) {
+        } else if (mNavController.currentDestination?.label == ABOUT_FRAGMENT) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment !is ExploreFragment) {
                 mNavController.navigate(R.id.explore_fragment)

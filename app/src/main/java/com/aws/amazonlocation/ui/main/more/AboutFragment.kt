@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.databinding.FragmentMoreBinding
+import com.aws.amazonlocation.databinding.FragmentAboutBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.KEY_URL
@@ -16,16 +16,16 @@ import com.aws.amazonlocation.utils.KEY_URL
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-class MoreFragment : BaseFragment() {
+class AboutFragment : BaseFragment() {
 
-    private lateinit var mBinding: FragmentMoreBinding
+    private lateinit var mBinding: FragmentAboutBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentMoreBinding.inflate(inflater, container, false)
+        mBinding = FragmentAboutBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 
@@ -40,7 +40,7 @@ class MoreFragment : BaseFragment() {
                 findNavController().navigate(R.id.attribution_fragment)
             }
             clVersion.setOnClickListener {
-                findNavController().navigate(R.id.about_fragment)
+                findNavController().navigate(R.id.version_fragment)
             }
             clTermsConditions.setOnClickListener {
                 findNavController().navigate(R.id.terms_conditions_fragment)
