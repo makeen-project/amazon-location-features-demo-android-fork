@@ -167,3 +167,163 @@ val PREF_MANAGER_VALUE_STRING_SET = setOf("string1", "string2")
 const val PREF_MANAGER_VALUE_BOOL = true
 
 const val DELAY_5000 = 5000L
+
+const val UNIT_METRICS_INPUT_1 = 1000.0
+const val UNIT_METRICS_INPUT_2 = 1001.0
+const val UNIT_METRICS_OUTPUT_1 = "1000 m"
+const val UNIT_METRICS_OUTPUT_2 = "1 km"
+
+const val UNIT_KM_TO_M_INPUT = 1.0
+const val UNIT_KM_TO_M_OUTPUT = 1000.0
+
+const val UNIT_TIME_SEC_1 = 50.0
+const val UNIT_TIME_SEC_2 = 120.0
+const val UNIT_TIME_SEC_3 = 3600.0
+
+const val UNIT_TIME_1_OUTPUT = "50 sec"
+const val UNIT_TIME_2_OUTPUT = "2 min"
+const val UNIT_TIME_3_OUTPUT = "1 hr 0 min"
+
+const val UNIT_DEF_AWS_CONF_INPUT_POOL_ID = "us-east-1_48VeDo2Uw"
+const val UNIT_DEF_AWS_CONF_INPUT_REGION = "us-east-1"
+
+const val UNIT_DEF_AWS_CONF = "{\n" +
+    "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
+    "    \"Version\": \"0.1.0\",\n" +
+    "    \"IdentityManager\": {\n" +
+    "        \"Default\": {}\n" +
+    "    },\n" +
+    "    \"CredentialsProvider\": {\n" +
+    "        \"CognitoIdentity\": {\n" +
+    "            \"Default\": {\n" +
+    "                \"PoolId\": \"us-east-1_48VeDo2Uw\",\n" +
+    "                \"Region\": \"us-east-1\"\n" +
+    "            }\n" +
+    "        }\n" +
+    "    }\n" +
+    "}"
+
+const val UNIT_AWS_CONF_JSON_INPUT_SCHEMA = "amazonlocationdemo"
+const val UNIT_AWS_CONF_JSON_INPUT_POOL_ID = "us-east-1:30f73277-588f-4587-a55a-256cc2e8a205"
+const val UNIT_AWS_CONF_JSON_INPUT_USER_POOL_ID = "us-east-1_48VeDo2Uw"
+const val UNIT_AWS_CONF_JSON_INPUT_APP_CLIENT_ID = "smpc5lgho8rqlc967dja58uig"
+const val UNIT_AWS_CONF_JSON_INPUT_DOMAIN = "https://973950707761.auth.us-east-1.amazoncognito.com"
+const val UNIT_AWS_CONF_JSON_INPUT_REGION = "us-east-1"
+
+const val UNIT_AWS_CONF_JSON = "{\n" +
+    "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
+    "    \"Version\": \"0.1.0\",\n" +
+    "    \"IdentityManager\": {\n" +
+    "        \"Default\": {}\n" +
+    "    },\n" +
+    "    \"CredentialsProvider\": {\n" +
+    "        \"CognitoIdentity\": {\n" +
+    "            \"Default\": {\n" +
+    "                \"PoolId\": \"us-east-1:30f73277-588f-4587-a55a-256cc2e8a205\",\n" +
+    "                \"Region\": \"us-east-1\"\n" +
+    "            }\n" +
+    "        }\n" +
+    "    },\n" +
+    "    \"CognitoUserPool\": {\n" +
+    "        \"Default\": {\n" +
+    "            \"PoolId\": \"us-east-1_48VeDo2Uw\",\n" +
+    "            \"AppClientId\": \"smpc5lgho8rqlc967dja58uig\",\n" +
+    "            \"Region\": \"us-east-1\"\n" +
+    "        }\n" +
+    "    },\n" +
+    "    \"Auth\": {\n" +
+    "        \"Default\": {\n" +
+    "            \"OAuth\": {\n" +
+    "              \"WebDomain\": \"https://973950707761.auth.us-east-1.amazoncognito.com\",\n" +
+    "              \"AppClientId\": \"smpc5lgho8rqlc967dja58uig\",\n" +
+    "              \"SignInRedirectURI\": \"amazonlocationdemo://signin/\",\n" +
+    "              \"SignOutRedirectURI\": \"amazonlocationdemo://signout/\",\n" +
+    "              \"Scopes\": [\n" +
+    "                \"email\",\n" +
+    "                \"openid\",\n" +
+    "                \"profile\"\n" +
+    "              ]\n" +
+    "            }\n" +
+    "          }\n" +
+    "    }\n" +
+    "}"
+
+const val UNIT_AWS_CONF_JSON_NULL_USER_POOL_ID = "{\n" +
+    "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
+    "    \"Version\": \"0.1.0\",\n" +
+    "    \"IdentityManager\": {\n" +
+    "        \"Default\": {}\n" +
+    "    },\n" +
+    "    \"CredentialsProvider\": {\n" +
+    "        \"CognitoIdentity\": {\n" +
+    "            \"Default\": {\n" +
+    "                \"PoolId\": \"us-east-1:30f73277-588f-4587-a55a-256cc2e8a205\",\n" +
+    "                \"Region\": \"us-east-1\"\n" +
+    "            }\n" +
+    "        }\n" +
+    "    },\n" +
+    "    \"CognitoUserPool\": {\n" +
+    "        \"Default\": {\n" +
+    "            \"PoolId\": \"null\",\n" +
+    "            \"AppClientId\": \"smpc5lgho8rqlc967dja58uig\",\n" +
+    "            \"Region\": \"us-east-1\"\n" +
+    "        }\n" +
+    "    },\n" +
+    "    \"Auth\": {\n" +
+    "        \"Default\": {\n" +
+    "            \"OAuth\": {\n" +
+    "              \"WebDomain\": \"https://973950707761.auth.us-east-1.amazoncognito.com\",\n" +
+    "              \"AppClientId\": \"smpc5lgho8rqlc967dja58uig\",\n" +
+    "              \"SignInRedirectURI\": \"amazonlocationdemo://signin/\",\n" +
+    "              \"SignOutRedirectURI\": \"amazonlocationdemo://signout/\",\n" +
+    "              \"Scopes\": [\n" +
+    "                \"email\",\n" +
+    "                \"openid\",\n" +
+    "                \"profile\"\n" +
+    "              ]\n" +
+    "            }\n" +
+    "          }\n" +
+    "    }\n" +
+    "}"
+
+const val UNIT_AMPLIFY_JSON_CONF_INPUT_POOL_ID = "us-east-1_48VeDo2Uw"
+const val UNIT_AMPLIFY_JSON_CONF_INPUT_REGION = "us-east-1"
+
+const val UNIT_AMPLIFY_JSON_CONFIG = "{\n" +
+    "    \"UserAgent\": \"aws-amplify-cli/2.0\",\n" +
+    "    \"Version\": \"1.0\",\n" +
+    "    \"auth\": {\n" +
+    "        \"plugins\": {\n" +
+    "            \"awsCognitoAuthPlugin\": {\n" +
+    "                \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
+    "                \"Version\": \"0.1.0\",\n" +
+    "                \"IdentityManager\": {\n" +
+    "                    \"Default\": {}\n" +
+    "                },\n" +
+    "                \"CredentialsProvider\": {\n" +
+    "                    \"CognitoIdentity\": {\n" +
+    "                        \"Default\": {\n" +
+    "                            \"PoolId\": \"us-east-1_48VeDo2Uw\",\n" +
+    "                            \"Region\": \"us-east-1\"\n" +
+    "                        }\n" +
+    "                    }\n" +
+    "                }\n" +
+    "            }\n" +
+    "        }\n" +
+    "    },\n" +
+    "    \"geo\": {\n" +
+    "        \"plugins\": {\n" +
+    "            \"awsLocationGeoPlugin\": {\n" +
+    "                \"region\": \"us-east-1\",\n" +
+    "                \"maps\": {\n" +
+    "                    \"items\": {\n" +
+    "                        \"location.aws.com.demo.maps.Esri.Light\": {\n" +
+    "                            \"style\": \"VectorEsriTopographic\"\n" +
+    "                        }\n" +
+    "                    },\n" +
+    "                    \"default\": \"location.aws.com.demo.maps.Esri.Light\"\n" +
+    "                }\n" +
+    "            }\n" +
+    "        }\n" +
+    "    }\n" +
+    "}"
