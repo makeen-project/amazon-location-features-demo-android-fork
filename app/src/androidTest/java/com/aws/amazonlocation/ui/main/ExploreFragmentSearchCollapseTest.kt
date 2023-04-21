@@ -20,7 +20,6 @@ import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
-import com.aws.amazonlocation.EXPLORE
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.di.AppModule
@@ -72,7 +71,7 @@ class ExploreFragmentSearchCollapseTest {
             val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =
                 BottomSheetBehavior.from(clSearchSheet)
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
-            uiDevice.wait(Until.hasObject(By.text(EXPLORE)), DELAY_5000)
+            uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))), DELAY_5000)
             val cardNavigation =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_navigation)
             Assert.assertTrue(cardNavigation.visibility == View.VISIBLE)

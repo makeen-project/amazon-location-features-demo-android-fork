@@ -26,7 +26,6 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.TRACKING
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.utils.KEY_POOL_ID
@@ -62,7 +61,7 @@ class TrackingAwsConnectTest {
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         Thread.sleep(DELAY_1000)
 
-        val tracking = uiDevice.findObject(By.text(TRACKING))
+        val tracking = uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
         tracking.click()
 
         Thread.sleep(DELAY_1000)

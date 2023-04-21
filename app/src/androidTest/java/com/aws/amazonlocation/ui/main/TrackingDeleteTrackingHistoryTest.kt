@@ -56,7 +56,7 @@ class TrackingDeleteTrackingHistoryTest {
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         Thread.sleep(DELAY_1000)
 
-        val tracking = uiDevice.findObject(By.text(TRACKING))
+        val tracking = uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
         tracking.click()
         uiDevice.wait(
             Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker))),
