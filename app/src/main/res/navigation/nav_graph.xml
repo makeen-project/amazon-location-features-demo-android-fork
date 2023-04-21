@@ -56,16 +56,16 @@
         tools:layout="@layout/fragment_attribution"/>
 
     <fragment
-        android:id="@+id/more_fragment"
-        android:name="com.aws.amazonlocation.ui.main.more.MoreFragment"
-        android:label="MoreFragment"
-        tools:layout="@layout/fragment_more"/>
-
-    <fragment
         android:id="@+id/about_fragment"
-        android:name="com.aws.amazonlocation.ui.main.about.AboutFragment"
+        android:name="com.aws.amazonlocation.ui.main.more.AboutFragment"
         android:label="AboutFragment"
         tools:layout="@layout/fragment_about"/>
+
+    <fragment
+        android:id="@+id/version_fragment"
+        android:name="com.aws.amazonlocation.ui.main.about.VersionFragment"
+        android:label="MoreFragment"
+        tools:layout="@layout/fragment_version"/>
 
     <fragment
         android:id="@+id/terms_conditions_fragment"

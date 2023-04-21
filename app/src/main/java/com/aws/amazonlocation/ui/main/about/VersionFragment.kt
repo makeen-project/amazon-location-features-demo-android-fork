@@ -8,22 +8,22 @@ import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.databinding.FragmentAboutBinding
+import com.aws.amazonlocation.databinding.FragmentVersionBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-class AboutFragment : BaseFragment() {
+class VersionFragment : BaseFragment() {
 
-    private lateinit var mBinding: FragmentAboutBinding
+    private lateinit var mBinding: FragmentVersionBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentAboutBinding.inflate(inflater, container, false)
+        mBinding = FragmentVersionBinding.inflate(inflater, container, false)
         return mBinding.root
     }
 
