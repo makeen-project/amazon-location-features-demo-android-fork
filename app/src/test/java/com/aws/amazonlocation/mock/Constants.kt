@@ -7,13 +7,14 @@ import com.amplifyframework.geo.models.Coordinates
 import com.mapbox.mapboxsdk.geometry.LatLng
 
 const val DELAY_1000 = 1000L
-const val DELAY_300 = 300L
+const val TIMEOUT_5000 = 5000L
 
 val DEFAULT_LOCATION = LatLng(49.281174, -123.116823)
 const val DEVICE_ID = "662f86eddc909886"
 
 const val SEARCH_TEXT_RIO_TINTO = "rio tinto"
 const val SEARCH_TEXT_TINTO = "Tinto"
+const val SEARCH_TEXT_ERROR = "asdfghjk"
 val GATE_WAY_OF_INDIA_LAT_LNG = LatLng(18.921880000000044, 72.83468000000005) // Gateway of India, Colaba, Mumbai, Maharashtra, 400001, IND
 val DISTANCE_COORDINATE_FROM = LatLng(18.92216, 72.83373) // Near Gateway of India, Colaba, Mumbai, Maharashtra, 400001, IND
 val FAKE_LAT_LNG = LatLng(49.2811, -12.3116823)
@@ -108,6 +109,15 @@ const val TEST_DATA_9 = "11"
 
 const val TEST_FAILED_DUE_TO_INVALID_LATITUDE = "Test failed due to invalid latitude"
 const val TEST_FAILED_DUE_TO_INVALID_LONGITUDE = "Test failed due to invalid longitude"
+
+const val TEST_FAILED_DUE_TO_RECEIVED_ERROR = "Test failed due to received error"
+const val TEST_FAILED_DUE_TO_RECEIVED_SUCCESS = "Test failed due to received success"
+const val TEST_FAILED_DUE_TO_RECEIVED_INTERNET_ERROR = "Test failed due to received internet error"
+const val TEST_FAILED_DUE_TO_TIMEOUT = "Test failed due to timeout"
+
+const val TEST_FAILED_DUE_TO_CLIENT_CONFIG_ERROR = "Test failed due to client config error"
+const val TEST_FAILED_DUE_TO_SIGN_OUT_SUCCESS = "Test failed due to sign out success"
+const val TEST_FAILED_DUE_TO_SIGN_OUT_ERROR = "Test failed due to sign out error"
 
 val PLACE_TO_AMAZON_LOCATION_INPUT = Place()
     .withCountry("PRT")
