@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.mock.DEFAULT_LOCATION
+import com.aws.amazonlocation.mock.TURF_TOLERANCE
 import com.aws.amazonlocation.utils.Durations.DEFAULT_RADIUS
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -39,9 +40,9 @@ class TurfModuleTest {
         )
         val pointList = TurfMeta.coordAll(turnTransformation, false)
         TurfTransformation.simplify(pointList)
-        TurfTransformation.simplify(pointList, 10.0)
+        TurfTransformation.simplify(pointList, TURF_TOLERANCE)
         TurfTransformation.simplify(pointList, true)
-        val data = TurfTransformation.simplify(pointList, 10.0, true)
+        val data = TurfTransformation.simplify(pointList, TURF_TOLERANCE, true)
         Assert.assertTrue(data.isNotEmpty())
     }
 }
