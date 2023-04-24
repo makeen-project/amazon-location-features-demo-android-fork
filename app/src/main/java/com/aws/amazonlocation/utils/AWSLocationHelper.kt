@@ -169,7 +169,7 @@ class AWSLocationHelper(
                                 CalculateRouteCarModeOptions().withAvoidTolls(isAvoidTolls)
                                     .withAvoidFerries(isAvoidFerries)
                             ).withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
-                            .withDepartNow(false).withTravelMode(travelMode)
+                            .withDepartNow(true).withTravelMode(travelMode)
                             .withCalculatorName(indexName)
                     )
                 }
@@ -183,7 +183,7 @@ class AWSLocationHelper(
                                 CalculateRouteTruckModeOptions().withAvoidTolls(isAvoidTolls)
                                     .withAvoidFerries(isAvoidFerries)
                             ).withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
-                            .withDepartNow(false).withTravelMode(travelMode)
+                            .withDepartNow(true).withTravelMode(travelMode)
                             .withCalculatorName(indexName)
                     )
                 }
@@ -194,7 +194,7 @@ class AWSLocationHelper(
                             latDeparture
                         ).withDestinationPosition(lngDestination, latDestination)
                             .withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
-                            .withDepartNow(false).withTravelMode(travelMode)
+                            .withDepartNow(true).withTravelMode(travelMode)
                             .withCalculatorName(indexName)
                     )
                 }
