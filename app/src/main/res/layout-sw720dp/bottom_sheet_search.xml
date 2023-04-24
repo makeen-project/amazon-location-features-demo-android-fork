@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_search_sheet"
+    android:layout_width="@dimen/screen_size"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingBottom="100dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/dp_150"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_amazon_logo_search_sheet"
+        android:layout_width="@dimen/dp_118"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_amazon_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_amazon_info_search_sheet"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_4"
+        android:src="@drawable/ic_info"
+        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_search_sheet"
+        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_search_sheet"
+        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_search_sheet" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_main_search"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_search_sheet">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_et_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:id="@+id/view_sheet_search"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_5"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="@dimen/dp_7"
+                android:background="@drawable/bottom_sheet_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_40"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_10"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/dp_8"
+                app:cardElevation="@dimen/dp_1"
+                app:cardUseCompatPadding="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_sheet_search">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/dp_8">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_search_sheet"
+                        android:layout_width="@dimen/dp_20"
+                        android:layout_height="@dimen/dp_20"
+                        android:layout_marginStart="@dimen/dp_16"
+                        android:src="@drawable/icon_search"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_search_places"
+                        style="@style/SearchText"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="@dimen/dp_0"
+                        android:background="@android:color/transparent"
+                        android:ellipsize="end"
+                        android:hint="@string/search"
+                        android:imeOptions="actionSearch"
+                        android:maxLength="200"
+                        android:paddingHorizontal="@dimen/dp_16"
+                        android:singleLine="true"
+                        android:textAlignment="viewStart"
+                        app:layout_constraintBottom_toBottomOf="@id/iv_search_sheet"
+                        app:layout_constraintEnd_toStartOf="@id/barrier_iv"
+                        app:layout_constraintStart_toEndOf="@id/iv_search_sheet"
+                        app:layout_constraintTop_toTopOf="@id/iv_search_sheet" />
+
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_iv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:barrierDirection="start"
+                        app:constraint_referenced_ids="card_user_profile,iv_close" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_user_profile"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        app:cardCornerRadius="@dimen/dp_100"
+                        app:cardElevation="@dimen/dp_0"
+                        android:visibility="gone"
+                        app:cardUseCompatPadding="false"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:strokeColor="@android:color/transparent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_user_profile"
+                            style="@style/SP13BoldMediumBlackTextStyle"
+                            android:layout_width="@dimen/dp_18"
+                            android:layout_height="@dimen/dp_18"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:maxLength="2"
+                            android:textColor="@color/white"
+                            android:visibility="gone"
+                            tools:text="AS" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_user_profile"
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
+                            android:src="@drawable/ic_account_circle"
+                            android:visibility="gone" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/iv_close"
+                        android:layout_width="@dimen/dp_24"
+                        android:layout_height="@dimen/dp_24"
+                        android:src="@drawable/ic_close"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <include
+            android:id="@+id/layout_no_data_found"
+            layout="@layout/layout_no_data_found"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_et_search" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/ns_search_places"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_0"
+            android:background="@color/search_bs_bg_color"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_et_search">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/cl_search_loader_search_sheet"
+                    layout="@layout/bottom_sheet_search_loader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_search_places_suggestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:paddingBottom="@dimen/dp_46" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_search_places"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:paddingBottom="@dimen/dp_46"
+                    android:visibility="gone" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_no_internet_connection_search_sheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_et_search">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_cloud_search_sheet"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_32"
+                android:layout_marginTop="@dimen/dp_60"
+                android:src="@drawable/icon_cloud"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_1_sheet_search"
+                style="@style/SP16BoldMediumBlackTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_36"
+                android:gravity="center"
+                android:text="@string/amazon_location_can_t_reach_the_internet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_cloud_search_sheet" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_2_no_internet_desc_search_sheet"
+                style="@style/SP13HintInterRegularTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_40"
+                android:layout_marginTop="@dimen/dp_8"
+                android:gravity="center"
+                android:text="@string/check_your_internet_connection_and_try_again"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_1_sheet_search" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

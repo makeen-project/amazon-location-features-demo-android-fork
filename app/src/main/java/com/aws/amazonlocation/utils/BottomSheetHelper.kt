@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.utils
 
+import android.content.Context
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
@@ -27,6 +28,7 @@ class BottomSheetHelper {
     private lateinit var mBottomSheetAttribution: BottomSheetBehavior<ConstraintLayout>
     private var exportFragment: ExploreFragment? = null
     var isSearchSheetOpen = false
+    var context: Context? = null
 
     // set search bottom sheet
     fun setSearchBottomSheet(
@@ -39,6 +41,7 @@ class BottomSheetHelper {
         mBottomSheetSearchPlaces =
             BottomSheetBehavior.from(view.clSearchSheet)
         mBottomSheetSearchPlaces.isFitToContents = false
+        context = view.clSearchSheet.context
         mBottomSheetSearchPlaces.expandedOffset =
             view.clSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
 
@@ -368,7 +371,18 @@ class BottomSheetHelper {
         if (!isHide) {
             exportFragment?.setUserProfile()
             mBottomSheetSearchPlaces.isHideable = false
-            mBottomSheetSearchPlaces.peekHeight = 98.px
+            if (context != null) {
+                context?.let {
+                    val isTablet = it.resources.getBoolean(R.bool.is_tablet)
+                    if (isTablet) {
+                        mBottomSheetSearchPlaces.peekHeight = 150.px
+                    } else {
+                        mBottomSheetSearchPlaces.peekHeight = 98.px
+                    }
+                }
+            } else {
+                mBottomSheetSearchPlaces.peekHeight = 98.px
+            }
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
             mBottomSheetSearchPlaces.isHideable = true
