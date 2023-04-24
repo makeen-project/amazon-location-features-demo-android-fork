@@ -91,6 +91,7 @@ object MapCameraZoom {
     const val NAVIGATION_CAMERA_ZOOM = 14.0
     const val DEFAULT_CAMERA_ZOOM = 14.0
     const val TRACKING_CAMERA_ZOOM = 14.0
+    const val MAX_ZOOM = 22.0
 }
 
 object Durations {
