@@ -23,7 +23,6 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.SECOND_DELAY_60
 import com.aws.amazonlocation.TEST_FAILED
-import com.aws.amazonlocation.TRACKING
 import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.TRACKING_EXITED
 import com.aws.amazonlocation.di.AppModule

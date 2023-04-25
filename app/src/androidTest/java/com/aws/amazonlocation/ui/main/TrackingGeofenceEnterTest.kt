@@ -25,7 +25,6 @@ import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.SECOND_DELAY_60
-import com.aws.amazonlocation.TRACKING
 import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS

@@ -23,7 +23,6 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_NO_TRACKING_HISTORY
 import com.aws.amazonlocation.TEST_FAILED_NO_UPDATE_TRACKING_HISTORY
-import com.aws.amazonlocation.TRACKING
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.google.android.material.card.MaterialCardView
