@@ -34,7 +34,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_navigation_time_dialog"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/navigation_top_dialog_size"
             android:layout_height="@dimen/dp_80"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_44"
@@ -42,7 +42,6 @@
             app:cardBackgroundColor="@color/color_primary_green"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
