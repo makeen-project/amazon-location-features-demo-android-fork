@@ -2,21 +2,29 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl_main"
-    android:layout_width="@dimen/screen_size"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
-    android:paddingBottom="@dimen/dp_16">
+    android:background="@android:color/transparent">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_sign_in_connected_close"
-        android:layout_width="@dimen/dp_30"
-        android:layout_height="@dimen/dp_30"
-        android:layout_marginTop="@dimen/dp_14"
-        android:layout_marginEnd="@dimen/dp_10"
-        app:cardBackgroundColor="@color/number_bg_color"
-        app:cardCornerRadius="@dimen/dp_30"
-        app:cardElevation="@dimen/dp_0"
-        app:cardUseCompatPadding="false"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/screen_size"
+        android:layout_height="match_parent"
+        android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
+        android:paddingBottom="@dimen/dp_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_sign_in_connected_close"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_14"
+            android:layout_marginEnd="@dimen/dp_10"
+            app:cardBackgroundColor="@color/number_bg_color"
+            app:cardCornerRadius="@dimen/dp_30"
+            app:cardElevation="@dimen/dp_0"
+            app:cardUseCompatPadding="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:strokeColor="@android:color/transparent">
@@ -96,5 +104,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_sign_in" />
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
