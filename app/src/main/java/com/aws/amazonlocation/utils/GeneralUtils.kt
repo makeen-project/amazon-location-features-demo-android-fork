@@ -512,7 +512,6 @@ fun Activity.restartApplication() {
 }
 
 fun Context.isInternetAvailable(): Boolean {
-    if (mockedInternetAvailability != null) return mockedInternetAvailability as Boolean
     var result = false
     val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     cm.run {
@@ -572,5 +571,3 @@ fun checkSessionValid(mPreferenceManager: PreferenceManager): Boolean {
     }
     return true
 }
-
-var mockedInternetAvailability: Boolean? = null

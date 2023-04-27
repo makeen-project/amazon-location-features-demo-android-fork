@@ -37,7 +37,6 @@ internal class AWSLocationHelperTest {
     @Before
     fun setUp() {
         mClient = awsLocationHelper.initCognitoCachingCredentialsProvider()
-        mockedInternetAvailability = true
         setConnectivity(true)
     }
 
