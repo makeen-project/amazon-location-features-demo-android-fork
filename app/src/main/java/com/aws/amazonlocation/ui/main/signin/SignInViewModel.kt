@@ -60,7 +60,6 @@ class SignInViewModel @Inject constructor(
                     null,
                     object : Callback<SignInResult> {
                         override fun onResult(result: SignInResult?) {
-                            result?.signInState?.name // Done
                             val mLoginResponse = LoginResponse()
                             mLoginResponse.success =
                                 activity.resources.getString(R.string.login_success)

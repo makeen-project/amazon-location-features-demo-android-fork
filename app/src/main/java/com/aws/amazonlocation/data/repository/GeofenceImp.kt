@@ -64,10 +64,6 @@ class GeofenceImp(private val mRemoteDataSource: RemoteDataSourceImpl) :
         mRemoteDataSource.searchPlaceIndexForText(lat, lng, searchText, searchPlace)
     }
 
-    override suspend fun associateTrackerWithGeofence(trackerName: String, consumerArn: String) {
-        mRemoteDataSource.associateTrackerWithGeofence(trackerName, consumerArn)
-    }
-
     override suspend fun batchUpdateDevicePosition(
         trackerName: String,
         position: List<Double>,
