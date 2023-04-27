@@ -349,6 +349,20 @@ class MainActivity : BaseActivity() {
         mBinding.bottomNavigationMain.show()
     }
 
+    fun showNavigationIcon() {
+        val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+        if (fragment is ExploreFragment) {
+            fragment.showCurrentLocationIcon()
+        }
+    }
+
+    fun showDirectionAndCurrentLocationIcon() {
+        val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+        if (fragment is ExploreFragment) {
+            fragment.showDirectionAndCurrentLocationIcon()
+        }
+    }
+
     @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -362,8 +376,11 @@ class MainActivity : BaseActivity() {
 
     private fun showGeofence() {
         val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+        val isTablet = resources.getBoolean(R.bool.is_tablet)
         if (fragment is ExploreFragment) {
-            fragment.hideDirectionAndCurrentLocationIcon()
+            if (!isTablet) {
+                fragment.hideDirectionAndCurrentLocationIcon()
+            }
         }
         mBottomSheetHelper.hideSearchBottomSheet(true)
         lifecycleScope.launch {
@@ -457,7 +474,7 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         if (mNavController.currentDestination?.label == AWS_CLOUD_INFORMATION_FRAGMENT) {
             mNavController.popBackStack()
-        }else if (mNavController.currentDestination?.label == VERSION_FRAGMENT) {
+        } else if (mNavController.currentDestination?.label == VERSION_FRAGMENT) {
             mNavController.popBackStack()
         } else if (mNavController.currentDestination?.label == ABOUT_FRAGMENT) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -540,7 +557,7 @@ class MainActivity : BaseActivity() {
                     resultLauncher.launch(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(BuildConfig.BASE_DOMAIN+BuildConfig.AWS_TERMS_URL)
+                            Uri.parse(BuildConfig.BASE_DOMAIN + BuildConfig.AWS_TERMS_URL)
                         )
                     )
                 }

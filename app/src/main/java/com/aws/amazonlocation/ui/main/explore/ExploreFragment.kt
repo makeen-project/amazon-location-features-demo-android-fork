@@ -15,7 +15,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.TypedValue
-import android.view.* // ktlint-disable no-wildcard-imports
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -135,6 +135,8 @@ class ExploreFragment :
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
+    private var isTablet = false
+
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult(),
     ) {
@@ -202,6 +204,7 @@ class ExploreFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
         setMap(savedInstanceState)
         mBottomSheetHelper.setSearchBottomSheet(
             activity,
@@ -2581,6 +2584,10 @@ class ExploreFragment :
         mBottomSheetHelper.hideDirectionSheet()
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         mIsDirectionSheetHalfExpanded = true
+        if (isTablet) {
+            mBinding.cardDirection.hide()
+            mBinding.cardNavigation.show()
+        }
     }
 
     private fun checkLocationPermission() {
@@ -2772,6 +2779,10 @@ class ExploreFragment :
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         showDirectionAndCurrentLocationIcon()
         adjustMapBound()
+        if (isTablet) {
+            mBinding.cardDirection.hide()
+            mBinding.cardNavigation.show()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -3010,6 +3021,9 @@ class ExploreFragment :
         mViewModel.calculateNavigationLine(it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)
+        if (isTablet) {
+            mBinding.bottomSheetNavigation.cardNavigationLocation.hide()
+        }
     }
 
     private fun BottomSheetDirectionSearchBinding.changeRouteListUI() {
@@ -3096,6 +3110,13 @@ class ExploreFragment :
                 it.cardDirection,
                 it.cardNavigation,
             )
+        }
+    }
+
+    fun showCurrentLocationIcon() {
+        mBinding.let {
+            it.cardDirection.hide()
+            it.cardNavigation.show()
         }
     }
 
@@ -3322,6 +3343,10 @@ class ExploreFragment :
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            if (isTablet) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
         }
     }
 
@@ -3367,6 +3392,10 @@ class ExploreFragment :
             mMapHelper.addMarker(requireActivity(), MarkerEnum.DIRECTION_ICON, it)
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            if (isTablet) {
+                mBinding.cardNavigation.show()
+                mBinding.cardDirection.hide()
+            }
         }
     }
 
@@ -3413,6 +3442,10 @@ class ExploreFragment :
             )
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            if (isTablet) {
+                mBinding.cardNavigation.show()
+                mBinding.cardDirection.hide()
+            }
         }
     }
 
@@ -3765,11 +3798,18 @@ class ExploreFragment :
     }
 
     fun changeDirectionCardMargin(marginBottom: Int) {
-        showViews(mBinding.cardDirection, mBinding.cardNavigation)
-        val layoutParams: ViewGroup.MarginLayoutParams =
-            mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.setMargins(0, 0, resources.getDimension(R.dimen.dp_16).toInt(), marginBottom)
-        mBinding.cardDirection.requestLayout()
+        if (!isTablet) {
+            showViews(mBinding.cardDirection, mBinding.cardNavigation)
+            val layoutParams: ViewGroup.MarginLayoutParams =
+                mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.setMargins(
+                0,
+                0,
+                resources.getDimension(R.dimen.dp_16).toInt(),
+                marginBottom
+            )
+            mBinding.cardDirection.requestLayout()
+        }
     }
 
     override fun onStart() {

@@ -66,6 +66,7 @@ class GeofenceUtils {
     private var mMapHelper: MapHelper? = null
     private var mIsBtnEnable = false
     private var connectivityObserver: ConnectivityObserveInterface? = null
+    private var isTablet = false
     private var preferenceManager: PreferenceManager? = null
 
     fun setMapBox(
@@ -109,6 +110,9 @@ class GeofenceUtils {
                     preferenceManager
                 )
             mGeofenceHelper?.initMapBoxStyle()
+            mActivity?.let {
+                isTablet = it.resources.getBoolean(R.bool.is_tablet)
+            }
         }
     }
 
@@ -201,7 +205,11 @@ class GeofenceUtils {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            showViews(cardGeofenceLiveLocation, imgAmazonLogoAddGeofence)
+                            if (!isTablet) {
+                                    showViews(cardGeofenceLiveLocation, imgAmazonLogoAddGeofence)
+                                } else {
+                                    (mActivity as MainActivity).showNavigationIcon()
+                                }
                             cardGeofenceLiveLocation.alpha = 1f
                             imgAmazonLogoAddGeofence.alpha = 1f
                             ivAmazonInfoAddGeofence.alpha = 1f
@@ -449,6 +457,9 @@ class GeofenceUtils {
     }
 
     fun showGeofenceListBottomSheet(context: Activity) {
+        if (isTablet) {
+            (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
+        }
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -510,6 +521,9 @@ class GeofenceUtils {
         mBottomSheetAddGeofenceBehavior?.isHideable = false
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
+        if (isTablet) {
+            mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
+        }
     }
 
     fun expandAddGeofenceBottomSheet() {
