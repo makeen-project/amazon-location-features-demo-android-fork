@@ -10,7 +10,7 @@
     android:focusable="true"
     android:paddingBottom="100dp"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/dp_98"
+    app:behavior_peekHeight="@dimen/dp_150"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.appcompat.widget.AppCompatImageView
