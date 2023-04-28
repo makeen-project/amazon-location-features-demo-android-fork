@@ -281,14 +281,10 @@ class CloudFormationBottomSheetFragment(
             }
         }
         mUserDomain?.let { uDomain ->
-            var userDomain = uDomain
-            if (uDomain.endsWith("/")) {
-                userDomain = uDomain.dropLast(1)
-            }
-            userDomain.split(HTTPS)[1].let { domain ->
+            uDomain.split(HTTPS)[1].let { domain ->
                 mPreferenceManager.setValue(
                     KEY_USER_DOMAIN,
-                    domain
+                    domain.removeSuffix("/")
                 )
             }
         }
