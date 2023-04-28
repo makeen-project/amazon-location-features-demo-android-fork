@@ -74,7 +74,9 @@ class MainActivity : BaseActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         mNavController = mNavHostFragment.navController
         mBinding.bottomNavigationMain.setupWithNavController(mNavController)
-        setBottomBar()
+        if (mBottomSheetDialog == null) {
+            setBottomBar()
+        }
 
         isAppNotFirstOpened = mPreferenceManager.getValue(IS_APP_FIRST_TIME_OPENED, false)
 
@@ -89,7 +91,9 @@ class MainActivity : BaseActivity() {
         } else {
             graph.startDestination = R.id.explore_fragment
             mNavHostFragment.navController.graph = graph
-            showBottomBar()
+            if (mBottomSheetDialog == null) {
+                setBottomBar()
+            }
         }
         if (reStartApp) {
             if (!mTab.isNullOrEmpty()) {
@@ -134,22 +138,13 @@ class MainActivity : BaseActivity() {
                 handleResult.onLoading {
                 }.onSuccess {
                     mIsUserLoggedIn = true
-                    if (mBinding.bottomNavigationMain.selectedItemId == R.id.menu_geofence) {
-                        mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
-                        mBottomSheetHelper.hideSearchBottomSheet(true)
-                    } else if (mBinding.bottomNavigationMain.selectedItemId == R.id.menu_tracking) {
-                        if (checkMap()) {
-                            mBottomSheetHelper.hideSearchBottomSheet(true)
-                            showTracking()
-                        }
-                    }
-
                     mPreferenceManager.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
                         AuthEnum.SIGNED_IN.name
                     )
                     getTokenAndAttachPolicy(it)
                 }.onError { it ->
+                    setBottomBar()
                     hideProgress()
                     it.messageResource?.let {
                         showError(it.toString())
@@ -189,15 +184,31 @@ class MainActivity : BaseActivity() {
                     AWSIotClient(mCognitoCredentialsProvider)
                 mIotAndroidClient.attachPolicy(attachPolicyReq)
                 showError(it)
-                hideProgress()
-                mBottomSheetDialog?.dismiss()
+                hideProgressAndShowData()
             }
 
             override fun onError(e: Exception?) {
-                hideProgress()
-                mBottomSheetDialog?.dismiss()
+                hideProgressAndShowData()
             }
         })
+    }
+
+    private fun hideProgressAndShowData() {
+        hideProgress()
+        runOnUiThread {
+            if (mBinding.bottomNavigationMain.selectedItemId == R.id.menu_geofence) {
+                mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
+                mBottomSheetHelper.hideSearchBottomSheet(true)
+            } else if (mBinding.bottomNavigationMain.selectedItemId == R.id.menu_tracking) {
+                if (checkMap()) {
+                    mBottomSheetHelper.hideSearchBottomSheet(true)
+                    showTracking()
+                }
+            }
+            setBottomBar()
+        }
+        mBottomSheetDialog?.dismiss()
+        mBottomSheetDialog = null
     }
 
     private fun setBottomBar() {
