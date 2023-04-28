@@ -19,6 +19,7 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.results.Tokens
 import com.amazonaws.mobileconnectors.cognitoauth.AuthClient
+import com.amazonaws.regions.Region
 import com.amazonaws.services.iot.AWSIotClient
 import com.amazonaws.services.iot.model.AttachPolicyRequest
 import com.aws.amazonlocation.BuildConfig
@@ -187,6 +188,12 @@ class MainActivity : BaseActivity() {
                         .withTarget(identityId)
                 val mIotAndroidClient =
                     AWSIotClient(mCognitoCredentialsProvider)
+                var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+
+                if (region.isNullOrEmpty()) {
+                    region = BuildConfig.DEFAULT_REGION
+                }
+                mIotAndroidClient.setRegion(Region.getRegion(region))
                 mIotAndroidClient.attachPolicy(attachPolicyReq)
                 showError(it)
                 hideProgress()
