@@ -324,7 +324,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             uDomain.split(HTTPS)[1].let { domain ->
                 mPreferenceManager.setValue(
                     KEY_USER_DOMAIN,
-                    domain
+                    domain.removeSuffix("/")
                 )
             }
         }
