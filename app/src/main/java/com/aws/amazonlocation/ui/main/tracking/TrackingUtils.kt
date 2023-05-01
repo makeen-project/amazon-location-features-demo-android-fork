@@ -112,8 +112,16 @@ class TrackingUtils(
         when (enableTracking) {
             TrackingEnum.ENABLE_TRACKING -> {
                 mBottomSheetTrackingBehavior?.isDraggable = false
-                mBottomSheetTrackingBehavior?.peekHeight = 390.px
-                mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                mBindingTracking?.clEnableTracking?.context?.let {
+                    val isTablet = it.resources.getBoolean(R.bool.is_tablet)
+                    if (isTablet) {
+                        mBottomSheetTrackingBehavior?.peekHeight = 450.px
+                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    } else {
+                        mBottomSheetTrackingBehavior?.peekHeight = 390.px
+                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
+                }
                 mBindingTracking?.apply {
                     clPersistentBottomSheet.show()
                     clEnableTracking.show()

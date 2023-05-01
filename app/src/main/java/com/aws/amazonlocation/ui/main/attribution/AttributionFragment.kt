@@ -76,7 +76,7 @@ class AttributionFragment : BaseFragment() {
                     )
                 }
             }
-            ivBack.setOnClickListener {
+            ivBack?.setOnClickListener {
                 findNavController().popBackStack()
             }
         }

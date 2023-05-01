@@ -22,6 +22,8 @@ class MapStyleFragment : BaseFragment() {
     private var mAdapter: EsriMapStyleAdapter? = null
     private var mHereAdapter: EsriMapStyleAdapter? = null
     private var isMapClickEnable = true
+    private var isTablet = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,6 +34,7 @@ class MapStyleFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
         val mapStyle =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
@@ -55,7 +58,7 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun setHereMapStyleAdapter() {
-        val mLayoutManager = GridLayoutManager(this.context, 3)
+        val mLayoutManager = GridLayoutManager(this.context, if (isTablet) 4 else 3)
         mBinding.apply {
             rvHere.layoutManager = mLayoutManager
             mHereAdapter = EsriMapStyleAdapter(
@@ -78,7 +81,7 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun setEsriMapStyleAdapter() {
-        val mLayoutManager = GridLayoutManager(this.context, 3)
+        val mLayoutManager = GridLayoutManager(this.context, if (isTablet) 4 else 3)
         mBinding.apply {
             rvEsri.layoutManager = mLayoutManager
             mAdapter = EsriMapStyleAdapter(

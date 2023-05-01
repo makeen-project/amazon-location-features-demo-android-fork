@@ -829,9 +829,26 @@ class GeofenceUtils {
         if (!isListEmpty) {
             mBindingGeofenceList?.clEmptyGeofenceList?.hide()
             mBindingGeofenceList?.clGeofenceList?.show()
+            mBindingGeofenceList?.clEmptyGeofenceList?.let {
+                val isTablet = it.resources.getBoolean(R.bool.is_tablet)
+                if (isTablet) {
+                    mBottomSheetGeofenceListBehavior?.peekHeight = 150.px
+                } else {
+                    mBottomSheetGeofenceListBehavior?.peekHeight = 104.px
+                }
+            }
         } else {
             mBindingGeofenceList?.clEmptyGeofenceList?.show()
             mBindingGeofenceList?.clGeofenceList?.hide()
+            mBindingGeofenceList?.clEmptyGeofenceList?.let {
+                val isTablet = it.resources.getBoolean(R.bool.is_tablet)
+                if (isTablet) {
+                    mBottomSheetGeofenceListBehavior?.peekHeight = 430.px
+                    mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    mBottomSheetGeofenceListBehavior?.peekHeight = 104.px
+                }
+            }
         }
     }
 
