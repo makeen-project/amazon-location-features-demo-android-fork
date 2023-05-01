@@ -71,9 +71,12 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.textfield.TextInputEditText
+import com.mapbox.android.gestures.StandardScaleGestureDetector
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Point.fromLngLat
 import com.mapbox.mapboxsdk.Mapbox
+import com.mapbox.mapboxsdk.camera.CameraPosition
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
@@ -94,12 +97,14 @@ class ExploreFragment :
     OnMapReadyCallback,
     SignOutInterface,
     MapboxMap.OnMapClickListener,
-    MapHelper.IsMapLoadedInterface {
+    MapHelper.IsMapLoadedInterface,
+    MapboxMap.OnScaleListener {
 
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
     private var isCalculateTruckApiError: Boolean = false
     private var isLocationUpdatedNeeded: Boolean = false
+    private var isZooming: Boolean = false
     private var mLastClickTime: Long = 0
     private var mIsDirectionDataSet: Boolean = false
     private var mIsDirectionSheetHalfExpanded: Boolean = false
@@ -655,6 +660,7 @@ class ExploreFragment :
                                 mBinding.cardNavigationTimeDialog.hide()
                                 mMapHelper.removeLine()
                                 mMapHelper.removeLocationListener()
+                                mMapboxMap?.removeOnScaleListener(this@ExploreFragment)
                             } else {
                                 bearing?.let { mMapHelper.bearingCamera(it, latLng) }
                                 CoroutineScope(Dispatchers.IO).launch {
@@ -729,6 +735,7 @@ class ExploreFragment :
                         }
                         if (isLocationUpdatedNeeded) {
                             mMapHelper.setUpdateRoute(mRouteUpDate)
+                            mMapboxMap?.addOnScaleListener(this@ExploreFragment)
                         }
                     }.onError { it ->
                         isLocationUpdatedNeeded = false
@@ -1251,7 +1258,7 @@ class ExploreFragment :
                         }
                     }
                     mMapHelper.getLiveLocation()?.let { mLatLng ->
-                        mMapHelper.navigationZoomCamera(mLatLng)
+                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
                     }
                     it.calculateRouteResult?.let { it1 ->
                         mMapHelper.clearOriginMarker()
@@ -1704,7 +1711,7 @@ class ExploreFragment :
             bottomSheetNavigation.cardNavigationLocation.setOnClickListener {
                 if (checkInternetConnection()) {
                     mMapHelper.getLiveLocation()?.let { mLatLng ->
-                        mMapHelper.navigationZoomCamera(mLatLng)
+                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
                     }
                 }
             }
@@ -2547,7 +2554,7 @@ class ExploreFragment :
                         isLocationIcon = true
                     )
                     mMapHelper.getLiveLocation()?.let { mLatLng ->
-                        mMapHelper.navigationZoomCamera(mLatLng)
+                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
                     }
                     mMapHelper.clearOriginMarker()
                     isLocationUpdatedNeeded = true
@@ -2563,7 +2570,7 @@ class ExploreFragment :
                                 it2
                             )
                         }
-                    }?.let { it2 -> mMapHelper.navigationZoomCamera(it2) }
+                    }?.let { it2 -> mMapHelper.navigationZoomCamera(it2, isZooming) }
                 }
                 mData?.let {
                     drawPolyLineOnMapCardClick(
@@ -2722,6 +2729,7 @@ class ExploreFragment :
         mRouteFinish = true
         mNavigationList.clear()
         mMapHelper.removeLocationListener()
+        mMapboxMap?.removeOnScaleListener(this)
         mBinding.cardNavigationTimeDialog.hide()
         mNavigationAdapter?.notifyDataSetChanged()
         mBottomSheetHelper.hideNavigationSheet()
@@ -3938,5 +3946,28 @@ class ExploreFragment :
     override fun mapLoadedSuccess() {
         mBinding.mapView.contentDescription = "Amazon Map Ready"
         mBinding.groupMapLoad.hide()
+    }
+
+    override fun onScaleBegin(detector: StandardScaleGestureDetector) {
+        isZooming = true
+    }
+
+    override fun onScale(detector: StandardScaleGestureDetector) {
+        mMapHelper.getLiveLocation()?.let { mLatLng ->
+            mMapboxMap?.easeCamera(
+                CameraUpdateFactory.newCameraPosition(
+                    CameraPosition.Builder().target(mLatLng)
+                        .build(),
+                ),
+                Durations.CAMERA_DURATION_1000,
+            )
+        }
+    }
+
+    override fun onScaleEnd(detector: StandardScaleGestureDetector) {
+        isZooming = false
+        mMapHelper.getLiveLocation()?.let { mLatLng ->
+            mMapHelper.navigationZoomCamera(mLatLng, false)
+        }
     }
 }
