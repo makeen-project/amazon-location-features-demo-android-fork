@@ -317,7 +317,7 @@ class BottomSheetHelper {
     }
 
     fun expandDirectionSheet() {
-        mBottomSheetDirections.state = BottomSheetBehavior.STATE_COLLAPSED
+        mBottomSheetDirections.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun hideDirectionSheet() {

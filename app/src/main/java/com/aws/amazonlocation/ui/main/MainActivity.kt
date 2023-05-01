@@ -3,6 +3,7 @@ package com.aws.amazonlocation.ui.main
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -61,9 +62,14 @@ class MainActivity : BaseActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             checkMap()
         }
+    private var isTablet = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isTablet = resources.getBoolean(R.bool.is_tablet)
+        if (!isTablet) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         makeTransparentStatusBar()
@@ -376,7 +382,6 @@ class MainActivity : BaseActivity() {
 
     private fun showGeofence() {
         val fragment = mNavHostFragment.childFragmentManager.fragments[0]
-        val isTablet = resources.getBoolean(R.bool.is_tablet)
         if (fragment is ExploreFragment) {
             if (!isTablet) {
                 fragment.hideDirectionAndCurrentLocationIcon()

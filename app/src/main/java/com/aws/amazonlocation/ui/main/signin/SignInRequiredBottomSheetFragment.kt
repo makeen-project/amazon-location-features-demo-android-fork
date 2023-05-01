@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main.signin
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -10,6 +11,8 @@ import com.aws.amazonlocation.databinding.BottomSheetSigninRequiredBinding
 import com.aws.amazonlocation.domain.`interface`.SignInRequiredInterface
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,6 +36,12 @@ class SignInRequiredBottomSheetFragment(private var mSignInRequiredInterface: Si
             STYLE_NORMAL,
             R.style.CustomBottomSheetDialogTheme
         )
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = BottomSheetDialog(requireContext(), theme)
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        return dialog
     }
 
     override fun onCreateView(

@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
@@ -88,11 +89,11 @@ class CloudFormationBottomSheetFragment(
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
-                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
                 behaviour.isDraggable = false
                 setupFullHeight(layout)
             }
         }
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         return dialog
     }
 
@@ -144,6 +145,13 @@ class CloudFormationBottomSheetFragment(
 
     private fun clickListener() {
         mBinding.apply {
+            if (BuildConfig.DEBUG) {
+                edtIdentityPoolId.setText(BuildConfig.IDENTITY_POOL_ID)
+                edtUserDomain.setText(BuildConfig.USER_DOMAIN)
+                edtUserPoolClientId.setText(BuildConfig.USER_POOL_CLIENT_ID)
+                edtUserPoolId.setText(BuildConfig.USER_POOL_ID)
+                edtWebSocketUrl.setText(BuildConfig.WEB_SOCKET_URL)
+            }
             edtIdentityPoolId.doOnTextChanged { _, _, _, _ ->
                 cloudFormationValidation()
             }
