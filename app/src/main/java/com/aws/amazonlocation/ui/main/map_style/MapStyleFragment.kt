@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main.map_style // ktlint-disable package-name
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,12 +18,15 @@ import com.aws.amazonlocation.utils.isInternetAvailable
 
 class MapStyleFragment : BaseFragment() {
 
+    private lateinit var mLayoutManagerEsri: GridLayoutManager
+    private lateinit var mLayoutManagerHere: GridLayoutManager
     private lateinit var mBinding: FragmentMapStyleBinding
     private val mViewModel: MapStyleViewModel by viewModels()
     private var mAdapter: EsriMapStyleAdapter? = null
     private var mHereAdapter: EsriMapStyleAdapter? = null
     private var isMapClickEnable = true
     private var isTablet = false
+    private var columnCount = 3
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,8 +37,14 @@ class MapStyleFragment : BaseFragment() {
         return mBinding.root
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        init()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
+        setColumnCount()
         val mapStyle =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
@@ -57,10 +67,28 @@ class MapStyleFragment : BaseFragment() {
         clickListener()
     }
 
+    private fun init() {
+        setColumnCount()
+        mLayoutManagerHere.spanCount = columnCount
+        mLayoutManagerEsri.spanCount = columnCount
+        mHereAdapter?.notifyDataSetChanged()
+        mAdapter?.notifyDataSetChanged()
+    }
+
+    private fun setColumnCount() {
+        columnCount = if (requireContext().resources.displayMetrics.widthPixels < 850) {
+            2
+        } else if (requireContext().resources.displayMetrics.widthPixels < 1100) {
+            3
+        } else {
+            4
+        }
+    }
+
     private fun setHereMapStyleAdapter() {
-        val mLayoutManager = GridLayoutManager(this.context, if (isTablet) 4 else 3)
+        mLayoutManagerHere = GridLayoutManager(this.context, columnCount)
         mBinding.apply {
-            rvHere.layoutManager = mLayoutManager
+            rvHere.layoutManager = mLayoutManagerHere
             mHereAdapter = EsriMapStyleAdapter(
                 mViewModel.hereList,
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
@@ -81,9 +109,9 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun setEsriMapStyleAdapter() {
-        val mLayoutManager = GridLayoutManager(this.context, if (isTablet) 4 else 3)
+        mLayoutManagerEsri = GridLayoutManager(this.context, columnCount)
         mBinding.apply {
-            rvEsri.layoutManager = mLayoutManager
+            rvEsri.layoutManager = mLayoutManagerEsri
             mAdapter = EsriMapStyleAdapter(
                 mViewModel.esriList,
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {

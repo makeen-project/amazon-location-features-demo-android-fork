@@ -3,6 +3,7 @@
     <!--dp -->
     <dimen name="screen_size">450dp</dimen>
     <dimen name="navigation_top_dialog_size">400dp</dimen>
+    <dimen name="attribution_learn_more">400dp</dimen>
     <dimen name="bottom_nav_height">55dp</dimen>
     <bool name="is_tablet">true</bool>
 </resources>
