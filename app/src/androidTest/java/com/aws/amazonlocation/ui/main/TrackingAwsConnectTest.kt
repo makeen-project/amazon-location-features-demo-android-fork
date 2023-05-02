@@ -66,7 +66,7 @@ class TrackingAwsConnectTest {
 
         Thread.sleep(DELAY_1000)
         uiDevice.wait(
-            Until.hasObject(By.res("com.aws.amazonlocation:id/tv_sign_in_required")),
+            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_sign_in_required")),
             DELAY_10000
         )
         val appViews = UiScrollable(UiSelector().scrollable(true))

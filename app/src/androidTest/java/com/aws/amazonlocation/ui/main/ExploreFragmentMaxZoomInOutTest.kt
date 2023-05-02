@@ -15,6 +15,7 @@ import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -63,7 +64,7 @@ class ExploreFragmentMaxZoomInOutTest {
             var beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             var isMaxZoomInReach = false
             while (!isMaxZoomInReach) {
-                val map = uiDevice.findObject(UiSelector().resourceId("com.aws.amazonlocation:id/mapView"))
+                val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
                 if (map.exists()) {
                     map.pinchIn(50, 15)
                 }
@@ -99,7 +100,7 @@ class ExploreFragmentMaxZoomInOutTest {
             var beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             var isMaxZoomInReach = false
             while (!isMaxZoomInReach) {
-                val map = uiDevice.findObject(UiSelector().resourceId("com.aws.amazonlocation:id/mapView"))
+                val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
                 if (map.exists()) {
                     onView(withId(R.id.mapView)).perform(ViewActions.doubleClick())
                 }

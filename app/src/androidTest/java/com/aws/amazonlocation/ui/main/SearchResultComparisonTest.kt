@@ -23,6 +23,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -77,7 +78,7 @@ class SearchResultComparisonTest {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_1))
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_10000
             )
             val rvSearchPlaceSuggestion =
@@ -132,7 +133,7 @@ class SearchResultComparisonTest {
                                     onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
                                 cardDirectionTest.perform(click())
                                 uiDevice.wait(
-                                    Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_direction")),
+                                    Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
                                     DELAY_5000
                                 )
                                 val edtSearchDirection =
@@ -149,7 +150,7 @@ class SearchResultComparisonTest {
                                 )
 
                                 uiDevice.wait(
-                                    Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion_direction")),
+                                    Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                                     DELAY_5000
                                 )
                                 val rvSearchPlaceDirection =
