@@ -15,6 +15,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
@@ -129,7 +130,7 @@ class TrackingDeleteTrackingHistoryTest {
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.ok)))
             labelOk?.click()
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/layout_no_data_found")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/layout_no_data_found")),
                 DELAY_1000
             )
             val rvTracking =

@@ -13,6 +13,7 @@ import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -58,11 +59,11 @@ class ExploreFragmentMapLocateMeButtonTest {
             mapView.getMapAsync {
                 mapbox = it
             }
-            val map = uiDevice.findObject(UiSelector().resourceId("com.aws.amazonlocation:id/mapView"))
+            val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             map.swipeLeft(50)
             Thread.sleep(DELAY_1000)
 
-            val cardNavigation = uiDevice.findObject(UiSelector().resourceId("com.aws.amazonlocation:id/card_navigation"))
+            val cardNavigation = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/card_navigation"))
             cardNavigation.click()
             Thread.sleep(DELAY_2000)
             Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
