@@ -13,6 +13,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
@@ -63,11 +64,11 @@ class SettingRouteOptionAvailableTest {
             defaultRouteOption.click()
 
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/tv_avoid_ferries")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_ferries")),
                 DELAY_10000
             )
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/tv_avoid_tools")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_tools")),
                 DELAY_10000
             )
 

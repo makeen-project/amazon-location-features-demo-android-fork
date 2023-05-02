@@ -20,6 +20,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
@@ -76,7 +77,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
         enableGPS(ApplicationProvider.getApplicationContext())
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         Thread.sleep(DELAY_2000)
-        val map = uiDevice.findObject(UiSelector().resourceId("com.aws.amazonlocation:id/mapView"))
+        val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
         map.swipeLeft(50)
         Thread.sleep(DELAY_1000)
 
@@ -99,7 +100,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
         edtSearch?.perform(click())
         onView(withId(R.id.edt_search_places))?.perform(typeText(TEST_WORD_4))
         uiDevice.wait(
-            Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
+            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
             DELAY_10000
         )
         val rvSearchPlaceSuggestion =
@@ -114,7 +115,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
                 )
 
                 uiDevice.wait(
-                    Until.hasObject(By.res("com.aws.amazonlocation:id/tv_direction_time")),
+                    Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_direction_time")),
                     DELAY_5000
                 )
 
@@ -134,7 +135,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
                     }
 
                     uiDevice.wait(
-                        Until.hasObject(By.res("com.aws.amazonlocation:id/card_drive_go")),
+                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_5000
                     )
 
@@ -146,7 +147,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
                         }
 
                         uiDevice.wait(
-                            Until.hasObject(By.res("com.aws.amazonlocation:id/rv_navigation_list")),
+                            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_navigation_list")),
                             DELAY_5000
                         )
 

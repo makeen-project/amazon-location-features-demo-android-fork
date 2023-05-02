@@ -19,6 +19,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -70,7 +71,7 @@ class RouteOptionShowingTest {
                     onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
                 cardDirectionTest.perform(click())
                 uiDevice.wait(
-                    Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_direction")),
+                    Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
                     DELAY_5000
                 )
                 val edtSearchDirection =
@@ -82,7 +83,7 @@ class RouteOptionShowingTest {
                     onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_4))
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
-                        Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion_direction")),
+                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                         DELAY_10000
                     )
                     val rvSearchPlacesSuggestionDirection =
@@ -98,15 +99,15 @@ class RouteOptionShowingTest {
                         }
                     }
                     uiDevice.wait(
-                        Until.hasObject(By.res("com.aws.amazonlocation:id/cl_drive")),
+                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
                         DELAY_10000
                     )
                     uiDevice.wait(
-                        Until.hasObject(By.res("com.aws.amazonlocation:id/cl_walk")),
+                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_walk")),
                         DELAY_10000
                     )
                     uiDevice.wait(
-                        Until.hasObject(By.res("com.aws.amazonlocation:id/cl_truck")),
+                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_truck")),
                         DELAY_10000
                     )
                     val clDrive =

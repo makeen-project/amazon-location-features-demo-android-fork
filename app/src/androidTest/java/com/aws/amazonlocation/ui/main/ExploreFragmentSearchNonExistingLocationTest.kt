@@ -17,6 +17,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -61,7 +62,7 @@ class ExploreFragmentSearchNonExistingLocationTest {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(" "))
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/tv_no_matching_found")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_no_matching_found")),
                 DELAY_10000
             )
             val tvNoMatchingPlaceFound =
