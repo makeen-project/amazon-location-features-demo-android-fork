@@ -27,6 +27,7 @@ import com.aws.amazonlocation.TEST_FAILED_NO_TRACKING_HISTORY
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.mockLocationsExit
+import com.aws.amazonlocation.printError
 import com.google.android.material.card.MaterialCardView
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -170,7 +171,8 @@ class TrackingStartTrackingMapDisplayTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(175, e)
             Assert.fail(TEST_FAILED)
         }
     }

@@ -26,6 +26,7 @@ import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_3
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -76,7 +77,8 @@ class ExploreFragmentSearchByCategoriesTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(81, e)
             Assert.fail(TEST_FAILED)
         }
     }

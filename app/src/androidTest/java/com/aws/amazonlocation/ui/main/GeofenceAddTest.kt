@@ -124,7 +124,8 @@ class GeofenceAddTest {
                     hasDescendant(withText(geofenceName))
                 )
             )
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(128, e)
             Assert.fail(TEST_FAILED)
         }
     }

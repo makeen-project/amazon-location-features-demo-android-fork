@@ -24,6 +24,7 @@ import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -74,7 +75,8 @@ class ExploreFragmentMapZoomInOutTest {
             } else {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(79, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -102,7 +104,8 @@ class ExploreFragmentMapZoomInOutTest {
             } else {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(108, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -131,7 +134,8 @@ class ExploreFragmentMapZoomInOutTest {
             } else {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(138, e)
             Assert.fail(TEST_FAILED)
         }
     }

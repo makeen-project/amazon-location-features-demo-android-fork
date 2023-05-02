@@ -23,6 +23,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -81,7 +82,8 @@ class ExploreFragmentMaxZoomInOutTest {
                 }
             }
             Assert.assertTrue(isMaxZoomInReach)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(86, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -117,7 +119,8 @@ class ExploreFragmentMaxZoomInOutTest {
                 }
             }
             Assert.assertTrue(isMaxZoomInReach)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(123, e)
             Assert.fail(TEST_FAILED)
         }
     }

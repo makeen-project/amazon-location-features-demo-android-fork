@@ -23,6 +23,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -139,6 +140,7 @@ class TrackingDeleteTrackingHistoryTest {
 
             Assert.assertTrue(itemCount == 0)
         } else {
+            printError(143, null)
             Assert.fail(TEST_FAILED)
         }
     }

@@ -27,6 +27,7 @@ import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.TRACKING_EXITED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -115,9 +116,11 @@ class TrackingGeofenceExitTest {
             } else if (dialogText.contains(TRACKING_EXITED)) {
                 Assert.assertTrue(dialogText.contains(TRACKING_EXITED))
             } else {
+                printError(119, null)
                 Assert.fail(TEST_FAILED)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(123, e)
             Assert.fail(TEST_FAILED)
         }
     }

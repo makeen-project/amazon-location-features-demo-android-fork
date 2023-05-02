@@ -21,6 +21,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -67,7 +68,8 @@ class ExploreFragmentMapLocateMeButtonTest {
             cardNavigation.click()
             Thread.sleep(DELAY_2000)
             Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(71, e)
             Assert.fail(TEST_FAILED)
         }
     }

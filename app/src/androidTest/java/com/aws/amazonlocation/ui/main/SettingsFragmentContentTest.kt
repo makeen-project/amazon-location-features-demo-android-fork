@@ -81,7 +81,8 @@ class SettingsFragmentContentTest {
             if (!dataProvider.isVisible || !mapStyle.isVisible || !defaultRoute.isVisible || !connectToAws.isVisible) {
                 Assert.fail(TEST_FAILED_SETTINGS_ALL_OPTIONS_NOT_VISIBLE)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(85, e)
             Assert.fail(TEST_FAILED)
         }
     }

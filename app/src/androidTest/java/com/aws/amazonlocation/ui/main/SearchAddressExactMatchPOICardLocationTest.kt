@@ -30,6 +30,7 @@ import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -102,7 +103,8 @@ class SearchAddressExactMatchPOICardLocationTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(107, e)
             Assert.fail(TEST_FAILED)
         }
     }

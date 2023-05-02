@@ -21,6 +21,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -78,7 +79,8 @@ class SettingRouteOptionAvailableTest {
             val tvAvoidTools =
                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_avoid_tools)
             Assert.assertTrue(tvAvoidFerries.visibility == View.VISIBLE && tvAvoidTools.visibility == View.VISIBLE)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(83, e)
             Assert.fail(TEST_FAILED)
         }
     }

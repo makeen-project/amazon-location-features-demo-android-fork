@@ -31,6 +31,7 @@ import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.TEST_WORD_1
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
@@ -113,7 +114,8 @@ class AfterSearchDirectionButtonWorkingTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(118, e)
             Assert.fail(TEST_FAILED)
         }
     }

@@ -75,9 +75,11 @@ class GeofenceDeleteTest {
             deleteGeoFence()
 
             if (initialCount == null || updatedCount == null || initialCount == updatedCount) {
+                printError(76, null)
                 Assert.fail(TEST_FAILED)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(82, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -176,6 +178,7 @@ class GeofenceDeleteTest {
                 0
             }
         } else {
+            printError(181, null)
             Assert.fail(TEST_FAILED)
         }
     }

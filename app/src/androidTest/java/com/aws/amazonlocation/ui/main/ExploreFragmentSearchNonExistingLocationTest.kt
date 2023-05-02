@@ -25,6 +25,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -68,7 +69,8 @@ class ExploreFragmentSearchNonExistingLocationTest {
             val tvNoMatchingPlaceFound =
                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_no_matching_found)
             Assert.assertTrue(tvNoMatchingPlaceFound.visibility == View.VISIBLE)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(73, e)
             Assert.fail(TEST_FAILED)
         }
     }
