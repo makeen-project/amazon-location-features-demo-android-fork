@@ -9,11 +9,7 @@ echo -e "*******************************${ENDCOLOR}"
 
 git stash -q --keep-index
 
-echo -e "${WHITE}"
-
 OUTPUT=$(./gradlew testDebugUnitTestCoverageVerification);RESULT=$?
-
-echo -e "${ENDCOLOR}"
 
 git stash pop -q
 
