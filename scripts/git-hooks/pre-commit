@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+echo "*******************************"
+echo   "Running git pre-commit hook"
+echo "*******************************"
+
+git stash -q --keep-index
+
+./gradlew testDebugUnitTestCoverageVerification
+
+RESULT=$?
+
+git stash pop -q
+
+if [ ${RESULT} -eq 0 ]; then
+  echo "*******************************"
+  echo   "Pre-commit hook passed"
+  echo "*******************************"
+  exit 0
+else
+  echo "*******************************"
+  echo   "Pre-commit hook failed"
+  echo "*******************************"
+  exit "${EXIT_CODE}"
+fi

@@ -1,19 +1,28 @@
-def GIT_HOOKS_GROUP = 'Git Hooks'
-def SCRIPT_ORIGIN_DIR = "${rootProject.rootDir}/scripts/git-hooks"
-def SCRIPT_DESTINATION_DIR = "${rootProject.rootDir}/.git/hooks"
+class GitHooksPlugin implements Plugin<Project> {
 
-task installGitHook(type: Copy) {
-    group = GIT_HOOKS_GROUP
-    description = "Installs the pre-commit git hooks from scripts/pre-commit."
-    from fileTree(SCRIPT_ORIGIN_DIR) {
-        include 'pre-commit'
+    @Override
+    void apply(Project project) {
+
+        def GIT_HOOKS_GROUP = 'Git Hooks'
+        def SCRIPT_ORIGIN_DIR = "${project.rootProject.rootDir}/scripts/git-hooks"
+
+        project.task('installGitHook', type: Copy) {
+            group = GIT_HOOKS_GROUP
+            description = "Installs the pre-commit git hooks from scripts/pre-commit."
+            from project.fileTree(SCRIPT_ORIGIN_DIR) {
+                include 'pre-commit'
+            }
+            into { new File(project.rootProject.rootDir, '.git/hooks') }
+            fileMode 0777
+        }
+
+        project.task('deleteGitHooks', type: Delete) {
+            group = GIT_HOOKS_GROUP
+            description = "Delete the pre-commit git hooks."
+            delete(project.fileTree(".git/hooks/"))
+        }
+
     }
-    into { new File(rootProject.rootDir, '.git/hooks') }
-    fileMode 0777
 }
 
-task deleteGitHooks(type: Delete) {
-    group = GIT_HOOKS_GROUP
-    description = "Delete the pre-commit git hooks."
-    delete(fileTree(".git/hooks/"))
-}
+apply plugin: GitHooksPlugin

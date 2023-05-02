@@ -8,7 +8,6 @@ buildscript {
     subprojects {
         afterEvaluate { project ->
             project.apply from: '../jacoco.gradle'
-            project.apply from: '../git-hooks.gradle'
         }
     }
 
