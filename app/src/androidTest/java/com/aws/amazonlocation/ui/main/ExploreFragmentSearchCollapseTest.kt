@@ -17,6 +17,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
@@ -56,7 +57,7 @@ class ExploreFragmentSearchCollapseTest {
         enableGPS(ApplicationProvider.getApplicationContext())
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         uiDevice.wait(
-            Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_places")),
+            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_places")),
             DELAY_5000
         )
         val edtSearch =

@@ -11,6 +11,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -52,7 +53,7 @@ class ExploreFragmentSearchExistsTest {
             Thread.sleep(DELAY_2000)
 
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_places")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_places")),
                 DELAY_10000
             )
             val edtSearchPlaces =

@@ -61,7 +61,7 @@ class GeofenceAddTest {
             Thread.sleep(DELAY_1000)
 
             uiDevice.wait(
-                Until.gone(By.res("com.aws.amazonlocation:id/cl_search_loader_geofence_list")),
+                Until.gone(By.res("${BuildConfig.APPLICATION_ID}:id/cl_search_loader_geofence_list")),
                 DELAY_5000
             )
             Thread.sleep(DELAY_2000)
@@ -117,7 +117,7 @@ class GeofenceAddTest {
                 btnAddGeofenceSave.performClick()
             }
 
-            uiDevice.wait(Until.hasObject(By.res("com.aws.amazonlocation:id/rv_geofence")), DELAY_5000)
+            uiDevice.wait(Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_geofence")), DELAY_5000)
 
             onView(withId(R.id.rv_geofence)).perform(
                 RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(

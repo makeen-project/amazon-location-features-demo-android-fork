@@ -18,6 +18,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
@@ -67,7 +68,7 @@ class SearchAddressExactMatchPOICardLocationTest {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_10000
             )
             val rvSearchPlaceSuggestion =
@@ -84,7 +85,7 @@ class SearchAddressExactMatchPOICardLocationTest {
                             mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
                         if (btnDirection.visibility == View.VISIBLE) {
                             uiDevice.wait(
-                                Until.hasObject(By.res("com.aws.amazonlocation:id/tv_direction_distance")),
+                                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_direction_distance")),
                                 DELAY_5000
                             )
                             val tvDirectionTime =

@@ -12,6 +12,7 @@ import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
@@ -44,7 +45,7 @@ class ExploreFragmentEnableLocationTest {
     fun testMapEnableLocation() {
         try {
             Thread.sleep(DELAY_2000)
-            val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("com.aws.amazonlocation:id/btn_continue_to_app"))
+            val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
                 Thread.sleep(DELAY_2000)

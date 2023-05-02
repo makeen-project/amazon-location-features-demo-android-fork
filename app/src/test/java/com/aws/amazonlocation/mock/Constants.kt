@@ -160,6 +160,7 @@ val GET_REGION_REGION_COUNTRY = "Porto, PRT"
 
 const val IDENTITY_POOL_ID_INVALID = "us-east-100:30f73277-588f-4587-a55a-256cc2e8a205"
 const val REGION_INVALID = "us-east-2"
+const val REGION_INVALID_1 = "us-east-1"
 const val USER_POOL_ID_INVALID = "invalid-pool-id"
 const val USER_POOL_CLIENT_ID_INVALID = "invalid-client-id"
 
