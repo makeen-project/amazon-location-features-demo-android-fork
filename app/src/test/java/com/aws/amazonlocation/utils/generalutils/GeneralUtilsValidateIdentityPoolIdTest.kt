@@ -14,13 +14,27 @@ class GeneralUtilsValidateIdentityPoolIdTest : BaseTest() {
 
     @Test
     fun validateIdentityPoolIdSuccess() {
-        var result = validateIdentityPoolId(BuildConfig.IDENTITY_POOL_ID, BuildConfig.DEFAULT_REGION)
+        var regionData = ""
+        var invalidRegion = REGION_INVALID
+        BuildConfig.IDENTITY_POOL_ID.let { identityPId ->
+            identityPId.split(":").let { splitStringList ->
+                splitStringList[0].let { region ->
+                    regionData = region
+                }
+            }
+        }
+        if (regionData == REGION_INVALID) {
+            invalidRegion = REGION_INVALID_1
+        }
+
+        var result =
+            validateIdentityPoolId(BuildConfig.IDENTITY_POOL_ID, regionData)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result)
-        result = validateIdentityPoolId(IDENTITY_POOL_ID_INVALID, BuildConfig.DEFAULT_REGION)
+        result = validateIdentityPoolId(IDENTITY_POOL_ID_INVALID, regionData)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
-        result = validateIdentityPoolId(BuildConfig.IDENTITY_POOL_ID, REGION_INVALID)
+        result = validateIdentityPoolId(BuildConfig.IDENTITY_POOL_ID, invalidRegion)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
-        result = validateIdentityPoolId(IDENTITY_POOL_ID_INVALID, REGION_INVALID)
+        result = validateIdentityPoolId(IDENTITY_POOL_ID_INVALID, invalidRegion)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
     }
 }
