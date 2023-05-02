@@ -128,7 +128,8 @@ class SettingsFragmentChangeStyleTest {
                 Thread.sleep(DELAY_2000)
                 checkLoadedTheme()
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(132, e)
             Assert.fail(TEST_FAILED)
         }
     }

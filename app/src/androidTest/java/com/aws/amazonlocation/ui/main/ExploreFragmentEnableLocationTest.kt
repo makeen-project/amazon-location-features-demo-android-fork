@@ -21,6 +21,7 @@ import com.aws.amazonlocation.WHILE_USING_THE_APP
 import com.aws.amazonlocation.WHILE_USING_THE_APP_1
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -63,6 +64,7 @@ class ExploreFragmentEnableLocationTest {
                     }
                     Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
+                    printError(67, e)
                     Assert.fail(TEST_FAILED)
                 }
             } else {
@@ -80,10 +82,12 @@ class ExploreFragmentEnableLocationTest {
                     }
                     Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
+                    printError(85, e)
                     Assert.fail(TEST_FAILED)
                 }
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(90, e)
             Assert.fail(TEST_FAILED)
         }
     }

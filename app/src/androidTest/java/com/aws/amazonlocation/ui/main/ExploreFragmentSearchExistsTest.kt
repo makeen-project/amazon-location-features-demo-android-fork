@@ -19,6 +19,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -62,7 +63,8 @@ class ExploreFragmentSearchExistsTest {
             edtSearchPlaces.getLocationOnScreen(point)
             val screenHeight = mActivityRule.activity.window.decorView.height / 2
             Assert.assertTrue(point[1] + edtSearchPlaces.height > screenHeight)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(67, e)
             Assert.fail(TEST_FAILED)
         }
     }

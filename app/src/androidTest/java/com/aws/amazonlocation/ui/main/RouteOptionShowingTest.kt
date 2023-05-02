@@ -31,6 +31,7 @@ import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -124,7 +125,8 @@ class RouteOptionShowingTest {
             } else {
                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(129, e)
             Assert.fail(TEST_FAILED)
         }
     }

@@ -33,6 +33,7 @@ import com.aws.amazonlocation.TEST_WORD_5
 import com.aws.amazonlocation.TEST_WORD_6
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.printError
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.mapboxsdk.maps.MapboxMap
@@ -141,7 +142,8 @@ class CheckRouteMapAdjustedTest {
             } else {
                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            printError(146, e)
             Assert.fail(TEST_FAILED)
         }
     }
