@@ -10,6 +10,7 @@ class GitHooksPlugin implements Plugin<Project> {
             group = GIT_HOOKS_GROUP
             description = "Installs the pre-commit git hooks from scripts/pre-commit."
             from project.fileTree(SCRIPT_ORIGIN_DIR) {
+                include 'colors'
                 include 'pre-commit'
             }
             into { new File(project.rootProject.rootDir, '.git/hooks') }
