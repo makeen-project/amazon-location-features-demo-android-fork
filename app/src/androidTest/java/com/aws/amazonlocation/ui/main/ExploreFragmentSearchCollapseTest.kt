@@ -22,6 +22,7 @@ import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_NAVIGATION_CARD_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -75,7 +76,7 @@ class ExploreFragmentSearchCollapseTest {
             uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))), DELAY_5000)
             val cardNavigation =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_navigation)
-            Assert.assertTrue(cardNavigation.visibility == View.VISIBLE)
+            Assert.assertTrue(TEST_FAILED_NAVIGATION_CARD_NOT_VISIBLE, cardNavigation.visibility == View.VISIBLE)
         } else {
             Assert.fail(TEST_FAILED_SEARCH_SHEET)
         }

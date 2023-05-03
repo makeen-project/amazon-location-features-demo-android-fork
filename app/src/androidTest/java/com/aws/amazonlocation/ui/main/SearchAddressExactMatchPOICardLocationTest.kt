@@ -26,11 +26,12 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -92,7 +93,7 @@ class SearchAddressExactMatchPOICardLocationTest {
                             val tvDirectionTime =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_direction_distance)
                             Thread.sleep(DELAY_1000)
-                            Assert.assertTrue(tvDirectionTime.visibility == View.VISIBLE)
+                            Assert.assertTrue(TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE, tvDirectionTime.visibility == View.VISIBLE)
                         } else {
                             Assert.fail()
                         }
@@ -104,7 +105,7 @@ class SearchAddressExactMatchPOICardLocationTest {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
         } catch (e: Exception) {
-            printError(107, e)
+            failTest(107, e)
             Assert.fail(TEST_FAILED)
         }
     }

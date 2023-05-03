@@ -82,7 +82,7 @@ class SettingsFragmentContentTest {
                 Assert.fail(TEST_FAILED_SETTINGS_ALL_OPTIONS_NOT_VISIBLE)
             }
         } catch (e: Exception) {
-            printError(85, e)
+            failTest(85, e)
             Assert.fail(TEST_FAILED)
         }
     }

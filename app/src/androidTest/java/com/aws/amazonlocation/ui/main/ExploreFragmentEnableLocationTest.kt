@@ -17,11 +17,12 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED
 import com.aws.amazonlocation.WHILE_USING_THE_APP
 import com.aws.amazonlocation.WHILE_USING_THE_APP_1
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -62,9 +63,9 @@ class ExploreFragmentEnableLocationTest {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
+                    Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
-                    printError(67, e)
+                    failTest(67, e)
                     Assert.fail(TEST_FAILED)
                 }
             } else {
@@ -80,14 +81,14 @@ class ExploreFragmentEnableLocationTest {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
+                    Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
-                    printError(85, e)
+                    failTest(85, e)
                     Assert.fail(TEST_FAILED)
                 }
             }
         } catch (e: Exception) {
-            printError(90, e)
+            failTest(90, e)
             Assert.fail(TEST_FAILED)
         }
     }

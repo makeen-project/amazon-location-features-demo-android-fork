@@ -22,11 +22,12 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_GREATER_THAN_ONE
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -72,13 +73,13 @@ class ExploreFragmentSearchResultTest {
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
                 rvSearchPlaceSuggestion.adapter?.itemCount?.let {
-                    Assert.assertTrue(it >= 2)
+                    Assert.assertTrue(TEST_FAILED_COUNT_NOT_GREATER_THAN_ONE, it >= 2)
                 }
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
         } catch (e: Exception) {
-            printError(81, e)
+            failTest(81, e)
             Assert.fail(TEST_FAILED)
         }
     }

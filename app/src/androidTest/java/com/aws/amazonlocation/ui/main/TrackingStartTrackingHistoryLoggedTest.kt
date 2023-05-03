@@ -23,7 +23,7 @@ import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_NO_TRACKING_HISTORY
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -102,7 +102,7 @@ class TrackingStartTrackingHistoryLoggedTest {
                 Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)
             }
         } catch (e: Exception) {
-            printError(105, e)
+            failTest(105, e)
             Assert.fail(TEST_FAILED)
         }
     }

@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.* // ktlint-disable no-wildcard-imports
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -15,7 +15,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.*
+import com.aws.amazonlocation.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.actions.nestedScrollTo
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.utils.IS_APP_FIRST_TIME_OPENED
@@ -27,7 +27,7 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.core.AllOf.allOf
-import org.junit.*
+import org.junit.* // ktlint-disable no-wildcard-imports
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -39,7 +39,7 @@ class ConnectToAWSTest {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -73,8 +73,8 @@ class ConnectToAWSTest {
                 allOf(
                     withText(settingTabText),
                     isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )
                 .perform(click())
             Thread.sleep(DELAY_1000)
@@ -83,39 +83,39 @@ class ConnectToAWSTest {
             onView(
                 allOf(
                     withId(R.id.cl_aws_cloudformation),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )
                 .perform(click())
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_identity_pool_id)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.IDENTITY_POOL_ID),
-                closeSoftKeyboard()
+                closeSoftKeyboard(),
             )
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_domain)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.USER_DOMAIN),
-                closeSoftKeyboard()
+                closeSoftKeyboard(),
             )
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_pool_client_id)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.USER_POOL_CLIENT_ID),
-                closeSoftKeyboard()
+                closeSoftKeyboard(),
             )
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_pool_id)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.USER_POOL_ID),
-                closeSoftKeyboard()
+                closeSoftKeyboard(),
             )
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_web_socket_url)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.WEB_SOCKET_URL),
-                closeSoftKeyboard()
+                closeSoftKeyboard(),
             )
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isEnabled()))
@@ -124,7 +124,7 @@ class ConnectToAWSTest {
             val targetContext: Context = getInstrumentation().targetContext.applicationContext
             val pm = PreferenceManager(targetContext)
             val mPoolId = pm.getValue(KEY_POOL_ID, "")
-            Assert.assertTrue(mPoolId == BuildConfig.IDENTITY_POOL_ID)
+            Assert.assertTrue(TEST_FAILED_INVALID_IDENTITY_POOL_ID, mPoolId == BuildConfig.IDENTITY_POOL_ID)
         } catch (e: Exception) {
             Assert.fail(TEST_FAILED_CONNECT_TO_AWS_FROM_SETTINGS)
         }
@@ -143,7 +143,7 @@ class ConnectToAWSTest {
             Thread.sleep(DELAY_1000)
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_sign_in_required")),
-                DELAY_10000
+                DELAY_10000,
             )
             val appViews = UiScrollable(UiSelector().scrollable(true))
             appViews.scrollForward()
@@ -175,7 +175,7 @@ class ConnectToAWSTest {
             val targetContext: Context = getInstrumentation().targetContext.applicationContext
             val pm = PreferenceManager(targetContext)
             val mPoolId = pm.getValue(KEY_POOL_ID, "")
-            Assert.assertTrue(mPoolId == BuildConfig.IDENTITY_POOL_ID)
+            Assert.assertTrue(TEST_FAILED_INVALID_IDENTITY_POOL_ID, mPoolId == BuildConfig.IDENTITY_POOL_ID)
         } catch (e: Exception) {
             Assert.fail(TEST_FAILED_CONNECT_TO_AWS_FROM_TRACKING)
         }
@@ -195,7 +195,7 @@ class ConnectToAWSTest {
             Thread.sleep(DELAY_1000)
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_sign_in_required")),
-                DELAY_10000
+                DELAY_10000,
             )
             val appViews = UiScrollable(UiSelector().scrollable(true))
             appViews.scrollForward()
@@ -227,7 +227,7 @@ class ConnectToAWSTest {
             val targetContext: Context = getInstrumentation().targetContext.applicationContext
             val pm = PreferenceManager(targetContext)
             val mPoolId = pm.getValue(KEY_POOL_ID, "")
-            Assert.assertTrue(mPoolId == BuildConfig.IDENTITY_POOL_ID)
+            Assert.assertTrue(TEST_FAILED_INVALID_IDENTITY_POOL_ID, mPoolId == BuildConfig.IDENTITY_POOL_ID)
         } catch (e: Exception) {
             Assert.fail(TEST_FAILED_CONNECT_TO_AWS_FROM_GEOFENCE)
         }

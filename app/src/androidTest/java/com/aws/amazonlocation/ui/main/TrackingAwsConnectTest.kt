@@ -26,6 +26,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_INVALID_IDENTITY_POOL_ID
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.utils.KEY_POOL_ID
@@ -110,6 +111,6 @@ class TrackingAwsConnectTest {
                 }
             }
         }
-        Assert.assertTrue(mPoolId == BuildConfig.IDENTITY_POOL_ID)
+        Assert.assertTrue(TEST_FAILED_INVALID_IDENTITY_POOL_ID, mPoolId == BuildConfig.IDENTITY_POOL_ID)
     }
 }

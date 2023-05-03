@@ -27,11 +27,12 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
+import com.aws.amazonlocation.TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -118,7 +119,7 @@ class RouteOptionShowingTest {
                     val clTruck =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_truck)
 
-                    Assert.assertTrue(clDrive.visibility == View.VISIBLE && clWalk.visibility == View.VISIBLE && clTruck.visibility == View.VISIBLE)
+                    Assert.assertTrue(TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE, clDrive.visibility == View.VISIBLE && clWalk.visibility == View.VISIBLE && clTruck.visibility == View.VISIBLE)
                 } else {
                     Assert.fail(TEST_FAILED_SEARCH_DIRECTION)
                 }
@@ -126,7 +127,7 @@ class RouteOptionShowingTest {
                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
             }
         } catch (e: Exception) {
-            printError(129, e)
+            failTest(129, e)
             Assert.fail(TEST_FAILED)
         }
     }

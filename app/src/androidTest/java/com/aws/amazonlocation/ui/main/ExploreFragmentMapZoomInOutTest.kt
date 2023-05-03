@@ -22,9 +22,10 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL
+import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -70,13 +71,13 @@ class ExploreFragmentMapZoomInOutTest {
             }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
-                    Assert.assertTrue(beforeZoomLevel < it)
+                    Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
                 }
             } else {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
         } catch (e: Exception) {
-            printError(79, e)
+            failTest(79, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -99,13 +100,13 @@ class ExploreFragmentMapZoomInOutTest {
             }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
-                    Assert.assertTrue(beforeZoomLevel > it)
+                    Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel > it)
                 }
             } else {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
         } catch (e: Exception) {
-            printError(108, e)
+            failTest(108, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -129,13 +130,13 @@ class ExploreFragmentMapZoomInOutTest {
             Thread.sleep(DELAY_2000)
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
-                    Assert.assertTrue(beforeZoomLevel < it)
+                    Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
                 }
             } else {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
         } catch (e: Exception) {
-            printError(138, e)
+            failTest(138, e)
             Assert.fail(TEST_FAILED)
         }
     }

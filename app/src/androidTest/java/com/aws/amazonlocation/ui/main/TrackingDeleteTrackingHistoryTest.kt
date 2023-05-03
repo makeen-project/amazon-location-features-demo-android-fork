@@ -21,9 +21,11 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_EQUAL_TO_FIVE
+import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_ZERO
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -138,9 +140,9 @@ class TrackingDeleteTrackingHistoryTest {
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_tracking)
             val itemCount = rvTracking.adapter?.itemCount ?: 0
 
-            Assert.assertTrue(itemCount == 0)
+            Assert.assertTrue(TEST_FAILED_COUNT_NOT_ZERO, itemCount == 0)
         } else {
-            printError(143, null)
+            failTest(143, null)
             Assert.fail(TEST_FAILED)
         }
     }

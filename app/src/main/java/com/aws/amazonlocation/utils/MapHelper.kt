@@ -33,7 +33,6 @@ import com.aws.amazonlocation.utils.Durations.DEFAULT_INTERVAL_IN_MILLISECONDS
 import com.aws.amazonlocation.utils.MapCameraZoom.DEFAULT_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.NAVIGATION_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.TRACKING_CAMERA_ZOOM
-import com.mapbox.android.gestures.StandardScaleGestureDetector
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
 import com.mapbox.geojson.LineString
@@ -134,11 +133,11 @@ class MapHelper(private val appContext: Context) {
         val request =
             LocationEngineRequest.Builder(DEFAULT_INTERVAL_IN_MILLISECONDS).setMaxWaitTime(1000)
                 .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY).build()
-        mLocationEngine?.requestLocationUpdates(request, locationListener, Looper.getMainLooper())
-        mLocationEngine?.getLastLocation(locationListener)
 
         if (setCurrentLocation) {
-            mLocationEngine?.getLastLocation(initialLocationListener)
+            try {
+                mLocationEngine?.getLastLocation(initialLocationListener)
+            } catch (_: Exception) {}
         } else {
             mLocationEngine?.requestLocationUpdates(request, locationListener, Looper.getMainLooper())
             mLocationEngine?.getLastLocation(locationListener)
@@ -889,7 +888,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun navigationZoomCamera(latLng: LatLng, isZooming: Boolean) {
-        if(!isZooming) {
+        if (!isZooming) {
             mMapboxMap?.easeCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().zoom(NAVIGATION_CAMERA_ZOOM).target(latLng)
@@ -1095,6 +1094,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     private fun updateZoomRange(style: Style) {
+        mMapboxMap?.getStyle {
         val cameraPosition = mMapboxMap?.cameraPosition
         val zoom = cameraPosition?.zoom
         val minZoom = minZoomLevel(style)
@@ -1112,6 +1112,7 @@ class MapHelper(private val appContext: Context) {
         }
         mMapboxMap?.setMinZoomPreference(minZoom)
         mMapboxMap?.setMaxZoomPreference(maxZoom)
+        }
     }
 
     private fun minZoomLevel(style: Style): Double {

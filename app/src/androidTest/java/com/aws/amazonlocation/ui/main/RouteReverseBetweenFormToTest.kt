@@ -27,11 +27,12 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
+import com.aws.amazonlocation.TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -119,7 +120,7 @@ class RouteReverseBetweenFormToTest {
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
                             DELAY_10000
                         )
-                        Assert.assertTrue(originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
+                        Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
                     } else {
                         Assert.fail()
                     }
@@ -130,7 +131,7 @@ class RouteReverseBetweenFormToTest {
                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
             }
         } catch (e: Exception) {
-            printError(133, e)
+            failTest(133, e)
             Assert.fail(TEST_FAILED)
         }
     }

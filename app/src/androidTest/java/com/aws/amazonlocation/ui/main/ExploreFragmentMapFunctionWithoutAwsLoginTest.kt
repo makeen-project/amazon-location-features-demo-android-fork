@@ -29,6 +29,7 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_BUTTON_DIRECTION
 import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
+import com.aws.amazonlocation.TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
@@ -153,7 +154,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest {
 
                         val btnExit =
                             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_exit)
-                        Assert.assertTrue(btnExit.visibility == View.VISIBLE)
+                        Assert.assertTrue(TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE, btnExit.visibility == View.VISIBLE)
                     } else {
                         Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                     }

@@ -129,7 +129,7 @@ class SettingsFragmentChangeStyleTest {
                 checkLoadedTheme()
             }
         } catch (e: Exception) {
-            printError(132, e)
+            failTest(132, e)
             Assert.fail(TEST_FAILED)
         }
     }

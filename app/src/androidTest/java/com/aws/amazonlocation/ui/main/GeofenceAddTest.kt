@@ -125,7 +125,7 @@ class GeofenceAddTest {
                 )
             )
         } catch (e: Exception) {
-            printError(128, e)
+            failTest(128, e)
             Assert.fail(TEST_FAILED)
         }
     }

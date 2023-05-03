@@ -7,6 +7,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
+import org.junit.Assert
 import java.util.*
 import kotlin.random.Random
 
@@ -81,6 +82,6 @@ val mockLocationsExit = listOf(
     MockLocation(23.011594, 72.522444),
 )
 
-fun printError(lineNo: Int, exception: Exception?) {
-    System.out.println("Exception caught at line $lineNo: ${exception?.stackTraceToString() ?: "Custom error"}")
+fun failTest(lineNo: Int, exception: Exception?) {
+    Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: ${exception?.stackTraceToString() ?: "Custom error"}")
 }

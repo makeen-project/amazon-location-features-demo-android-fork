@@ -23,11 +23,12 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.SECOND_DELAY_60
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_NOT_TRACKING_EXIT_DIALOG
 import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.TRACKING_EXITED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -112,15 +113,15 @@ class TrackingGeofenceExitTest {
                     SECOND_DELAY_60
                 )
                 dialogText = getAlertDialogMessage()
-                Assert.assertTrue(dialogText.contains(TRACKING_EXITED))
+                Assert.assertTrue(TEST_FAILED_NOT_TRACKING_EXIT_DIALOG, dialogText.contains(TRACKING_EXITED))
             } else if (dialogText.contains(TRACKING_EXITED)) {
-                Assert.assertTrue(dialogText.contains(TRACKING_EXITED))
+                Assert.assertTrue(TEST_FAILED_NOT_TRACKING_EXIT_DIALOG, dialogText.contains(TRACKING_EXITED))
             } else {
-                printError(119, null)
+                failTest(119, null)
                 Assert.fail(TEST_FAILED)
             }
         } catch (e: Exception) {
-            printError(123, e)
+            failTest(123, e)
             Assert.fail(TEST_FAILED)
         }
     }

@@ -31,6 +31,7 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
+import com.aws.amazonlocation.TEST_FAILED_NOT_EQUAL
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.TEST_WORD_1
@@ -192,7 +193,7 @@ class SearchResultComparisonTest {
                                             }
                                         }
                                     }
-                                    Assert.assertTrue(listDataSearch == listInsideDataSearch)
+                                    Assert.assertTrue(TEST_FAILED_NOT_EQUAL, listDataSearch == listInsideDataSearch)
                                 }
                             } else {
                                 Assert.fail(TEST_FAILED_DIRECTION_CARD)

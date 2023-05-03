@@ -70,7 +70,7 @@ class GeofenceEditTest {
 
             verifyGeoFenceUpdate()
         } catch (e: Exception) {
-            printError(73, e)
+            failTest(73, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -160,7 +160,7 @@ class GeofenceEditTest {
         val seekbar = mActivityRule.activity.findViewById<SeekBar>(R.id.seekbar_geofence_radius)
 
         if (seekbar.progress != updatedRadius) {
-            printError(163, null)
+            failTest(163, null)
             Assert.fail(TEST_FAILED)
         }
     }

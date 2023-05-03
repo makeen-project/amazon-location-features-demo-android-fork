@@ -71,7 +71,7 @@ class SettingsFragmentDefaultRouteTest {
 
             checkDefaultRouteOptions(avoidTollsShouldBe = false, avoidFerriesShouldBe = false)
         } catch (e: Exception) {
-            printError(74, e)
+            failTest(74, e)
             Assert.fail(TEST_FAILED)
         }
     }

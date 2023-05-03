@@ -18,7 +18,7 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -53,7 +53,7 @@ class ExploreFragmentMapLoadingTest {
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             Assert.assertEquals(AMAZON_MAP_READY, map.contentDescription)
         } catch (e: Exception) {
-            printError(56, e)
+            failTest(56, e)
             Assert.fail(TEST_FAILED)
         }
     }

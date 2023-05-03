@@ -144,7 +144,7 @@ class ExploreFragmentChangeStyleTest {
                 }
             }
         } catch (e: Exception) {
-            printError(147, e)
+            failTest(147, e)
             Assert.fail(TEST_FAILED)
         }
     }

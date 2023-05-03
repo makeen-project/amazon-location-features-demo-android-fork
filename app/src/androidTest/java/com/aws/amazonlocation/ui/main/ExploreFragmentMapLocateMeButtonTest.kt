@@ -19,9 +19,10 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -67,9 +68,9 @@ class ExploreFragmentMapLocateMeButtonTest {
             val cardNavigation = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/card_navigation"))
             cardNavigation.click()
             Thread.sleep(DELAY_2000)
-            Assert.assertTrue(mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
+            Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
         } catch (e: Exception) {
-            printError(71, e)
+            failTest(71, e)
             Assert.fail(TEST_FAILED)
         }
     }

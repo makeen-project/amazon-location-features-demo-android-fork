@@ -8,7 +8,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -35,7 +35,7 @@ import com.aws.amazonlocation.TEST_WORD_7
 import com.aws.amazonlocation.TEST_WORD_8
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.printError
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -55,7 +55,7 @@ class CheckRouteOptionsTest {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -77,7 +77,7 @@ class CheckRouteOptionsTest {
                 cardDirectionTest.perform(click())
                 uiDevice.wait(
                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                    DELAY_5000
+                    DELAY_5000,
                 )
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
@@ -86,7 +86,7 @@ class CheckRouteOptionsTest {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_10000,
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -95,8 +95,8 @@ class CheckRouteOptionsTest {
                             onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                                     0,
-                                    click()
-                                )
+                                    click(),
+                                ),
                             )
                         }
                     }
@@ -104,21 +104,21 @@ class CheckRouteOptionsTest {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_10000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
                             onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                                     0,
-                                    click()
-                                )
+                                    click(),
+                                ),
                             )
                         }
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_10000
+                        DELAY_10000,
                     )
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
@@ -134,7 +134,7 @@ class CheckRouteOptionsTest {
 
                         uiDevice.wait(
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                            DELAY_10000
+                            DELAY_10000,
                         )
                         if (cardDriveGo.visibility == View.VISIBLE) {
                             onView(withId(R.id.edt_search_direction)).perform(ViewActions.clearText())
@@ -143,15 +143,15 @@ class CheckRouteOptionsTest {
                             Thread.sleep(DELAY_2000)
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                                DELAY_10000
+                                DELAY_10000,
                             )
                             rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                                 if (it > 0) {
                                     onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                         RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                                             0,
-                                            click()
-                                        )
+                                            click(),
+                                        ),
                                     )
                                 }
                             }
@@ -162,21 +162,21 @@ class CheckRouteOptionsTest {
                             Thread.sleep(DELAY_2000)
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                                DELAY_10000
+                                DELAY_10000,
                             )
                             rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                                 if (it > 0) {
                                     onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                         RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                                             0,
-                                            click()
-                                        )
+                                            click(),
+                                        ),
                                     )
                                 }
                             }
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                                DELAY_10000
+                                DELAY_10000,
                             )
                             if (cardDriveGo.visibility == View.VISIBLE) {
                                 Thread.sleep(DELAY_1000)
@@ -186,9 +186,9 @@ class CheckRouteOptionsTest {
                                 Thread.sleep(DELAY_2000)
                                 uiDevice.wait(
                                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                                    DELAY_10000
+                                    DELAY_10000,
                                 )
-                                Assert.assertTrue(cardDriveGo.visibility == View.VISIBLE)
+                                Assert.assertTrue(TEST_FAILED_CARD_DRIVE_GO, cardDriveGo.visibility == View.VISIBLE)
                             } else {
                                 Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                             }
@@ -205,7 +205,7 @@ class CheckRouteOptionsTest {
                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
             }
         } catch (e: Exception) {
-            printError(208, e)
+            failTest(208, e)
             Assert.fail(TEST_FAILED)
         }
     }

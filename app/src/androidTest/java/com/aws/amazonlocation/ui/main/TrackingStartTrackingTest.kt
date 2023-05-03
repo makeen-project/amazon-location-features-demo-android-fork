@@ -90,7 +90,7 @@ class TrackingStartTrackingTest {
                 Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY_NULL)
             }
         } catch (e: Exception) {
-            printError(93, e)
+            failTest(93, e)
             Assert.fail(TEST_FAILED)
         }
     }

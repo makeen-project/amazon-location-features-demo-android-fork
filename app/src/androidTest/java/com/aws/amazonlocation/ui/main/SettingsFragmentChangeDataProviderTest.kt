@@ -92,7 +92,7 @@ class SettingsFragmentChangeDataProviderTest {
 
             checkDataProvider(true)
         } catch (e: Exception) {
-            printError(95, e)
+            failTest(95, e)
             Assert.fail(TEST_FAILED)
         }
     }
