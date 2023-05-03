@@ -26,6 +26,7 @@ class MapStyleFragment : BaseFragment() {
     private var mHereAdapter: EsriMapStyleAdapter? = null
     private var isMapClickEnable = true
     private var isTablet = false
+    private var isLargeTablet = false
     private var columnCount = 3
 
     override fun onCreateView(
@@ -44,6 +45,7 @@ class MapStyleFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
+        isLargeTablet = requireContext().resources.getBoolean(R.bool.is_large_tablet)
         setColumnCount()
         val mapStyle =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
@@ -76,12 +78,22 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun setColumnCount() {
-        columnCount = if (requireContext().resources.displayMetrics.widthPixels < 850) {
-            2
-        } else if (requireContext().resources.displayMetrics.widthPixels < 1100) {
-            3
+        if (isLargeTablet) {
+            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 1500) {
+                2
+            } else if (requireContext().resources.displayMetrics.widthPixels < 2000) {
+                3
+            } else {
+                4
+            }
         } else {
-            4
+            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 850) {
+                2
+            } else if (requireContext().resources.displayMetrics.widthPixels < 1100) {
+                3
+            } else {
+                4
+            }
         }
     }
 
