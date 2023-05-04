@@ -155,7 +155,12 @@ class TrackingUtils(
             getCurrentDateData()
 
             mBottomSheetTrackingBehavior?.isDraggable = true
-            mBottomSheetTrackingBehavior?.peekHeight = 110.px
+            val isTablet = clTracking.context.resources.getBoolean(R.bool.is_tablet)
+            if (isTablet) {
+                mBottomSheetTrackingBehavior?.peekHeight = 160.px
+            } else {
+                mBottomSheetTrackingBehavior?.peekHeight = 110.px
+            }
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
     }

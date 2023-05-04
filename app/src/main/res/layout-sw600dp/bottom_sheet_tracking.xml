@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/dp_110"
+    app:behavior_peekHeight="@dimen/dp_150"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
@@ -37,7 +37,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/bottom_sheet_top_corner_curved_geofence"
-        android:paddingBottom="@dimen/dp_3"
+        android:paddingBottom="@dimen/bottom_nav_height"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -312,6 +312,7 @@
         android:clickable="true"
         android:focusable="true"
         android:paddingBottom="@dimen/dp_24"
+        android:layout_marginBottom="@dimen/dp_24"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_tracking_sheet">
@@ -400,5 +401,13 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <View
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_50"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_enable_tracking" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

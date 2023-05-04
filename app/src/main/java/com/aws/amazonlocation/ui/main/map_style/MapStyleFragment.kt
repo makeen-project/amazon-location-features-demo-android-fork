@@ -79,12 +79,14 @@ class MapStyleFragment : BaseFragment() {
 
     private fun setColumnCount() {
         if (isLargeTablet) {
-            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 1500) {
+            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 1400) {
                 2
             } else if (requireContext().resources.displayMetrics.widthPixels < 2000) {
                 3
-            } else {
+            } else if (requireContext().resources.displayMetrics.widthPixels < 2400) {
                 4
+            } else {
+                5
             }
         } else {
             columnCount = if (requireContext().resources.displayMetrics.widthPixels < 850) {

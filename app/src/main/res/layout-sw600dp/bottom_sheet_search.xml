@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
-    android:paddingBottom="100dp"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/dp_150"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -182,6 +181,7 @@
             android:layout_height="@dimen/dp_0"
             android:background="@color/search_bs_bg_color"
             android:overScrollMode="never"
+            android:paddingBottom="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
