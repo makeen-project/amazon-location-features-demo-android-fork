@@ -17,13 +17,16 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_NO_MATCHING_TEXT_NOT_VISIBLE
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -61,13 +64,14 @@ class ExploreFragmentSearchNonExistingLocationTest {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(" "))
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/tv_no_matching_found")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_no_matching_found")),
                 DELAY_10000
             )
             val tvNoMatchingPlaceFound =
                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_no_matching_found)
-            Assert.assertTrue(tvNoMatchingPlaceFound.visibility == View.VISIBLE)
-        } catch (_: Exception) {
+            Assert.assertTrue(TEST_FAILED_NO_MATCHING_TEXT_NOT_VISIBLE, tvNoMatchingPlaceFound.visibility == View.VISIBLE)
+        } catch (e: Exception) {
+            failTest(73, e)
             Assert.fail(TEST_FAILED)
         }
     }

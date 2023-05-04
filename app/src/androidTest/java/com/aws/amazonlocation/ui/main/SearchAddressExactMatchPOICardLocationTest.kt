@@ -18,6 +18,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
@@ -25,10 +26,12 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -67,7 +70,7 @@ class SearchAddressExactMatchPOICardLocationTest {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_10000
             )
             val rvSearchPlaceSuggestion =
@@ -84,13 +87,13 @@ class SearchAddressExactMatchPOICardLocationTest {
                             mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
                         if (btnDirection.visibility == View.VISIBLE) {
                             uiDevice.wait(
-                                Until.hasObject(By.res("com.aws.amazonlocation:id/tv_direction_distance")),
+                                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_direction_distance")),
                                 DELAY_5000
                             )
                             val tvDirectionTime =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_direction_distance)
                             Thread.sleep(DELAY_1000)
-                            Assert.assertTrue(tvDirectionTime.visibility == View.VISIBLE)
+                            Assert.assertTrue(TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE, tvDirectionTime.visibility == View.VISIBLE)
                         } else {
                             Assert.fail()
                         }
@@ -101,7 +104,8 @@ class SearchAddressExactMatchPOICardLocationTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(107, e)
             Assert.fail(TEST_FAILED)
         }
     }

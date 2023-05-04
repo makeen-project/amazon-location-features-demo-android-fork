@@ -18,18 +18,20 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
+import com.aws.amazonlocation.TEST_FAILED_SEARCH_FIELD_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.TEST_WORD_1
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
@@ -50,7 +52,7 @@ class AfterSearchDirectionButtonWorkingTest {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -69,9 +71,10 @@ class AfterSearchDirectionButtonWorkingTest {
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_1))
+            BuildConfig.APPLICATION_ID
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
-                DELAY_10000
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
+                DELAY_10000,
             )
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
@@ -92,12 +95,12 @@ class AfterSearchDirectionButtonWorkingTest {
                                     onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
                                 cardDirectionTest.perform(click())
                                 uiDevice.wait(
-                                    Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_direction")),
-                                    DELAY_5000
+                                    Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
+                                    DELAY_5000,
                                 )
                                 val edtSearchDirection =
                                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
-                                Assert.assertTrue(edtSearchDirection.visibility == View.VISIBLE)
+                                Assert.assertTrue(TEST_FAILED_SEARCH_FIELD_NOT_VISIBLE, edtSearchDirection.visibility == View.VISIBLE)
                             } else {
                                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
                             }
@@ -111,8 +114,8 @@ class AfterSearchDirectionButtonWorkingTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
-        } catch (_: Exception) {
-            Assert.fail(TEST_FAILED)
+        } catch (e: Exception) {
+            failTest(118, e)
         }
     }
 }

@@ -67,6 +67,7 @@ class BottomSheetHelper {
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
                             isSearchSheetOpen = true
+                            activity?.hideKeyboard()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}

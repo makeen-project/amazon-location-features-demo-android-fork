@@ -26,6 +26,7 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
+import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_GREATER_THAN_ZERO
 import com.aws.amazonlocation.TEST_FAILED_LIST
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
@@ -122,7 +123,7 @@ class ExploreFragmentLiveNavigationTest {
                     if (rvNavigationList.visibility == View.VISIBLE) {
                         mActivityRule.activity.runOnUiThread {
                             val itemCount = rvNavigationList.adapter?.itemCount ?: 0
-                            Assert.assertTrue(itemCount > 0)
+                            Assert.assertTrue(TEST_FAILED_COUNT_NOT_GREATER_THAN_ZERO, itemCount > 0)
                         }
                     } else {
                         Assert.fail(TEST_FAILED_LIST)

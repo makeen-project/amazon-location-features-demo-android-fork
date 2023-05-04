@@ -7,6 +7,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
+import org.junit.Assert
 import java.util.*
 import kotlin.random.Random
 
@@ -23,7 +24,7 @@ fun enableGPS(context: Context) {
             UiSelector()
                 .className("android.widget.Button").packageName("com.google.android.gms")
                 .resourceId("android:id/button1")
-                .clickable(true).checkable(false)
+                .clickable(true).checkable(false),
         )
         uiDevice.pressDelete()
         if (allowGpsBtn.exists() && allowGpsBtn.isEnabled) {
@@ -69,7 +70,7 @@ val mockLocations = listOf(
     MockLocation(23.015137, 72.532712),
     MockLocation(23.014985, 72.532109),
     MockLocation(23.014748, 72.531518),
-    MockLocation(23.014630, 72.530917)
+    MockLocation(23.014630, 72.530917),
 )
 
 val mockLocationsExit = listOf(
@@ -78,5 +79,9 @@ val mockLocationsExit = listOf(
     MockLocation(23.013142, 72.523544),
     MockLocation(23.013152, 72.522846),
     MockLocation(23.012348, 72.522382),
-    MockLocation(23.011594, 72.522444)
+    MockLocation(23.011594, 72.522444),
 )
+
+fun failTest(lineNo: Int, exception: Exception?) {
+    Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: ${exception?.stackTraceToString() ?: "Custom error"}")
+}

@@ -20,6 +20,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_POOL_ID_NOT_BLANK
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.ui.base.BaseActivity
@@ -101,6 +102,6 @@ class SettingAWSDisconnectingTest {
         Thread.sleep(DELAY_1000)
 
         val poolId = preferenceManager.getValue(KEY_POOL_ID, "")
-        Assert.assertTrue(poolId == "")
+        Assert.assertTrue(TEST_FAILED_POOL_ID_NOT_BLANK, poolId == "")
     }
 }

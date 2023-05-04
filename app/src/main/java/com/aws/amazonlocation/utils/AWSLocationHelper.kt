@@ -8,7 +8,6 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.regions.Region
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.geo.AmazonLocationClient
-import com.amazonaws.services.geo.model.AssociateTrackerConsumerRequest
 import com.amazonaws.services.geo.model.BatchDeleteDevicePositionHistoryRequest
 import com.amazonaws.services.geo.model.BatchDeleteGeofenceRequest
 import com.amazonaws.services.geo.model.BatchUpdateDevicePositionRequest
@@ -169,7 +168,7 @@ class AWSLocationHelper(
                                 CalculateRouteCarModeOptions().withAvoidTolls(isAvoidTolls)
                                     .withAvoidFerries(isAvoidFerries)
                             ).withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
-                            .withDepartNow(false).withTravelMode(travelMode)
+                            .withDepartNow(true).withTravelMode(travelMode)
                             .withCalculatorName(indexName)
                     )
                 }
@@ -183,7 +182,7 @@ class AWSLocationHelper(
                                 CalculateRouteTruckModeOptions().withAvoidTolls(isAvoidTolls)
                                     .withAvoidFerries(isAvoidFerries)
                             ).withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
-                            .withDepartNow(false).withTravelMode(travelMode)
+                            .withDepartNow(true).withTravelMode(travelMode)
                             .withCalculatorName(indexName)
                     )
                 }
@@ -194,7 +193,7 @@ class AWSLocationHelper(
                             latDeparture
                         ).withDestinationPosition(lngDestination, latDestination)
                             .withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
-                            .withDepartNow(false).withTravelMode(travelMode)
+                            .withDepartNow(true).withTravelMode(travelMode)
                             .withCalculatorName(indexName)
                     )
                 }
@@ -388,7 +387,7 @@ class AWSLocationHelper(
         }
     }
 
-    private fun searchPlaceIndexForPosition(
+    fun searchPlaceIndexForPosition(
         lng: Double?,
         lat: Double?
     ): SearchPlaceIndexForSuggestionsResult {
@@ -520,16 +519,6 @@ class AWSLocationHelper(
         }
     }
 
-    fun associateTrackerWithGeofence(trackerName: String, consumerArn: String) {
-        val data = AssociateTrackerConsumerRequest().withTrackerName(trackerName)
-            .withConsumerArn(consumerArn)
-        try {
-            mClient?.associateTrackerConsumer(data)
-        } catch (e: Exception) {
-            // handle error
-        }
-    }
-
     fun batchUpdateDevicePosition(
         trackerName: String,
         position: List<Double>,
@@ -599,5 +588,3 @@ class AWSLocationHelper(
         }
     }
 }
-
-

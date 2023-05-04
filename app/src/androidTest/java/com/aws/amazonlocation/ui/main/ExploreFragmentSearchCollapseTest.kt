@@ -17,10 +17,12 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_NAVIGATION_CARD_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -56,7 +58,7 @@ class ExploreFragmentSearchCollapseTest {
         enableGPS(ApplicationProvider.getApplicationContext())
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         uiDevice.wait(
-            Until.hasObject(By.res("com.aws.amazonlocation:id/edt_search_places")),
+            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_places")),
             DELAY_5000
         )
         val edtSearch =
@@ -74,7 +76,7 @@ class ExploreFragmentSearchCollapseTest {
             uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))), DELAY_5000)
             val cardNavigation =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_navigation)
-            Assert.assertTrue(cardNavigation.visibility == View.VISIBLE)
+            Assert.assertTrue(TEST_FAILED_NAVIGATION_CARD_NOT_VISIBLE, cardNavigation.visibility == View.VISIBLE)
         } else {
             Assert.fail(TEST_FAILED_SEARCH_SHEET)
         }
