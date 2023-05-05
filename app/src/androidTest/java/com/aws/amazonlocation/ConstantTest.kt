@@ -107,3 +107,4 @@ const val TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE = "Test failed due to signin but
 const val TEST_FAILED_COUNT_NOT_ZERO = "Test failed due to count not zero"
 const val TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG = "Test failed due to not tracking entered dialog"
 const val TEST_FAILED_NOT_TRACKING_EXIT_DIALOG = "Test failed due to not tracking exit dialog"
+const val TEST_FAILED_LATCH_TIMEOUT = "Test failed due to latch timeout"
