@@ -3701,7 +3701,7 @@ class ExploreFragment :
                 mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
             }
         }
-        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this)
+        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this, activity)
         activity?.let {
             mBaseActivity?.mGeofenceUtils?.setMapBox(
                 it,

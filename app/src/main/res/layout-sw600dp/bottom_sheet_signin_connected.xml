@@ -7,20 +7,20 @@
     android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/screen_size"
-        android:layout_height="match_parent"
-        android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
-        android:paddingBottom="@dimen/dp_16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dp_50"
+        android:background="@drawable/bottom_sheet_top_all_corner_curved_white_bg"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_sign_in_connected_close"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_14"
-            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_16"
             app:cardBackgroundColor="@color/number_bg_color"
             app:cardCornerRadius="@dimen/dp_30"
             app:cardElevation="@dimen/dp_0"
@@ -36,17 +36,26 @@
                 android:src="@drawable/ic_close" />
 
         </com.google.android.material.card.MaterialCardView>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/screen_size"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_60"
+            android:paddingBottom="@dimen/dp_48"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/card_tracking"
             android:layout_width="@dimen/dp_104"
             android:layout_height="@dimen/dp_104"
-            android:layout_marginTop="@dimen/dp_132"
+            android:layout_marginTop="@dimen/dp_48"
             android:src="@drawable/ic_check_sign_in_connected"
             app:cardBackgroundColor="@color/color_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_sign_in_connected_close" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_sign_in_required"
@@ -104,5 +113,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_sign_in" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

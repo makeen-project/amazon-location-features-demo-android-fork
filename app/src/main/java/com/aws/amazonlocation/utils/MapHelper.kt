@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.maplibre.util.toJsonElement
@@ -101,7 +102,8 @@ class MapHelper(private val appContext: Context) {
         mapStyle: String,
         style: String,
         isMapLoadedInterface: IsMapLoadedInterface,
-        mapStyleChangedListener: MapStyleChangeListener
+        mapStyleChangedListener: MapStyleChangeListener,
+        activity: FragmentActivity?
     ) {
         mapboxMap?.let {
             mMapLibreView = mapView
@@ -112,7 +114,9 @@ class MapHelper(private val appContext: Context) {
             mapView.setStyle(MapStyle(mapStyle, style)) { style ->
                 updateZoomRange(style)
                 enableLocationComponent()
-                initLocationEngine(true)
+                if (activity?.checkLocationPermission() == true) {
+                    initLocationEngine(true)
+                }
                 mSymbolManager = SymbolManager(mapView, mapboxMap, style)
                 mSymbolManagerWithClick = SymbolManager(mapView, mapboxMap, style)
                 mSymbolManagerTracker = SymbolManager(mapView, mapboxMap, style)
