@@ -231,27 +231,29 @@ class MapHelper(private val appContext: Context) {
 
     private val initialLocationListener = object : LocationEngineCallback<LocationEngineResult> {
         override fun onSuccess(result: LocationEngineResult?) {
-            mMapboxMap?.moveCamera(
-                CameraUpdateFactory.newCameraPosition(
-                    CameraPosition.Builder().zoom(DEFAULT_CAMERA_ZOOM).padding(
-                        appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                        appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                        appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                        appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                    ).target(
-                        result?.lastLocation?.let {
-                            LatLng(
-                                it.latitude,
-                                it.longitude,
-                            )
-                        } ?: mDefaultLatLng,
-                    ).build(),
-                ),
-            )
-            try {
-                mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
-            } catch (e: Exception) {
-                e.printStackTrace()
+            mMapboxMap?.getStyle {
+                mMapboxMap?.moveCamera(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.Builder().zoom(DEFAULT_CAMERA_ZOOM).padding(
+                            appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
+                        ).target(
+                            result?.lastLocation?.let {
+                                LatLng(
+                                    it.latitude,
+                                    it.longitude,
+                                )
+                            } ?: mDefaultLatLng,
+                        ).build(),
+                    ),
+                )
+                try {
+                    mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
 
