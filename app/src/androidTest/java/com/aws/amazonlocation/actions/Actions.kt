@@ -22,13 +22,12 @@ import com.aws.amazonlocation.NESTED_SCROLL_ERROR
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
-
 fun nestedScrollTo(): ViewAction {
     return object : ViewAction {
         override fun getConstraints(): Matcher<View> {
             return Matchers.allOf(
                 ViewMatchers.isDescendantOfA(ViewMatchers.isAssignableFrom(NestedScrollView::class.java)),
-                ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)
+                ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
             )
         }
 
@@ -41,7 +40,7 @@ fun nestedScrollTo(): ViewAction {
                 val nestedScrollView = view?.let {
                     findFirstParentLayoutOfClass(
                         it,
-                        NestedScrollView::class.java
+                        NestedScrollView::class.java,
                     )
                 } as NestedScrollView?
                 if (nestedScrollView != null) {
@@ -105,7 +104,7 @@ fun clickXYPercent(x: Float, y: Float): ViewAction {
 
             floatArrayOf(xPoint, yPoint)
         },
-        Press.FINGER
+        Press.FINGER,
     )
 }
 
@@ -117,9 +116,6 @@ fun clickOnViewChild(viewId: Int) = object : ViewAction {
     override fun perform(uiController: UiController, view: View) = ViewActions.click()
         .perform(uiController, view.findViewById(viewId))
 }
-
-
-
 
 fun pinchOut(): ViewAction? {
     return object : ViewAction {
@@ -176,7 +172,7 @@ private fun getCenterPoint(view: View): Point {
     val viewWidth = view.width * view.scaleX
     return Point(
         (locationOnScreen[0] + viewWidth / 2).toInt(),
-        (locationOnScreen[1] + viewHeight / 2).toInt()
+        (locationOnScreen[1] + viewHeight / 2).toInt(),
     )
 }
 
@@ -185,7 +181,7 @@ private fun performPinch(
     startPoint1: Point,
     startPoint2: Point,
     endPoint1: Point,
-    endPoint2: Point
+    endPoint2: Point,
 ) {
     val duration = 500
     val eventMinInterval: Long = 10
@@ -242,7 +238,7 @@ private fun performPinch(
         event = MotionEvent.obtain(
             startTime, eventTime,
             MotionEvent.ACTION_DOWN, 1, properties,
-            pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0
+            pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0,
         )
         injectMotionEventToUiController(uiController, event)
 
@@ -261,7 +257,7 @@ private fun performPinch(
             0,
             0,
             0,
-            0
+            0,
         )
         injectMotionEventToUiController(uiController, event)
 
@@ -291,7 +287,7 @@ private fun performPinch(
             event = MotionEvent.obtain(
                 startTime, eventTime,
                 MotionEvent.ACTION_MOVE, 2, properties,
-                pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0
+                pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0,
             )
             injectMotionEventToUiController(uiController, event)
         }
@@ -318,7 +314,7 @@ private fun performPinch(
             0,
             0,
             0,
-            0
+            0,
         )
         injectMotionEventToUiController(uiController, event)
 
@@ -327,7 +323,7 @@ private fun performPinch(
         event = MotionEvent.obtain(
             startTime, eventTime,
             MotionEvent.ACTION_UP, 1, properties,
-            pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0
+            pointerCoords, 0, 0, 1f, 1f, 0, 0, 0, 0,
         )
         injectMotionEventToUiController(uiController, event)
     } catch (e: InjectEventSecurityException) {

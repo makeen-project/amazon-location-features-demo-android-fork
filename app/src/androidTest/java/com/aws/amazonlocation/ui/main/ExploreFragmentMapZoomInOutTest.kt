@@ -74,7 +74,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             onView(withId(R.id.mapView)).perform(pinchOut())
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_3000)
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
@@ -83,7 +83,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
         } catch (e: Exception) {
-            failTest(79, e)
+            failTest(86, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -99,10 +99,11 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
+            Thread.sleep(DELAY_3000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             onView(withId(R.id.mapView)).perform(pinchIn())
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_3000)
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel > it)
@@ -111,7 +112,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
         } catch (e: Exception) {
-            failTest(108, e)
+            failTest(115, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -145,7 +146,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
                 Assert.fail(TEST_FAILED_ZOOM_LEVEL)
             }
         } catch (e: Exception) {
-            failTest(138, e)
+            failTest(149, e)
             Assert.fail(TEST_FAILED)
         }
     }
