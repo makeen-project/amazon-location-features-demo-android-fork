@@ -25,6 +25,8 @@ import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_MAP_NOT_FOUND
+import com.aws.amazonlocation.TEST_FAILED_PINCH_IN_FAILED
+import com.aws.amazonlocation.TEST_FAILED_PINCH_OUT_FAILED
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED
 import com.aws.amazonlocation.di.AppModule
@@ -73,7 +75,8 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             if (map.exists()) {
-                map.pinchOut(50, 15)
+                val success = map.pinchOut(50, 50)
+                Assert.assertTrue(TEST_FAILED_PINCH_OUT_FAILED, success)
             } else {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }
@@ -106,7 +109,8 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             if (map.exists()) {
-                map.pinchIn(50, 15)
+                val success = map.pinchIn(50, 50)
+                Assert.assertTrue(TEST_FAILED_PINCH_IN_FAILED, success)
             } else {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }

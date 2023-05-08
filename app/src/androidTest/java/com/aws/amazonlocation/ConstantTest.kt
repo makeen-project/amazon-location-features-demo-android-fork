@@ -109,3 +109,5 @@ const val TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG = "Test failed due to not trac
 const val TEST_FAILED_NOT_TRACKING_EXIT_DIALOG = "Test failed due to not tracking exit dialog"
 const val TEST_FAILED_LATCH_TIMEOUT = "Test failed due to latch timeout"
 const val TEST_FAILED_MAP_NOT_FOUND = "Test failed due to map not found"
+const val TEST_FAILED_PINCH_OUT_FAILED = "Test failed due to pinch out failed"
+const val TEST_FAILED_PINCH_IN_FAILED = "Test failed due to pinch in failed"
