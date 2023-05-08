@@ -56,7 +56,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_1))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
-
+                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapboxMap? = null
@@ -64,6 +64,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
+                    Thread.sleep(DELAY_2000)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(67, e)
@@ -74,7 +75,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
 
                     uiDevice.findObject(By.text(ALLOW))?.click()
-
+                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapboxMap? = null
@@ -82,6 +83,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
+                    Thread.sleep(DELAY_2000)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(85, e)
