@@ -1,31 +1,45 @@
 package com.aws.amazonlocation.ui.main
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.* // ktlint-disable no-wildcard-imports
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.*
-import com.aws.amazonlocation.*
+import androidx.test.uiautomator.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.DELAY_1000
+import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_5000
+import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.actions.clickOnViewChild
 import com.aws.amazonlocation.actions.clickXYPercent
 import com.aws.amazonlocation.di.AppModule
+import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.getRandom0_01To1_0
+import com.aws.amazonlocation.getRandom1To100
+import com.aws.amazonlocation.getRandomGeofenceName
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import java.util.*
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -37,7 +51,7 @@ class GeofenceDeleteTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -59,15 +73,15 @@ class GeofenceDeleteTest : BaseTest() {
             onView(
                 allOf(
                     withId(R.id.card_geofence_map),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             ).perform(click())
 
             Thread.sleep(DELAY_1000)
 
             uiDevice.wait(
                 Until.gone(By.res("${BuildConfig.APPLICATION_ID}:id/cl_search_loader_geofence_list")),
-                DELAY_5000
+                DELAY_5000,
             )
 
             createOrGetGeoFence()
@@ -95,19 +109,19 @@ class GeofenceDeleteTest : BaseTest() {
                 allOf(
                     withId(R.id.btn_add_geofence),
                     isDisplayed(),
-                    isEnabled()
-                )
+                    isEnabled(),
+                ),
             ).perform(click())
 
             Thread.sleep(DELAY_1000)
 
             onView(
-                withId(R.id.mapView)
+                withId(R.id.mapView),
             ).perform(
                 clickXYPercent(
                     getRandom1To100(),
-                    getRandom1To100()
-                )
+                    getRandom1To100(),
+                ),
             )
 
             Thread.sleep(DELAY_1000)
@@ -125,8 +139,8 @@ class GeofenceDeleteTest : BaseTest() {
 
             onView(withId(R.id.rv_geofence)).perform(
                 RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                    hasDescendant(withText(geofenceName))
-                )
+                    hasDescendant(withText(geofenceName)),
+                ),
             )
         } else {
             rv.findViewHolderForAdapterPosition(0)?.let {
@@ -148,22 +162,22 @@ class GeofenceDeleteTest : BaseTest() {
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
-                    withText(geofenceName)
+                    withText(geofenceName),
                 ),
-                clickOnViewChild(R.id.iv_delete_geofence)
-            )
+                clickOnViewChild(R.id.iv_delete_geofence),
+            ),
         )
         Thread.sleep(DELAY_1000)
         onView(withText(mActivityRule.activity.getString(R.string.ok))).perform(click())
 
         uiDevice.wait(
             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_search_loader_geofence_list")),
-            DELAY_5000
+            DELAY_5000,
         )
 
         uiDevice.wait(
             Until.gone(By.res("${BuildConfig.APPLICATION_ID}:id/cl_search_loader_geofence_list")),
-            DELAY_5000
+            DELAY_5000,
         )
         Thread.sleep(DELAY_1000)
         val iCount = initialCount
