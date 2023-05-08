@@ -131,7 +131,7 @@ fun pinchOut(): ViewAction? {
             val middlePosition: Point = getCenterPoint(view)
             val startDelta = 0 // How far from the center point each finger should start
             val endDelta =
-                (view.width * 0.25).toInt() // How far from the center point each finger should end (note: Be sure to have this large enough so that the gesture is recognized!)
+                500 // How far from the center point each finger should end (note: Be sure to have this large enough so that the gesture is recognized!)
             val startPoint1 = Point(middlePosition.x - startDelta, middlePosition.y)
             val startPoint2 = Point(middlePosition.x + startDelta, middlePosition.y)
             val endPoint1 = Point(middlePosition.x - endDelta, middlePosition.y)
@@ -153,7 +153,7 @@ fun pinchIn(): ViewAction {
 
         override fun perform(uiController: UiController, view: View) {
             val middlePosition: Point = getCenterPoint(view)
-            val startDelta = (view.width * 0.25).toInt() // How far from the center point each finger should start (note: Be sure to have this large enough so that the gesture is recognized!)
+            val startDelta = (view.width * 0.5).toInt() // How far from the center point each finger should start (note: Be sure to have this large enough so that the gesture is recognized!)
             val endDelta = 0 // How far from the center point each finger should end
             val startPoint1 = Point(middlePosition.x - startDelta, middlePosition.y)
             val startPoint2 = Point(middlePosition.x + startDelta, middlePosition.y)

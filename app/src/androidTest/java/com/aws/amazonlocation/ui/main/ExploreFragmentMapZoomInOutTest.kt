@@ -73,7 +73,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             Thread.sleep(DELAY_3000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
-            onView(withId(R.id.mapView)).perform(pinchOut())
+            onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut())
             Thread.sleep(DELAY_3000)
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
@@ -102,7 +102,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             Thread.sleep(DELAY_3000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
-            onView(withId(R.id.mapView)).perform(pinchIn())
+            onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn())
             Thread.sleep(DELAY_3000)
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
