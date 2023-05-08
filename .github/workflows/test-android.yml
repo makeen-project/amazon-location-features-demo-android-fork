@@ -33,6 +33,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
+          emulator-boot-timeout: 1200
           target: playstore
           avd-name: test
           disable-animations: true
