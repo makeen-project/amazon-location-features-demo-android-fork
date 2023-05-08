@@ -23,7 +23,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingStartTrackingTest {
+class TrackingStartTrackingTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

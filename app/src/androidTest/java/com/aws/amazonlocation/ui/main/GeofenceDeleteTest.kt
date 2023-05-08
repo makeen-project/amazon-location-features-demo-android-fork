@@ -29,7 +29,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class GeofenceDeleteTest {
+class GeofenceDeleteTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

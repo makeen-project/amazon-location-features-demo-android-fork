@@ -12,6 +12,7 @@ import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
@@ -30,7 +31,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentMapCurrentLocationTest {
+class ExploreFragmentMapCurrentLocationTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

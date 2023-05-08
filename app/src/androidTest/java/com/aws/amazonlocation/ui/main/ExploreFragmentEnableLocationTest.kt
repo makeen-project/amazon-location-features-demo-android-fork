@@ -12,6 +12,7 @@ import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -33,7 +34,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentEnableLocationTest {
+class ExploreFragmentEnableLocationTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
