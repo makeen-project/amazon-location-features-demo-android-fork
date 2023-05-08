@@ -132,18 +132,18 @@ class BottomSheetHelper {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            view.imgAmazonLogoMapStyle.alpha = 1f
-                            view.ivAmazonInfoMapStyle.alpha = 1f
+                            view.imgAmazonLogoMapStyle?.alpha = 1f
+                            view.ivAmazonInfoMapStyle?.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-                            view.imgAmazonLogoMapStyle.alpha = 0f
-                            view.ivAmazonInfoMapStyle.alpha = 0f
+                            view.imgAmazonLogoMapStyle?.alpha = 0f
+                            view.ivAmazonInfoMapStyle?.alpha = 0f
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                            view.imgAmazonLogoMapStyle.alpha = 1f
-                            view.ivAmazonInfoMapStyle.alpha = 1f
+                            view.imgAmazonLogoMapStyle?.alpha = 1f
+                            view.ivAmazonInfoMapStyle?.alpha = 1f
                             if (isMapStyleExpandedOrHalfExpand() && isDirectionSearchSheetVisible()) {
                                 collapseDirectionSearch()
                             }

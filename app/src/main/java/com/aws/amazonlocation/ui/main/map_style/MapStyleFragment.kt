@@ -89,9 +89,9 @@ class MapStyleFragment : BaseFragment() {
                 5
             }
         } else {
-            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 850) {
+            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 1250) {
                 2
-            } else if (requireContext().resources.displayMetrics.widthPixels < 1100) {
+            } else if (requireContext().resources.displayMetrics.widthPixels < 1700) {
                 3
             } else {
                 4

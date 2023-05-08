@@ -1,9 +1,11 @@
 package com.aws.amazonlocation.ui.main
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -44,6 +46,7 @@ import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
@@ -64,9 +67,17 @@ class MainActivity : BaseActivity() {
         }
     var isTablet = false
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val height = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.bottomNavigationMain.layoutParams.width = height
+        mBinding.bottomNavigationMain.requestLayout()
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isTablet = resources.getBoolean(R.bool.is_tablet)
+        isTablet = resources.getBoolean(com.aws.amazonlocation.R.bool.is_tablet)
         if (!isTablet) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
@@ -78,7 +89,7 @@ class MainActivity : BaseActivity() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         initObserver()
         mNavHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            supportFragmentManager.findFragmentById(com.aws.amazonlocation.R.id.nav_host_fragment) as NavHostFragment
         mNavController = mNavHostFragment.navController
         mBinding.bottomNavigationMain.setupWithNavController(mNavController)
         if (mBottomSheetDialog == null) {
@@ -88,7 +99,7 @@ class MainActivity : BaseActivity() {
         isAppNotFirstOpened = mPreferenceManager.getValue(IS_APP_FIRST_TIME_OPENED, false)
 
         val inflater = mNavHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.nav_graph)
+        val graph = inflater.inflate(com.aws.amazonlocation.R.navigation.nav_graph)
         if (!isAppNotFirstOpened) {
             val welcomeSheet = WelcomeBottomSheetFragment()
             this.supportFragmentManager.let {
@@ -96,7 +107,7 @@ class MainActivity : BaseActivity() {
             }
             mBinding.bottomNavigationMain.hide()
         } else {
-            graph.startDestination = R.id.explore_fragment
+            graph.startDestination = com.aws.amazonlocation.R.id.explore_fragment
             mNavHostFragment.navController.graph = graph
             if (mBottomSheetDialog == null) {
                 setBottomBar()
@@ -124,11 +135,11 @@ class MainActivity : BaseActivity() {
                     }
                     TabEnum.TAB_TRACKING.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
-                            R.id.menu_tracking
+                            com.aws.amazonlocation.R.id.menu_tracking
                     }
                     TabEnum.TAB_GEOFENCE.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
-                            R.id.menu_geofence
+                            com.aws.amazonlocation.R.id.menu_geofence
                     }
                 }
             }
