@@ -20,6 +20,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -67,6 +68,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
+            Thread.sleep(DELAY_3000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
@@ -133,6 +135,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
+            Thread.sleep(DELAY_3000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
