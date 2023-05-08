@@ -27,6 +27,7 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
 import com.aws.amazonlocation.TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
@@ -123,7 +124,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                         )
                         Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
                     } else {
-                        Assert.fail()
+                        Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                     }
                 } else {
                     Assert.fail(TEST_FAILED_SEARCH_DIRECTION)

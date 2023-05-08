@@ -13,7 +13,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -38,6 +38,7 @@ import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.TEST_WORD_1
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -60,7 +61,7 @@ class SearchResultComparisonTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -81,7 +82,7 @@ class SearchResultComparisonTest : BaseTest() {
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_1))
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
-                DELAY_10000
+                DELAY_10000,
             )
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
@@ -92,7 +93,7 @@ class SearchResultComparisonTest : BaseTest() {
                         for (i in 0 until it) {
                             onView(withId(R.id.rv_search_places_suggestion)).perform(
                                 RecyclerViewActions.scrollToPosition<SearchPlacesSuggestionAdapter.SearchPlaceVH>(
-                                    i
+                                    i,
                                 ),
                                 RecyclerViewActions.actionOnItemAtPosition<SearchPlacesSuggestionAdapter.SearchPlaceVH>(
                                     i,
@@ -107,14 +108,14 @@ class SearchResultComparisonTest : BaseTest() {
 
                                         override fun perform(
                                             uiController: UiController?,
-                                            view: View
+                                            view: View,
                                         ) {
                                             val data =
                                                 view.findViewById<AppCompatTextView>(R.id.tv_place_name)
                                             listDataSearch.add(data.text.toString())
                                         }
-                                    }
-                                )
+                                    },
+                                ),
                             )
                         }
 
@@ -126,7 +127,7 @@ class SearchResultComparisonTest : BaseTest() {
                             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
                             uiDevice.wait(
                                 Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))),
-                                DELAY_5000
+                                DELAY_5000,
                             )
                             val cardDirection =
                                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_direction)
@@ -136,24 +137,24 @@ class SearchResultComparisonTest : BaseTest() {
                                 cardDirectionTest.perform(click())
                                 uiDevice.wait(
                                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                                    DELAY_5000
+                                    DELAY_5000,
                                 )
                                 val edtSearchDirection =
                                     onView(withId(R.id.edt_search_direction)).check(
                                         matches(
-                                            isDisplayed()
-                                        )
+                                            isDisplayed(),
+                                        ),
                                     )
                                 edtSearchDirection.perform(click())
                                 onView(withId(R.id.edt_search_direction)).perform(
                                     typeText(
-                                        TEST_WORD_1
-                                    )
+                                        TEST_WORD_1,
+                                    ),
                                 )
 
                                 uiDevice.wait(
                                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                                    DELAY_5000
+                                    DELAY_5000,
                                 )
                                 val rvSearchPlaceDirection =
                                     mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -165,7 +166,7 @@ class SearchResultComparisonTest : BaseTest() {
                                             for (i in 0 until it1) {
                                                 onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                                     RecyclerViewActions.scrollToPosition<SearchPlacesAdapter.SearchPlaceVH>(
-                                                        i
+                                                        i,
                                                     ),
                                                     RecyclerViewActions.actionOnItemAtPosition<SearchPlacesAdapter.SearchPlaceVH>(
                                                         i,
@@ -180,16 +181,16 @@ class SearchResultComparisonTest : BaseTest() {
 
                                                             override fun perform(
                                                                 uiController: UiController?,
-                                                                view: View
+                                                                view: View,
                                                             ) {
                                                                 val data =
                                                                     view.findViewById<AppCompatTextView>(
-                                                                        R.id.tv_place_name
+                                                                        R.id.tv_place_name,
                                                                     )
                                                                 listInsideDataSearch.add(data.text.toString())
                                                             }
-                                                        }
-                                                    )
+                                                        },
+                                                    ),
                                                 )
                                             }
                                         }
@@ -209,7 +210,8 @@ class SearchResultComparisonTest : BaseTest() {
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(214, e)
             Assert.fail(TEST_FAILED)
         }
     }
