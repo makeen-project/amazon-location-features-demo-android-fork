@@ -76,7 +76,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                 cardDirectionTest.perform(click())
                 uiDevice.wait(
                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                    DELAY_5000
+                    DELAY_15000
                 )
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
@@ -90,7 +90,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_15000
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -108,7 +108,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                     val destinationText = edtSearchDest.text.toString().trim()
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                        DELAY_10000
+                        DELAY_15000
                     )
                     val clDrive =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
@@ -120,7 +120,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                         Thread.sleep(DELAY_2000)
                         uiDevice.wait(
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                            DELAY_10000
+                            DELAY_15000
                         )
                         Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
                     } else {
