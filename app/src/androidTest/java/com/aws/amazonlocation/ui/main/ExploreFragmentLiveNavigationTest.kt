@@ -4,10 +4,12 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
@@ -24,6 +26,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
@@ -37,6 +40,8 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.anything
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -51,7 +56,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -70,7 +75,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
         onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
         uiDevice.wait(
             Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion")),
-            DELAY_10000
+            DELAY_15000,
         )
         val rvSearchPlaceSuggestion =
             mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
@@ -80,21 +85,17 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 onView(withId(R.id.rv_search_places_suggestion)).perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         0,
-                        click()
-                    )
+                        click(),
+                    ),
                 )
                 Thread.sleep(DELAY_2000)
                 uiDevice.wait(
                     Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/tv_direction_time")),
-                    DELAY_5000
+                    DELAY_5000,
                 )
 
-                val btnDirection =
-                    mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
-                mActivityRule.activity.runOnUiThread {
-                    btnDirection.performClick()
-                }
-                Thread.sleep(DELAY_2000)
+                onView(withId(R.id.btn_direction)).perform(click())
+                Thread.sleep(DELAY_3000)
                 val tvGetLocation1 =
                     mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_get_location)
                 if (tvGetLocation1.visibility == View.VISIBLE) {
@@ -103,29 +104,28 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 }
                 uiDevice.wait(
                     Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_drive_go")),
-                    DELAY_5000
+                    DELAY_10000,
                 )
 
                 val cardDriveGo =
                     mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
                 if (cardDriveGo.visibility == View.VISIBLE) {
-                    mActivityRule.activity.runOnUiThread {
-                        cardDriveGo.performClick()
-                    }
+                    onView(withId(R.id.card_drive_go)).perform(click())
 
                     uiDevice.wait(
                         Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_navigation_list")),
-                        DELAY_5000
+                        DELAY_15000,
                     )
 
                     val rvNavigationList =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_navigation_list)
                     Thread.sleep(DELAY_2000)
                     if (rvNavigationList.visibility == View.VISIBLE) {
-                        mActivityRule.activity.runOnUiThread {
-                            val itemCount = rvNavigationList.adapter?.itemCount ?: 0
-                            Assert.assertTrue(TEST_FAILED_COUNT_NOT_GREATER_THAN_ZERO, itemCount > 0)
-                        }
+                        onView(withId(R.id.rv_navigation_list)).check(
+                            matches(
+                                hasMinimumChildCount(1),
+                            ),
+                        )
                     } else {
                         Assert.fail(TEST_FAILED_LIST)
                     }
