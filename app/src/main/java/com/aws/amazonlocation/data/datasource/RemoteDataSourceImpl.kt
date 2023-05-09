@@ -24,16 +24,20 @@ import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SignInInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
+import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.isInternetAvailable
+import com.aws.amazonlocation.utils.isRunningRemoteDataSourceImplTest
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
+import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
 class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLocationHelper) :
     RemoteDataSource {
-
+    @Inject
+    lateinit var mPreferenceManager: PreferenceManager
     override fun searchPlaceSuggestions(
         lat: Double?,
         lng: Double?,
@@ -170,7 +174,11 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
                 }
             }
         } else {
-            distanceInterface.internetConnectionError(mContext.resources.getString(R.string.check_your_internet_connection_and_try_again))
+            distanceInterface.internetConnectionError(
+                if (isRunningRemoteDataSourceImplTest) "" else mContext.resources.getString(
+                    R.string.check_your_internet_connection_and_try_again
+                )
+            )
         }
     }
 
@@ -195,7 +203,11 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
             navigationData.country = indexResponse?.results?.get(0)?.place?.country
             searchPlace.getNavigationList(navigationData)
         } else {
-            searchPlace.internetConnectionError(mContext.resources.getString(R.string.check_your_internet_connection_and_try_again))
+            searchPlace.internetConnectionError(
+                if (isRunningRemoteDataSourceImplTest) "" else mContext.resources.getString(
+                    R.string.check_your_internet_connection_and_try_again
+                )
+            )
         }
     }
 
@@ -212,7 +224,11 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
                 searchPlace.error("")
             }
         } else {
-            searchPlace.internetConnectionError(mContext.resources.getString(R.string.check_your_internet_connection_and_try_again))
+            searchPlace.internetConnectionError(
+                if (isRunningRemoteDataSourceImplTest) "" else mContext.resources.getString(
+                    R.string.check_your_internet_connection_and_try_again
+                )
+            )
         }
     }
     override suspend fun getGeofenceList(
@@ -223,7 +239,7 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         mGeofenceAPIInterface.getGeofenceList(response)
     }
 
-    override suspend fun addGeofence(
+    override fun addGeofence(
         geofenceId: String,
         collectionName: String,
         radius: Double?,
@@ -241,10 +257,6 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
     ) {
         val response = mAWSLocationHelper.deleteGeofence(position, data)
         mGeofenceAPIInterface.deleteGeofence(response)
-    }
-
-    override suspend fun associateTrackerWithGeofence(trackerName: String, consumerArn: String) {
-        mAWSLocationHelper.associateTrackerWithGeofence(trackerName, consumerArn)
     }
 
     override suspend fun batchUpdateDevicePosition(

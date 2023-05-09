@@ -23,11 +23,12 @@ import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_IMAGE_NULL
 import com.aws.amazonlocation.TEST_FAILED_NO_TRACKING_HISTORY
-import com.aws.amazonlocation.TRACKING
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.mockLocationsExit
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
@@ -163,7 +164,7 @@ class TrackingStartTrackingMapDisplayTest {
                             mActivityRule.activity.runOnUiThread {
                                 idCount++
                                 val image = style.getImage("tracker$idCount")
-                                Assert.assertTrue(image != null)
+                                Assert.assertTrue(TEST_FAILED_IMAGE_NULL, image != null)
                             }
                         }
                     }
@@ -171,7 +172,8 @@ class TrackingStartTrackingMapDisplayTest {
             } else {
                 Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(175, e)
             Assert.fail(TEST_FAILED)
         }
     }

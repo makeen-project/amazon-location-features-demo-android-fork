@@ -16,11 +16,13 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_EQUAL_TO_FIVE
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_1
 import com.aws.amazonlocation.di.AppModule
@@ -62,7 +64,7 @@ class ExploreFragmentSearchTotalResultTest {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_1))
             uiDevice.wait(
-                Until.hasObject(By.res("com.aws.amazonlocation:id/rv_search_places_suggestion")),
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_10000
             )
             Thread.sleep(DELAY_2000)
@@ -70,7 +72,7 @@ class ExploreFragmentSearchTotalResultTest {
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
                 rvSearchPlaceSuggestion.adapter?.itemCount?.let {
-                    Assert.assertTrue(it == 5)
+                    Assert.assertTrue(TEST_FAILED_COUNT_NOT_EQUAL_TO_FIVE, it == 5)
                 }
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)

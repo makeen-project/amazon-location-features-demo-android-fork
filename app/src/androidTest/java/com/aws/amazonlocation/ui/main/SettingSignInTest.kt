@@ -22,6 +22,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_LOGOUT_BUTTON_NOT_VISIBLE
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -92,6 +93,6 @@ class SettingSignInTest {
         Thread.sleep(DELAY_1000)
         val btnLogout =
             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_logout)
-        Assert.assertTrue(btnLogout.visibility == View.VISIBLE)
+        Assert.assertTrue(TEST_FAILED_LOGOUT_BUTTON_NOT_VISIBLE, btnLogout.visibility == View.VISIBLE)
     }
 }

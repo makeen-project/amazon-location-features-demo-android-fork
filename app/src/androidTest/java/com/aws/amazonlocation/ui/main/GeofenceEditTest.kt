@@ -62,14 +62,15 @@ class GeofenceEditTest {
 
             Thread.sleep(DELAY_1000)
 
-            uiDevice.wait(Until.gone(By.res("com.aws.amazonlocation:id/cl_search_loader_geofence_list")), DELAY_5000)
+            uiDevice.wait(Until.gone(By.res("${BuildConfig.APPLICATION_ID}:id/cl_search_loader_geofence_list")), DELAY_5000)
 
             createOrGetGeoFence()
 
             editGeoFence()
 
             verifyGeoFenceUpdate()
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(73, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -112,7 +113,7 @@ class GeofenceEditTest {
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.btn_add_geofence_save)).perform(click())
 
-            uiDevice.wait(Until.hasObject(By.res("com.aws.amazonlocation:id/rv_geofence")), DELAY_5000)
+            uiDevice.wait(Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_geofence")), DELAY_5000)
 
             onView(withId(R.id.rv_geofence)).perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(geofenceName))))
         } else {
@@ -141,7 +142,7 @@ class GeofenceEditTest {
 
         onView(withId(R.id.btn_add_geofence_save)).perform(click())
 
-        uiDevice.wait(Until.hasObject(By.res("com.aws.amazonlocation:id/rv_geofence")), DELAY_5000)
+        uiDevice.wait(Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_geofence")), DELAY_5000)
     }
 
     private fun verifyGeoFenceUpdate() {
@@ -159,6 +160,7 @@ class GeofenceEditTest {
         val seekbar = mActivityRule.activity.findViewById<SeekBar>(R.id.seekbar_geofence_radius)
 
         if (seekbar.progress != updatedRadius) {
+            failTest(163, null)
             Assert.fail(TEST_FAILED)
         }
     }

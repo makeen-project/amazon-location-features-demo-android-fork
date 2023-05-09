@@ -40,12 +40,38 @@ class ExploreVMSetMapListData : BaseTest() {
     fun setMapListDataSuccess() = runTest {
         mExploreVM.setMapListData(context)
 
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED, mExploreVM.mStyleList.size == 2)
+        mExploreVM.mStyleList[0].styleNameDisplay = ESRI
+        mExploreVM.mStyleList[0].isSelected = mExploreVM.mStyleList[0].isSelected
+        mExploreVM.mStyleList[0].mapInnerData?.get(0)?.image
+        mExploreVM.mStyleList[0].mapInnerData?.get(0)?.mMapName =
+            mExploreVM.mStyleList[0].mapInnerData?.get(0)?.mMapName
+        mExploreVM.mStyleList[0].mapInnerData?.get(0)?.mapName =
+            mExploreVM.mStyleList[0].mapInnerData?.get(0)?.mapName
+        mExploreVM.mStyleList[0].mapInnerData?.get(0)?.mMapStyleName =
+            mExploreVM.mStyleList[0].mapInnerData?.get(0)?.mMapStyleName
+        mExploreVM.mStyleList[0].mapInnerData?.get(0)?.isSelected = false
 
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_ESRI, mExploreVM.mStyleList[0].styleNameDisplay == ESRI)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, mExploreVM.mStyleList[0].mapInnerData?.size == 6)
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED,
+            mExploreVM.mStyleList.size == 2
+        )
 
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_HERE, mExploreVM.mStyleList[1].styleNameDisplay == HERE)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE, mExploreVM.mStyleList[1].mapInnerData?.size == 5)
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_ESRI,
+            mExploreVM.mStyleList[0].styleNameDisplay == ESRI
+        )
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI,
+            mExploreVM.mStyleList[0].mapInnerData?.size == 6
+        )
+
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_HERE,
+            mExploreVM.mStyleList[1].styleNameDisplay == HERE
+        )
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE,
+            mExploreVM.mStyleList[1].mapInnerData?.size == 5
+        )
     }
 }

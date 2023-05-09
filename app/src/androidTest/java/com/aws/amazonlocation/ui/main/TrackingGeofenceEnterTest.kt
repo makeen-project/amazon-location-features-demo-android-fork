@@ -25,7 +25,7 @@ import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.SECOND_DELAY_60
-import com.aws.amazonlocation.TRACKING
+import com.aws.amazonlocation.TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG
 import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -148,7 +148,7 @@ class TrackingGeofenceEnterTest {
             SECOND_DELAY_60
         )
         val dialogText = getAlertDialogMessage()
-        Assert.assertTrue(dialogText.contains(TRACKING_ENTERED))
+        Assert.assertTrue(TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG, dialogText.contains(TRACKING_ENTERED))
     }
 
     private fun getAlertDialogMessage(): String {
