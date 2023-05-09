@@ -10,13 +10,13 @@ Below are the requirements for development, running and testing.
 
 #### Development Tools
 
-    1. Android Studio
-    2. Java 11 or above.
+1. Android Studio
+2. Java 11 or above.
 
 #### Pre-requisites
 
-    1. Sign in to [Amazon AWS account](https://aws.amazon.com/)
-    2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
+1. Sign in to [Amazon AWS account](https://aws.amazon.com/)
+2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
 
 The required values can be found from the `Outputs` tab on your stack page created in step 2 above.
 ## Configure
