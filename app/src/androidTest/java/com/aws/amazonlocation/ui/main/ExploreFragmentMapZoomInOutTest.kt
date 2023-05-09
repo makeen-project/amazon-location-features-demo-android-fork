@@ -133,11 +133,11 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             if (map.exists()) {
-                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick())
+                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick(), ViewActions.doubleClick())
             } else {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_3000)
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
