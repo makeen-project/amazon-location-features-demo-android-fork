@@ -46,7 +46,6 @@ import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
@@ -69,8 +68,8 @@ class MainActivity : BaseActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        val height = resources.getDimensionPixelSize(R.dimen.screen_size)
-        mBinding.bottomNavigationMain.layoutParams.width = height
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.bottomNavigationMain.layoutParams.width = width
         mBinding.bottomNavigationMain.requestLayout()
     }
 
@@ -89,7 +88,7 @@ class MainActivity : BaseActivity() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         initObserver()
         mNavHostFragment =
-            supportFragmentManager.findFragmentById(com.aws.amazonlocation.R.id.nav_host_fragment) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         mNavController = mNavHostFragment.navController
         mBinding.bottomNavigationMain.setupWithNavController(mNavController)
         if (mBottomSheetDialog == null) {
@@ -357,7 +356,9 @@ class MainActivity : BaseActivity() {
             fragment.showDirectionAndCurrentLocationIcon()
         }
         mBottomSheetHelper.hideSearchBottomSheet(false)
-        mBottomSheetHelper.hideMapStyleSheet()
+        if (!isTablet) {
+            mBottomSheetHelper.hideMapStyleSheet()
+        }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
     }
@@ -414,7 +415,9 @@ class MainActivity : BaseActivity() {
             fragment.showDirectionAndCurrentLocationIcon()
         }
         mBottomSheetHelper.hideSearchBottomSheet(true)
-        mBottomSheetHelper.hideMapStyleSheet()
+        if (!isTablet) {
+            mBottomSheetHelper.hideMapStyleSheet()
+        }
         showTrackingBottomSheet()
     }
 

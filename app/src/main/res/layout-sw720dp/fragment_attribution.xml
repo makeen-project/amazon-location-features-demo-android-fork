@@ -59,7 +59,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_learn_more"
         style="@style/SigInHintTxt"
-        android:layout_width="@dimen/navigation_top_dialog_size"
+        android:layout_width="@dimen/attribution_learn_more"
         android:layout_height="@dimen/dp_48"
         android:layout_marginHorizontal="@dimen/dp_24"
         android:layout_marginTop="@dimen/dp_24"
@@ -105,7 +105,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_learn_more_sa"
         style="@style/SigInHintTxt"
-        android:layout_width="@dimen/navigation_top_dialog_size"
+        android:layout_width="@dimen/attribution_learn_more"
         android:layout_height="@dimen/dp_48"
         android:layout_marginHorizontal="@dimen/dp_24"
         android:layout_marginTop="@dimen/dp_24"

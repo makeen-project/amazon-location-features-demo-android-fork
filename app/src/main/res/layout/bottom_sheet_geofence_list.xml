@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
+    android:id="@+id/cl_geofence_list_main"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/dp_104"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

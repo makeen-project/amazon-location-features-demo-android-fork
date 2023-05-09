@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main.setting
 
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +58,13 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     ): View {
         mBinding = FragmentSettingBinding.inflate(inflater, container, false)
         return mBinding.root
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.clSettings?.layoutParams?.width = width
+        mBinding.clSettings?.requestLayout()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main.attribution
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,7 +29,14 @@ class AttributionFragment : BaseFragment() {
         mBinding = FragmentAttributionBinding.inflate(inflater, container, false)
         return mBinding.root
     }
-
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.attribution_learn_more)
+        mBinding.btnLearnMore.layoutParams.width = width
+        mBinding.btnLearnMore.requestLayout()
+        mBinding.btnLearnMoreSa.layoutParams.width = width
+        mBinding.btnLearnMoreSa.requestLayout()
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         backPress()
         initClick()
@@ -54,7 +62,7 @@ class AttributionFragment : BaseFragment() {
                     Intent(
                         context,
                         WebViewActivity::class.java
-                    ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN+BuildConfig.AWS_SOFTWARE_ATTRIBUTION_URL)
+                    ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_SOFTWARE_ATTRIBUTION_URL)
                 )
             }
             btnLearnMore.setOnClickListener {

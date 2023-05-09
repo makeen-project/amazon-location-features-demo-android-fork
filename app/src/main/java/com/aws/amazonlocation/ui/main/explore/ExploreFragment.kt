@@ -7,7 +7,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.IntentSender
+import android.content.res.Configuration
 import android.location.Location
 import android.net.ConnectivityManager
 import android.net.Network
@@ -146,6 +146,29 @@ class ExploreFragment :
         if (it.resultCode == Activity.RESULT_OK) {
             checkAndEnableLocation()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.bottomSheetSearch.clSearchSheet.layoutParams.width = width
+        mBinding.bottomSheetSearch.clSearchSheet.requestLayout()
+        mBinding.bottomSheetDirection.clPersistentBottomSheetDirection.layoutParams.width = width
+        mBinding.bottomSheetDirection.clPersistentBottomSheetDirection.requestLayout()
+        mBinding.bottomSheetDirectionSearch.clDirectionSearchSheet.layoutParams.width = width
+        mBinding.bottomSheetDirectionSearch.clDirectionSearchSheet.requestLayout()
+        mBinding.bottomSheetNavigation.clNavigationParent.layoutParams.width = width
+        mBinding.bottomSheetNavigation.clNavigationParent.requestLayout()
+        mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.layoutParams.width = width
+        mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.requestLayout()
+        mBinding.bottomSheetTracking.clPersistentBottomSheet.layoutParams.width = width
+        mBinding.bottomSheetTracking.clPersistentBottomSheet.requestLayout()
+        mBinding.bottomSheetGeofenceList.clGeofenceListMain.layoutParams.width = width
+        mBinding.bottomSheetGeofenceList.clGeofenceListMain.requestLayout()
+        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.layoutParams.width = width
+        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.requestLayout()
+        mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
+        mBinding.bottomSheetAttribution.clMain.requestLayout()
     }
 
     override fun onCreateView(
@@ -3779,36 +3802,37 @@ class ExploreFragment :
         isLocationAlreadyEnabled: Boolean,
         isCurrentLocationClicked: Boolean,
     ) {
-        val locationRequest: LocationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val result: Task<LocationSettingsResponse> =
-            LocationServices.getSettingsClient(requireActivity())
-                .checkLocationSettings(builder.build())
-        builder.setAlwaysShow(true)
-        this.mIsLocationAlreadyEnabled = isLocationAlreadyEnabled
-        this.mIsCurrentLocationClicked = isCurrentLocationClicked
-        result.addOnCompleteListener {
-            try {
-                it.getResult(ApiException::class.java)
-                checkAndEnableLocation()
-            } catch (exception: ApiException) {
-                when (exception.statusCode) {
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                        val resolvable = exception as ResolvableApiException
-                        val intentSenderRequest =
-                            IntentSenderRequest.Builder(resolvable.resolution).build()
-                        if (isAdded) {
-                            gpsActivityResult.launch(intentSenderRequest)
-                        }
-                    } catch (_: IntentSender.SendIntentException) {
-                    } catch (_: ClassCastException) {
-                    }
-                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                    }
-                }
-            }
-        }
+        checkAndEnableLocation()
+//        val locationRequest: LocationRequest = LocationRequest.create()
+//        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+//        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+//        val result: Task<LocationSettingsResponse> =
+//            LocationServices.getSettingsClient(requireActivity())
+//                .checkLocationSettings(builder.build())
+//        builder.setAlwaysShow(true)
+//        this.mIsLocationAlreadyEnabled = isLocationAlreadyEnabled
+//        this.mIsCurrentLocationClicked = isCurrentLocationClicked
+//        result.addOnCompleteListener {
+//            try {
+//                it.getResult(ApiException::class.java)
+//                checkAndEnableLocation()
+//            } catch (exception: ApiException) {
+//                when (exception.statusCode) {
+//                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+//                        val resolvable = exception as ResolvableApiException
+//                        val intentSenderRequest =
+//                            IntentSenderRequest.Builder(resolvable.resolution).build()
+//                        if (isAdded) {
+//                            gpsActivityResult.launch(intentSenderRequest)
+//                        }
+//                    } catch (_: IntentSender.SendIntentException) {
+//                    } catch (_: ClassCastException) {
+//                    }
+//                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun checkAndEnableLocation() {

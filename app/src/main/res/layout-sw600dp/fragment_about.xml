@@ -6,7 +6,7 @@
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_settings"
+        android:id="@+id/cl_about"
         android:layout_width="@dimen/screen_size"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -250,6 +250,6 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/cl_settings"
+        app:layout_constraintStart_toEndOf="@+id/cl_about"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     app:behavior_hideable="false"
+    android:id="@+id/cl_geofence_list_main"
     app:behavior_peekHeight="@dimen/dp_104"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
