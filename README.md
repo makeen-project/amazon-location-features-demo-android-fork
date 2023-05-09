@@ -18,6 +18,8 @@ Below are the requirements for development, running and testing.
 1. Sign in to [Amazon AWS account](https://aws.amazon.com/)
 2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
 
+Follow this [Document](https://location.aws.com/demo/help) for detailed info to create & configure a new Cloud formation.
+
 The required values can be found from the `Outputs` tab on your stack page created in step 2 above.
 ## Configure
 
