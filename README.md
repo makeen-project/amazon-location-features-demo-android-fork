@@ -23,7 +23,7 @@ The required values can be found from the `Outputs` tab on your stack page creat
 
 Create *`custom.properties`* file inside the project root folder and add the details as below.
 
-KEY to be added in custoom.properties | Corresponding Key from stack output |
+KEY to be added in custom.properties | Corresponding Key from stack output |
 --- | --- |
 DEFAULT_IDENTITY_POOL_ID | IdentityPoolId |
 DEFAULT_REGION | Take regin from IdentityPoolId (Cahracters before ':') |
