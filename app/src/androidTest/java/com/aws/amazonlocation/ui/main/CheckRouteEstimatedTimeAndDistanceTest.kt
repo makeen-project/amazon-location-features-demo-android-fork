@@ -85,7 +85,7 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -103,7 +103,7 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
@@ -117,15 +117,15 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_walk_go")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_truck_go")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)

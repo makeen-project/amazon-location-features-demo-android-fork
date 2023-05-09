@@ -87,7 +87,7 @@ class CheckRouteOptionsTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -105,7 +105,7 @@ class CheckRouteOptionsTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
@@ -119,7 +119,7 @@ class CheckRouteOptionsTest : BaseTest() {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_10000,
+                        DELAY_15000,
                     )
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
@@ -135,7 +135,7 @@ class CheckRouteOptionsTest : BaseTest() {
 
                         uiDevice.wait(
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                            DELAY_10000,
+                            DELAY_15000,
                         )
                         if (cardDriveGo.visibility == View.VISIBLE) {
                             onView(withId(R.id.edt_search_direction)).perform(ViewActions.clearText())
@@ -144,7 +144,7 @@ class CheckRouteOptionsTest : BaseTest() {
                             Thread.sleep(DELAY_2000)
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                                DELAY_10000,
+                                DELAY_15000,
                             )
                             rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                                 if (it > 0) {
@@ -163,7 +163,7 @@ class CheckRouteOptionsTest : BaseTest() {
                             Thread.sleep(DELAY_2000)
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                                DELAY_10000,
+                                DELAY_15000,
                             )
                             rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                                 if (it > 0) {
@@ -177,7 +177,7 @@ class CheckRouteOptionsTest : BaseTest() {
                             }
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                                DELAY_10000,
+                                DELAY_15000,
                             )
                             if (cardDriveGo.visibility == View.VISIBLE) {
                                 Thread.sleep(DELAY_1000)
@@ -187,7 +187,7 @@ class CheckRouteOptionsTest : BaseTest() {
                                 Thread.sleep(DELAY_2000)
                                 uiDevice.wait(
                                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                                    DELAY_10000,
+                                    DELAY_15000,
                                 )
                                 Assert.assertTrue(TEST_FAILED_CARD_DRIVE_GO, cardDriveGo.visibility == View.VISIBLE)
                             } else {

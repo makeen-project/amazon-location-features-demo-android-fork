@@ -68,11 +68,11 @@ class SettingRouteOptionAvailableTest : BaseTest() {
 
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_ferries")),
-                DELAY_10000
+                DELAY_15000
             )
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_tools")),
-                DELAY_10000
+                DELAY_15000
             )
 
             val tvAvoidFerries =

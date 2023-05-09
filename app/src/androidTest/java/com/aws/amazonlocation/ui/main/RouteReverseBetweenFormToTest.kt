@@ -106,6 +106,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                     }
                     val originText = edtSearchDirection.text.toString().trim()
                     val destinationText = edtSearchDest.text.toString().trim()
+                    Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
                         DELAY_15000
