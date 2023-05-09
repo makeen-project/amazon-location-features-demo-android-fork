@@ -18,6 +18,7 @@
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
         android:src="@drawable/ic_amazon_logo"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,6 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_4"
         android:src="@drawable/ic_info"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_direction_search_sheet"
         app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_direction_search_sheet"
         app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_direction_search_sheet" />

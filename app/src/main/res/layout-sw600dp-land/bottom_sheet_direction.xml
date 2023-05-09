@@ -8,36 +8,16 @@
     app:behavior_hideable="true"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_amazon_logo_direction"
-        android:layout_width="@dimen/dp_118"
-        android:layout_height="@dimen/dp_18"
-        android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_amazon_info_direction"
-        android:layout_width="@dimen/dp_16"
-        android:layout_height="@dimen/dp_20"
-        android:layout_marginStart="@dimen/dp_4"
-        android:src="@drawable/ic_info"
-        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_direction"
-        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_direction"
-        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_direction" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_navigation_main_sheet_direction_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
         android:clickable="true"
         android:focusable="true"
         android:paddingBottom="@dimen/dp_16"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_direction">
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/direction_sheet_gl_direction_start"

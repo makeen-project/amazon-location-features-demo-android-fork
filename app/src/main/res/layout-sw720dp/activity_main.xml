@@ -32,4 +32,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_bottom_navigation" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_amazon_logo_search_sheet"
+        android:layout_width="@dimen/dp_118"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_amazon_logo"
+        app:layout_constraintTop_toTopOf="@+id/bottom_navigation_main"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation_main"
+        app:layout_constraintStart_toEndOf="@+id/bottom_navigation_main" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_amazon_info_search_sheet"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_4"
+        android:src="@drawable/ic_info"
+        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_search_sheet"
+        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_search_sheet"
+        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_search_sheet" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,6 +38,7 @@
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
+        android:visibility="gone"
         android:src="@drawable/ic_amazon_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card_navigation_location" />
@@ -46,6 +47,7 @@
         android:id="@+id/iv_amazon_info_navigation"
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_20"
+        android:visibility="gone"
         android:layout_marginStart="@dimen/dp_4"
         android:src="@drawable/ic_info"
         app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_navigation"

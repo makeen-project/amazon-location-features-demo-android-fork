@@ -104,9 +104,13 @@ class MainActivity : BaseActivity() {
             this.supportFragmentManager.let {
                 welcomeSheet.show(it, WelcomeBottomSheetFragment::javaClass.name)
             }
-            mBinding.bottomNavigationMain.hide()
+            if (isTablet) {
+                mBinding.bottomNavigationMain.invisible()
+            } else {
+                mBinding.bottomNavigationMain.hide()
+            }
         } else {
-            graph.startDestination = com.aws.amazonlocation.R.id.explore_fragment
+            graph.startDestination = R.id.explore_fragment
             mNavHostFragment.navController.graph = graph
             if (mBottomSheetDialog == null) {
                 setBottomBar()
@@ -134,11 +138,11 @@ class MainActivity : BaseActivity() {
                     }
                     TabEnum.TAB_TRACKING.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
-                            com.aws.amazonlocation.R.id.menu_tracking
+                            R.id.menu_tracking
                     }
                     TabEnum.TAB_GEOFENCE.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
-                            com.aws.amazonlocation.R.id.menu_geofence
+                            R.id.menu_geofence
                     }
                 }
             }
@@ -448,8 +452,12 @@ class MainActivity : BaseActivity() {
                 bottomNavigationMain.animate().translationY(0f).start()
                 bottomNavigationMain.show()
             } else {
-                bottomNavigationMain.animate().translationY(100f).start()
-                bottomNavigationMain.hide()
+                if (isTablet) {
+                    mBinding.bottomNavigationMain.invisible()
+                } else {
+                    bottomNavigationMain.animate().translationY(100f).start()
+                    bottomNavigationMain.hide()
+                }
             }
         }
     }

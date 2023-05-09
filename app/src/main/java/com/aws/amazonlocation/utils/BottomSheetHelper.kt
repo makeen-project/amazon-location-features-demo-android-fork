@@ -42,8 +42,11 @@ class BottomSheetHelper {
             BottomSheetBehavior.from(view.clSearchSheet)
         mBottomSheetSearchPlaces.isFitToContents = false
         context = view.clSearchSheet.context
-        mBottomSheetSearchPlaces.expandedOffset =
-            view.clSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+        val isTablet = view.clSearchSheet.resources.getBoolean(R.bool.is_tablet)
+        if (!isTablet) {
+            mBottomSheetSearchPlaces.expandedOffset =
+                view.clSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+        }
 
         mBottomSheetSearchPlaces.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
@@ -375,7 +378,7 @@ class BottomSheetHelper {
                 context?.let {
                     val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                     if (isTablet) {
-                        mBottomSheetSearchPlaces.peekHeight = 150.px
+                        mBottomSheetSearchPlaces.peekHeight = 130.px
                     } else {
                         mBottomSheetSearchPlaces.peekHeight = 98.px
                     }

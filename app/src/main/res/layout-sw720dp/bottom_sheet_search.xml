@@ -9,13 +9,14 @@
     android:clickable="true"
     android:focusable="true"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/dp_150"
+    app:behavior_peekHeight="@dimen/dp_130"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_amazon_logo_search_sheet"
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
+        android:visibility="gone"
         android:layout_marginStart="@dimen/dp_8"
         android:src="@drawable/ic_amazon_logo"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +27,7 @@
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_20"
         android:layout_marginStart="@dimen/dp_4"
+        android:visibility="gone"
         android:src="@drawable/ic_info"
         app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_search_sheet"
         app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_search_sheet"
@@ -35,7 +37,6 @@
         android:id="@+id/cl_main_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp_5"
         android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
