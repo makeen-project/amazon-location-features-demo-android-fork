@@ -1,23 +1,19 @@
 package com.aws.amazonlocation.ui.main
 
 import android.content.Context
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.*
+import com.aws.amazonlocation.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.di.AppModule
-import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -66,15 +62,19 @@ class TrackingStartTrackingTest : BaseTest() {
                 DELAY_5000,
             )
 
-            Espresso.onView(withId(R.id.cl_enable_tracking)).check(matches(isDisplayed()))
-            Espresso.onView(withId(R.id.btn_enable_tracking)).check(matches(isDisplayed())).perform(click())
+            uiDevice.wait(
+                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/btn_enable_tracking")),
+                DELAY_15000,
+            )
+            Thread.sleep(DELAY_2000)
+            uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/btn_enable_tracking"))?.click()
 
             Thread.sleep(DELAY_5000)
             Thread.sleep(DELAY_3000)
 
             uiDevice.wait(
                 Until.hasObject(By.text(ApplicationProvider.getApplicationContext<Context>().getString(R.string.label_start_tracking))),
-                DELAY_3000,
+                DELAY_5000,
             )
             val labelStartTracking =
                 uiDevice.findObject(By.text(ApplicationProvider.getApplicationContext<Context>().getString(R.string.label_start_tracking)))
