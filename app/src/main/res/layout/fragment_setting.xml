@@ -44,7 +44,7 @@
             android:id="@+id/iv_unit_system"
             android:layout_width="@dimen/dp_20"
             android:layout_height="@dimen/dp_20"
-            android:src="@drawable/ic_map"
+            android:src="@drawable/ic_unit_system"
             android:tint="@color/color_img_tint"
             app:layout_constraintBottom_toBottomOf="@id/tv_unit_system_name"
             app:layout_constraintStart_toStartOf="parent"
