@@ -16,12 +16,10 @@ jobs:
           bundle config --local deployment true
           bundle install
 
-      - name: Setup Signing
+      - name: Setup Config
         working-directory:
         run: |
-          mkdir -p .signing
           base64 -d <<< ${{ secrets.SECRETS }} > custom.properties
-          ls .signing
 
       - name: Setup Java
         uses: actions/setup-java@v3
