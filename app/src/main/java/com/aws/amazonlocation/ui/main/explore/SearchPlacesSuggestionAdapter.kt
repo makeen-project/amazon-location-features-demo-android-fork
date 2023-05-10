@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.databinding.ItemSearchPlacesSuggestionBinding
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
+import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
@@ -15,7 +17,8 @@ import com.aws.amazonlocation.utils.show
 // SPDX-License-Identifier: MIT-0
 class SearchPlacesSuggestionAdapter(
     private val mSearchPlaceList: ArrayList<SearchSuggestionData>,
-    var mSearchPlaceSuggestionInterface: SearchPlaceSuggestionInterface
+    private val preferenceManager: PreferenceManager?,
+    var mSearchPlaceSuggestionInterface: SearchPlaceSuggestionInterface,
 ) :
     RecyclerView.Adapter<SearchPlacesSuggestionAdapter.SearchPlaceVH>() {
 
@@ -39,8 +42,14 @@ class SearchPlacesSuggestionAdapter(
                     tvPlaceName.text = data.text?.split(",")?.toTypedArray()?.get(0) ?: data.text
                 }
 
-                if (data.distance != null) {
-                    tvDistance.text = Units.getMetrics(data.distance!!)
+                if (data.distance != null && preferenceManager != null) {
+                    tvDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
+                        val isMetric = Units.isMetric(unitSystem)
+                        Units.getMetricsNew(
+                            data.distance!!,
+                            isMetric,
+                        )
+                    }
                     groupDistance.show()
                 } else {
                     groupDistance.hide()
@@ -62,8 +71,8 @@ class SearchPlacesSuggestionAdapter(
             ItemSearchPlacesSuggestionBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
-            )
+                false,
+            ),
         )
     }
 

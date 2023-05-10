@@ -6,7 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.databinding.ItemSearchPlacesBinding
-import com.aws.amazonlocation.utils.Units.getMetrics
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.getRegion
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
@@ -16,7 +18,8 @@ import com.aws.amazonlocation.utils.show
 // SPDX-License-Identifier: MIT-0
 class SearchPlacesAdapter(
     private val mSearchPlaceList: ArrayList<SearchSuggestionData>,
-    var mSearchPlaceInterface: SearchPlaceInterface
+    private val prefernceManager: PreferenceManager?,
+    var mSearchPlaceInterface: SearchPlaceInterface,
 ) :
     RecyclerView.Adapter<SearchPlacesAdapter.SearchPlaceVH>() {
 
@@ -34,8 +37,14 @@ class SearchPlacesAdapter(
                     tvPlaceName.text = data.amazonLocationPlace?.label?.split(",")?.toTypedArray()?.get(0) ?: data.amazonLocationPlace?.label
                 }
 
-                if (data.distance != null) {
-                    tvDistance.text = getMetrics(data.distance!!)
+                if (data.distance != null && prefernceManager != null) {
+                    tvDistance.text = prefernceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
+                        val isMetric = Units.isMetric(unitSystem)
+                        Units.getMetricsNew(
+                            data.distance!!,
+                            isMetric,
+                        )
+                    }
                     groupDistance.show()
                 } else {
                     groupDistance.hide()
@@ -53,7 +62,7 @@ class SearchPlacesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlaceVH {
         return SearchPlaceVH(
-            ItemSearchPlacesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemSearchPlacesBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 

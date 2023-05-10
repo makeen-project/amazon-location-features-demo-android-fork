@@ -6,7 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.databinding.ItemNavigationRouteListBinding
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
+import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.Units.convertToLowerUnit
+import com.aws.amazonlocation.utils.Units.getMetricsNew
+import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
 
@@ -14,7 +19,8 @@ import com.aws.amazonlocation.utils.show
 
 // SPDX-License-Identifier: MIT-0
 class NavigationAdapter(
-    private val mNavigationList: ArrayList<NavigationData>
+    private val mNavigationList: ArrayList<NavigationData>,
+    private val preferenceManager: PreferenceManager
 ) :
     RecyclerView.Adapter<NavigationAdapter.NavigationVH>() {
     private var isRoundDotted = false
@@ -24,9 +30,10 @@ class NavigationAdapter(
             binding.apply {
                 tvNavigationAddress.text = data.getRegions()
 
-                tvNavigationDistance.text = Units.getMetrics(
-                    Units.kiloMeterToMeter(data.distance!!)
-                )
+                tvNavigationDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
+                    val isMetric = isMetric(unitSystem)
+                    getMetricsNew(convertToLowerUnit(data.distance!!, isMetric), isMetric)
+                }
             }
         }
     }
