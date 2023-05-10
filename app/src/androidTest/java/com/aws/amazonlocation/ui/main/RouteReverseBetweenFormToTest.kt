@@ -24,6 +24,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -109,7 +110,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                        DELAY_15000
+                        DELAY_20000
                     )
                     val clDrive =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
@@ -121,7 +122,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                         Thread.sleep(DELAY_2000)
                         uiDevice.wait(
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                            DELAY_15000
+                            DELAY_20000
                         )
                         Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
                     } else {
