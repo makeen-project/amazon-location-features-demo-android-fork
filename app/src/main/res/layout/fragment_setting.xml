@@ -33,12 +33,77 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_data_provider"
+        android:id="@+id/cl_unit_system"
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/end_guideline"
         app:layout_constraintStart_toStartOf="@id/start_guideline"
         app:layout_constraintTop_toBottomOf="@id/tv_settings">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_unit_system"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:src="@drawable/ic_map"
+            android:tint="@color/color_img_tint"
+            app:layout_constraintBottom_toBottomOf="@id/tv_unit_system_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_back_arrow_unit_system"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:rotation="180"
+            android:src="@drawable/ic_back"
+            android:tint="@color/color_img_tint"
+            app:layout_constraintBottom_toBottomOf="@id/tv_unit_system_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_unit_system" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_unit_system"
+            style="@style/SP16RegularWhiteTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_14"
+            android:paddingTop="@dimen/dp_14"
+            android:text="@string/units"
+            android:textColor="@color/color_medium_black"
+            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_unit_system"
+            app:layout_constraintStart_toEndOf="@id/iv_unit_system"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_unit_system_name"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_24"
+            android:paddingBottom="@dimen/dp_14"
+            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_unit_system"
+            app:layout_constraintStart_toEndOf="@id/iv_unit_system"
+            app:layout_constraintTop_toBottomOf="@id/tv_unit_system"
+            tools:text="Metric" />
+
+        <View
+            android:id="@+id/view_unit_system"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/color_view_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_unit_system_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_data_provider"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/end_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_guideline"
+        app:layout_constraintTop_toBottomOf="@id/cl_unit_system">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_data_provider"
@@ -67,7 +132,6 @@
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_24"
-            android:layout_marginTop="@dimen/dp_14"
             android:paddingTop="@dimen/dp_14"
             android:text="@string/data_provider"
             android:textColor="@color/color_medium_black"
