@@ -100,6 +100,7 @@ class GeofenceAddTest : BaseTest() {
             mActivityRule.activity.runOnUiThread {
                 edtAddGeofenceSearch1.performClick()
             }
+            Thread.sleep(DELAY_5000)
             onView(withId(R.id.edt_add_geofence_search)).perform(clearText())
             onView(withId(R.id.edt_add_geofence_search)).perform(typeText(TEST_WORD_4))
 

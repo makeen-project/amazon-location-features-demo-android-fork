@@ -8,7 +8,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -25,6 +25,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_INVALID_IDENTITY_POOL_ID
@@ -49,7 +50,7 @@ class TrackingAwsConnectTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -69,7 +70,7 @@ class TrackingAwsConnectTest : BaseTest() {
         Thread.sleep(DELAY_1000)
         uiDevice.wait(
             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_sign_in_required")),
-            DELAY_10000
+            DELAY_10000,
         )
         val appViews = UiScrollable(UiSelector().scrollable(true))
         appViews.scrollForward()
@@ -77,23 +78,23 @@ class TrackingAwsConnectTest : BaseTest() {
         val edtIdentityPoolId =
             onView(withId(R.id.edt_identity_pool_id)).check(ViewAssertions.matches(isDisplayed()))
         edtIdentityPoolId.perform(click())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_identity_pool_id))
             ?.perform(click(), replaceText(BuildConfig.IDENTITY_POOL_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_user_domain))
             ?.perform(click(), replaceText(BuildConfig.USER_DOMAIN), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_user_pool_client_id))
             ?.perform(click(), replaceText(BuildConfig.USER_POOL_CLIENT_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_user_pool_id))
             ?.perform(click(), replaceText(BuildConfig.USER_POOL_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_web_socket_url))
             ?.perform(click(), replaceText(BuildConfig.WEB_SOCKET_URL), closeSoftKeyboard())
 
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         val btnConnect =
             onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
         btnConnect.perform(click())
