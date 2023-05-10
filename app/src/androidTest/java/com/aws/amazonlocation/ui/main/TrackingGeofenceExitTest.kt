@@ -17,6 +17,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
@@ -41,7 +42,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingGeofenceExitTest {
+class TrackingGeofenceExitTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

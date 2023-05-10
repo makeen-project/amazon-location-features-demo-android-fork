@@ -8,7 +8,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -18,6 +18,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
@@ -44,7 +45,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class AfterSearchDirectionButtonWorkingTest {
+class AfterSearchDirectionButtonWorkingTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

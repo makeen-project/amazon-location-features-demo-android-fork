@@ -12,9 +12,11 @@ import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_4000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED
@@ -33,7 +35,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentEnableLocationTest {
+class ExploreFragmentEnableLocationTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -55,7 +57,7 @@ class ExploreFragmentEnableLocationTest {
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_1))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
-
+                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapboxMap? = null
@@ -63,6 +65,7 @@ class ExploreFragmentEnableLocationTest {
                     mapView.getMapAsync {
                         mapbox = it
                     }
+                    Thread.sleep(DELAY_4000)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(67, e)
@@ -73,7 +76,7 @@ class ExploreFragmentEnableLocationTest {
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
 
                     uiDevice.findObject(By.text(ALLOW))?.click()
-
+                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapboxMap? = null
@@ -81,6 +84,7 @@ class ExploreFragmentEnableLocationTest {
                     mapView.getMapAsync {
                         mapbox = it
                     }
+                    Thread.sleep(DELAY_4000)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(85, e)

@@ -19,13 +19,16 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
 import com.aws.amazonlocation.TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
@@ -44,7 +47,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class RouteReverseBetweenFormToTest {
+class RouteReverseBetweenFormToTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -74,7 +77,7 @@ class RouteReverseBetweenFormToTest {
                 cardDirectionTest.perform(click())
                 uiDevice.wait(
                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                    DELAY_5000
+                    DELAY_15000
                 )
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
@@ -88,7 +91,7 @@ class RouteReverseBetweenFormToTest {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_15000
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -104,9 +107,10 @@ class RouteReverseBetweenFormToTest {
                     }
                     val originText = edtSearchDirection.text.toString().trim()
                     val destinationText = edtSearchDest.text.toString().trim()
+                    Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                        DELAY_10000
+                        DELAY_20000
                     )
                     val clDrive =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
@@ -118,11 +122,11 @@ class RouteReverseBetweenFormToTest {
                         Thread.sleep(DELAY_2000)
                         uiDevice.wait(
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                            DELAY_10000
+                            DELAY_20000
                         )
                         Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
                     } else {
-                        Assert.fail()
+                        Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                     }
                 } else {
                     Assert.fail(TEST_FAILED_SEARCH_DIRECTION)

@@ -36,7 +36,7 @@ import java.util.concurrent.CountDownLatch
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentChangeStyleTest {
+class ExploreFragmentChangeStyleTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

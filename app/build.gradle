@@ -4,6 +4,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
 }
+apply from : '../git-hooks.gradle'
 
 android {
     namespace 'com.aws.amazonlocation'
@@ -159,4 +160,10 @@ dependencies {
     // Support for Java 8 features
     // noinspection GradleDependency
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
+}
+
+idea.project.settings {
+    taskTriggers {
+        afterSync installGitHook
+    }
 }

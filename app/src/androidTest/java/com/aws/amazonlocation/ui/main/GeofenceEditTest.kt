@@ -1,34 +1,48 @@
 package com.aws.amazonlocation.ui.main
 
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.* // ktlint-disable no-wildcard-imports
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.*
-import com.aws.amazonlocation.*
+import androidx.test.uiautomator.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.DELAY_1000
+import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_5000
+import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.actions.clickXYPercent
 import com.aws.amazonlocation.di.AppModule
+import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.getRandom0_01To1_0
+import com.aws.amazonlocation.getRandom1To100
+import com.aws.amazonlocation.getRandomGeofenceName
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import java.util.*
-import kotlin.properties.Delegates
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
+import kotlin.properties.Delegates
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class GeofenceEditTest {
+class GeofenceEditTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -36,7 +50,7 @@ class GeofenceEditTest {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -56,8 +70,8 @@ class GeofenceEditTest {
             onView(
                 allOf(
                     withId(R.id.card_geofence_map),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             ).perform(click())
 
             Thread.sleep(DELAY_1000)
@@ -87,19 +101,19 @@ class GeofenceEditTest {
                 allOf(
                     withId(R.id.btn_add_geofence),
                     isDisplayed(),
-                    isEnabled()
-                )
+                    isEnabled(),
+                ),
             ).perform(click())
 
             Thread.sleep(DELAY_1000)
 
             onView(
-                withId(R.id.mapView)
+                withId(R.id.mapView),
             ).perform(
                 clickXYPercent(
                     getRandom1To100(),
-                    getRandom1To100()
-                )
+                    getRandom1To100(),
+                ),
             )
 
             Thread.sleep(DELAY_1000)
@@ -127,10 +141,10 @@ class GeofenceEditTest {
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
-                    withText(geofenceName)
+                    withText(geofenceName),
                 ),
-                click()
-            )
+                click(),
+            ),
         )
 
         Thread.sleep(DELAY_1000)
@@ -151,10 +165,10 @@ class GeofenceEditTest {
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
-                    withText(geofenceName)
+                    withText(geofenceName),
                 ),
-                click()
-            )
+                click(),
+            ),
         )
         Thread.sleep(DELAY_1000)
         val seekbar = mActivityRule.activity.findViewById<SeekBar>(R.id.seekbar_geofence_radius)

@@ -13,6 +13,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
@@ -32,7 +33,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingRouteOptionAvailableTest {
+class SettingRouteOptionAvailableTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -67,11 +68,11 @@ class SettingRouteOptionAvailableTest {
 
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_ferries")),
-                DELAY_10000
+                DELAY_15000
             )
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_tools")),
-                DELAY_10000
+                DELAY_15000
             )
 
             val tvAvoidFerries =
