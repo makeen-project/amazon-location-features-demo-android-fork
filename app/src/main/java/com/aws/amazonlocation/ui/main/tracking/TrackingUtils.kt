@@ -115,7 +115,7 @@ class TrackingUtils(
                 mBindingTracking?.clEnableTracking?.context?.let {
                     val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                     if (isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = 450.px
+                        mBottomSheetTrackingBehavior?.peekHeight = 430.px
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     } else {
                         mBottomSheetTrackingBehavior?.peekHeight = 390.px
@@ -157,7 +157,7 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isDraggable = true
             val isTablet = clTracking.context.resources.getBoolean(R.bool.is_tablet)
             if (isTablet) {
-                mBottomSheetTrackingBehavior?.peekHeight = 160.px
+                mBottomSheetTrackingBehavior?.peekHeight = 140.px
             } else {
                 mBottomSheetTrackingBehavior?.peekHeight = 110.px
             }
@@ -228,13 +228,13 @@ class TrackingUtils(
                         when (newState) {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 if (!clEnableTracking.isVisible) {
-                                    imgAmazonLogoTrackingSheet.alpha = 1f
-                                    ivAmazonInfoTrackingSheet.alpha = 1f
+                                    imgAmazonLogoTrackingSheet?.alpha = 1f
+                                    ivAmazonInfoTrackingSheet?.alpha = 1f
                                 }
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
-                                imgAmazonLogoTrackingSheet.alpha = 0f
-                                ivAmazonInfoTrackingSheet.alpha = 0f
+                                imgAmazonLogoTrackingSheet?.alpha = 0f
+                                ivAmazonInfoTrackingSheet?.alpha = 0f
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
@@ -242,8 +242,8 @@ class TrackingUtils(
                                 if (clEnableTracking.isVisible) {
                                     mBottomSheetTrackingBehavior?.isDraggable = false
                                 }
-                                imgAmazonLogoTrackingSheet.alpha = 1f
-                                ivAmazonInfoTrackingSheet.alpha = 1f
+                                imgAmazonLogoTrackingSheet?.alpha = 1f
+                                ivAmazonInfoTrackingSheet?.alpha = 1f
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}

@@ -32,34 +32,15 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_amazon_logo_add_geofence"
-        android:layout_width="@dimen/dp_118"
-        android:layout_height="@dimen/dp_18"
-        android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/card_geofence_live_location" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/iv_amazon_info_add_geofence"
-        android:layout_width="@dimen/dp_16"
-        android:layout_height="@dimen/dp_20"
-        android:layout_marginStart="@dimen/dp_4"
-        android:src="@drawable/ic_info"
-        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_add_geofence"
-        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_add_geofence"
-        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_add_geofence" />
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"
-        android:layout_marginTop="@dimen/dp_8"
         android:background="@drawable/bottom_sheet_top_corner_curved_geofence"
         android:clickable="true"
         android:focusable="true"
         android:paddingBottom="@dimen/dp_34"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_add_geofence">
+        app:layout_constraintTop_toTopOf="parent">
 
         <View
             android:id="@+id/view_add_geofence_2"

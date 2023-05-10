@@ -16,7 +16,6 @@
         android:id="@+id/img_amazon_logo_direction_search_sheet"
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
-        android:layout_marginStart="@dimen/dp_8"
         android:src="@drawable/ic_amazon_logo"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"

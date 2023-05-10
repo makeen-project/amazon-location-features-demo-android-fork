@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentSender
 import android.content.res.Configuration
 import android.location.Location
 import android.net.ConnectivityManager
@@ -17,6 +18,7 @@ import android.os.SystemClock
 import android.util.TypedValue
 import android.view.* // ktlint-disable no-wildcard-imports
 import android.view.inputmethod.EditorInfo
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -71,6 +73,7 @@ import com.aws.amazonlocation.utils.Units.isMetric
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.* // ktlint-disable no-wildcard-imports
+import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.textfield.TextInputEditText
@@ -168,6 +171,8 @@ class ExploreFragment :
         mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.requestLayout()
         mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
         mBinding.bottomSheetAttribution.clMain.requestLayout()
+        mBinding.cardNavigationTimeDialog.layoutParams.width = width
+        mBinding.cardNavigationTimeDialog.requestLayout()
     }
 
     override fun onCreateView(
@@ -2127,13 +2132,13 @@ class ExploreFragment :
                 bottomSheetNavigationComplete.ivAmazonInfoNavigationComplete.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetGeofenceList.ivAmazonInfoGeofenceList.setOnClickListener {
+                bottomSheetGeofenceList.ivAmazonInfoGeofenceList?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetAddGeofence.ivAmazonInfoAddGeofence.setOnClickListener {
+                bottomSheetAddGeofence.ivAmazonInfoAddGeofence?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetTracking.ivAmazonInfoTrackingSheet.setOnClickListener {
+                bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
                 mBinding.bottomSheetAttribution.apply {
@@ -2305,7 +2310,7 @@ class ExploreFragment :
         }
     }
 
-    private fun setAttributionDataAndExpandSheet() {
+    fun setAttributionDataAndExpandSheet() {
         setAttributionData()
         mBottomSheetHelper.expandAttributeSheet()
     }

@@ -41,7 +41,7 @@ import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -147,6 +147,18 @@ class MainActivity : BaseActivity() {
                 }
             }
         }
+        initClick()
+    }
+
+    private fun initClick() {
+        mBinding.apply {
+            ivAmazonInfo?.setOnClickListener {
+                val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                if (fragment is ExploreFragment) {
+                    fragment.setAttributionDataAndExpandSheet()
+                }
+            }
+        }
     }
 
     fun geofenceClick() {
@@ -244,6 +256,7 @@ class MainActivity : BaseActivity() {
             when (item.itemId) {
                 R.id.menu_explore -> {
                     setExplorer()
+                    showAmazonLogo()
                 }
                 R.id.menu_tracking -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -291,6 +304,7 @@ class MainActivity : BaseActivity() {
                             mCloudFormationInterface
                         )
                     }
+                    showAmazonLogo()
                 }
                 R.id.menu_geofence -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -334,22 +348,35 @@ class MainActivity : BaseActivity() {
                             mCloudFormationInterface
                         )
                     }
+                    showAmazonLogo()
                 }
                 R.id.menu_settings -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
                     mNavController.navigate(R.id.setting_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    hideAmazonLogo()
                 }
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
                     mNavController.navigate(R.id.about_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    hideAmazonLogo()
                 }
             }
             true
         }
+    }
+
+    private fun hideAmazonLogo() {
+        mBinding.imgAmazonLogo?.hide()
+        mBinding.ivAmazonInfo?.hide()
+    }
+
+    private fun showAmazonLogo() {
+        mBinding.imgAmazonLogo?.show()
+        mBinding.ivAmazonInfo?.show()
     }
 
     fun setExplorer() {

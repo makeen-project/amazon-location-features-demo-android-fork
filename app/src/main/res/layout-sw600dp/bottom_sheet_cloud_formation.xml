@@ -10,9 +10,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginVertical="@dimen/dp_50"
         android:background="@drawable/bottom_sheet_top_all_corner_curved_white_bg"
         android:paddingBottom="@dimen/dp_16"
-        android:layout_marginVertical="@dimen/dp_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,8 +42,9 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/screen_size"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="@dimen/dp_60"
+            android:layout_marginBottom="@dimen/dp_64"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +56,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_18"
-                android:gravity="center"
                 android:alpha="0"
+                android:gravity="center"
                 android:text="@string/connect_to_aws_account"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -76,16 +77,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="card_sign_in_connected_close,view_scroll" />
+                app:constraint_referenced_ids="view_scroll" />
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/ns_cloud_formation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_0"
                 android:fillViewport="true"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/btn_connect"
                 app:layout_constraintTop_toBottomOf="@id/top_barrier">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -321,8 +322,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
                         android:hint="@string/enter_identity_pool_id"
-                        android:paddingHorizontal="@dimen/dp_16"
                         android:imeOptions="actionNext"
+                        android:paddingHorizontal="@dimen/dp_16"
                         android:paddingVertical="@dimen/dp_12"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -370,9 +371,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
                         android:hint="@string/enter_user_pool_client_id"
+                        android:imeOptions="actionNext"
                         android:paddingHorizontal="@dimen/dp_16"
                         android:paddingVertical="@dimen/dp_12"
-                        android:imeOptions="actionNext"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_user_pool_client_id" />
@@ -394,8 +395,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
                         android:hint="@string/enter_user_pool_id"
-                        android:paddingHorizontal="@dimen/dp_16"
                         android:imeOptions="actionNext"
+                        android:paddingHorizontal="@dimen/dp_16"
                         android:paddingVertical="@dimen/dp_12"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -418,9 +419,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_8"
                         android:hint="@string/label_enter_web_socket_url_1"
+                        android:imeOptions="actionDone"
                         android:paddingHorizontal="@dimen/dp_16"
                         android:paddingVertical="@dimen/dp_12"
-                        android:imeOptions="actionDone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_web_socket_url" />
@@ -441,25 +442,33 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_connect"
-                style="@style/SigInHintTxt"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="@dimen/dp_48"
-                android:textSize="@dimen/sp_16"
-                android:layout_marginHorizontal="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_56"
-                android:background="@drawable/sign_in_bg_1"
-                android:text="@string/connect"
-                android:alpha="0.4"
-                android:enabled="false"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/color_view"
+            app:layout_constraintBottom_toTopOf="@+id/btn_connect"
+            android:layout_marginBottom="@dimen/dp_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_connect"
+            style="@style/SigInHintTxt"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="@dimen/dp_77"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_56"
+            android:alpha="0.4"
+            android:background="@drawable/sign_in_bg_1"
+            android:enabled="false"
+            android:text="@string/connect"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -35,11 +35,11 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_navigation_time_dialog"
             android:layout_width="@dimen/navigation_top_dialog_size"
-            android:layout_height="@dimen/dp_80"
+            android:layout_height="@dimen/dp_64"
             android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_44"
+            android:layout_marginTop="@dimen/dp_40"
             android:visibility="gone"
-            app:cardBackgroundColor="@color/color_primary_green"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,6 +56,8 @@
                     style="@style/SP24BoldWhiteTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/color_medium_black"
+                    android:textSize="@dimen/sp_20"
                     android:gravity="center"
                     tools:text="300 m" />
 
@@ -63,6 +65,8 @@
                     android:id="@+id/tv_navigation_name"
                     style="@style/SP16RegularWhiteTextStyle"
                     android:layout_width="match_parent"
+                    android:textColor="@color/color_medium_black"
+                    android:textSize="@dimen/sp_13"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
@@ -78,7 +82,7 @@
             android:layout_width="@dimen/dp_48"
             android:layout_height="@dimen/dp_48"
             android:layout_marginStart="@dimen/dp_0"
-            android:layout_marginTop="@dimen/dp_54"
+            android:layout_marginTop="@dimen/dp_40"
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginBottom="@dimen/dp_8"
             android:clickable="true"
@@ -161,11 +165,11 @@
             android:layout_height="@dimen/dp_48"
             android:layout_marginStart="@dimen/dp_0"
             android:layout_marginEnd="@dimen/dp_16"
-            android:layout_marginBottom="@dimen/dp_24"
+            android:layout_marginBottom="@dimen/dp_8"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/view_divider"
             app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -173,10 +177,16 @@
                 android:layout_height="@dimen/dp_25"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_directions"
-                android:tint="@color/color_icon_tint"/>
+                android:tint="@color/color_icon_tint" />
 
         </com.google.android.material.card.MaterialCardView>
 
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <androidx.constraintlayout.widget.Group
             android:id="@+id/group_map_load"

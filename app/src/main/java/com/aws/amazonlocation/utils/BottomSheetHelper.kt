@@ -378,7 +378,7 @@ class BottomSheetHelper {
                 context?.let {
                     val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                     if (isTablet) {
-                        mBottomSheetSearchPlaces.peekHeight = 130.px
+                        mBottomSheetSearchPlaces.peekHeight = 140.px
                     } else {
                         mBottomSheetSearchPlaces.peekHeight = 98.px
                     }

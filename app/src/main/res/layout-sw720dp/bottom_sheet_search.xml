@@ -9,7 +9,7 @@
     android:clickable="true"
     android:focusable="true"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/dp_130"
+    app:behavior_peekHeight="@dimen/dp_140"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -37,6 +37,7 @@
         android:id="@+id/cl_main_search"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_16"
         android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
