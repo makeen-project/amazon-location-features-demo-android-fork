@@ -16,6 +16,7 @@ import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_4000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED
@@ -64,7 +65,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Thread.sleep(DELAY_2000)
+                    Thread.sleep(DELAY_4000)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(67, e)
@@ -83,7 +84,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Thread.sleep(DELAY_2000)
+                    Thread.sleep(DELAY_4000)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(85, e)
