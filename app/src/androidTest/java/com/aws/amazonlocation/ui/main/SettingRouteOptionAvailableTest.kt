@@ -18,6 +18,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_ROUTE_OPTION_NOT_VISIBLE
@@ -68,11 +69,11 @@ class SettingRouteOptionAvailableTest : BaseTest() {
 
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_ferries")),
-                DELAY_15000
+                DELAY_20000
             )
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_avoid_tools")),
-                DELAY_15000
+                DELAY_20000
             )
 
             val tvAvoidFerries =

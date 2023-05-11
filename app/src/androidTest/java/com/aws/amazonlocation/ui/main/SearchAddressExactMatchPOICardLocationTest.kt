@@ -24,6 +24,7 @@ import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -72,7 +73,7 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTest() {
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
-                DELAY_10000
+                DELAY_20000
             )
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
@@ -89,7 +90,7 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTest() {
                         if (btnDirection.visibility == View.VISIBLE) {
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_direction_distance")),
-                                DELAY_5000
+                                DELAY_20000
                             )
                             val tvDirectionTime =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_direction_distance)

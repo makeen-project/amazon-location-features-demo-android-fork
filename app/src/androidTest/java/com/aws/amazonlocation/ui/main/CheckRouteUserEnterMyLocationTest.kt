@@ -23,6 +23,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.MY_LOCATION
 import com.aws.amazonlocation.R
@@ -90,7 +91,7 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
@@ -104,7 +105,7 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)

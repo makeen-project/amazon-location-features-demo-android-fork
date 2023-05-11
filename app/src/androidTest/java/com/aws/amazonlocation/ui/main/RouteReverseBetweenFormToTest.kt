@@ -77,7 +77,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                 cardDirectionTest.perform(click())
                 uiDevice.wait(
                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                    DELAY_15000
+                    DELAY_20000
                 )
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
@@ -91,7 +91,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000
+                        DELAY_20000
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)

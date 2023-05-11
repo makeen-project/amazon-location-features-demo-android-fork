@@ -24,6 +24,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -85,7 +86,7 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -103,7 +104,7 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
@@ -117,15 +118,15 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_walk_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_truck_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)

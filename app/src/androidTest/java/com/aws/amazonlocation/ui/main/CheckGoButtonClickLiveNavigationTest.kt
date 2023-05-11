@@ -92,7 +92,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
@@ -106,11 +106,11 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_walk_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_truck_go")),
@@ -129,7 +129,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
 
                         uiDevice.wait(
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_navigation_list")),
-                            DELAY_15000,
+                            DELAY_20000,
                         )
 
                         val btnExit =
