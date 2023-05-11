@@ -46,7 +46,9 @@ class MapStyleFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
         isLargeTablet = requireContext().resources.getBoolean(R.bool.is_large_tablet)
-        setColumnCount()
+        if (isTablet) {
+            setColumnCount()
+        }
         val mapStyle =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
