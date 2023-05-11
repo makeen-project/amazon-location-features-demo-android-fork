@@ -19,18 +19,22 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
+import com.aws.amazonlocation.TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -42,7 +46,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class RouteOptionShowingTest {
+class RouteOptionShowingTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -84,7 +88,7 @@ class RouteOptionShowingTest {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_20000
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -100,15 +104,15 @@ class RouteOptionShowingTest {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                        DELAY_10000
+                        DELAY_20000
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_walk")),
-                        DELAY_10000
+                        DELAY_20000
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_truck")),
-                        DELAY_10000
+                        DELAY_20000
                     )
                     val clDrive =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
@@ -117,14 +121,15 @@ class RouteOptionShowingTest {
                     val clTruck =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_truck)
 
-                    Assert.assertTrue(clDrive.visibility == View.VISIBLE && clWalk.visibility == View.VISIBLE && clTruck.visibility == View.VISIBLE)
+                    Assert.assertTrue(TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE, clDrive.visibility == View.VISIBLE && clWalk.visibility == View.VISIBLE && clTruck.visibility == View.VISIBLE)
                 } else {
                     Assert.fail(TEST_FAILED_SEARCH_DIRECTION)
                 }
             } else {
                 Assert.fail(TEST_FAILED_DIRECTION_CARD)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(129, e)
             Assert.fail(TEST_FAILED)
         }
     }

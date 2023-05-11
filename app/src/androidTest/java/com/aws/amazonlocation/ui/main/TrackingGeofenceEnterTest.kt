@@ -19,12 +19,14 @@ import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.SECOND_DELAY_60
+import com.aws.amazonlocation.TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG
 import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -47,7 +49,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingGeofenceEnterTest {
+class TrackingGeofenceEnterTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -147,7 +149,7 @@ class TrackingGeofenceEnterTest {
             SECOND_DELAY_60
         )
         val dialogText = getAlertDialogMessage()
-        Assert.assertTrue(dialogText.contains(TRACKING_ENTERED))
+        Assert.assertTrue(TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG, dialogText.contains(TRACKING_ENTERED))
     }
 
     private fun getAlertDialogMessage(): String {

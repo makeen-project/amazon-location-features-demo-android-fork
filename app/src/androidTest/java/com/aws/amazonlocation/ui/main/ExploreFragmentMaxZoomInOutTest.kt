@@ -15,14 +15,17 @@ import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_MAX_ZOOM_NOT_REACHED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -33,7 +36,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentMaxZoomInOutTest {
+class ExploreFragmentMaxZoomInOutTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -80,8 +83,9 @@ class ExploreFragmentMaxZoomInOutTest {
                     }
                 }
             }
-            Assert.assertTrue(isMaxZoomInReach)
-        } catch (_: Exception) {
+            Assert.assertTrue(TEST_FAILED_MAX_ZOOM_NOT_REACHED, isMaxZoomInReach)
+        } catch (e: Exception) {
+            failTest(86, e)
             Assert.fail(TEST_FAILED)
         }
     }
@@ -116,8 +120,9 @@ class ExploreFragmentMaxZoomInOutTest {
                     }
                 }
             }
-            Assert.assertTrue(isMaxZoomInReach)
-        } catch (_: Exception) {
+            Assert.assertTrue(TEST_FAILED_MAX_ZOOM_NOT_REACHED, isMaxZoomInReach)
+        } catch (e: Exception) {
+            failTest(123, e)
             Assert.fail(TEST_FAILED)
         }
     }

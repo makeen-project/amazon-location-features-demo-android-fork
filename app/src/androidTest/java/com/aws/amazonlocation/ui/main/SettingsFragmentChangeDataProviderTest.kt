@@ -27,7 +27,7 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentChangeDataProviderTest {
+class SettingsFragmentChangeDataProviderTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -91,7 +91,8 @@ class SettingsFragmentChangeDataProviderTest {
             }
 
             checkDataProvider(true)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(95, e)
             Assert.fail(TEST_FAILED)
         }
     }
