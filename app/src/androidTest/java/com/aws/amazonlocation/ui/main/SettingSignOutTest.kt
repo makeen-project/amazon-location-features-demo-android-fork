@@ -46,7 +46,7 @@ class SettingSignOutTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -70,16 +70,16 @@ class SettingSignOutTest : BaseTest() {
             AllOf.allOf(
                 withText(settingTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         ).perform(ViewActions.click())
 
         Thread.sleep(DELAY_1000)
         Espresso.onView(
             AllOf.allOf(
                 withId(R.id.cl_aws_cloudformation),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         ).perform(ViewActions.click())
 
         val appViews = UiScrollable(UiSelector().scrollable(true))
@@ -93,7 +93,7 @@ class SettingSignOutTest : BaseTest() {
         Thread.sleep(DELAY_1000)
         uiDevice.wait(
             Until.hasObject(By.text(mActivityRule.activity.getString(R.string.logout))),
-            DELAY_20000
+            DELAY_20000,
         )
         Thread.sleep(DELAY_1000)
         val btnLogOut =
@@ -102,11 +102,11 @@ class SettingSignOutTest : BaseTest() {
 
         uiDevice.wait(
             Until.hasObject(By.text(mActivityRule.activity.getString(R.string.sign_in))),
-            DELAY_20000
+            DELAY_20000,
         )
         Thread.sleep(DELAY_1000)
         val btnSignIn =
             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_sign_in)
-        Assert.assertTrue(TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE,btnSignIn.visibility == View.VISIBLE)
+        Assert.assertTrue(TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE, btnSignIn.visibility == View.VISIBLE)
     }
 }

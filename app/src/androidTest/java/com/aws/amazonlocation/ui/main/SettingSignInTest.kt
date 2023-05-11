@@ -1,7 +1,7 @@
 package com.aws.amazonlocation.ui.main
 
-import android.view.View
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.view.isVisible
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
@@ -21,7 +21,10 @@ import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_4000
+import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_LOGOUT_BUTTON_NOT_VISIBLE
 import com.aws.amazonlocation.di.AppModule
@@ -45,7 +48,7 @@ class SettingSignInTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -69,31 +72,31 @@ class SettingSignInTest : BaseTest() {
             AllOf.allOf(
                 withText(settingTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         ).perform(ViewActions.click())
 
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         Espresso.onView(
             AllOf.allOf(
                 withId(R.id.cl_aws_cloudformation),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         ).perform(ViewActions.click())
 
         val appViews = UiScrollable(UiSelector().scrollable(true))
         appViews.scrollForward()
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_4000)
         val signIn =
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.sign_in)))
         signIn?.click()
         uiDevice.wait(
             Until.hasObject(By.text(mActivityRule.activity.getString(R.string.log_out))),
-            DELAY_20000
+            DELAY_20000,
         )
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_5000)
         val btnLogout =
             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_logout)
-        Assert.assertTrue(TEST_FAILED_LOGOUT_BUTTON_NOT_VISIBLE, btnLogout.visibility == View.VISIBLE)
+        Assert.assertTrue(TEST_FAILED_LOGOUT_BUTTON_NOT_VISIBLE, btnLogout.isVisible)
     }
 }
