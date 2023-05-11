@@ -19,14 +19,14 @@ class UnitsIsMetricTest : BaseTest() {
     @Test
     fun getDistanceUnitSuccess() {
         Locale.setDefault(Locale.US)
-        var result = Units.isMetric("")
+        var result = Units.isMetric(AUTOMATIC)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
-        Locale.setDefault(Locale("en", "IN"))
-        result = Units.isMetric("")
+        Locale.setDefault(LOCALE_IN)
+        result = Units.isMetric(AUTOMATIC)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result)
-        result = Units.isMetric("Imperial")
+        result = Units.isMetric(IMPERIAL)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
-        result = Units.isMetric("Metric")
+        result = Units.isMetric(METRIC)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result)
     }
 }

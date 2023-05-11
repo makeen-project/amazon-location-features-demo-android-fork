@@ -18,15 +18,15 @@ class UnitsGetDistanceUnitTest : BaseTest() {
 
     @Test
     fun getDistanceUnitSuccess() {
-        Locale.setDefault(Locale.US)
-        var result = Units.getDistanceUnit("")
+        Locale.setDefault(LOCALE_US)
+        var result = Units.getDistanceUnit(AUTOMATIC)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, MILES == result)
-        Locale.setDefault(Locale("en", "IN"))
-        result = Units.getDistanceUnit("")
+        Locale.setDefault(LOCALE_IN)
+        result = Units.getDistanceUnit(AUTOMATIC)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, KILOMETERS == result)
-        result = Units.getDistanceUnit("Imperial")
+        result = Units.getDistanceUnit(IMPERIAL)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, MILES == result)
-        result = Units.getDistanceUnit("Metric")
+        result = Units.getDistanceUnit(METRIC)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, KILOMETERS == result)
     }
 }

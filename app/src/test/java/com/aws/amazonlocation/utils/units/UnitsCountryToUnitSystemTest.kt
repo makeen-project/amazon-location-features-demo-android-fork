@@ -16,10 +16,10 @@ class UnitsCountryToUnitSystemTest : BaseTest() {
 
     @Test
     fun toLowerUnitSuccess() {
-        Locale.setDefault(Locale.US)
+        Locale.setDefault(LOCALE_US)
         var result = Units.isMetricUsingCountry()
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
-        Locale.setDefault(Locale("en", "IN"))
+        Locale.setDefault(LOCALE_IN)
         result = Units.isMetricUsingCountry()
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result)
     }

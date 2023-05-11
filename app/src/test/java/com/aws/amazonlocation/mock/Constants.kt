@@ -5,6 +5,7 @@ import com.amazonaws.services.geo.model.PlaceGeometry
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.mapbox.mapboxsdk.geometry.LatLng
+import java.util.Locale
 
 const val DELAY_1000 = 1000L
 const val TIMEOUT_5000 = 5000L
@@ -346,3 +347,9 @@ const val UNIT_AMPLIFY_JSON_CONFIG = "{\n" +
     "        }\n" +
     "    }\n" +
     "}"
+
+val LOCALE_IN = Locale("en", "IN")
+val LOCALE_US = Locale.US
+val METRIC = "Metric"
+val IMPERIAL = "Imperial"
+val AUTOMATIC = "Automatic"
