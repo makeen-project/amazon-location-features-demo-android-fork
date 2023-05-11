@@ -836,7 +836,7 @@ class GeofenceUtils {
             mBindingGeofenceList?.clEmptyGeofenceList?.let {
                 val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                 if (isTablet) {
-                    mBottomSheetGeofenceListBehavior?.peekHeight = 130.px
+                    mBottomSheetGeofenceListBehavior?.peekHeight = 140.px
                 } else {
                     mBottomSheetGeofenceListBehavior?.peekHeight = 104.px
                 }
