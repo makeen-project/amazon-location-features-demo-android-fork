@@ -33,6 +33,7 @@ import com.aws.amazonlocation.actions.pinchOut
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.waitUntil
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -77,6 +78,13 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut())
             Thread.sleep(DELAY_5000)
             if (beforeZoomLevel != null) {
+                waitUntil(DELAY_3000, 5) {
+                    mapbox?.cameraPosition?.zoom?.let {
+                        beforeZoomLevel < it
+                    }
+                }
+            }
+            if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
                 }
@@ -105,6 +113,13 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
             onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn())
             Thread.sleep(DELAY_5000)
+            if (beforeZoomLevel != null) {
+                waitUntil(DELAY_3000, 5) {
+                    mapbox?.cameraPosition?.zoom?.let {
+                        beforeZoomLevel > it
+                    }
+                }
+            }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel > it)
@@ -139,6 +154,13 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }
             Thread.sleep(DELAY_5000)
+            if (beforeZoomLevel != null) {
+                waitUntil(DELAY_3000, 5) {
+                    mapbox?.cameraPosition?.zoom?.let {
+                        beforeZoomLevel < it
+                    }
+                }
+            }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)

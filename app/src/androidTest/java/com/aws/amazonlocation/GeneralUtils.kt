@@ -85,3 +85,14 @@ val mockLocationsExit = listOf(
 fun failTest(lineNo: Int, exception: Exception?) {
     Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: ${exception?.stackTraceToString() ?: "Custom error"}")
 }
+
+fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
+    var count = 0
+    while (condition() != true) {
+        Thread.sleep(waitTime)
+        if (maxCount < ++count) {
+            Assert.fail("$TEST_FAILED - Max count reached")
+            break
+        }
+    }
+}
