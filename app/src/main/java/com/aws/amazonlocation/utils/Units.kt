@@ -13,14 +13,6 @@ import java.util.concurrent.TimeUnit
 // SPDX-License-Identifier: MIT-0
 object Units {
 
-    fun getMetrics(distance: Double): String {
-        return if (distance <= 1000) {
-            "${DecimalFormat("##.##").format((distance.toInt()))} m"
-        } else {
-            "${DecimalFormat("##.#").format((distance / 1000))} km"
-        }
-    }
-
     fun getMetricsNew(distance: Double, isMetric: Boolean): String {
         return if (isMetric) {
             if (distance <= 1000) {

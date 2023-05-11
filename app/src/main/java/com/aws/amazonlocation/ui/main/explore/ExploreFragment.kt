@@ -61,7 +61,6 @@ import com.aws.amazonlocation.utils.MapNames.ESRI_LIGHT
 import com.aws.amazonlocation.utils.MapStyles.VECTOR_ESRI_TOPOGRAPHIC
 import com.aws.amazonlocation.utils.Units.convertToLowerUnit
 import com.aws.amazonlocation.utils.Units.getDeviceId
-import com.aws.amazonlocation.utils.Units.getMetrics
 import com.aws.amazonlocation.utils.Units.getMetricsNew
 import com.aws.amazonlocation.utils.Units.getTime
 import com.aws.amazonlocation.utils.Units.isGPSEnabled

@@ -104,7 +104,8 @@ class GeofenceUtils {
                     mBindingAddGeofence?.tvSeekbarRadius,
                     mBindingAddGeofence?.seekbarGeofenceRadius,
                     mMapboxMap,
-                    mMapLatLngListener
+                    mMapLatLngListener,
+                    preferenceManager
                 )
             mGeofenceHelper?.initMapBoxStyle()
         }
