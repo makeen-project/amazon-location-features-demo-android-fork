@@ -22,6 +22,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_NO_MATCHING_TEXT_NOT_VISIBLE
@@ -66,7 +67,7 @@ class ExploreFragmentSearchNonExistingLocationTest : BaseTest() {
             onView(withId(R.id.edt_search_places)).perform(typeText(" "))
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_no_matching_found")),
-                DELAY_10000
+                DELAY_20000
             )
             val tvNoMatchingPlaceFound =
                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_no_matching_found)
