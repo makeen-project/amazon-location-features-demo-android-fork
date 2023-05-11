@@ -38,6 +38,7 @@
         android:background="@drawable/bottom_sheet_top_corner_curved_geofence"
         android:clickable="true"
         android:focusable="true"
+        android:layout_marginTop="@dimen/dp_16"
         android:paddingBottom="@dimen/dp_34"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">

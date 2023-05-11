@@ -7,11 +7,10 @@
         android:right="@dimen/dp_3"
         android:top="@dimen/dp_3">
         <shape android:shape="oval">
-            <stroke android:width="@dimen/dp_1" android:color="@color/color_view"/>
             <size
                 android:width="@dimen/dp_27"
                 android:height="@dimen/dp_27" />
-            <solid android:color="@color/white" />
+            <solid android:color="@color/color_primary_green" />
         </shape>
     </item>
 </layer-list>

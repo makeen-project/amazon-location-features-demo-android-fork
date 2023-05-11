@@ -15,7 +15,7 @@
         android:id="@+id/cl_tracking"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_16"
         android:background="@drawable/bottom_sheet_top_corner_curved_geofence"
         android:paddingBottom="@dimen/bottom_nav_height"
         android:visibility="visible"

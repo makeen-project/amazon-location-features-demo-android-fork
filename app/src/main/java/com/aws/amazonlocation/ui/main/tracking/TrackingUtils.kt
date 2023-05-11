@@ -157,7 +157,7 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isDraggable = true
             val isTablet = clTracking.context.resources.getBoolean(R.bool.is_tablet)
             if (isTablet) {
-                mBottomSheetTrackingBehavior?.peekHeight = 140.px
+                mBottomSheetTrackingBehavior?.peekHeight = 150.px
             } else {
                 mBottomSheetTrackingBehavior?.peekHeight = 110.px
             }
