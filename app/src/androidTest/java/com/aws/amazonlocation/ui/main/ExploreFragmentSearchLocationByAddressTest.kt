@@ -68,6 +68,7 @@ class ExploreFragmentSearchLocationByAddressTest : BaseTest() {
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_20000,
             )
+            Thread.sleep(DELAY_2000)
             onView(withId(R.id.rv_search_places_suggestion)).check(
                 matches(
                     hasMinimumChildCount(1),

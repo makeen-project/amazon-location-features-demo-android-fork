@@ -69,6 +69,7 @@ class ExploreFragmentSearchNonExistingLocationTest : BaseTest() {
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_no_matching_found")),
                 DELAY_20000
             )
+            Thread.sleep(DELAY_2000)
             val tvNoMatchingPlaceFound =
                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_no_matching_found)
             Assert.assertTrue(TEST_FAILED_NO_MATCHING_TEXT_NOT_VISIBLE, tvNoMatchingPlaceFound.visibility == View.VISIBLE)

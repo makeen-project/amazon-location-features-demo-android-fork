@@ -60,6 +60,7 @@ class ExploreFragmentSearchExistsTest : BaseTest() {
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_places")),
                 DELAY_20000
             )
+            Thread.sleep(DELAY_2000)
             val edtSearchPlaces =
                 mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_places)
             val point = IntArray(2)

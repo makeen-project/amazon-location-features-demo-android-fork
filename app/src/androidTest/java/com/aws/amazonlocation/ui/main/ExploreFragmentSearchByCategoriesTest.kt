@@ -70,11 +70,11 @@ class ExploreFragmentSearchByCategoriesTest : BaseTest() {
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_20000
             )
+            Thread.sleep(DELAY_2000)
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
                 rvSearchPlaceSuggestion.adapter?.itemCount?.let {
-                    Thread.sleep(DELAY_2000)
                     Assert.assertTrue(TEST_FAILED_COUNT_NOT_GREATER_THAN_ZERO, it > 0)
                 }
             } else {
