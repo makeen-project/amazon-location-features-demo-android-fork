@@ -66,6 +66,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                         mapbox = it
                     }
                     Thread.sleep(DELAY_4000)
+                    tryWait(mapbox)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(67, e)
@@ -85,6 +86,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                         mapbox = it
                     }
                     Thread.sleep(DELAY_4000)
+                    tryWait(mapbox)
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
                 } catch (e: UiObjectNotFoundException) {
                     failTest(85, e)
@@ -96,4 +98,13 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
             Assert.fail(TEST_FAILED)
         }
     }
+
+    private fun tryWait(mapbox: MapboxMap?) {
+        var count = 0
+        while ((mapbox?.locationComponent?.isLocationComponentActivated != true || mapbox?.locationComponent?.isLocationComponentEnabled != true) && count < 5) {
+            Thread.sleep(DELAY_4000)
+            count++
+        }
+    }
+
 }
