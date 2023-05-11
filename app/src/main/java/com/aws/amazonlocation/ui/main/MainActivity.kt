@@ -515,6 +515,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun moveToExploreScreen() {
+        showAmazonLogo()
         mBinding.bottomNavigationMain.menu.findItem(R.id.menu_explore).isChecked = true
     }
 
