@@ -578,27 +578,31 @@ class ExploreFragment :
                     mViewModel.mStyleList,
                     object : MapStyleAdapter.MapInterface {
                         override fun mapClick(position: Int) {
-                            if (!mViewModel.mStyleList[position].isSelected) {
-                                repeat(mViewModel.mStyleList.size) {
-                                    mViewModel.mStyleList[it].isSelected = false
+                            if (position != -1) {
+                                if (!mViewModel.mStyleList[position].isSelected) {
+                                    repeat(mViewModel.mStyleList.size) {
+                                        mViewModel.mStyleList[it].isSelected = false
+                                    }
+                                } else {
+                                    return
                                 }
-                            } else {
-                                return
+                                mapStyleChange(position, 0)
+                                mViewModel.mStyleList[position].isSelected =
+                                    !mViewModel.mStyleList[position].isSelected
+                                mMapStyleAdapter?.notifyDataSetChanged()
                             }
-                            mapStyleChange(position, 0)
-                            mViewModel.mStyleList[position].isSelected =
-                                !mViewModel.mStyleList[position].isSelected
-                            mMapStyleAdapter?.notifyDataSetChanged()
                         }
 
                         override fun mapStyleClick(position: Int, innerPosition: Int) {
                             if (checkInternetConnection()) {
-                                mViewModel.mStyleList[position].mapInnerData?.let {
-                                    if (it[innerPosition].isSelected) {
-                                        return
+                                if (position != -1 && innerPosition != -1) {
+                                    mViewModel.mStyleList[position].mapInnerData?.let {
+                                        if (it[innerPosition].isSelected) {
+                                            return
+                                        }
                                     }
+                                    mapStyleChange(position, innerPosition)
                                 }
-                                mapStyleChange(position, innerPosition)
                             }
                         }
                     },
