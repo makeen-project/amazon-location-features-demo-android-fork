@@ -21,6 +21,7 @@ class MapStyleFragment : BaseFragment() {
     private val mViewModel: MapStyleViewModel by viewModels()
     private var mAdapter: EsriMapStyleAdapter? = null
     private var mHereAdapter: EsriMapStyleAdapter? = null
+    private var isMapClickEnable = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,7 +63,10 @@ class MapStyleFragment : BaseFragment() {
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
                     override fun esriStyleClick(position: Int) {
                         if (context?.isInternetAvailable() == true) {
-                            changeStyle(position, true)
+                            if (isMapClickEnable) {
+                                isMapClickEnable = false
+                                changeStyle(position, true)
+                            }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
                         }
@@ -82,7 +86,10 @@ class MapStyleFragment : BaseFragment() {
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
                     override fun esriStyleClick(position: Int) {
                         if (context?.isInternetAvailable() == true) {
-                            changeStyle(position, false)
+                            if (isMapClickEnable) {
+                                isMapClickEnable = false
+                                changeStyle(position, false)
+                            }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
                         }
@@ -94,7 +101,7 @@ class MapStyleFragment : BaseFragment() {
     }
 
     fun changeStyle(position: Int, isHere: Boolean) {
-        if (context?.isInternetAvailable() == true) {
+        if (position != -1) {
             if (isHere) {
                 mAdapter?.deselectAll()
                 mHereAdapter?.singeSelection(position)
@@ -130,9 +137,8 @@ class MapStyleFragment : BaseFragment() {
                     mViewModel.esriList[position].mMapStyleName!!
                 )
             }
-        } else {
-            showError(getString(R.string.check_your_internet_connection_and_try_again))
         }
+        isMapClickEnable = true
     }
 
     private fun clickListener() {
