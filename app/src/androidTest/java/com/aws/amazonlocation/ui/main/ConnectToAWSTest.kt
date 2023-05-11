@@ -31,7 +31,7 @@ import org.junit.* // ktlint-disable no-wildcard-imports
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ConnectToAWSTest {
+class ConnectToAWSTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

@@ -27,7 +27,7 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentChangeDataProviderTest {
+class SettingsFragmentChangeDataProviderTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

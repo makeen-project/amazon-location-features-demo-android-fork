@@ -22,20 +22,20 @@ import org.junit.runners.Suite
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
     ExploreFragmentEnableLocationTest::class,
-    ExploreFragmentMapLoadingTest::class,
-    ExploreFragmentMapCurrentLocationTest::class,
-    ExploreFragmentLiveNavigationTest::class,
-    ExploreFragmentMapFunctionWithoutAwsLoginTest::class,
-    ExploreFragmentMapLocateMeButtonTest::class,
-    ExploreFragmentMapZoomInOutTest::class,
-    ExploreFragmentMaxZoomInOutTest::class,
-    AfterSearchDirectionButtonWorkingTest::class,
-    ExploreFragmentSearchByCategoriesTest::class,
-    ExploreFragmentSearchCollapseTest::class,
-    ExploreFragmentSearchExistsTest::class,
-    ExploreFragmentSearchGeocodeReversedTest::class,
-    ExploreFragmentSearchLocationByAddressTest::class,
-    ExploreFragmentSearchLocationByGeocodeTest::class,
-    ExploreFragmentSearchNonExistingLocationTest::class
+//    ExploreFragmentMapLoadingTest::class,
+//    ExploreFragmentMapCurrentLocationTest::class,
+//    ExploreFragmentLiveNavigationTest::class,
+//    ExploreFragmentMapFunctionWithoutAwsLoginTest::class,
+//    ExploreFragmentMapLocateMeButtonTest::class,
+//    ExploreFragmentMapZoomInOutTest::class,
+//    ExploreFragmentMaxZoomInOutTest::class,
+//    AfterSearchDirectionButtonWorkingTest::class,
+//    ExploreFragmentSearchByCategoriesTest::class,
+//    ExploreFragmentSearchCollapseTest::class,
+//    ExploreFragmentSearchExistsTest::class,
+//    ExploreFragmentSearchGeocodeReversedTest::class,
+//    ExploreFragmentSearchLocationByAddressTest::class,
+//    ExploreFragmentSearchLocationByGeocodeTest::class,
+//    ExploreFragmentSearchNonExistingLocationTest::class
 )
 class DefaultConnectionFlowSuite

@@ -32,7 +32,7 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentDefaultRouteTest {
+class SettingsFragmentDefaultRouteTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

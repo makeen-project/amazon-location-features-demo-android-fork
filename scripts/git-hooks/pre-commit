@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source ./.git/hooks/colors
+
+set -e
+echo -e "${BLUE}*******************************"
+echo -e "Running git pre-commit hook"
+echo -e "*******************************${ENDCOLOR}"
+
+git stash -q --keep-index
+
+OUTPUT=$(./gradlew testDebugUnitTestCoverageVerification);RESULT=$?
+
+git stash pop -q
+
+if [ ${RESULT} -eq 0 ]; then
+  echo -e "${GREEN}*******************************"
+  echo -e   "Pre-commit hook passed"
+  echo -e "*******************************${ENDCOLOR}"
+  exit 0
+fi
