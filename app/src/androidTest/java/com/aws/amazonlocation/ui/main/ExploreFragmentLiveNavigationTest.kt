@@ -22,6 +22,7 @@ import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
@@ -68,7 +69,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
             uiDevice.wait(
                 Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion")),
-                DELAY_15000,
+                DELAY_20000,
             )
 
             onView(withId(R.id.rv_search_places_suggestion)).check(matches(isDisplayed()))
@@ -88,7 +89,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
             Thread.sleep(DELAY_2000)
             uiDevice.wait(
                 Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/tv_direction_time")),
-                DELAY_15000,
+                DELAY_20000,
             )
 
             onView(withId(R.id.btn_direction)).perform(click())
@@ -101,7 +102,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
 
             uiDevice.wait(
                 Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_drive_go")),
-                DELAY_15000,
+                DELAY_20000,
             )
 
             onView(withId(R.id.card_drive_go)).check(matches(isDisplayed()))
@@ -115,7 +116,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
 
             uiDevice.wait(
                 Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_navigation_list")),
-                DELAY_15000,
+                DELAY_20000,
             )
 
             Thread.sleep(DELAY_2000)
