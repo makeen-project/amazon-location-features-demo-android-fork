@@ -36,6 +36,7 @@
         android:id="@+id/cl_direction_sheet_search"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"
+        android:layout_marginTop="@dimen/dp_16"
         android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

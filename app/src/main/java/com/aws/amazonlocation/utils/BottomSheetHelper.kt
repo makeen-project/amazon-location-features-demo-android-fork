@@ -191,9 +191,11 @@ class BottomSheetHelper {
         mBottomSheetDirectionsSearch.isHideable = true
         mBottomSheetDirectionsSearch.state = BottomSheetBehavior.STATE_HIDDEN
         mBottomSheetDirectionsSearch.isFitToContents = false
-        mBottomSheetDirectionsSearch.expandedOffset =
-            view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
-
+        val isTablet = view.clDirectionSearchSheet.resources.getBoolean(R.bool.is_tablet)
+        if (!isTablet) {
+            mBottomSheetDirectionsSearch.expandedOffset =
+                view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+        }
         mBottomSheetDirectionsSearch.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
