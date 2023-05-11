@@ -111,10 +111,14 @@ class MapStyleFragment : BaseFragment() {
                         it1
                     )
                 }
-                mMapHelper.updateMapStyle(
-                    mViewModel.hereList[position].mMapName!!,
-                    mViewModel.hereList[position].mMapStyleName!!
-                )
+                mViewModel.hereList[position].mMapName?.let {
+                    mViewModel.hereList[position].mMapStyleName?.let { it1 ->
+                        mMapHelper.updateMapStyle(
+                            it,
+                            it1
+                        )
+                    }
+                }
                 mPreferenceManager.setValue(
                     KEY_MAP_NAME,
                     resources.getString(R.string.here)
@@ -132,10 +136,14 @@ class MapStyleFragment : BaseFragment() {
                     KEY_MAP_NAME,
                     resources.getString(R.string.map_esri)
                 )
-                mMapHelper.updateMapStyle(
-                    mViewModel.esriList[position].mMapName!!,
-                    mViewModel.esriList[position].mMapStyleName!!
-                )
+                mViewModel.esriList[position].mMapName?.let {
+                    mViewModel.esriList[position].mMapStyleName?.let { it1 ->
+                        mMapHelper.updateMapStyle(
+                            it,
+                            it1
+                        )
+                    }
+                }
             }
         }
         isMapClickEnable = true
