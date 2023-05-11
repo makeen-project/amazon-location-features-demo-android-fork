@@ -52,6 +52,7 @@ import com.aws.amazonlocation.domain.`interface`.*
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
+import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
@@ -99,7 +100,8 @@ class ExploreFragment :
     SignOutInterface,
     MapboxMap.OnMapClickListener,
     MapHelper.IsMapLoadedInterface,
-    MapboxMap.OnScaleListener {
+    MapboxMap.OnScaleListener,
+    MapStyleChangeListener {
 
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
@@ -3658,7 +3660,7 @@ class ExploreFragment :
                 mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
             }
         }
-        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this)
+        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this)
         activity?.let {
             mBaseActivity?.mGeofenceUtils?.setMapBox(
                 it,
@@ -4027,5 +4029,36 @@ class ExploreFragment :
         mMapHelper.getLiveLocation()?.let { mLatLng ->
             mMapHelper.navigationZoomCamera(mLatLng, false)
         }
+    }
+
+    override fun onMapStyleChanged(mapStyle: String) {
+        val logoResId = when (mapStyle) {
+            MapNames.ESRI_LIGHT,
+            MapNames.ESRI_STREET_MAP,
+            MapNames.ESRI_NAVIGATION,
+            MapNames.ESRI_LIGHT_GRAY_CANVAS,
+            MapNames.HERE_CONTRAST,
+            MapNames.HERE_EXPLORE,
+            MapNames.HERE_EXPLORE_TRUCK,
+            -> R.drawable.ic_amazon_logo_on_light
+
+            MapNames.ESRI_DARK_GRAY_CANVAS,
+            MapNames.ESRI_IMAGERY,
+            MapNames.HERE_IMAGERY,
+            MapNames.HERE_HYBRID,
+            -> R.drawable.ic_amazon_logo_on_dark
+
+            else -> {
+                R.drawable.ic_amazon_logo_on_light }
+        }
+        mBinding.bottomSheetSearch.imgAmazonLogoSearchSheet.setImageResource(logoResId)
+        mBinding.bottomSheetDirection.imgAmazonLogoDirection.setImageResource(logoResId)
+        mBinding.bottomSheetDirectionSearch.imgAmazonLogoDirectionSearchSheet.setImageResource(logoResId)
+        mBinding.bottomSheetNavigation.imgAmazonLogoNavigation.setImageResource(logoResId)
+        mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(logoResId)
+        mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList.setImageResource(logoResId)
+        mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence.setImageResource(logoResId)
+        mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet.setImageResource(logoResId)
+        mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle.setImageResource(logoResId)
     }
 }
