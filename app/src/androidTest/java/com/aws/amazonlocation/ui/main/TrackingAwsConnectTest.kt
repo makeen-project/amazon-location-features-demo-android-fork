@@ -8,7 +8,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -20,12 +20,15 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
+import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_INVALID_IDENTITY_POOL_ID
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.utils.KEY_POOL_ID
@@ -39,7 +42,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingAwsConnectTest {
+class TrackingAwsConnectTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -47,7 +50,7 @@ class TrackingAwsConnectTest {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -67,7 +70,7 @@ class TrackingAwsConnectTest {
         Thread.sleep(DELAY_1000)
         uiDevice.wait(
             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_sign_in_required")),
-            DELAY_10000
+            DELAY_10000,
         )
         val appViews = UiScrollable(UiSelector().scrollable(true))
         appViews.scrollForward()
@@ -75,23 +78,23 @@ class TrackingAwsConnectTest {
         val edtIdentityPoolId =
             onView(withId(R.id.edt_identity_pool_id)).check(ViewAssertions.matches(isDisplayed()))
         edtIdentityPoolId.perform(click())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_identity_pool_id))
             ?.perform(click(), replaceText(BuildConfig.IDENTITY_POOL_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_user_domain))
             ?.perform(click(), replaceText(BuildConfig.USER_DOMAIN), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_user_pool_client_id))
             ?.perform(click(), replaceText(BuildConfig.USER_POOL_CLIENT_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_user_pool_id))
             ?.perform(click(), replaceText(BuildConfig.USER_POOL_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         onView(withId(R.id.edt_web_socket_url))
             ?.perform(click(), replaceText(BuildConfig.WEB_SOCKET_URL), closeSoftKeyboard())
 
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
         val btnConnect =
             onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
         btnConnect.perform(click())
@@ -110,6 +113,6 @@ class TrackingAwsConnectTest {
                 }
             }
         }
-        Assert.assertTrue(mPoolId == BuildConfig.IDENTITY_POOL_ID)
+        Assert.assertTrue(TEST_FAILED_INVALID_IDENTITY_POOL_ID, mPoolId == BuildConfig.IDENTITY_POOL_ID)
     }
 }

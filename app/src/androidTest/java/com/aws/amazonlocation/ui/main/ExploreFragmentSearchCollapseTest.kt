@@ -17,11 +17,13 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_NAVIGATION_CARD_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_SHEET
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -36,7 +38,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentSearchCollapseTest {
+class ExploreFragmentSearchCollapseTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -75,7 +77,7 @@ class ExploreFragmentSearchCollapseTest {
             uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))), DELAY_5000)
             val cardNavigation =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_navigation)
-            Assert.assertTrue(cardNavigation.visibility == View.VISIBLE)
+            Assert.assertTrue(TEST_FAILED_NAVIGATION_CARD_NOT_VISIBLE, cardNavigation.visibility == View.VISIBLE)
         } else {
             Assert.fail(TEST_FAILED_SEARCH_SHEET)
         }

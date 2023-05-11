@@ -11,14 +11,17 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_HEIGHT_NOT_GREATER
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -29,7 +32,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentSearchExistsTest {
+class ExploreFragmentSearchExistsTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -61,8 +64,9 @@ class ExploreFragmentSearchExistsTest {
             val point = IntArray(2)
             edtSearchPlaces.getLocationOnScreen(point)
             val screenHeight = mActivityRule.activity.window.decorView.height / 2
-            Assert.assertTrue(point[1] + edtSearchPlaces.height > screenHeight)
-        } catch (_: Exception) {
+            Assert.assertTrue(TEST_FAILED_HEIGHT_NOT_GREATER, point[1] + edtSearchPlaces.height > screenHeight)
+        } catch (e: Exception) {
+            failTest(67, e)
             Assert.fail(TEST_FAILED)
         }
     }

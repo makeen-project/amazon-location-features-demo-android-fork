@@ -30,7 +30,7 @@ import java.util.concurrent.CountDownLatch
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentChangeStyleTest {
+class SettingsFragmentChangeStyleTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -128,7 +128,8 @@ class SettingsFragmentChangeStyleTest {
                 Thread.sleep(DELAY_2000)
                 checkLoadedTheme()
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(132, e)
             Assert.fail(TEST_FAILED)
         }
     }

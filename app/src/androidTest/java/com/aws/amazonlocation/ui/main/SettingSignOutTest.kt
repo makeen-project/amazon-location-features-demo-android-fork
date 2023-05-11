@@ -18,11 +18,13 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -36,7 +38,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingSignOutTest {
+class SettingSignOutTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -105,6 +107,6 @@ class SettingSignOutTest {
         Thread.sleep(DELAY_1000)
         val btnSignIn =
             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_sign_in)
-        Assert.assertTrue(btnSignIn.visibility == View.VISIBLE)
+        Assert.assertTrue(TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE,btnSignIn.visibility == View.VISIBLE)
     }
 }

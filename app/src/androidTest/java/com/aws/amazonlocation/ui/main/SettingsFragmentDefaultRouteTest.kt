@@ -32,7 +32,7 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentDefaultRouteTest {
+class SettingsFragmentDefaultRouteTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -70,7 +70,8 @@ class SettingsFragmentDefaultRouteTest {
             goToDefaultRouteSettings()
 
             checkDefaultRouteOptions(avoidTollsShouldBe = false, avoidFerriesShouldBe = false)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(74, e)
             Assert.fail(TEST_FAILED)
         }
     }

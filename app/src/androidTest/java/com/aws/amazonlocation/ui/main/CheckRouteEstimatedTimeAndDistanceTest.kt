@@ -9,7 +9,7 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -19,6 +19,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
@@ -28,6 +29,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
+import com.aws.amazonlocation.TEST_FAILED_DISTANCE_OR_TIME_EMPTY
 import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
 import com.aws.amazonlocation.TEST_WORD_10
 import com.aws.amazonlocation.TEST_WORD_9
@@ -44,7 +46,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class CheckRouteEstimatedTimeAndDistanceTest {
+class CheckRouteEstimatedTimeAndDistanceTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -52,7 +54,7 @@ class CheckRouteEstimatedTimeAndDistanceTest {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -74,7 +76,7 @@ class CheckRouteEstimatedTimeAndDistanceTest {
                 cardDirectionTest.perform(click())
                 uiDevice.wait(
                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                    DELAY_5000
+                    DELAY_5000,
                 )
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
@@ -83,7 +85,7 @@ class CheckRouteEstimatedTimeAndDistanceTest {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_15000,
                     )
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
@@ -92,8 +94,8 @@ class CheckRouteEstimatedTimeAndDistanceTest {
                             onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                                     0,
-                                    click()
-                                )
+                                    click(),
+                                ),
                             )
                         }
                     }
@@ -101,29 +103,29 @@ class CheckRouteEstimatedTimeAndDistanceTest {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_10000
+                        DELAY_15000,
                     )
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
                             onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
                                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                                     0,
-                                    click()
-                                )
+                                    click(),
+                                ),
                             )
                         }
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_10000
+                        DELAY_15000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_walk_go")),
-                        DELAY_10000
+                        DELAY_15000,
                     )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_truck_go")),
-                        DELAY_10000
+                        DELAY_15000,
                     )
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
@@ -142,9 +144,10 @@ class CheckRouteEstimatedTimeAndDistanceTest {
                             mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_truck_minute)
 
                         Assert.assertTrue(
+                            TEST_FAILED_DISTANCE_OR_TIME_EMPTY,
                             tvDriveDistance.text.toString().isNotEmpty() && tvDriveMinute.text.toString().isNotEmpty() &&
                                 tvWalkDistance.text.toString().isNotEmpty() && tvWalkMinute.text.toString().isNotEmpty() &&
-                                tvTruckDistance.text.toString().isNotEmpty() && tvTruckMinute.text.toString().isNotEmpty()
+                                tvTruckDistance.text.toString().isNotEmpty() && tvTruckMinute.text.toString().isNotEmpty(),
                         )
                     } else {
                         Assert.fail(TEST_FAILED_CARD_DRIVE_GO)

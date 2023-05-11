@@ -17,16 +17,19 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
+import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.SECOND_DELAY_60
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_NOT_TRACKING_EXIT_DIALOG
 import com.aws.amazonlocation.TRACKING_ENTERED
 import com.aws.amazonlocation.TRACKING_EXITED
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -39,7 +42,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingGeofenceExitTest {
+class TrackingGeofenceExitTest : BaseTest() {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -111,13 +114,15 @@ class TrackingGeofenceExitTest {
                     SECOND_DELAY_60
                 )
                 dialogText = getAlertDialogMessage()
-                Assert.assertTrue(dialogText.contains(TRACKING_EXITED))
+                Assert.assertTrue(TEST_FAILED_NOT_TRACKING_EXIT_DIALOG, dialogText.contains(TRACKING_EXITED))
             } else if (dialogText.contains(TRACKING_EXITED)) {
-                Assert.assertTrue(dialogText.contains(TRACKING_EXITED))
+                Assert.assertTrue(TEST_FAILED_NOT_TRACKING_EXIT_DIALOG, dialogText.contains(TRACKING_EXITED))
             } else {
+                failTest(119, null)
                 Assert.fail(TEST_FAILED)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            failTest(123, e)
             Assert.fail(TEST_FAILED)
         }
     }
