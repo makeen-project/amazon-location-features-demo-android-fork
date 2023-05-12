@@ -31,6 +31,7 @@ import com.aws.amazonlocation.utils.geofence_helper.GeofenceHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
@@ -69,7 +70,7 @@ class GeofenceUtils {
     fun setMapBox(
         activity: Activity,
         mapboxMap: MapboxMap,
-        mMapHelper: MapHelper
+        mMapHelper: MapHelper,
     ) {
         mClient = AmazonLocationClient(AWSMobileClient.getInstance())
         this.mMapHelper = mMapHelper
@@ -101,7 +102,7 @@ class GeofenceUtils {
                     mBindingAddGeofence?.tvSeekbarRadius,
                     mBindingAddGeofence?.seekbarGeofenceRadius,
                     mMapboxMap,
-                    mMapLatLngListener
+                    mMapLatLngListener,
                 )
             mGeofenceHelper?.initMapBoxStyle()
         }
@@ -111,7 +112,7 @@ class GeofenceUtils {
         fragmentActivity: FragmentActivity?,
         bottomSheetGeofenceList: BottomSheetGeofenceListBinding,
         bindingAddGeofence: BottomSheetAddGeofenceBinding,
-        mGeofenceInterface: GeofenceInterface
+        mGeofenceInterface: GeofenceInterface,
     ) {
         this.mGeofenceInterface = mGeofenceInterface
         this.mFragmentActivity = fragmentActivity
@@ -172,55 +173,55 @@ class GeofenceUtils {
                                 } else {
                                     showErrorMessage(
                                         mActivity?.resources?.getString(R.string.geofence_name_exists)
-                                            .toString()
+                                            .toString(),
                                     )
                                 }
                             }
                         } else {
                             showErrorMessage(
                                 mActivity?.resources?.getString(R.string.invalid_name)
-                                    .toString()
+                                    .toString(),
                             )
                         }
                     } else {
                         showErrorMessage(
                             mActivity?.resources?.getString(R.string.please_enter_geofence_name)
-                                .toString()
+                                .toString(),
                         )
                     }
                 }
             }
 
             mBottomSheetAddGeofenceBehavior?.addBottomSheetCallback(object :
-                    BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_COLLAPSED -> {
-                                showViews(cardGeofenceLiveLocation, imgAmazonLogoAddGeofence)
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence.alpha = 1f
-                                ivAmazonInfoAddGeofence.alpha = 1f
-                            }
-                            BottomSheetBehavior.STATE_EXPANDED -> {
-                                cardGeofenceLiveLocation.alpha = 0f
-                                imgAmazonLogoAddGeofence.alpha = 0f
-                                ivAmazonInfoAddGeofence.alpha = 0f
-                            }
-                            BottomSheetBehavior.STATE_DRAGGING -> {
-                            }
-                            BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence.alpha = 1f
-                                ivAmazonInfoAddGeofence.alpha = 1f
-                            }
-                            BottomSheetBehavior.STATE_HIDDEN -> {}
-                            BottomSheetBehavior.STATE_SETTLING -> {}
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            showViews(cardGeofenceLiveLocation, imgAmazonLogoAddGeofence)
+                            cardGeofenceLiveLocation.alpha = 1f
+                            imgAmazonLogoAddGeofence.alpha = 1f
+                            ivAmazonInfoAddGeofence.alpha = 1f
                         }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            cardGeofenceLiveLocation.alpha = 0f
+                            imgAmazonLogoAddGeofence.alpha = 0f
+                            ivAmazonInfoAddGeofence.alpha = 0f
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+                        }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            cardGeofenceLiveLocation.alpha = 1f
+                            imgAmazonLogoAddGeofence.alpha = 1f
+                            ivAmazonInfoAddGeofence.alpha = 1f
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {}
+                        BottomSheetBehavior.STATE_SETTLING -> {}
                     }
+                }
 
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    }
-                })
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
         }
     }
 
@@ -231,8 +232,8 @@ class GeofenceUtils {
                 edtEnterGeofenceName.setTextColor(
                     ContextCompat.getColor(
                         it,
-                        R.color.color_medium_black
-                    )
+                        R.color.color_medium_black,
+                    ),
                 )
             }
             btnDeleteGeofence.hide()
@@ -242,13 +243,13 @@ class GeofenceUtils {
             edtEnterGeofenceName.clearFocus()
             mGeofenceInterface?.hideShowBottomNavigationBar(
                 false,
-                GeofenceBottomSheetEnum.ADD_GEOFENCE_BOTTOM_SHEET
+                GeofenceBottomSheetEnum.ADD_GEOFENCE_BOTTOM_SHEET,
             )
         }
     }
 
     private fun BottomSheetAddGeofenceBinding.addGeofenceAndClearData(
-        geofenceName: String
+        geofenceName: String,
     ) {
         removeGeofenceMarker()
         edtAddGeofenceSearch.clearFocus()
@@ -289,7 +290,7 @@ class GeofenceUtils {
             hideViews(
                 layoutNoDataFound.root,
                 layoutNoDataFound.groupNoSearchFound,
-                nsGeofenceSearchPlaces
+                nsGeofenceSearchPlaces,
             )
         }
         mPlaceList.clear()
@@ -305,7 +306,7 @@ class GeofenceUtils {
             btnAddGeofence.setOnClickListener {
                 mGeofenceInterface?.hideShowBottomNavigationBar(
                     true,
-                    GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
+                    GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET,
                 )
             }
 
@@ -314,7 +315,7 @@ class GeofenceUtils {
                     if (mIsBtnEnable) {
                         mGeofenceInterface?.hideShowBottomNavigationBar(
                             true,
-                            GeofenceBottomSheetEnum.NONE
+                            GeofenceBottomSheetEnum.NONE,
                         )
                         clearAddGeofenceSearch()
                         removeGeofenceMarker()
@@ -332,31 +333,31 @@ class GeofenceUtils {
             }
 
             mBottomSheetGeofenceListBehavior?.addBottomSheetCallback(object :
-                    BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_COLLAPSED -> {
-                                imgAmazonLogoGeofenceList.alpha = 1f
-                                ivAmazonInfoGeofenceList.alpha = 1f
-                            }
-                            BottomSheetBehavior.STATE_EXPANDED -> {
-                                imgAmazonLogoGeofenceList.alpha = 0f
-                                ivAmazonInfoGeofenceList.alpha = 0f
-                            }
-                            BottomSheetBehavior.STATE_DRAGGING -> {
-                            }
-                            BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                imgAmazonLogoGeofenceList.alpha = 1f
-                                ivAmazonInfoGeofenceList.alpha = 1f
-                            }
-                            BottomSheetBehavior.STATE_HIDDEN -> {}
-                            BottomSheetBehavior.STATE_SETTLING -> {}
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            imgAmazonLogoGeofenceList.alpha = 1f
+                            ivAmazonInfoGeofenceList.alpha = 1f
                         }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            imgAmazonLogoGeofenceList.alpha = 0f
+                            ivAmazonInfoGeofenceList.alpha = 0f
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+                        }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            imgAmazonLogoGeofenceList.alpha = 1f
+                            ivAmazonInfoGeofenceList.alpha = 1f
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {}
+                        BottomSheetBehavior.STATE_SETTLING -> {}
                     }
+                }
 
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    }
-                })
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
         }
     }
 
@@ -364,9 +365,9 @@ class GeofenceUtils {
         mBindingAddGeofence?.edtAddGeofenceSearch?.setText(
             mGeofenceHelper?.mDefaultLatLng?.let { it1 ->
                 getLatLngStr(
-                    it1
+                    it1,
                 )
-            }
+            },
         )
     }
 
@@ -386,7 +387,7 @@ class GeofenceUtils {
                             editGeofenceBottomSheet(position, data)
                         }
                     }
-                }
+                },
             )
             it.rvGeofence.layoutManager = LinearLayoutManager(it.rvGeofence.context)
             it.rvGeofence.adapter = mGeofenceListAdapter
@@ -419,8 +420,8 @@ class GeofenceUtils {
             mBindingAddGeofence?.edtEnterGeofenceName?.setTextColor(
                 ContextCompat.getColor(
                     it.applicationContext,
-                    R.color.color_medium_black_opacity_30
-                )
+                    R.color.color_medium_black_opacity_30,
+                ),
             )
         }
         mBindingAddGeofence?.btnDeleteGeofence?.show()
@@ -437,7 +438,7 @@ class GeofenceUtils {
         override fun deleteGeofence(
             position: Int,
             data: ListGeofenceResponseEntry,
-            dialog: DialogInterface
+            dialog: DialogInterface,
         ) {
             mGeofenceInterface?.deleteGeofence(position, data)
         }
@@ -547,18 +548,30 @@ class GeofenceUtils {
                 if (mGeofenceList.isEmpty()) {
                     mGeofenceInterface?.hideShowBottomNavigationBar(
                         true,
-                        GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
+                        GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET,
                     )
                 } else {
                     mGeofenceInterface?.hideShowBottomNavigationBar(
                         true,
-                        GeofenceBottomSheetEnum.NONE
+                        GeofenceBottomSheetEnum.NONE,
                     )
                 }
                 showAddGeofenceBottomSheet()
             }
             removeGeofenceMarker()
             mBindingAddGeofence?.edtAddGeofenceSearch?.setText(getLatLngStr(latLng))
+        }
+
+        override fun addInvisibleDraggableMarker(latLng: LatLng, listener: OnSymbolDragListener) {
+            mMapHelper?.addGeofenceInvisibleDraggableMarker(mActivity, latLng, listener)
+        }
+
+        override fun deleteInvisibleDraggableMarker(listener: OnSymbolDragListener) {
+            mMapHelper?.deleteGeofenceInvisibleDraggableMarker(listener)
+        }
+
+        override fun updateInvisibleDraggableMarker(latLng: LatLng) {
+            mMapHelper?.updateGeofenceInvisibleDraggableMarker(latLng)
         }
     }
 
@@ -578,7 +591,7 @@ class GeofenceUtils {
             geofenceId,
             GEOFENCE_COLLECTION,
             mGeofenceHelper?.mCircleRadius?.toDouble(),
-            mGeofenceHelper?.mDefaultLatLng
+            mGeofenceHelper?.mDefaultLatLng,
         )
     }
 
@@ -607,20 +620,20 @@ class GeofenceUtils {
                                     }
                                 }
                             }
-                        }
+                        },
                     )
                 }
                 mLatLngList.add(
                     LatLng(
                         data.geometry.circle.center[1],
-                        data.geometry.circle.center[0]
-                    )
+                        data.geometry.circle.center[0],
+                    ),
                 )
             }
             mActivity?.resources?.getDimension(R.dimen.dp_100)?.toInt()?.let {
                 mMapHelper?.adjustMapBounds(
                     mLatLngList,
-                    it
+                    it,
                 )
             }
             mGeofenceListAdapter?.notifyDataSetChanged()
@@ -651,7 +664,7 @@ class GeofenceUtils {
                         }
                     }
                 }
-            }
+            },
         )
         mBindingAddGeofence?.rvGeofenceSearchPlacesSuggestion?.adapter =
             mGeofenceSearchSuggestionAdapter
@@ -693,7 +706,7 @@ class GeofenceUtils {
                     view.groupAddGeofenceName,
                     view.rvGeofenceSearchPlaces,
                     view.layoutNoDataFound.root,
-                    view.layoutNoDataFound.groupNoSearchFound
+                    view.layoutNoDataFound.groupNoSearchFound,
                 )
             }
         }
@@ -712,7 +725,7 @@ class GeofenceUtils {
                             setGeofenceSearchData(position)
                         }
                     }
-                }
+                },
             )
             rvGeofenceSearchPlaces.adapter = mSearchPlacesAdapter
         }
@@ -734,7 +747,7 @@ class GeofenceUtils {
                     view.groupAddGeofenceName,
                     view.rvGeofenceSearchPlacesSuggestion,
                     view.layoutNoDataFound.root,
-                    view.layoutNoDataFound.groupNoSearchFound
+                    view.layoutNoDataFound.groupNoSearchFound,
                 )
             }
         }
@@ -758,8 +771,8 @@ class GeofenceUtils {
             mBindingAddGeofence?.edtEnterGeofenceName?.setTextColor(
                 ContextCompat.getColor(
                     it.applicationContext,
-                    R.color.color_medium_black
-                )
+                    R.color.color_medium_black,
+                ),
             )
         }
         mBindingAddGeofence?.edtEnterGeofenceName?.setText("")
