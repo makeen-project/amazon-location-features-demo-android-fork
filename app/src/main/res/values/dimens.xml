@@ -83,6 +83,7 @@
     <dimen name="sp_20">20sp</dimen>
     <dimen name="sp_24">24sp</dimen>
     <dimen name="screen_size">400dp</dimen>
+    <dimen name="screen_size_cloud_formation">500dp</dimen>
     <dimen name="navigation_top_dialog_size">300dp</dimen>
     <dimen name="attribution_learn_more">300dp</dimen>
     <dimen name="bottom_nav_height">50dp</dimen>

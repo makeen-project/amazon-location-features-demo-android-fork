@@ -8,7 +8,7 @@
     android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/screen_size_cloud_formation"
         android:layout_height="match_parent"
         android:layout_marginVertical="@dimen/dp_50"
         android:background="@drawable/bottom_sheet_top_all_corner_curved_white_bg"
@@ -40,44 +40,40 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_aws_cloud_formation_required"
+            style="@style/SP13BoldMediumBlackTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_18"
+            android:alpha="0"
+            android:gravity="center"
+            android:text="@string/connect_to_aws_account"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_scroll"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_1"
+            android:layout_marginTop="@dimen/dp_18"
+            android:alpha="0"
+            android:background="@color/color_view_line"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_aws_cloud_formation_required" />
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="@dimen/screen_size"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="@dimen/dp_60"
             android:layout_marginBottom="@dimen/dp_64"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_aws_cloud_formation_required"
-                style="@style/SP13BoldMediumBlackTextStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_18"
-                android:alpha="0"
-                android:gravity="center"
-                android:text="@string/connect_to_aws_account"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/view_scroll"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_1"
-                android:layout_marginTop="@dimen/dp_18"
-                android:alpha="0"
-                android:background="@color/color_view_line"
-                app:layout_constraintTop_toBottomOf="@id/tv_aws_cloud_formation_required" />
-
-            <androidx.constraintlayout.widget.Barrier
-                android:id="@+id/top_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="view_scroll" />
+            app:layout_constraintTop_toBottomOf="@+id/view_scroll">
 
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/ns_cloud_formation"
@@ -87,7 +83,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/top_barrier">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

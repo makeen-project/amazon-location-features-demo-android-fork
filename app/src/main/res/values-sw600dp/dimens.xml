@@ -2,6 +2,7 @@
 <resources>
     <!--dp -->
     <dimen name="screen_size">300dp</dimen>
+    <dimen name="screen_size_cloud_formation">420dp</dimen>
     <dimen name="navigation_top_dialog_size">270dp</dimen>
     <dimen name="attribution_learn_more">250dp</dimen>
     <dimen name="bottom_nav_height">55dp</dimen>
