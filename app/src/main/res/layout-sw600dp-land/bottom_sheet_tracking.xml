@@ -335,6 +335,7 @@
             style="@style/SP20InterRegularMediumBlack1TextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_semi_bold"
             android:layout_marginTop="@dimen/dp_16"
             android:gravity="center"
             android:text="@string/label_enable_tracking"

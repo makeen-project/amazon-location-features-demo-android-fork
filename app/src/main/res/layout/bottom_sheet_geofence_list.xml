@@ -233,6 +233,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
+            android:fontFamily="@font/inter_semi_bold"
             android:gravity="center"
             android:text="@string/menu_geofence"
             app:layout_constraintEnd_toEndOf="parent"
