@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.geofence_helper
+package com.aws.amazonlocation.utils.geofence_helper // ktlint-disable package-name
 
 import android.content.Context
 import android.widget.SeekBar
@@ -177,6 +177,15 @@ class GeofenceHelper(
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     adjustRadius(seekBar?.progress)
+                    seekBar?.progress?.let { progress ->
+                        var dragMarkerRadius = progress
+                        if (dragMarkerRadius < 10) {
+                            dragMarkerRadius = 10
+                        }
+                        TurfMeasurement.destination(mLastClickPoint, dragMarkerRadius.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
+                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))
+                        }
+                    }
                 }
             })
         }
@@ -405,7 +414,6 @@ class GeofenceHelper(
     }
 
     private fun updateInvisibleDraggableMarker(center: LatLng) {
-
         val radius = mSeekBar?.progress?.toDouble()
         radius?.let {
             val point = TurfMeasurement.destination(fromLngLat(center.longitude, center.latitude), it, CIRCLE_DRAGGABLE_BEARING, mCircleUnit)
