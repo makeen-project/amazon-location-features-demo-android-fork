@@ -171,7 +171,8 @@ class ExploreFragment :
         mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.requestLayout()
         mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
         mBinding.bottomSheetAttribution.clMain.requestLayout()
-        mBinding.cardNavigationTimeDialog.layoutParams.width = width
+        val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
+        mBinding.cardNavigationTimeDialog.layoutParams.width = widthTimeDialog
         mBinding.cardNavigationTimeDialog.requestLayout()
     }
 

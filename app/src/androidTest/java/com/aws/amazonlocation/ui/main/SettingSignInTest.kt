@@ -81,8 +81,12 @@ class SettingSignInTest : BaseTest() {
             )
         ).perform(ViewActions.click())
 
-        val appViews = UiScrollable(UiSelector().scrollable(true))
-        appViews.scrollForward()
+        val isTablet = mActivityRule.activity.resources.getBoolean(R.bool.is_tablet)
+
+        if (!isTablet) {
+            val appViews = UiScrollable(UiSelector().scrollable(true))
+            appViews.scrollForward()
+        }
         Thread.sleep(DELAY_1000)
         val signIn =
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.sign_in)))

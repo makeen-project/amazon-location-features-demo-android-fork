@@ -24,6 +24,7 @@
         android:id="@+id/view_bottom"
         android:layout_width="@dimen/dp_0"
         android:layout_height="0.5dp"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/dp_8"
         android:background="@color/color_view_line"
         app:layout_constraintEnd_toEndOf="parent"

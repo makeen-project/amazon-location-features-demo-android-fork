@@ -207,7 +207,8 @@ class GeofenceUtils {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             if (!isTablet) {
                                     imgAmazonLogoAddGeofence?.let {
-                                        showViews(cardGeofenceLiveLocation,
+                                        showViews(
+                                            cardGeofenceLiveLocation,
                                             it
                                         )
                                     }
