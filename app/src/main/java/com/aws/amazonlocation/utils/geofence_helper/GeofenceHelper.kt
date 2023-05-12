@@ -18,6 +18,7 @@ import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_BEARING
 import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_VISIBLE_ICON_ID
 import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID
 import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID
+import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_MIN_RADIUS
 import com.aws.amazonlocation.utils.GeofenceCons.RADIUS_SEEKBAR_DIFFERENCE
 import com.aws.amazonlocation.utils.GeofenceCons.RADIUS_SEEKBAR_MAX
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID
@@ -88,10 +89,10 @@ class GeofenceHelper(
             symbolLatLng?.let {
                 if (it.longitude > mLastClickPoint.longitude()) {
                     val distance = TurfMeasurement.distance(mLastClickPoint, fromLngLat(annotation.latLng.longitude, mLastClickPoint.latitude()), mCircleUnit)
-                    if (distance >= 10) {
+                    if (distance >= GEOFENCE_MIN_RADIUS) {
                         mSeekBar?.progress = distance.toInt()
                     } else {
-                        mSeekBar?.progress = 10
+                        mSeekBar?.progress = GEOFENCE_MIN_RADIUS
                     }
                 }
             }
@@ -99,9 +100,11 @@ class GeofenceHelper(
 
         override fun onAnnotationDragFinished(annotation: Symbol?) {
             annotation?.let {
-                TurfMeasurement.destination(mLastClickPoint, mSeekBar?.progress?.toDouble()!!, CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
-                    if (annotation.latLng.longitude != it.longitude() && annotation.latLng.latitude != it.latitude()) {
-                        mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))
+                mSeekBar?.progress?.let { progress ->
+                    TurfMeasurement.destination(mLastClickPoint, progress.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
+                        if (annotation.latLng.longitude != it.longitude() && annotation.latLng.latitude != it.latitude()) {
+                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))
+                        }
                     }
                 }
             }
@@ -179,8 +182,8 @@ class GeofenceHelper(
                     adjustRadius(seekBar?.progress)
                     seekBar?.progress?.let { progress ->
                         var dragMarkerRadius = progress
-                        if (dragMarkerRadius < 10) {
-                            dragMarkerRadius = 10
+                        if (dragMarkerRadius < GEOFENCE_MIN_RADIUS) {
+                            dragMarkerRadius = GEOFENCE_MIN_RADIUS
                         }
                         TurfMeasurement.destination(mLastClickPoint, dragMarkerRadius.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
                             mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))

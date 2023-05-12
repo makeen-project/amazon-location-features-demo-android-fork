@@ -127,6 +127,8 @@ object GeofenceCons {
 
     const val CIRCLE_DRAGGABLE_BEARING = 90.0
 
+    const val GEOFENCE_MIN_RADIUS = 10
+
 }
 
 object TrackerCons {
