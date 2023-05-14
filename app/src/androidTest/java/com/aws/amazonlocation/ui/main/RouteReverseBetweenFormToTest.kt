@@ -25,6 +25,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -112,9 +113,9 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
                         DELAY_20000
                     )
+                    Thread.sleep(DELAY_5000)
                     val clDrive =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
-
                     if (clDrive.visibility == View.VISIBLE) {
                         val ivSwapLocation =
                             onView(withId(R.id.iv_swap_location)).check(matches(isDisplayed()))
@@ -124,6 +125,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
                             DELAY_20000
                         )
+                        Thread.sleep(DELAY_3000)
                         Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == edtSearchDest.text.toString().trim() && destinationText == edtSearchDirection.text.toString().trim())
                     } else {
                         Assert.fail(TEST_FAILED_CARD_DRIVE_GO)

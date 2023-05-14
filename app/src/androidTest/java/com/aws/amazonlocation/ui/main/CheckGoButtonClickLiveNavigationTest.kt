@@ -15,13 +15,13 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
@@ -37,6 +37,7 @@ import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.waitUntil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -105,10 +106,17 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                             )
                         }
                     }
+                    Thread.sleep(DELAY_3000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_20000,
                     )
+                    var carDriveGo: UiObject2?
+                    waitUntil(DELAY_5000, 7) {
+                        carDriveGo = uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go"))
+                        carDriveGo != null
+                    }
+
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_walk_go")),
                         DELAY_20000,

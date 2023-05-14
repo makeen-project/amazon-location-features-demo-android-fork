@@ -108,11 +108,11 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_20000,
                     )
+                    Thread.sleep(DELAY_5000)
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
                     if (cardDriveGo.visibility == View.VISIBLE) {
-                        onView(withId(R.id.edt_search_direction)).check(matches(withText(MY_LOCATION)))
-//                        Assert.assertTrue(TEST_FAILED_ORIGIN_TEXT_NOT_MY_LOCATION, edtSearchDirection.text.toString() == MY_LOCATION)
+                        Assert.assertTrue(TEST_FAILED_ORIGIN_TEXT_NOT_MY_LOCATION, edtSearchDirection.text.toString().trim() == MY_LOCATION)
                     } else {
                         Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                     }
