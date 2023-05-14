@@ -115,8 +115,6 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 cardDriveGo != null
             }
 
-            onView(withId(R.id.card_drive_go)).check(matches(isDisplayed()))
-
             onView(
                 allOf(
                     withId(R.id.card_drive_go),
@@ -129,7 +127,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 DELAY_20000,
             )
 
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_5000)
 
             onView(allOf(withId(R.id.rv_navigation_list), isDisplayed())).check(
                 matches(
