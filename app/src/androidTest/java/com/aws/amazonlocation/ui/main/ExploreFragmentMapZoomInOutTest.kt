@@ -28,6 +28,7 @@ import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_MAP_NOT_FOUND
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED
+import com.aws.amazonlocation.actions.doubleTap
 import com.aws.amazonlocation.actions.pinchIn
 import com.aws.amazonlocation.actions.pinchOut
 import com.aws.amazonlocation.di.AppModule
@@ -149,7 +150,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             if (map.exists()) {
-                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick(), ViewActions.doubleClick(), ViewActions.doubleClick(), ViewActions.doubleClick(), ViewActions.doubleClick())
+                onView(withId(R.id.mapView)).perform(doubleTap(), doubleTap(), doubleTap(), doubleTap())
             } else {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }

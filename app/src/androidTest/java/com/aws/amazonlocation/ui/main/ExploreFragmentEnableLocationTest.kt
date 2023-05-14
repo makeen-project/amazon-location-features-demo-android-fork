@@ -54,6 +54,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                 btnContinueToApp.click()
                 Thread.sleep(DELAY_2000)
                 try {
+                    Thread.sleep(DELAY_2000)
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_1))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
@@ -74,8 +75,9 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                 }
             } else {
                 try {
+                    Thread.sleep(DELAY_2000)
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
-
+                    uiDevice.findObject(By.text(WHILE_USING_THE_APP_1))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
                     Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
