@@ -37,6 +37,7 @@ import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.waitUntil
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -105,27 +106,19 @@ class RouteOptionShowingTest : BaseTest() {
                             )
                         }
                     }
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                        DELAY_20000
-                    )
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_walk")),
-                        DELAY_20000
-                    )
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_truck")),
-                        DELAY_20000
-                    )
 
                     Thread.sleep(DELAY_5000)
 
-                    val clDrive =
-                        mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
-                    val clWalk =
-                        mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_walk)
-                    val clTruck =
-                        mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_truck)
+                    lateinit var clDrive: ConstraintLayout
+                    lateinit var clWalk: ConstraintLayout
+                    lateinit var clTruck: ConstraintLayout
+
+                    waitUntil(DELAY_5000, 15) {
+                        clDrive = mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
+                        clWalk = mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_walk)
+                        clTruck = mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_truck)
+                        clDrive.isVisible && clWalk.isVisible && clTruck.isVisible
+                    }
 
                     Assert.assertTrue(TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE, clDrive.isVisible && clWalk.isVisible && clTruck.isVisible)
                 } else {
