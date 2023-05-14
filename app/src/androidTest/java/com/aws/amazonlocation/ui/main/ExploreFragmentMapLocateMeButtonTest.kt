@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main
 
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
@@ -21,6 +22,7 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED
+import com.aws.amazonlocation.actions.swipeLeft
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
@@ -63,7 +65,7 @@ class ExploreFragmentMapLocateMeButtonTest : BaseTest() {
                 mapbox = it
             }
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
-            map.swipeLeft(50)
+            Espresso.onView(withId(R.id.mapView)).perform(swipeLeft())
             Thread.sleep(DELAY_1000)
 
             val cardNavigation = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/card_navigation"))

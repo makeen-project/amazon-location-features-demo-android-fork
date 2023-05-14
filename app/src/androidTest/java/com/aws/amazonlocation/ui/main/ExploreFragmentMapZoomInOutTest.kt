@@ -75,7 +75,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             Thread.sleep(DELAY_5000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
-            onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut())
+            onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut())
             Thread.sleep(DELAY_5000)
             if (beforeZoomLevel != null) {
                 waitUntil(DELAY_3000, 5) {
@@ -111,7 +111,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             Thread.sleep(DELAY_5000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
-            onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn())
+            onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn())
             Thread.sleep(DELAY_5000)
             if (beforeZoomLevel != null) {
                 waitUntil(DELAY_3000, 5) {
@@ -149,7 +149,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             if (map.exists()) {
-                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick(), ViewActions.doubleClick())
+                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick(), ViewActions.doubleClick(), ViewActions.doubleClick(), ViewActions.doubleClick(), ViewActions.doubleClick())
             } else {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }

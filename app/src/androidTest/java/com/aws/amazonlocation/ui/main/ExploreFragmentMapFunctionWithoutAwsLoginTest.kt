@@ -33,6 +33,7 @@ import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
 import com.aws.amazonlocation.TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_4
+import com.aws.amazonlocation.actions.swipeLeft
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -80,7 +81,9 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTest() {
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         Thread.sleep(DELAY_2000)
         val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
-        map.swipeLeft(50)
+        if(map.exists()) {
+            onView(withId(R.id.mapView)).perform(swipeLeft())
+        }
         Thread.sleep(DELAY_1000)
 
         val btnCardMap =
