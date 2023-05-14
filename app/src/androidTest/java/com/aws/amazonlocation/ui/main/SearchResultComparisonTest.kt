@@ -29,6 +29,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -81,10 +82,12 @@ class SearchResultComparisonTest : BaseTest() {
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_1))
+            Thread.sleep(DELAY_2000)
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
                 DELAY_20000,
             )
+            Thread.sleep(DELAY_3000)
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
@@ -119,6 +122,8 @@ class SearchResultComparisonTest : BaseTest() {
                                 ),
                             )
                         }
+
+                        Thread.sleep(DELAY_5000)
 
                         val clSearchSheet =
                             mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_search)
@@ -157,6 +162,7 @@ class SearchResultComparisonTest : BaseTest() {
                                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                                     DELAY_20000,
                                 )
+                                Thread.sleep(DELAY_3000)
                                 val rvSearchPlaceDirection =
                                     mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
                                 Thread.sleep(DELAY_2000)
@@ -196,6 +202,9 @@ class SearchResultComparisonTest : BaseTest() {
                                             }
                                         }
                                     }
+
+                                    Thread.sleep(DELAY_3000)
+
                                     Assert.assertTrue(TEST_FAILED_NOT_EQUAL, listDataSearch == listInsideDataSearch)
                                 }
                             } else {

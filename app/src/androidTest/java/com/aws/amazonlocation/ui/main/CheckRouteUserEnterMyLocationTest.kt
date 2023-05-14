@@ -24,6 +24,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.MY_LOCATION
 import com.aws.amazonlocation.R
@@ -85,24 +86,24 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                     val clMyLocation =
                         onView(withId(R.id.cl_my_location)).check(matches(isDisplayed()))
                     clMyLocation.perform(click())
-                    val rvSearchPlacesSuggestionDirection =
-                        mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
                     onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_2))
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                         DELAY_20000,
                     )
-                    rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
-                        if (it > 0) {
-                            onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
-                                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                    0,
-                                    click(),
-                                ),
-                            )
-                        }
-                    }
+                    Thread.sleep(DELAY_3000)
+                    onView(withId(R.id.rv_search_places_suggestion_direction)).check(
+                        matches(
+                            hasMinimumChildCount(1),
+                        ),
+                    )
+                        .perform(
+                            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                                0,
+                                click(),
+                            ),
+                        )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_20000,
@@ -110,7 +111,8 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
                     if (cardDriveGo.visibility == View.VISIBLE) {
-                        Assert.assertTrue(TEST_FAILED_ORIGIN_TEXT_NOT_MY_LOCATION, edtSearchDirection.text.toString() == MY_LOCATION)
+                        onView(withId(R.id.edt_search_direction)).check(matches(withText(MY_LOCATION)))
+//                        Assert.assertTrue(TEST_FAILED_ORIGIN_TEXT_NOT_MY_LOCATION, edtSearchDirection.text.toString() == MY_LOCATION)
                     } else {
                         Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
                     }

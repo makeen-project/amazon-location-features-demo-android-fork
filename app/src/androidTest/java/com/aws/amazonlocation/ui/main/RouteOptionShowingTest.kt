@@ -2,6 +2,7 @@ package com.aws.amazonlocation.ui.main
 
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -25,6 +26,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -90,6 +92,7 @@ class RouteOptionShowingTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                         DELAY_20000
                     )
+                    Thread.sleep(DELAY_3000)
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
@@ -114,6 +117,9 @@ class RouteOptionShowingTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_truck")),
                         DELAY_20000
                     )
+
+                    Thread.sleep(DELAY_5000)
+
                     val clDrive =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_drive)
                     val clWalk =
@@ -121,7 +127,7 @@ class RouteOptionShowingTest : BaseTest() {
                     val clTruck =
                         mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_truck)
 
-                    Assert.assertTrue(TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE, clDrive.visibility == View.VISIBLE && clWalk.visibility == View.VISIBLE && clTruck.visibility == View.VISIBLE)
+                    Assert.assertTrue(TEST_FAILED_DRIVE_OR_WALK_OR_TRUCK_OPTION_NOT_VISIBLE, clDrive.isVisible && clWalk.isVisible && clTruck.isVisible)
                 } else {
                     Assert.fail(TEST_FAILED_SEARCH_DIRECTION)
                 }

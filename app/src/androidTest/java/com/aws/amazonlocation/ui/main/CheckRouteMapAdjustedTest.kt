@@ -137,7 +137,7 @@ class CheckRouteMapAdjustedTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_20000,
                     )
-                    Thread.sleep(DELAY_3000)
+                    Thread.sleep(DELAY_5000)
                     if (beforeZoomLevel != null) {
                         mapbox?.cameraPosition?.zoom?.let {
                             Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel != it)

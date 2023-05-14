@@ -25,6 +25,7 @@ import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -116,6 +117,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_truck_go")),
                         DELAY_20000,
                     )
+                    Thread.sleep(DELAY_3000)
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
                     if (cardDriveGo.visibility == View.VISIBLE) {
@@ -131,7 +133,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_navigation_list")),
                             DELAY_20000,
                         )
-
+                        Thread.sleep(DELAY_3000)
                         val btnExit =
                             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_exit)
                         Assert.assertTrue(TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE, btnExit.visibility == View.VISIBLE)
