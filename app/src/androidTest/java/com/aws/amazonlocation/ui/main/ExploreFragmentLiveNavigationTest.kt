@@ -14,6 +14,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
@@ -31,6 +32,8 @@ import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.waitUntil
+import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -79,20 +82,26 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 ),
             )
 
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_3000)
             onView(withId(R.id.rv_search_places_suggestion)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
                     click(),
                 ),
             )
-            Thread.sleep(DELAY_2000)
-            uiDevice.wait(
-                Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/tv_direction_time")),
-                DELAY_20000,
-            )
+            Thread.sleep(DELAY_5000)
+            var tvDirectionTime: UiObject2?
 
-            onView(withId(R.id.btn_direction)).perform(click())
+            waitUntil(DELAY_5000, 6) {
+                tvDirectionTime = uiDevice.findObject(By.res(BuildConfig.APPLICATION_ID + ":id/tv_direction_time"))
+                tvDirectionTime != null && tvDirectionTime?.text?.isNotBlank() == true
+            }
+
+            getInstrumentation().waitForIdleSync()
+            getInstrumentation().runOnMainSync {
+                val directionButton = mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
+                directionButton.performClick()
+            }
             Thread.sleep(DELAY_3000)
 
             onView(withId(R.id.tv_get_location)).check(matches(isDisplayed()))
@@ -104,6 +113,13 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_drive_go")),
                 DELAY_20000,
             )
+
+            var cardDriveGo: UiObject2?
+
+            waitUntil(DELAY_5000, 6) {
+                cardDriveGo = uiDevice.findObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_drive_go"))
+                cardDriveGo != null
+            }
 
             onView(withId(R.id.card_drive_go)).check(matches(isDisplayed()))
 
