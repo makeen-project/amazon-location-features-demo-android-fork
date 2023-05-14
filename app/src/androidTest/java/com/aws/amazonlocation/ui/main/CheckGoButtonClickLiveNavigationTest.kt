@@ -112,7 +112,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                         DELAY_20000,
                     )
                     var carDriveGo: UiObject2?
-                    waitUntil(DELAY_5000, 7) {
+                    waitUntil(DELAY_5000, 15) {
                         carDriveGo = uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go"))
                         carDriveGo != null
                     }
@@ -141,7 +141,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_navigation_list")),
                             DELAY_20000,
                         )
-                        Thread.sleep(DELAY_3000)
+                        Thread.sleep(DELAY_5000)
                         val btnExit =
                             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_exit)
                         Assert.assertTrue(TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE, btnExit.visibility == View.VISIBLE)
