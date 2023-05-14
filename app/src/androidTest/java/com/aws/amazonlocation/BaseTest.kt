@@ -8,7 +8,7 @@ import org.junit.Before
 abstract class BaseTest {
 
     @Before
-    fun before() {
+    open fun before() {
         val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
         context.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
     }

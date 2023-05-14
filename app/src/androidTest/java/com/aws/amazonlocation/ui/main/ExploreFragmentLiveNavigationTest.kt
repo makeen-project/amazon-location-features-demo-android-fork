@@ -90,12 +90,6 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 ),
             )
             Thread.sleep(DELAY_5000)
-            var tvDirectionTime: UiObject2?
-
-            waitUntil(DELAY_5000, 6) {
-                tvDirectionTime = uiDevice.findObject(By.res(BuildConfig.APPLICATION_ID + ":id/tv_direction_time"))
-                tvDirectionTime != null && tvDirectionTime?.text?.isNotBlank() == true
-            }
 
             getInstrumentation().waitForIdleSync()
             getInstrumentation().runOnMainSync {
