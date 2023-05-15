@@ -131,13 +131,13 @@ class ExploreFragmentChangeStyleTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
-            Thread.sleep(DELAY_1000)
+            Thread.sleep(DELAY_2000)
 
             goToMapStyles()
             loadCountMap()
 
             while (hasMore()) {
-                Thread.sleep(DELAY_1000)
+                Thread.sleep(DELAY_2000)
                 changeStyle()
                 mapbox?.let {
                     checkLoadedTheme(it)
@@ -195,7 +195,7 @@ class ExploreFragmentChangeStyleTest : BaseTest() {
                     click()
                 )
             )
-            Thread.sleep(DELAY_1000)
+            Thread.sleep(DELAY_2000)
             changeInnerStyle(recyclerView)
         }
     }
@@ -206,7 +206,7 @@ class ExploreFragmentChangeStyleTest : BaseTest() {
         getInstrumentation().runOnMainSync {
             holder?.itemView?.findViewById<MaterialCardView>(R.id.card_map_image)?.performClick()
         }
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
     }
 
     private fun goToMapStyles() {

@@ -1,5 +1,7 @@
 package com.aws.amazonlocation.ui.main
 
+import android.app.ActivityManager
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
@@ -127,6 +129,7 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
                 hasMore = changeMapStyle()
                 Thread.sleep(DELAY_2000)
                 checkLoadedTheme()
+                Thread.sleep(DELAY_2000)
             }
         } catch (e: Exception) {
             failTest(132, e)
@@ -201,7 +204,7 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_map_style")),
             DELAY_10000,
         )
-        Thread.sleep(DELAY_2000)
+        Thread.sleep(DELAY_3000)
 
         onView(
             allOf(
@@ -211,7 +214,7 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
         )
             .perform(click())
 
-        Thread.sleep(DELAY_2000)
+        Thread.sleep(DELAY_3000)
     }
 
     private fun checkLoadedTheme() {
@@ -276,5 +279,16 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
     @After
     fun tearDown() {
         mActivityRule.finishActivity()
+        val targetContext = ApplicationProvider.getApplicationContext<Context>()
+        val packageName = targetContext.packageName
+        // Clear app from recent apps list
+        val am = targetContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        am.let {
+            it.appTasks.forEach { task ->
+                if (task.taskInfo.baseActivity?.packageName == packageName) {
+                    task.finishAndRemoveTask()
+                }
+            }
+        }
     }
 }

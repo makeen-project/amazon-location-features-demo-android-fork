@@ -26,6 +26,7 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_3000
+import com.aws.amazonlocation.DELAY_4000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -94,6 +95,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                         DELAY_20000
                     )
+                    Thread.sleep(DELAY_4000)
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
@@ -111,7 +113,7 @@ class RouteReverseBetweenFormToTest : BaseTest() {
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_drive")),
-                        DELAY_20000
+                        DELAY_20000 + DELAY_10000
                     )
                     Thread.sleep(DELAY_5000)
                     val clDrive =

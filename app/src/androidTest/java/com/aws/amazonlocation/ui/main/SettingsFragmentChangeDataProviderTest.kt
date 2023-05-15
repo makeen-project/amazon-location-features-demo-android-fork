@@ -1,5 +1,7 @@
 package com.aws.amazonlocation.ui.main
 
+import android.app.ActivityManager
+import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -161,5 +163,16 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
     @After
     fun tearDown() {
         mActivityRule.finishActivity()
+        val targetContext = ApplicationProvider.getApplicationContext<Context>()
+        val packageName = targetContext.packageName
+        // Clear app from recent apps list
+        val am = targetContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        am.let {
+            it.appTasks.forEach { task ->
+                if (task.taskInfo.baseActivity?.packageName == packageName) {
+                    task.finishAndRemoveTask()
+                }
+            }
+        }
     }
 }
