@@ -114,16 +114,14 @@ class RouteOptionShowingTest : BaseTest() {
                         }
                     }
 
-                    rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
-                        if (it > 0) {
-                            onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
-                                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                    0,
-                                    click(),
-                                ),
-                            )
-                        }
-                    }
+                    Thread.sleep(DELAY_2000)
+
+                    onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
+                        RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                            0,
+                            click(),
+                        ),
+                    )
 
                     Thread.sleep(DELAY_5000)
 

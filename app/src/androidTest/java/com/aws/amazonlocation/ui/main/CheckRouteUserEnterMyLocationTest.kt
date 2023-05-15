@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -85,6 +86,8 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                     val clMyLocation =
                         onView(withId(R.id.cl_my_location)).check(matches(isDisplayed()))
                     clMyLocation.perform(click())
+                    Thread.sleep(DELAY_2000)
+                    Assert.assertTrue(TEST_FAILED_ORIGIN_TEXT_NOT_MY_LOCATION, edtSearchDirection.text.toString().trim() == MY_LOCATION)
                     onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_2))
                     Thread.sleep(DELAY_3000)
                     uiDevice.wait(
@@ -109,13 +112,10 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                         DELAY_20000,
                     )
                     Thread.sleep(DELAY_5000)
+
                     val cardDriveGo =
                         mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
-                    if (cardDriveGo.visibility == View.VISIBLE) {
-                        Assert.assertTrue(TEST_FAILED_ORIGIN_TEXT_NOT_MY_LOCATION, edtSearchDirection.text.toString().trim() == MY_LOCATION)
-                    } else {
-                        Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
-                    }
+                    Assert.assertTrue(TEST_FAILED_CARD_DRIVE_GO, cardDriveGo.isVisible)
                 } else {
                     Assert.fail(TEST_FAILED_SEARCH_DIRECTION)
                 }
