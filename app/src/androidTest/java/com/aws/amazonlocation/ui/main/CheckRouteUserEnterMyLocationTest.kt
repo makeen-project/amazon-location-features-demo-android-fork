@@ -20,7 +20,6 @@ import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
@@ -98,12 +97,13 @@ class CheckRouteUserEnterMyLocationTest : BaseTest() {
                             hasMinimumChildCount(1),
                         ),
                     )
-                        .perform(
-                            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                0,
-                                click(),
-                            ),
-                        )
+                    Thread.sleep(DELAY_2000)
+                    onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
+                        RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                            0,
+                            click(),
+                        ),
+                    )
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_20000,
