@@ -3,11 +3,14 @@ package com.aws.amazonlocation.ui.main
 import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
@@ -20,8 +23,6 @@ import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_1000
-import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
@@ -52,7 +53,7 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTest() {
     @get:Rule
     var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
         ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
+        ACCESS_COARSE_LOCATION,
     )
 
     @get:Rule
@@ -71,10 +72,13 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTest() {
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
+            closeSoftKeyboard()
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
-                DELAY_20000
+                DELAY_20000,
             )
+            Thread.sleep(DELAY_5000)
+            getInstrumentation().waitForIdleSync()
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
@@ -83,18 +87,20 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTest() {
                         Thread.sleep(DELAY_2000)
                         onView(withId(R.id.rv_search_places_suggestion))
                             .check(matches(hasDescendant(withText(TEST_WORD_4))))
-                            .perform(click())
-                        Thread.sleep(DELAY_1000)
+                        Thread.sleep(DELAY_2000)
+                        onView(withId(R.id.rv_search_places_suggestion))
+                            .perform(RecyclerViewActions.actionOnItem<ViewHolder>(hasDescendant(withText(TEST_WORD_4)), click()))
+                        Thread.sleep(DELAY_2000)
                         val btnDirection =
                             mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
                         if (btnDirection.visibility == View.VISIBLE) {
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_direction_distance")),
-                                DELAY_20000
+                                DELAY_20000,
                             )
                             val tvDirectionTime =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_direction_distance)
-                            Thread.sleep(DELAY_1000)
+                            Thread.sleep(DELAY_2000)
                             Assert.assertTrue(TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE, tvDirectionTime.visibility == View.VISIBLE)
                         } else {
                             Assert.fail()
