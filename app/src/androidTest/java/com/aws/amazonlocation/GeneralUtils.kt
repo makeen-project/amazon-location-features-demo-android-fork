@@ -2,11 +2,14 @@ package com.aws.amazonlocation
 
 import android.content.Context
 import android.provider.Settings
+import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
+import org.hamcrest.Matcher
 import org.junit.Assert
 import java.util.*
 import kotlin.random.Random
@@ -92,6 +95,27 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
         Thread.sleep(waitTime)
         if (maxCount < ++count) {
             Assert.fail("$TEST_FAILED - Max count reached")
+            break
+        }
+    }
+}
+
+fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: Int = 30, onNotFound: (() -> Unit)?) {
+    var count = 0
+    var found = false
+    while (!found) {
+        Espresso.onView(
+            matcher,
+        ).check { view, noViewFoundException ->
+            found = noViewFoundException == null && view != null
+            Thread.sleep(waitTime)
+        }
+        if (!found && maxCount <= ++count) {
+            if (onNotFound == null) {
+                Assert.fail("$TEST_FAILED - Max count reached")
+            } else {
+                onNotFound()
+            }
             break
         }
     }

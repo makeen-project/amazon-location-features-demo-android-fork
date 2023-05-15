@@ -1,12 +1,11 @@
 package com.aws.amazonlocation.ui.main
 
-import android.view.View
-import androidx.appcompat.widget.AppCompatButton
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
@@ -15,34 +14,27 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
-import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_3000
-import com.aws.amazonlocation.DELAY_5000
+import com.aws.amazonlocation.GO
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
-import com.aws.amazonlocation.TEST_FAILED_CARD_DRIVE_GO
-import com.aws.amazonlocation.TEST_FAILED_DIRECTION_CARD
 import com.aws.amazonlocation.TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE
-import com.aws.amazonlocation.TEST_FAILED_SEARCH_DIRECTION
 import com.aws.amazonlocation.TEST_WORD_4
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
-import com.aws.amazonlocation.waitUntil
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.textfield.TextInputEditText
+import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -71,108 +63,84 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
             enableGPS(ApplicationProvider.getApplicationContext())
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
             Thread.sleep(DELAY_2000)
-            val cardDirection =
-                mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_direction)
-            if (cardDirection.visibility == View.VISIBLE) {
-                val cardDirectionTest =
-                    onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-                cardDirectionTest.perform(click())
-                uiDevice.wait(
-                    Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
-                    DELAY_5000,
+
+            val cardDirectionTest =
+                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
+            cardDirectionTest.perform(click())
+
+            Thread.sleep(DELAY_2000)
+
+            val sourceEdt = onView(withId(R.id.edt_search_direction)).check(matches(isDisplayed()))
+            sourceEdt.perform(click())
+
+            Thread.sleep(DELAY_2000)
+
+            val clMyLocation =
+                onView(withId(R.id.cl_my_location)).check(matches(isDisplayed()))
+            clMyLocation.perform(click())
+
+            Thread.sleep(DELAY_2000)
+
+            val destinationEdt = onView(withId(R.id.edt_search_dest)).check(matches(isDisplayed()))
+            destinationEdt.perform(typeText(TEST_WORD_4))
+
+            Thread.sleep(DELAY_2000)
+
+            waitForView(allOf(withId(R.id.rv_search_places_suggestion_direction), isDisplayed())) {
+                Assert.fail(TEST_FAILED)
+            }
+
+            Thread.sleep(DELAY_3000)
+
+            onView(withId(R.id.rv_search_places_suggestion_direction)).check(
+                matches(
+                    hasMinimumChildCount(1),
+                ),
+            )
+
+            Thread.sleep(DELAY_2000)
+
+            onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                    0,
+                    click(),
+                ),
+            )
+
+            waitForView(
+                allOf(
+                    withId(R.id.card_drive_go),
+                    hasDescendant(
+                        withText(GO),
+                    ),
+                    isDisplayed(),
+                ),
+            ) {
+                Assert.fail(TEST_FAILED)
+            }
+
+            val cardDriveGoTest =
+                onView(
+                    allOf(
+                        withId(R.id.card_drive_go),
+                        hasDescendant(
+                            withText(GO),
+                        ),
+                    ),
                 )
-                val edtSearchDirection =
-                    mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
-                if (edtSearchDirection.visibility == View.VISIBLE) {
-                    val clMyLocation =
-                        onView(withId(R.id.cl_my_location)).check(matches(isDisplayed()))
-                    clMyLocation.perform(click())
+            cardDriveGoTest.perform(click())
 
-                    onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_4))
-                    Thread.sleep(DELAY_2000)
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_20000,
-                    )
+            waitForView(withId(R.id.rv_navigation_list)) {
+                Assert.fail(TEST_FAILED)
+            }
 
-                    var searchPlaceSuggestionDirection: UiObject2?
+            Thread.sleep(DELAY_2000)
 
-                    waitUntil(DELAY_5000, 25) {
-                        searchPlaceSuggestionDirection = uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction"))
-                        searchPlaceSuggestionDirection != null
-                    }
-
-                    Thread.sleep(DELAY_5000)
-
-                    val rvSearchPlacesSuggestionDirection =
-                        mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
-
-                    waitUntil(DELAY_5000, 25) {
-                        rvSearchPlacesSuggestionDirection.adapter.let {
-                            it?.itemCount != null && it.itemCount > 0
-                        }
-                    }
-
-                    rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
-                        if (it > 0) {
-                            onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
-                                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                    0,
-                                    click(),
-                                ),
-                            )
-                        }
-                    }
-
-                    Thread.sleep(DELAY_3000)
-
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_20000,
-                    )
-
-                    var carDriveGo: UiObject2?
-                    waitUntil(DELAY_5000, 25) {
-                        carDriveGo = uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go"))
-                        carDriveGo != null
-                    }
-
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_walk_go")),
-                        DELAY_20000,
-                    )
-                    uiDevice.wait(
-                        Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_truck_go")),
-                        DELAY_20000,
-                    )
-                    Thread.sleep(DELAY_3000)
-                    val cardDriveGo =
-                        mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_drive_go)
-                    if (cardDriveGo.visibility == View.VISIBLE) {
-                        val cardDriveGoTest =
-                            onView(withId(R.id.card_drive_go)).check(
-                                matches(
-                                    isDisplayed(),
-                                ),
-                            )
-                        cardDriveGoTest.perform(click())
-
-                        uiDevice.wait(
-                            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_navigation_list")),
-                            DELAY_20000,
-                        )
-                        Thread.sleep(DELAY_5000)
-                        val btnExit =
-                            mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_exit)
-                        Assert.assertTrue(TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE, btnExit.visibility == View.VISIBLE)
-                    } else {
-                        Assert.fail(TEST_FAILED_CARD_DRIVE_GO)
-                    }
-                } else {
-                    Assert.fail(TEST_FAILED_SEARCH_DIRECTION)
+            onView(withId(R.id.btn_exit)).check { view, noViewFoundException ->
+                if (noViewFoundException != null) {
+                    Assert.fail(TEST_FAILED)
                 }
-            } else {
-                Assert.fail(TEST_FAILED_DIRECTION_CARD)
+                Assert.assertTrue(TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE, view.isVisible)
             }
         } catch (e: Exception) {
             failTest(145, e)
