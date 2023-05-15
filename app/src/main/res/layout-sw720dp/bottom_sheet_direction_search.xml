@@ -16,7 +16,7 @@
         android:id="@+id/img_amazon_logo_direction_search_sheet"
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

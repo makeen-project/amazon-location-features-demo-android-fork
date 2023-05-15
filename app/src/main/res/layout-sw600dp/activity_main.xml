@@ -38,7 +38,7 @@
         android:layout_height="@dimen/dp_18"
         android:layout_marginBottom="@dimen/dp_8"
         android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation_main"
         app:layout_constraintStart_toEndOf="@+id/bottom_navigation_main" />
 

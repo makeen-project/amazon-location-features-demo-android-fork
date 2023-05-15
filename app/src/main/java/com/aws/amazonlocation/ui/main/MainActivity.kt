@@ -379,6 +379,10 @@ class MainActivity : BaseActivity() {
         mBinding.ivAmazonInfo?.show()
     }
 
+    fun changeAmazonLogo(logoResId: Int) {
+        mBinding.imgAmazonLogo?.setImageResource(logoResId)
+    }
+
     fun setExplorer() {
         val fragment = mNavHostFragment.childFragmentManager.fragments[0]
         if (fragment !is ExploreFragment) {
