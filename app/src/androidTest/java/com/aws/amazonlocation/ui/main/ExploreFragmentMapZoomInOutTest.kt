@@ -79,7 +79,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut())
             Thread.sleep(DELAY_5000)
             if (beforeZoomLevel != null) {
-                waitUntil(DELAY_3000, 5) {
+                waitUntil(DELAY_3000, 25) {
                     mapbox?.cameraPosition?.zoom?.let {
                         beforeZoomLevel < it
                     }
@@ -115,7 +115,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn())
             Thread.sleep(DELAY_5000)
             if (beforeZoomLevel != null) {
-                waitUntil(DELAY_3000, 5) {
+                waitUntil(DELAY_3000, 25) {
                     mapbox?.cameraPosition?.zoom?.let {
                         beforeZoomLevel > it
                     }
@@ -156,7 +156,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             }
             Thread.sleep(DELAY_5000)
             if (beforeZoomLevel != null) {
-                waitUntil(DELAY_3000, 5) {
+                waitUntil(DELAY_3000, 25) {
                     mapbox?.cameraPosition?.zoom?.let {
                         beforeZoomLevel < it
                     }

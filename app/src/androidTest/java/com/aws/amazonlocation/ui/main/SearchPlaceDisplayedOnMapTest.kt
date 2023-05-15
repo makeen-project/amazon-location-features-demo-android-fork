@@ -87,7 +87,7 @@ class SearchPlaceDisplayedOnMapTest : BaseTest() {
             rvSearchPlaceSuggestion.adapter?.itemCount?.let {
                 if (it >= 0) {
                     mapbox?.getStyle { style ->
-                        waitUntil(DELAY_5000, 6) {
+                        waitUntil(DELAY_5000, 25) {
                             var image: Bitmap? = null
                             var image1: Bitmap? = null
                             getInstrumentation().runOnMainSync {

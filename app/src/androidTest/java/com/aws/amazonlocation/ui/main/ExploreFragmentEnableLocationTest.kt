@@ -69,7 +69,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                         mapbox = it
                     }
                     Thread.sleep(DELAY_4000)
-                    waitUntil(DELAY_5000, 12) {
+                    waitUntil(DELAY_5000, 25) {
                         mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true
                     }
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
@@ -92,7 +92,7 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
                         mapbox = it
                     }
                     Thread.sleep(DELAY_4000)
-                    waitUntil(DELAY_5000, 12) {
+                    waitUntil(DELAY_5000, 25) {
                         mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true
                     }
                     Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)

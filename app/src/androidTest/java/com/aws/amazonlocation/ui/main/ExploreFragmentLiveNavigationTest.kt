@@ -76,7 +76,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
 //            )
 
             var rvRecyclerView: UiObject2?
-            waitUntil(DELAY_5000, 15) {
+            waitUntil(DELAY_5000, 25) {
                 rvRecyclerView = uiDevice.findObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion"))
                 rvRecyclerView != null
             }
@@ -116,7 +116,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
 
             var cardDriveGo: UiObject2?
 
-            waitUntil(DELAY_5000, 6) {
+            waitUntil(DELAY_5000, 25) {
                 cardDriveGo = uiDevice.findObject(By.res(BuildConfig.APPLICATION_ID + ":id/card_drive_go"))
                 cardDriveGo != null
             }

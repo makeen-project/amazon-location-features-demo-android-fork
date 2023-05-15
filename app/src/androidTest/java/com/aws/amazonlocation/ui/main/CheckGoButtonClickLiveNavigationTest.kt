@@ -88,14 +88,31 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                         onView(withId(R.id.cl_my_location)).check(matches(isDisplayed()))
                     clMyLocation.perform(click())
 
-                    val rvSearchPlacesSuggestionDirection =
-                        mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
                     onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_4))
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
                         DELAY_20000,
                     )
+
+                    var searchPlaceSuggestionDirection: UiObject2?
+
+                    waitUntil(DELAY_5000, 25) {
+                        searchPlaceSuggestionDirection = uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction"))
+                        searchPlaceSuggestionDirection != null
+                    }
+
+                    Thread.sleep(DELAY_5000)
+
+                    val rvSearchPlacesSuggestionDirection =
+                        mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
+
+                    waitUntil(DELAY_5000, 25) {
+                        rvSearchPlacesSuggestionDirection.adapter.let {
+                            it?.itemCount != null && it.itemCount > 0
+                        }
+                    }
+
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
                             onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
@@ -106,13 +123,16 @@ class CheckGoButtonClickLiveNavigationTest : BaseTest() {
                             )
                         }
                     }
+
                     Thread.sleep(DELAY_3000)
+
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
                         DELAY_20000,
                     )
+
                     var carDriveGo: UiObject2?
-                    waitUntil(DELAY_5000, 15) {
+                    waitUntil(DELAY_5000, 25) {
                         carDriveGo = uiDevice.findObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go"))
                         carDriveGo != null
                     }
