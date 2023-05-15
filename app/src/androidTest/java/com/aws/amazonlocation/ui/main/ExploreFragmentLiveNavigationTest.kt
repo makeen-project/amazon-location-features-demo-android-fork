@@ -70,10 +70,16 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(TEST_WORD_4))
-            uiDevice.wait(
-                Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion")),
-                DELAY_20000,
-            )
+//            uiDevice.wait(
+//                Until.hasObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion")),
+//                DELAY_20000,
+//            )
+
+            var rvRecyclerView: UiObject2?
+            waitUntil(DELAY_5000, 15) {
+                rvRecyclerView = uiDevice.findObject(By.res(BuildConfig.APPLICATION_ID + ":id/rv_search_places_suggestion"))
+                rvRecyclerView != null
+            }
 
             onView(withId(R.id.rv_search_places_suggestion)).check(matches(isDisplayed()))
             onView(withId(R.id.rv_search_places_suggestion)).check(
