@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
+import android.graphics.Bitmap
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -23,6 +24,7 @@ import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_IMAGE_NULL
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
@@ -31,6 +33,7 @@ import com.aws.amazonlocation.TEST_IMAGE_LABEL_1
 import com.aws.amazonlocation.TEST_WORD_1
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.waitUntil
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -77,14 +80,23 @@ class SearchPlaceDisplayedOnMapTest : BaseTest() {
             Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
             DELAY_20000,
         )
-        Thread.sleep(DELAY_2000)
+        Thread.sleep(DELAY_5000)
         val rvSearchPlaceSuggestion =
             mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
         if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
             rvSearchPlaceSuggestion.adapter?.itemCount?.let {
                 if (it >= 0) {
                     mapbox?.getStyle { style ->
-                        mActivityRule.activity.runOnUiThread {
+                        waitUntil(DELAY_5000, 6) {
+                            var image: Bitmap? = null
+                            var image1: Bitmap? = null
+                            getInstrumentation().runOnMainSync {
+                                image = style.getImage(TEST_IMAGE_LABEL)
+                                image1 = style.getImage(TEST_IMAGE_LABEL_1)
+                            }
+                            image != null && image1 != null
+                        }
+                        getInstrumentation().runOnMainSync {
                             val image = style.getImage(TEST_IMAGE_LABEL)
                             val image1 = style.getImage(TEST_IMAGE_LABEL_1)
                             Assert.assertTrue(TEST_FAILED_IMAGE_NULL, image != null && image1 != null)
