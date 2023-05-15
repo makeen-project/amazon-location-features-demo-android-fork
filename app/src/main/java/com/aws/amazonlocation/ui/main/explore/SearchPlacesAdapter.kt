@@ -18,7 +18,7 @@ import com.aws.amazonlocation.utils.show
 // SPDX-License-Identifier: MIT-0
 class SearchPlacesAdapter(
     private val mSearchPlaceList: ArrayList<SearchSuggestionData>,
-    private val prefernceManager: PreferenceManager?,
+    private val preferenceManager: PreferenceManager?,
     var mSearchPlaceInterface: SearchPlaceInterface,
 ) :
     RecyclerView.Adapter<SearchPlacesAdapter.SearchPlaceVH>() {
@@ -37,8 +37,8 @@ class SearchPlacesAdapter(
                     tvPlaceName.text = data.amazonLocationPlace?.label?.split(",")?.toTypedArray()?.get(0) ?: data.amazonLocationPlace?.label
                 }
 
-                if (data.distance != null && prefernceManager != null) {
-                    tvDistance.text = prefernceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
+                if (data.distance != null && preferenceManager != null) {
+                    tvDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
                         val isMetric = Units.isMetric(unitSystem)
                         Units.getMetricsNew(
                             data.distance!!,

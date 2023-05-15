@@ -97,7 +97,7 @@
                 android:id="@+id/tv_metric_sublabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/metric" />
+                android:text="@string/subtitle_metric" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -138,7 +138,7 @@
                 android:id="@+id/tv_imperial_sublabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/metric" />
+                android:text="@string/subtitle_imperial" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

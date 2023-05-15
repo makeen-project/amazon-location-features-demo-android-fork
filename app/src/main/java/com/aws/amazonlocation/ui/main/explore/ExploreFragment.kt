@@ -998,19 +998,21 @@ class ExploreFragment :
                             mBinding.bottomSheetDirection.apply {
                                 mViewModel.mCarData?.legs?.let { legs ->
                                     if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                        legs[0].distance?.let { distance ->
-                                            tvDirectionDistance.text = mPreferenceManager.getValue(
-                                                KEY_UNIT_SYSTEM,
-                                                "",
-                                            ).let { unitSystem ->
-                                                val isMetric = isMetric(unitSystem)
-                                                getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                                        legs.firstOrNull()?.let { firstLeg ->
+                                            firstLeg.distance?.let { distance ->
+                                                tvDirectionDistance.text = mPreferenceManager.getValue(
+                                                    KEY_UNIT_SYSTEM,
+                                                    "",
+                                                ).let { unitSystem ->
+                                                    val isMetric = isMetric(unitSystem)
+                                                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                                                }
                                             }
+                                            groupDistance.show()
+                                            tvDirectionDot.show()
+                                            tvDirectionTime.show()
+                                            tvDirectionTime.text = getTime(firstLeg.durationSeconds)
                                         }
-                                        groupDistance.show()
-                                        tvDirectionDot.show()
-                                        tvDirectionTime.show()
-                                        tvDirectionTime.text = getTime(legs[0].durationSeconds)
                                     }
                                     mBinding.bottomSheetDirectionSearch.apply {
                                         if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -1040,14 +1042,16 @@ class ExploreFragment :
                                             cardDriveGo,
                                             clDrive,
                                         )
-                                        tvDriveDistance.text = mPreferenceManager.getValue(
-                                            KEY_UNIT_SYSTEM,
-                                            "",
-                                        ).let { unitSystem ->
-                                            val isMetric = isMetric(unitSystem)
-                                            getMetricsNew(convertToLowerUnit(legs[0].distance, isMetric), isMetric)
+                                        legs.firstOrNull()?.let { firstLeg ->
+                                            tvDriveDistance.text = mPreferenceManager.getValue(
+                                                KEY_UNIT_SYSTEM,
+                                                "",
+                                            ).let { unitSystem ->
+                                                val isMetric = isMetric(unitSystem)
+                                                getMetricsNew(convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
+                                            }
+                                            tvDriveMinute.text = getTime(firstLeg.durationSeconds)
                                         }
-                                        tvDriveMinute.text = getTime(legs[0].durationSeconds)
                                     }
                                 }
                             }

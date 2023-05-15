@@ -30,9 +30,11 @@ class NavigationAdapter(
             binding.apply {
                 tvNavigationAddress.text = data.getRegions()
 
-                tvNavigationDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
-                    val isMetric = isMetric(unitSystem)
-                    getMetricsNew(convertToLowerUnit(data.distance!!, isMetric), isMetric)
+                data.distance?.let { distance ->
+                    tvNavigationDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
+                        val isMetric = isMetric(unitSystem)
+                        getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                    }
                 }
             }
         }
