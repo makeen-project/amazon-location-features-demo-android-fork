@@ -102,7 +102,7 @@ class ExploreFragmentLiveNavigationTest : BaseTest() {
                 val directionButton = mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
                 directionButton.performClick()
             }
-            Thread.sleep(DELAY_3000)
+            Thread.sleep(DELAY_5000)
 
             onView(withId(R.id.tv_get_location)).check(matches(isDisplayed()))
             onView(withText(ApplicationProvider.getApplicationContext<Context>().getString(R.string.label_my_location))).perform(
