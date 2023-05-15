@@ -3807,37 +3807,36 @@ class ExploreFragment :
         isLocationAlreadyEnabled: Boolean,
         isCurrentLocationClicked: Boolean,
     ) {
-        checkAndEnableLocation()
-//        val locationRequest: LocationRequest = LocationRequest.create()
-//        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-//        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-//        val result: Task<LocationSettingsResponse> =
-//            LocationServices.getSettingsClient(requireActivity())
-//                .checkLocationSettings(builder.build())
-//        builder.setAlwaysShow(true)
-//        this.mIsLocationAlreadyEnabled = isLocationAlreadyEnabled
-//        this.mIsCurrentLocationClicked = isCurrentLocationClicked
-//        result.addOnCompleteListener {
-//            try {
-//                it.getResult(ApiException::class.java)
-//                checkAndEnableLocation()
-//            } catch (exception: ApiException) {
-//                when (exception.statusCode) {
-//                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-//                        val resolvable = exception as ResolvableApiException
-//                        val intentSenderRequest =
-//                            IntentSenderRequest.Builder(resolvable.resolution).build()
-//                        if (isAdded) {
-//                            gpsActivityResult.launch(intentSenderRequest)
-//                        }
-//                    } catch (_: IntentSender.SendIntentException) {
-//                    } catch (_: ClassCastException) {
-//                    }
-//                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-//                    }
-//                }
-//            }
-//        }
+        val locationRequest: LocationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val result: Task<LocationSettingsResponse> =
+            LocationServices.getSettingsClient(requireActivity())
+                .checkLocationSettings(builder.build())
+        builder.setAlwaysShow(true)
+        this.mIsLocationAlreadyEnabled = isLocationAlreadyEnabled
+        this.mIsCurrentLocationClicked = isCurrentLocationClicked
+        result.addOnCompleteListener {
+            try {
+                it.getResult(ApiException::class.java)
+                checkAndEnableLocation()
+            } catch (exception: ApiException) {
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+                        val resolvable = exception as ResolvableApiException
+                        val intentSenderRequest =
+                            IntentSenderRequest.Builder(resolvable.resolution).build()
+                        if (isAdded) {
+                            gpsActivityResult.launch(intentSenderRequest)
+                        }
+                    } catch (_: IntentSender.SendIntentException) {
+                    } catch (_: ClassCastException) {
+                    }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                    }
+                }
+            }
+        }
     }
 
     private fun checkAndEnableLocation() {
