@@ -130,7 +130,11 @@ class SettingsFragmentDefaultRouteTest : BaseTest() {
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_setting)))
         explorer.click()
 
-        Thread.sleep(DELAY_1000)
+        uiDevice.wait(
+            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_route_option")),
+            DELAY_10000,
+        )
+        Thread.sleep(DELAY_2000)
 
         val clRouteOption =
             mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_route_option)

@@ -197,6 +197,10 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
         )
             .perform(click())
 
+        uiDevice.wait(
+            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_map_style")),
+            DELAY_10000,
+        )
         Thread.sleep(DELAY_2000)
 
         onView(
@@ -215,7 +219,7 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
             uiDevice.pressBack()
         }
 
-        Thread.sleep(DELAY_1000)
+        Thread.sleep(DELAY_2000)
 
         if (getActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation_main).selectedItemId != R.id.menu_explore) {
             uiDevice.pressBack()
