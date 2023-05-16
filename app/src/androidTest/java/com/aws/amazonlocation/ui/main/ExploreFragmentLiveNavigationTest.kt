@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -41,7 +42,7 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
 
             val edtSearch = waitForView(allOf(withId(R.id.edt_search_places), isDisplayed()))
-            edtSearch?.perform(typeText(TEST_WORD_4))
+            edtSearch?.perform(click(), replaceText(TEST_WORD_4))
 
             val rvRecyclerView = waitForView(
                 allOf(
@@ -57,12 +58,12 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
                 ),
             )
 
-//            val textTime = waitForView(
-//                allOf(
-//                    withId(R.id.tv_direction_time),
-//                    isDisplayed(),
-//                ),
-//            )
+            val textTime = waitForView(
+                allOf(
+                    withId(R.id.tv_direction_time),
+                    isDisplayed(),
+                ),
+            )
 
             val btnDirection = waitForView(
                 allOf(

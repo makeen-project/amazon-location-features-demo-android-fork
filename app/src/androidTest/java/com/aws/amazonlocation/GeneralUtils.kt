@@ -91,7 +91,7 @@ fun failTest(lineNo: Int, exception: Exception?) {
     if (exception != null) {
         throw exception
     } else {
-        Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: Custom error")
+        throw Exception("$TEST_FAILED - Exception caught at line $lineNo: Custom error")
     }
 }
 
@@ -106,7 +106,7 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
     }
 }
 
-fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: Int = 60, onNotFound: (() -> Unit)? = null): ViewInteraction? {
+fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_3000, maxCount: Int = 60, onNotFound: (() -> Unit)? = null): ViewInteraction? {
     var count = 0
     var found = false
     var interaction: ViewInteraction? = null
