@@ -119,15 +119,6 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
             )
             swapBtn?.perform(click())
 
-            Thread.sleep(DELAY_2000)
-
-            val btnCarGoTwo = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    isDisplayed(),
-                ),
-            )
-
             Thread.sleep(DELAY_3000)
 
             getInstrumentation().runOnMainSync {

@@ -131,3 +131,27 @@ fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_3000, maxCount: I
     }
     return interaction
 }
+
+fun scrollForView(matcher: Matcher<View>, maxCount: Int = 20, onScrollRequested: (() -> Unit)? = null): ViewInteraction? {
+    var count = 0
+    var found = false
+    var interaction: ViewInteraction? = null
+    var exception: Exception? = null
+    while (!found) {
+        interaction = Espresso.onView(
+            matcher,
+        ).check { view, noViewFoundException ->
+            exception = noViewFoundException
+            found = exception == null && view != null
+        }
+        if (!found && maxCount <= ++count) {
+            throw java.lang.Exception("$TEST_FAILED - Max count reached", exception)
+            break
+        }
+        if (!found) {
+            interaction = null
+            onScrollRequested?.invoke()
+        }
+    }
+    return interaction
+}

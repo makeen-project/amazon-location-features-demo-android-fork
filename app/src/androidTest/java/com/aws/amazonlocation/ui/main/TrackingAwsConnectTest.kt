@@ -30,11 +30,13 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_INVALID_IDENTITY_POOL_ID
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.scrollForView
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.PreferenceManager
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
@@ -61,25 +63,31 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
         )
         val appViews = UiScrollable(UiSelector().scrollable(true))
 
-        appViews.scrollIntoView(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_user_domain"))
-        Thread.sleep(DELAY_2000)
-        val edtIdentityPoolId = onView(withId(R.id.edt_identity_pool_id)).check(ViewAssertions.matches(isDisplayed()))
-        edtIdentityPoolId.perform(click())
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_identity_pool_id)).perform(click(), replaceText(BuildConfig.IDENTITY_POOL_ID))
-        appViews.scrollIntoView(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_user_pool_client_id"))
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_user_domain)).perform(click(), replaceText(BuildConfig.USER_DOMAIN))
-        appViews.scrollIntoView(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_user_pool_id"))
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_user_pool_client_id)).perform(click(), replaceText(BuildConfig.USER_POOL_CLIENT_ID))
-        appViews.scrollIntoView(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_web_socket_url"))
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_user_pool_id)).perform(click(), replaceText(BuildConfig.USER_POOL_ID))
-        appViews.scrollForward()
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_web_socket_url)).perform(click(), replaceText(BuildConfig.WEB_SOCKET_URL))
-        Thread.sleep(DELAY_2000)
+        val edtIdentityPoolId = scrollForView(allOf(withId(R.id.edt_identity_pool_id), isCompletelyDisplayed())){
+            appViews.scrollForward(2)
+        }
+        edtIdentityPoolId?.perform(replaceText(BuildConfig.IDENTITY_POOL_ID))
+
+        val edtUserDomain = scrollForView(allOf(withId(R.id.edt_user_domain), isCompletelyDisplayed())){
+            appViews.scrollForward(2)
+        }
+        edtUserDomain?.perform(replaceText(BuildConfig.USER_DOMAIN))
+
+        val edtUserPoolClientId = scrollForView(allOf(withId(R.id.edt_user_pool_client_id), isCompletelyDisplayed())) {
+            appViews.scrollForward(2)
+        }
+        edtUserPoolClientId?.perform(replaceText(BuildConfig.USER_POOL_CLIENT_ID))
+
+        val edtUserPoolId = scrollForView(allOf(withId(R.id.edt_user_pool_id), isCompletelyDisplayed())) {
+            appViews.scrollForward(2)
+        }
+        edtUserPoolId?.perform(replaceText(BuildConfig.USER_POOL_ID))
+
+        val edtWebSocketUrl = scrollForView(allOf(withId(R.id.edt_web_socket_url), isCompletelyDisplayed())) {
+            appViews.scrollForward(2)
+        }
+        edtWebSocketUrl?.perform(replaceText(BuildConfig.WEB_SOCKET_URL))
+
         val btnConnect =
             onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
         btnConnect.perform(click())
