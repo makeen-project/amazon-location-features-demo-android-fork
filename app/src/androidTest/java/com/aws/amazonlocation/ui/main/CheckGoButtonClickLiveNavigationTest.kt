@@ -5,11 +5,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.pressImeActionButton
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
@@ -62,7 +61,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
             Thread.sleep(DELAY_2000)
 
             val destinationEdt = waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
-            destinationEdt?.perform(click(), replaceText(TEST_WORD_4), pressImeActionButton())
+            destinationEdt?.perform(click(), replaceText(TEST_WORD_4))
 
             Thread.sleep(DELAY_2000)
 
