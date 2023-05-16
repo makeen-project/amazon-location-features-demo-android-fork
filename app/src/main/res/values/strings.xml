@@ -122,6 +122,8 @@
     <string name="map_explore_truck">Explore Truck</string>
     <string name="map_hybrid">Hybrid</string>
     <string name="map_raster">Imagery</string>
+    <string name="map_grab_light">Grab Light</string>
+    <string name="map_grab_dark">Grab Dark</string>
     <string name="label_enter_identity_pool_id">Please enter proper identity pool id</string>
     <string name="label_enter_domain">Entered user domain is wrong</string>
     <string name="label_enter_user_pool_client_id">Entered user pool client id is wrong</string>
@@ -132,6 +134,7 @@
     <string name="aws_cloudformation">Connect your AWS Account</string>
     <string name="esri">Esri</string>
     <string name="here">HERE</string>
+    <string name="grab">GrabMaps</string>
     <string name="label_connected">You are connected</string>
     <string name="label_connected_description">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="label_how_to_remove">How to remove:</string>

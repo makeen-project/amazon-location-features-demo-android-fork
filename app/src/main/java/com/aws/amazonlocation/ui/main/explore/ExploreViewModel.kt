@@ -535,5 +535,27 @@ class ExploreViewModel @Inject constructor(
             ),
         )
         mStyleList.add(MapStyleData(context.resources.getString(R.string.here), false, hereList))
+
+        val grabList = ArrayList<MapStyleInnerData>()
+
+        grabList.add(
+            MapStyleInnerData(
+                mapName = context.resources.getString(R.string.map_grab_light),
+                image = R.drawable.light_gray,
+                isSelected = false,
+                mMapName = MapNames.GRAB_LIGHT,
+                mMapStyleName = MapStyles.GRAB_LIGHT
+            )
+        )
+        grabList.add(
+            MapStyleInnerData(
+                mapName = context.resources.getString(R.string.map_grab_dark),
+                image = R.drawable.dark_gray,
+                isSelected = false,
+                mMapName = MapNames.GRAB_DARK,
+                mMapStyleName = MapStyles.GRAB_DARK
+            )
+        )
+        mStyleList.add(MapStyleData(context.resources.getString(R.string.grab), false, grabList))
     }
 }

@@ -35,10 +35,16 @@ class DataProviderFragment : BaseFragment() {
         val dataProvider =
             mPreferenceManager.getValue(KEY_MAP_NAME, resources.getString(R.string.esri))
         mBinding.apply {
-            if (dataProvider == resources.getString(R.string.esri)) {
-                changeDataProvider(true)
-            } else if (dataProvider == resources.getString(R.string.here)) {
-                changeDataProvider(false)
+            when (dataProvider) {
+                resources.getString(R.string.esri) -> {
+                    changeDataProvider(isEsri = true, isGrab = false)
+                }
+                resources.getString(R.string.here) -> {
+                    changeDataProvider(isEsri = false, isGrab = false)
+                }
+                resources.getString(R.string.grab) -> {
+                    changeDataProvider(isEsri = false, isGrab = true)
+                }
             }
 
             ivRouteDataProvider.setOnClickListener {
@@ -46,7 +52,7 @@ class DataProviderFragment : BaseFragment() {
             }
 
             llEsri.setOnClickListener {
-                changeDataProvider(true)
+                changeDataProvider(isEsri = true, isGrab = false)
                 val mapStyle = mPreferenceManager.getValue(
                     KEY_MAP_STYLE_NAME,
                     resources.getString(R.string.map_light)
@@ -68,7 +74,7 @@ class DataProviderFragment : BaseFragment() {
             }
 
             llHere.setOnClickListener {
-                changeDataProvider(false)
+                changeDataProvider(isEsri = false, isGrab = false)
                 val mapStyle = mPreferenceManager.getValue(
                     KEY_MAP_STYLE_NAME,
                     resources.getString(R.string.map_light)
@@ -86,11 +92,49 @@ class DataProviderFragment : BaseFragment() {
                 }
                 mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.here))
             }
+
+            llGrab.setOnClickListener {
+                changeDataProvider(isEsri = false, isGrab = true)
+                val mapStyle = mPreferenceManager.getValue(
+                    KEY_MAP_STYLE_NAME,
+                    resources.getString(R.string.map_light)
+                )
+                if (mapStyle != getString(R.string.map_grab_light) ||
+                    mapStyle != getString(R.string.map_grab_dark)
+                ) {
+                    mPreferenceManager.setValue(
+                        KEY_MAP_STYLE_NAME,
+                        resources.getString(R.string.map_grab_light)
+                    )
+                }
+                mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.grab))
+            }
         }
     }
 
-    private fun changeDataProvider(isEsri: Boolean = false) {
+    private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false) {
         mBinding.apply {
+            if (isGrab) {
+                ivGrab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_check_data_provider
+                    )
+                )
+                ivHere.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_radio_button_unchecked
+                    )
+                )
+                ivEsri.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_radio_button_unchecked
+                    )
+                )
+                return
+            }
             if (isEsri) {
                 ivEsri.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -99,6 +143,12 @@ class DataProviderFragment : BaseFragment() {
                     )
                 )
                 ivHere.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_radio_button_unchecked
+                    )
+                )
+                ivGrab.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_radio_button_unchecked
@@ -115,6 +165,12 @@ class DataProviderFragment : BaseFragment() {
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.icon_checkmark
+                    )
+                )
+                ivGrab.setImageDrawable(
+                    ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_radio_button_unchecked
                     )
                 )
             }

@@ -24,6 +24,7 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
 
     val esriList = arrayListOf<MapStyleInnerData>()
     val hereList = arrayListOf<MapStyleInnerData>()
+    val grabList = arrayListOf<MapStyleInnerData>()
 
     fun setEsriMapListData(context: Context) {
         esriList.add(
@@ -129,6 +130,28 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
                 isSelected = false,
                 mMapName = HERE_HYBRID,
                 mMapStyleName = HYBRID_HERE_EXPLORE_SATELLITE
+            )
+        )
+    }
+
+    fun setGrabMapListData(context: Context) {
+        grabList.clear()
+        grabList.add(
+            MapStyleInnerData(
+                mapName = context.resources.getString(R.string.map_grab_light),
+                image = R.drawable.light_gray,
+                isSelected = false,
+                mMapName = MapNames.GRAB_LIGHT,
+                mMapStyleName = MapStyles.GRAB_LIGHT
+            )
+        )
+        grabList.add(
+            MapStyleInnerData(
+                mapName = context.resources.getString(R.string.map_grab_dark),
+                image = R.drawable.dark_gray,
+                isSelected = false,
+                mMapName = MapNames.GRAB_DARK,
+                mMapStyleName = MapStyles.GRAB_DARK
             )
         )
     }

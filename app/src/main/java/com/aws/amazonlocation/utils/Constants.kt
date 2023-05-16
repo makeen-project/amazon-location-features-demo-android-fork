@@ -155,6 +155,8 @@ object MapNames {
     const val HERE_EXPLORE_TRUCK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.ExploreTruck"
     const val HERE_HYBRID = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Hybrid"
     const val HERE_IMAGERY = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Imagery"
+    const val GRAB_LIGHT = "GrabStandardLightMap"
+    const val GRAB_DARK = "GrabStandardDark"
 }
 
 object MapStyles {
@@ -169,6 +171,8 @@ object MapStyles {
     const val VECTOR_HERE_EXPLORE_TRUCK = "VectorHereExploreTruck"
     const val HYBRID_HERE_EXPLORE_SATELLITE = "HybridHereExploreSatellite"
     const val RASTER_HERE_EXPLORE_SATELLITE = "RasterHereExploreSatellite"
+    const val GRAB_LIGHT = "VectorGrabStandardLight"
+    const val GRAB_DARK = "VectorGrabStandardDark"
 }
 
 object DateFormat {

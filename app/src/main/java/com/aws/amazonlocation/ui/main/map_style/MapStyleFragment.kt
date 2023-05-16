@@ -27,6 +27,7 @@ class MapStyleFragment : BaseFragment() {
     private val mViewModel: MapStyleViewModel by viewModels()
     private var mAdapter: EsriMapStyleAdapter? = null
     private var mHereAdapter: EsriMapStyleAdapter? = null
+    private var mGrabAdapter: EsriMapStyleAdapter? = null
     private var isMapClickEnable = true
     private var isTablet = false
     private var isLargeTablet = false
@@ -60,18 +61,28 @@ class MapStyleFragment : BaseFragment() {
 
         mViewModel.setEsriMapListData(requireContext())
         mViewModel.setHereMapListData(requireContext())
-        if (mapName == resources.getString(R.string.esri)) {
-            for (i in 0 until mViewModel.esriList.size) {
-                mViewModel.esriList[i].isSelected = mViewModel.esriList[i].mapName == mapStyle
+        mViewModel.setGrabMapListData(requireContext())
+        when (mapName) {
+            resources.getString(R.string.esri) -> {
+                for (i in 0 until mViewModel.esriList.size) {
+                    mViewModel.esriList[i].isSelected = mViewModel.esriList[i].mapName == mapStyle
+                }
             }
-        } else if (mapName == resources.getString(R.string.here)) {
-            for (i in 0 until mViewModel.hereList.size) {
-                mViewModel.hereList[i].isSelected = mViewModel.hereList[i].mapName == mapStyle
+            resources.getString(R.string.here) -> {
+                for (i in 0 until mViewModel.hereList.size) {
+                    mViewModel.hereList[i].isSelected = mViewModel.hereList[i].mapName == mapStyle
+                }
+            }
+            resources.getString(R.string.grab) -> {
+                for (i in 0 until mViewModel.grabList.size) {
+                    mViewModel.grabList[i].isSelected = mViewModel.grabList[i].mapName == mapStyle
+                }
             }
         }
 
         setEsriMapStyleAdapter()
         setHereMapStyleAdapter()
+        setGrabMapStyleAdapter()
         backPress()
         clickListener()
     }
@@ -105,7 +116,7 @@ class MapStyleFragment : BaseFragment() {
                         if (context?.isInternetAvailable() == true) {
                             if (isMapClickEnable) {
                                 isMapClickEnable = false
-                                changeStyle(position, true)
+                                changeStyle(position, isHere = true, isGrab = false)
                             }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
@@ -128,7 +139,7 @@ class MapStyleFragment : BaseFragment() {
                         if (context?.isInternetAvailable() == true) {
                             if (isMapClickEnable) {
                                 isMapClickEnable = false
-                                changeStyle(position, false)
+                                changeStyle(position, isHere = false, isGrab = false)
                             }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
@@ -140,10 +151,51 @@ class MapStyleFragment : BaseFragment() {
         }
     }
 
-    fun changeStyle(position: Int, isHere: Boolean) {
+    private fun setGrabMapStyleAdapter() {
+        val mLayoutManager = GridLayoutManager(this.context, 3)
+        mBinding.apply {
+            rvGrab.layoutManager = mLayoutManager
+            mGrabAdapter = EsriMapStyleAdapter(
+                mViewModel.grabList,
+                object : EsriMapStyleAdapter.EsriMapStyleInterface {
+                    override fun esriStyleClick(position: Int) {
+                        if (context?.isInternetAvailable() == true) {
+                            changeStyle(position, isHere = false, isGrab = true)
+                        } else {
+                            showError(getString(R.string.check_your_internet_connection_and_try_again))
+                        }
+                    }
+                }
+            )
+            rvGrab.adapter = mGrabAdapter
+        }
+    }
+
+    fun changeStyle(position: Int, isHere: Boolean, isGrab: Boolean) {
         if (position != -1) {
+            if (isGrab) {
+                mAdapter?.deselectAll()
+                mHereAdapter?.deselectAll()
+                mGrabAdapter?.singeSelection(position)
+                mViewModel.grabList[position].mapName?.let { it1 ->
+                    mPreferenceManager.setValue(
+                        KEY_MAP_STYLE_NAME,
+                        it1
+                    )
+                }
+                mMapHelper.updateMapStyle(
+                    mViewModel.grabList[position].mMapName!!,
+                    mViewModel.grabList[position].mMapStyleName!!
+                )
+                mPreferenceManager.setValue(
+                    KEY_MAP_NAME,
+                    resources.getString(R.string.grab)
+                )
+                return
+            }
             if (isHere) {
                 mAdapter?.deselectAll()
+                mGrabAdapter?.deselectAll()
                 mHereAdapter?.singeSelection(position)
                 mViewModel.hereList[position].mapName?.let { it1 ->
                     mPreferenceManager.setValue(
@@ -165,6 +217,7 @@ class MapStyleFragment : BaseFragment() {
                 )
             } else {
                 mHereAdapter?.deselectAll()
+                mGrabAdapter?.deselectAll()
                 mAdapter?.singeSelection(position)
                 mViewModel.esriList[position].mapName?.let { it1 ->
                     mPreferenceManager.setValue(

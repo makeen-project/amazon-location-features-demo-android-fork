@@ -1141,13 +1141,13 @@ class MapHelper(private val appContext: Context) {
 
         llMain.measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         llMain.layout(0, 0, llMain.measuredWidth, llMain.measuredHeight)
         val bitmap = Bitmap.createBitmap(
             llMain.measuredWidth,
             llMain.measuredHeight,
-            Bitmap.Config.ARGB_8888,
+            Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
         llMain.draw(canvas)
