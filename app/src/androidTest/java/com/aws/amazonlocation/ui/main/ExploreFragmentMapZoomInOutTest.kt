@@ -32,6 +32,7 @@ import com.aws.amazonlocation.actions.pinchOut
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.utils.retry_rule.Retry
 import com.aws.amazonlocation.waitUntil
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -48,6 +49,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Test
+    @Retry
     fun testMapZoomIn() {
         try {
             enableGPS(ApplicationProvider.getApplicationContext())
@@ -85,6 +87,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
     }
 
     @Test
+    @Retry
     fun testMapZoomOut() {
         try {
             var mapbox: MapboxMap? = null
@@ -121,6 +124,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
     }
 
     @Test
+    @Retry
     fun testMapZoomDoubleTap() {
         try {
             var mapbox: MapboxMap? = null

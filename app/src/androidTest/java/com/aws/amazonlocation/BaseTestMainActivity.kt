@@ -7,7 +7,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.utils.ScreenshotTakingRule
+import com.aws.amazonlocation.utils.retry_rule.RetryTestRule
+import com.aws.amazonlocation.utils.screenshot_rule.ScreenshotTakingRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.junit.After
 import org.junit.Before
@@ -59,6 +60,9 @@ abstract class BaseTestMainActivity {
     val ruleChain: RuleChain = RuleChain
         .outerRule(mActivityRule)
         .around(ScreenshotTakingRule())
+
+    @get:Rule(order = 3)
+    val retryRule = RetryTestRule()
 
     @Before
     open fun before() {

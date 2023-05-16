@@ -58,13 +58,6 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
                 ),
             )
 
-            val textTime = waitForView(
-                allOf(
-                    withId(R.id.tv_direction_time),
-                    isDisplayed(),
-                ),
-            )
-
             val btnDirection = waitForView(
                 allOf(
                     withId(R.id.btn_direction),

@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils
+package com.aws.amazonlocation.utils.screenshot_rule // ktlint-disable package-name
 
 import android.util.Log
 import androidx.test.runner.screenshot.Screenshot
