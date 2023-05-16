@@ -202,4 +202,10 @@
     <string name="label_app_version">App version:</string>
     <string name="label_warning">Warning</string>
     <string name="label_session_expired">The session has expired. Please sign in again to access all features.</string>
+    <string name="units">Units</string>
+    <string name="metric">Metric</string>
+    <string name="subtitle_metric">Kilometers, kilograms</string>
+    <string name="imperial">Imperial</string>
+    <string name="subtitle_imperial">Miles, pounds</string>
+    <string name="automatic">Automatic</string>
 </resources>

@@ -20,7 +20,10 @@ import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_LINE_LAYER_ID
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.MapCameraZoom
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants.UNIT_METRES
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
@@ -51,7 +54,6 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import java.text.DecimalFormat
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -61,7 +63,8 @@ class GeofenceHelper(
     private var mTvSeekBar: AppCompatTextView?,
     private var mSeekBar: SeekBar?,
     private var mMapboxMap: MapboxMap?,
-    private var mGeofenceMapLatLngInterface: GeofenceMapLatLngInterface?
+    private var mGeofenceMapLatLngInterface: GeofenceMapLatLngInterface?,
+    private var mPrefrenceManager: PreferenceManager?,
 ) {
 
     var mDefaultLatLng = LatLng(49.281174, -123.116823)
@@ -78,7 +81,7 @@ class GeofenceHelper(
             mMapboxMap?.locationComponent?.lastKnownLocation?.apply {
                 mLatLng = LatLng(
                     latitude,
-                    longitude
+                    longitude,
                 )
             }
         }
@@ -124,7 +127,7 @@ class GeofenceHelper(
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
-                    fromUser: Boolean
+                    fromUser: Boolean,
                 ) {
                     adjustRadius(seekBar?.progress)
                 }
@@ -144,25 +147,25 @@ class GeofenceHelper(
         BitmapUtils.getBitmapFromDrawable(
             ContextCompat.getDrawable(
                 mAppContext,
-                R.drawable.ic_geofence_marker
-            )
+                R.drawable.ic_geofence_marker,
+            ),
         )?.let {
             style.addImage(
                 CIRCLE_CENTER_ICON_ID,
-                it
+                it,
             )
         }
         if (style.getSource(CIRCLE_CENTER_SOURCE_ID) == null) {
             style.addSource(
                 GeoJsonSource(
                     CIRCLE_CENTER_SOURCE_ID,
-                    Feature.fromGeometry(mDefaultLocationPoint)
-                )
+                    Feature.fromGeometry(mDefaultLocationPoint),
+                ),
             )
         }
 
         if (style.getSource(CIRCLE_CENTER_LAYER_ID) == null && style.getLayer(
-                CIRCLE_CENTER_LAYER_ID
+                CIRCLE_CENTER_LAYER_ID,
             ) == null
         ) {
             style.addLayer(
@@ -171,8 +174,8 @@ class GeofenceHelper(
                     iconIgnorePlacement(false),
                     iconAllowOverlap(true),
                     textAllowOverlap(true),
-                    iconAnchor(Property.ICON_ANCHOR_CENTER)
-                )
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
+                ),
             )
         }
     }
@@ -184,12 +187,12 @@ class GeofenceHelper(
         mMapboxMap?.getStyle { style ->
             val fillLayer = FillLayer(
                 TURF_CALCULATION_FILL_LAYER_ID,
-                TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID
+                TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID,
             )
 
             val lineLayer = LineLayer(
                 TURF_CALCULATION_LINE_LAYER_ID,
-                TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID
+                TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID,
             )
 
             lineLayer.setProperties(
@@ -197,15 +200,15 @@ class GeofenceHelper(
                 lineColor(
                     ContextCompat.getColor(
                         mAppContext,
-                        R.color.color_bn_selected
-                    )
-                )
+                        R.color.color_bn_selected,
+                    ),
+                ),
             )
 
             fillLayer.setProperties(
                 fillColor(ContextCompat.getColor(mAppContext, R.color.color_bn_selected)),
                 fillOutlineColor(ContextCompat.getColor(mAppContext, R.color.color_bn_selected)),
-                fillOpacity(0.2f)
+                fillOpacity(0.2f),
             )
             if (style.getLayer(TURF_CALCULATION_FILL_LAYER_ID) == null) {
                 style.addLayerBelow(fillLayer, CIRCLE_CENTER_LAYER_ID)
@@ -231,8 +234,8 @@ class GeofenceHelper(
                 style.getSourceAs<GeoJsonSource>(TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID)
             polygonCircleSource?.setGeoJson(
                 Polygon.fromOuterInner(
-                    LineString.fromLngLats(pointList)
-                )
+                    LineString.fromLngLats(pointList),
+                ),
             )
 
             // Update the source's GeoJSON to draw a new circle
@@ -253,9 +256,9 @@ class GeofenceHelper(
                     CAMERA_TOP_RIGHT_LEFT_PADDING,
                     CAMERA_TOP_RIGHT_LEFT_PADDING,
                     CAMERA_TOP_RIGHT_LEFT_PADDING,
-                    CAMERA_BOTTOM_PADDING
+                    CAMERA_BOTTOM_PADDING,
                 ),
-                CAMERA_DURATION_1500
+                CAMERA_DURATION_1500,
             )
         }
     }
@@ -270,7 +273,7 @@ class GeofenceHelper(
      */
     private fun getTurfPolygon(
         centerPoint: Point,
-        radius: Double
+        radius: Double,
     ): Polygon {
         return TurfTransformation.circle(centerPoint, radius, 360, mCircleUnit)
     }
@@ -288,13 +291,14 @@ class GeofenceHelper(
     }
 
     private fun upDateSeekbarText(radius: Int) {
-        if (radius >= 1000) {
-            val seekBarTextKm = "${DecimalFormat("##.#").format((radius.toDouble() / 1000))} km"
-            mTvSeekBar?.text = seekBarTextKm
+        val isMetric = Units.isMetric(mPrefrenceManager?.getValue(KEY_UNIT_SYSTEM, ""))
+        var seekbarText = ""
+        if (isMetric) {
+            seekbarText = Units.getMetricsNew(radius.toDouble(), true)
         } else {
-            val seekBarTextRadius = "$radius m"
-            mTvSeekBar?.text = seekBarTextRadius
+            seekbarText = Units.getMetricsNew(Units.meterToFeet(radius.toDouble()), false)
         }
+        mTvSeekBar?.text = seekbarText
     }
 
     fun mapClick(mapClickLatLng: LatLng) {
@@ -329,9 +333,9 @@ class GeofenceHelper(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition.Builder().zoom(MapCameraZoom.DEFAULT_CAMERA_ZOOM)
                     .target(mDefaultLatLng)
-                    .build()
+                    .build(),
             ),
-            CAMERA_DURATION_1000
+            CAMERA_DURATION_1000,
         )
         drawGeofence(fromLngLat(mDefaultLatLng.longitude, mDefaultLatLng.latitude))
     }

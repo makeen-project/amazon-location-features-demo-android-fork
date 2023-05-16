@@ -26,6 +26,7 @@ import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
@@ -48,7 +49,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         mBinding = FragmentSettingBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -57,6 +58,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
+        getUnitSystem()
         getDataProvider()
         getMapStyle()
         initObserver()
@@ -88,6 +90,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         }
     }
 
+    private fun getUnitSystem() {
+        val unitSystem =
+            mPreferenceManager.getValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
+        mBinding.tvUnitSystemName.text = unitSystem
+    }
+
     private fun getDataProvider() {
         val dataProvider =
             mPreferenceManager.getValue(KEY_MAP_NAME, resources.getString(R.string.esri))
@@ -109,7 +117,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     mBaseActivity?.clearUserInFo()
                     mBaseActivity?.mPreferenceManager?.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.AWS_CONNECTED.name
+                        AuthEnum.AWS_CONNECTED.name,
                     )
                     init()
                     mPreferenceManager.removeValue(KEY_ID_TOKEN)
@@ -128,6 +136,9 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     private fun clickListener() {
         mBinding.apply {
+            clUnitSystem.setOnClickListener {
+                findNavController().navigate(R.id.unit_system_fragment)
+            }
             clDataProvider.setOnClickListener {
                 findNavController().navigate(R.id.data_provider_fragment)
             }
@@ -162,7 +173,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                             override fun logoutAndDisconnectAWS(dialog: DialogInterface) {
                             }
                         },
-                        AWSMobileClient.getInstance().isSignedIn
+                        AWSMobileClient.getInstance().isSignedIn,
                     )
                 }
             }

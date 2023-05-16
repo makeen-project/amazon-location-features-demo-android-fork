@@ -45,6 +45,9 @@ import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.data.response.UpdateBatchLocationResponse
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
+import com.aws.amazonlocation.utils.Units.getDistanceUnit
+import com.aws.amazonlocation.utils.Units.isMetric
+import com.aws.amazonlocation.utils.Units.meterToFeet
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
 import java.util.Locale
@@ -54,7 +57,7 @@ import java.util.Locale
 // SPDX-License-Identifier: MIT-0
 class AWSLocationHelper(
     private var mMapHelper: MapHelper,
-    private var mPreferenceManager: PreferenceManager
+    private var mPreferenceManager: PreferenceManager,
 ) {
 
     private var mClient: AmazonLocationClient? = null
@@ -87,7 +90,7 @@ class AWSLocationHelper(
         }
         mCognitoCredentialsProvider = CognitoCredentialsProvider(
             identityPoolId,
-            Regions.fromName(region)
+            Regions.fromName(region),
         )
         val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         if (identityPoolId != BuildConfig.DEFAULT_IDENTITY_POOL_ID && mAuthStatus == AuthEnum.SIGNED_IN.name) {
@@ -110,7 +113,7 @@ class AWSLocationHelper(
     private fun searchPlaceIndexForSuggestions(
         lat: Double?,
         lng: Double?,
-        text: String
+        text: String,
     ): SearchPlaceIndexForSuggestionsResult? {
         return try {
             val indexName = when (mPreferenceManager.getValue(KEY_MAP_NAME, "Esri")) {
@@ -126,7 +129,7 @@ class AWSLocationHelper(
                 SearchPlaceIndexForSuggestionsRequest().withBiasPosition(arrayListOf(lng, lat))
                     .withText(text).withLanguage(Locale.getDefault().language)
                     .withIndexName(indexName)
-                    .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT)
+                    .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT),
             )
         } catch (e: Exception) {
             mBaseActivity?.handleException(e)
@@ -145,7 +148,7 @@ class AWSLocationHelper(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        travelMode: String?
+        travelMode: String?,
     ): CalculateRouteResult? {
         return try {
             val indexName = when (mPreferenceManager.getValue(KEY_MAP_NAME, "Esri")) {
@@ -157,44 +160,47 @@ class AWSLocationHelper(
                 }
                 else -> ESRI_ROUTE_CALCULATOR
             }
+
+            val DISTANCE_UNIT = getDistanceUnit(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, "Automatic"))
+
             when (travelMode) {
                 TravelMode.Car.value -> {
                     mClient?.calculateRoute(
                         CalculateRouteRequest().withDeparturePosition(
                             lngDeparture,
-                            latDeparture
+                            latDeparture,
                         ).withDestinationPosition(lngDestination, latDestination)
                             .withCarModeOptions(
                                 CalculateRouteCarModeOptions().withAvoidTolls(isAvoidTolls)
-                                    .withAvoidFerries(isAvoidFerries)
-                            ).withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
+                                    .withAvoidFerries(isAvoidFerries),
+                            ).withIncludeLegGeometry(true).withDistanceUnit(DISTANCE_UNIT)
                             .withDepartNow(true).withTravelMode(travelMode)
-                            .withCalculatorName(indexName)
+                            .withCalculatorName(indexName),
                     )
                 }
                 TravelMode.Truck.value -> {
                     mClient?.calculateRoute(
                         CalculateRouteRequest().withDeparturePosition(
                             lngDeparture,
-                            latDeparture
+                            latDeparture,
                         ).withDestinationPosition(lngDestination, latDestination)
                             .withTruckModeOptions(
                                 CalculateRouteTruckModeOptions().withAvoidTolls(isAvoidTolls)
-                                    .withAvoidFerries(isAvoidFerries)
-                            ).withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
+                                    .withAvoidFerries(isAvoidFerries),
+                            ).withIncludeLegGeometry(true).withDistanceUnit(DISTANCE_UNIT)
                             .withDepartNow(true).withTravelMode(travelMode)
-                            .withCalculatorName(indexName)
+                            .withCalculatorName(indexName),
                     )
                 }
                 else -> {
                     mClient?.calculateRoute(
                         CalculateRouteRequest().withDeparturePosition(
                             lngDeparture,
-                            latDeparture
+                            latDeparture,
                         ).withDestinationPosition(lngDestination, latDestination)
-                            .withIncludeLegGeometry(true).withDistanceUnit(KILOMETERS)
+                            .withIncludeLegGeometry(true).withDistanceUnit(DISTANCE_UNIT)
                             .withDepartNow(true).withTravelMode(travelMode)
-                            .withCalculatorName(indexName)
+                            .withCalculatorName(indexName),
                     )
                 }
             }
@@ -207,7 +213,7 @@ class AWSLocationHelper(
     fun searchPlaceSuggestion(
         lat: Double?,
         lng: Double?,
-        searchText: String
+        searchText: String,
     ): SearchSuggestionResponse {
         try {
             val liveLocation = mMapHelper.getLiveLocation()
@@ -217,13 +223,13 @@ class AWSLocationHelper(
                 val mLatLng = validateLatLng(searchText)
                 searchPlaceIndexForPosition(
                     lng = mLatLng?.longitude,
-                    lat = mLatLng?.latitude
+                    lat = mLatLng?.latitude,
                 )
             } else {
                 searchPlaceIndexForSuggestions(
                     lat = lat,
                     lng = lng,
-                    text = searchText
+                    text = searchText,
                 )
             }
 
@@ -232,7 +238,7 @@ class AWSLocationHelper(
                 text = searchPlaceIndexForSuggestionsResult?.summary?.text,
                 maxResults = searchPlaceIndexForSuggestionsResult?.summary?.maxResults,
                 language = searchPlaceIndexForSuggestionsResult?.summary?.language,
-                dataSource = searchPlaceIndexForSuggestionsResult?.summary?.dataSource
+                dataSource = searchPlaceIndexForSuggestionsResult?.summary?.dataSource,
             )
             if (isLatLng && searchPlaceIndexForSuggestionsResult?.results.isNullOrEmpty()) {
                 addMarkerBasedOnLatLng(response, searchText, mList)
@@ -249,8 +255,8 @@ class AWSLocationHelper(
                         distance = getDistance(
                             liveLocation,
                             getSearchResult?.place?.geometry?.point?.get(1)!!,
-                            getSearchResult.place?.geometry?.point?.get(0)!!
-                        )
+                            getSearchResult.place?.geometry?.point?.get(0)!!,
+                        ),
                     )
                 } else {
                     SearchSuggestionData(text = it.text)
@@ -262,7 +268,7 @@ class AWSLocationHelper(
         } catch (e: Exception) {
             mBaseActivity?.handleException(e, apiError)
             return SearchSuggestionResponse(
-                error = apiError
+                error = apiError,
             )
         }
     }
@@ -270,7 +276,7 @@ class AWSLocationHelper(
     fun getDistance(
         liveLocation: LatLng?,
         destinationLat: Double,
-        destinationLng: Double
+        destinationLng: Double,
     ): Double? {
         var distance: Double? = null
         if (liveLocation?.latitude != null) {
@@ -281,7 +287,8 @@ class AWSLocationHelper(
             val destinationLocation = Location("destinationLocation")
             destinationLocation.latitude = destinationLat
             destinationLocation.longitude = destinationLng
-            distance = currentLocation.distanceTo(destinationLocation).toDouble()
+            val distanceMeters = currentLocation.distanceTo(destinationLocation).toDouble()
+            distance = if (isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))) distanceMeters else meterToFeet(distanceMeters)
         }
         return distance
     }
@@ -289,22 +296,22 @@ class AWSLocationHelper(
     private fun addMarkerBasedOnLatLng(
         mResponse: SearchSuggestionResponse,
         searchText: String,
-        mList: ArrayList<SearchSuggestionData>
+        mList: ArrayList<SearchSuggestionData>,
     ) {
         val mLatLng = validateLatLng(searchText)
         val amazonLocationPlace = AmazonLocationPlace(
             coordinates = Coordinates(
                 mLatLng?.latitude!!,
-                mLatLng.longitude
+                mLatLng.longitude,
             ),
-            label = mResponse.text
+            label = mResponse.text,
         )
         val response = SearchSuggestionData(
             searchText = mResponse.text,
             placeId = mResponse.text,
             text = mResponse.text,
             isPlaceIndexForPosition = true,
-            amazonLocationPlace = amazonLocationPlace
+            amazonLocationPlace = amazonLocationPlace,
         )
         mList.add(response)
     }
@@ -312,7 +319,7 @@ class AWSLocationHelper(
     fun searchPlaceIndexForText(
         lat: Double?,
         lng: Double?,
-        text: String?
+        text: String?,
     ): SearchSuggestionResponse {
         try {
             val indexName = when (mPreferenceManager.getValue(KEY_MAP_NAME, "Esri")) {
@@ -329,14 +336,14 @@ class AWSLocationHelper(
                 SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat))
                     .withIndexName(indexName).withText(text)
                     .withLanguage(Locale.getDefault().language)
-                    .withMaxResults(SEARCH_MAX_RESULT)
+                    .withMaxResults(SEARCH_MAX_RESULT),
             )
             val searchSuggestionResponse = SearchSuggestionResponse(
                 text = response?.summary?.text,
                 maxResults = response?.summary?.maxResults,
                 language = response?.summary?.language,
                 dataSource = response?.summary?.dataSource,
-                error = null
+                error = null,
             )
             val mList = ArrayList<SearchSuggestionData>()
             if (validateLatLng(text!!) != null && response?.results?.isEmpty()!!) {
@@ -350,8 +357,8 @@ class AWSLocationHelper(
                         distance = getDistance(
                             liveLocation,
                             it.place?.geometry?.point?.get(1)!!,
-                            it.place?.geometry?.point?.get(0)!!
-                        )
+                            it.place?.geometry?.point?.get(0)!!,
+                        ),
                     )
                     mList.add(placeData)
                 }
@@ -361,7 +368,7 @@ class AWSLocationHelper(
         } catch (e: Exception) {
             mBaseActivity?.handleException(e, apiError)
             return SearchSuggestionResponse(
-                error = apiError
+                error = apiError,
             )
         }
     }
@@ -379,7 +386,7 @@ class AWSLocationHelper(
             }
             mClient?.getPlace(
                 GetPlaceRequest().withIndexName(indexName).withPlaceId(placeId)
-                    .withLanguage(Locale.getDefault().language)
+                    .withLanguage(Locale.getDefault().language),
             )
         } catch (e: Exception) {
             mBaseActivity?.handleException(e)
@@ -389,7 +396,7 @@ class AWSLocationHelper(
 
     fun searchPlaceIndexForPosition(
         lng: Double?,
-        lat: Double?
+        lat: Double?,
     ): SearchPlaceIndexForSuggestionsResult {
         try {
             val indexName = when (mPreferenceManager.getValue(KEY_MAP_NAME, "Esri")) {
@@ -404,10 +411,10 @@ class AWSLocationHelper(
             val indexResponse = mClient?.searchPlaceIndexForPosition(
                 SearchPlaceIndexForPositionRequest().withIndexName(indexName)
                     .withLanguage(Locale.getDefault().language).withPosition(
-                        arrayListOf(lng, lat)
+                        arrayListOf(lng, lat),
                     ).withMaxResults(
-                        SEARCH_MAX_SUGGESTION_RESULT
-                    )
+                        SEARCH_MAX_SUGGESTION_RESULT,
+                    ),
             )
             val list = ArrayList<SearchForSuggestionsResult>()
             indexResponse?.results?.forEach {
@@ -434,7 +441,7 @@ class AWSLocationHelper(
 
     fun searchNavigationPlaceIndexForPosition(
         lat: Double?,
-        lng: Double?
+        lng: Double?,
     ): SearchPlaceIndexForPositionResult? {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
@@ -451,7 +458,7 @@ class AWSLocationHelper(
             return mClient?.searchPlaceIndexForPosition(
                 SearchPlaceIndexForPositionRequest().withIndexName(indexName)
                     .withLanguage(Locale.getDefault().language).withPosition(arrayListOf(lat, lng))
-                    .withMaxResults(1)
+                    .withMaxResults(1),
             )
         } catch (e: Exception) {
             mBaseActivity?.handleException(e)
@@ -463,7 +470,7 @@ class AWSLocationHelper(
         geofenceId: String,
         collectionName: String,
         radius: Double?,
-        latLng: LatLng?
+        latLng: LatLng?,
     ): AddGeofenceResponse {
         val putGeofenceRequest =
             PutGeofenceRequest().withCollectionName(collectionName)
@@ -473,10 +480,10 @@ class AWSLocationHelper(
                 Circle().withCenter(
                     arrayListOf(
                         latLng?.longitude,
-                        latLng?.latitude
-                    )
-                ).withRadius(radius)
-            )
+                        latLng?.latitude,
+                    ),
+                ).withRadius(radius),
+            ),
         )
         return try {
             mClient?.putGeofence(putGeofenceRequest)
@@ -491,12 +498,12 @@ class AWSLocationHelper(
         return try {
             val response = mClient?.listGeofences(
                 ListGeofencesRequest().withCollectionName(
-                    collectionName
-                )
+                    collectionName,
+                ),
             )
             GeofenceData(
                 response?.entries as ArrayList<ListGeofenceResponseEntry>,
-                message = null
+                message = null,
             )
         } catch (e: Exception) {
             e.printStackTrace()
@@ -509,8 +516,8 @@ class AWSLocationHelper(
         return try {
             mClient?.batchDeleteGeofence(
                 BatchDeleteGeofenceRequest().withCollectionName(
-                    GEOFENCE_COLLECTION
-                ).withGeofenceIds(data.geofenceId)
+                    GEOFENCE_COLLECTION,
+                ).withGeofenceIds(data.geofenceId),
             )
             DeleteGeofence(data = data, position = position)
         } catch (e: Exception) {
@@ -523,7 +530,7 @@ class AWSLocationHelper(
         trackerName: String,
         position: List<Double>,
         deviceId: String,
-        date: Date
+        date: Date,
     ): UpdateBatchLocationResponse {
         val map: HashMap<String, String> = HashMap()
         val identityId = AWSMobileClient.getInstance().identityId
@@ -558,7 +565,7 @@ class AWSLocationHelper(
         trackerName: String,
         deviceId: String,
         dateStart: Date,
-        dateEnd: Date
+        dateEnd: Date,
     ): LocationHistoryResponse {
         val data = GetDevicePositionHistoryRequest()
             .withTrackerName(trackerName).withDeviceId(deviceId).withStartTimeInclusive(dateStart)
@@ -575,7 +582,7 @@ class AWSLocationHelper(
 
     fun deleteDevicePositionHistory(
         trackerName: String,
-        deviceId: String
+        deviceId: String,
     ): DeleteLocationHistoryResponse {
         val data = BatchDeleteDevicePositionHistoryRequest()
             .withTrackerName(trackerName).withDeviceIds(deviceId)
