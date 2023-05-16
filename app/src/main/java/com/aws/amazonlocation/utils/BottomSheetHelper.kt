@@ -11,6 +11,7 @@ import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.databinding.BottomSheetNavigationBinding
 import com.aws.amazonlocation.databinding.BottomSheetSearchBinding
 import com.aws.amazonlocation.ui.base.BaseActivity
+import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -42,8 +43,7 @@ class BottomSheetHelper {
             BottomSheetBehavior.from(view.clSearchSheet)
         mBottomSheetSearchPlaces.isFitToContents = false
         context = view.clSearchSheet.context
-        val isTablet = view.clSearchSheet.resources.getBoolean(R.bool.is_tablet)
-        if (!isTablet) {
+        if (!(activity as MainActivity).isTablet) {
             mBottomSheetSearchPlaces.expandedOffset =
                 view.clSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
         }
@@ -55,7 +55,7 @@ class BottomSheetHelper {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             mBaseActivity?.bottomNavigationVisibility(true)
                             isSearchSheetOpen = false
-                            activity?.hideKeyboard()
+                            activity.hideKeyboard()
                             fragment.clearKeyboardFocus()
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
@@ -73,7 +73,7 @@ class BottomSheetHelper {
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
                             isSearchSheetOpen = true
-                            activity?.hideKeyboard()
+                            activity.hideKeyboard()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}
@@ -191,10 +191,11 @@ class BottomSheetHelper {
         mBottomSheetDirectionsSearch.isHideable = true
         mBottomSheetDirectionsSearch.state = BottomSheetBehavior.STATE_HIDDEN
         mBottomSheetDirectionsSearch.isFitToContents = false
-        val isTablet = view.clDirectionSearchSheet.resources.getBoolean(R.bool.is_tablet)
-        if (!isTablet) {
-            mBottomSheetDirectionsSearch.expandedOffset =
-                view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                mBottomSheetDirectionsSearch.expandedOffset =
+                    view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+            }
         }
         mBottomSheetDirectionsSearch.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
@@ -380,13 +381,15 @@ class BottomSheetHelper {
                 context?.let {
                     val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                     if (isTablet) {
-                        mBottomSheetSearchPlaces.peekHeight = 150.px
+                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
                     } else {
-                        mBottomSheetSearchPlaces.peekHeight = 98.px
+                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_98)
                     }
                 }
             } else {
-                mBottomSheetSearchPlaces.peekHeight = 98.px
+                context?.let {
+                    mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_98)
+                }
             }
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {

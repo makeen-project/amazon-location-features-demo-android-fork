@@ -141,7 +141,6 @@ class ExploreFragment :
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
-    private var isTablet = false
 
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult(),
@@ -236,7 +235,6 @@ class ExploreFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
         setMap(savedInstanceState)
         mBottomSheetHelper.setSearchBottomSheet(
             activity,
@@ -252,10 +250,12 @@ class ExploreFragment :
         mBottomSheetHelper.setNavigationBottomSheet(mBinding.bottomSheetNavigation)
         mBottomSheetHelper.setNavigationCompleteBottomSheet(mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete)
         mBottomSheetHelper.setDirectionBottomSheet(mBinding.bottomSheetDirection.clPersistentBottomSheetDirection)
-        if (!isTablet) {
-            mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
-        } else {
-            mBinding.bottomSheetMapStyle.clMapStyleBottomSheet.hide()
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
+            } else {
+                mBinding.bottomSheetMapStyle.clMapStyleBottomSheet.hide()
+            }
         }
         mBottomSheetHelper.setAttributeBottomSheet(mBinding.bottomSheetAttribution)
         mBottomSheetHelper.setDirectionSearchBottomSheet(
@@ -1775,54 +1775,56 @@ class ExploreFragment :
             }
 
             cardMap.setOnClickListener {
-                if (isTablet) {
-                    mapStyleBottomSheetFragment =
-                        MapStyleBottomSheetFragment(
-                            mViewModel,
-                            object : MapStyleAdapter.MapInterface {
-                                override fun mapClick(position: Int) {
-                                    if (!mViewModel.mStyleList[position].isSelected) {
-                                        repeat(mViewModel.mStyleList.size) {
-                                            mViewModel.mStyleList[it].isSelected = false
-                                        }
-                                    } else {
-                                        return
-                                    }
-                                    mapStyleChange(position, 0)
-                                    mViewModel.mStyleList[position].isSelected =
-                                        !mViewModel.mStyleList[position].isSelected
-                                    mapStyleBottomSheetFragment.notifyAdapter()
-                                }
-
-                                override fun mapStyleClick(position: Int, innerPosition: Int) {
-                                    if (checkInternetConnection()) {
-                                        mViewModel.mStyleList[position].mapInnerData?.let {
-                                            if (it[innerPosition].isSelected) {
-                                                return
+                mBaseActivity?.isTablet?.let {
+                    if (it) {
+                        mapStyleBottomSheetFragment =
+                            MapStyleBottomSheetFragment(
+                                mViewModel,
+                                object : MapStyleAdapter.MapInterface {
+                                    override fun mapClick(position: Int) {
+                                        if (!mViewModel.mStyleList[position].isSelected) {
+                                            repeat(mViewModel.mStyleList.size) {
+                                                mViewModel.mStyleList[it].isSelected = false
                                             }
+                                        } else {
+                                            return
                                         }
-                                        mapStyleChange(position, innerPosition)
+                                        mapStyleChange(position, 0)
+                                        mViewModel.mStyleList[position].isSelected =
+                                            !mViewModel.mStyleList[position].isSelected
+                                        mapStyleBottomSheetFragment.notifyAdapter()
+                                    }
+
+                                    override fun mapStyleClick(position: Int, innerPosition: Int) {
+                                        if (checkInternetConnection()) {
+                                            mViewModel.mStyleList[position].mapInnerData?.let {
+                                                if (it[innerPosition].isSelected) {
+                                                    return
+                                                }
+                                            }
+                                            mapStyleChange(position, innerPosition)
+                                        }
                                     }
                                 }
-                            }
-                        )
-                    activity?.supportFragmentManager.let {
-                        if (it != null) {
-                            mapStyleBottomSheetFragment.show(
-                                it,
-                                CloudFormationBottomSheetFragment::class.java.name
                             )
+                        activity?.supportFragmentManager.let {
+                            if (it != null) {
+                                mapStyleBottomSheetFragment.show(
+                                    it,
+                                    CloudFormationBottomSheetFragment::class.java.name
+                                )
+                            }
                         }
+                    } else {
+                        mBottomSheetHelper.expandMapStyleSheet()
                     }
-                } else {
-                    mBottomSheetHelper.expandMapStyleSheet()
-                }
-                when {
-                    mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mTrackingUtils?.collapseTracking()
-                    }
-                    mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
+                    when {
+                        mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
+                            mBaseActivity?.mTrackingUtils?.collapseTracking()
+                        }
+                        mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
+                            mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
+                        }
                     }
                 }
             }
@@ -2661,9 +2663,11 @@ class ExploreFragment :
         mBottomSheetHelper.hideDirectionSheet()
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         mIsDirectionSheetHalfExpanded = true
-        if (isTablet) {
-            mBinding.cardDirection.hide()
-            mBinding.cardNavigation.show()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
         }
     }
 
@@ -2856,9 +2860,11 @@ class ExploreFragment :
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         showDirectionAndCurrentLocationIcon()
         adjustMapBound()
-        if (isTablet) {
-            mBinding.cardDirection.hide()
-            mBinding.cardNavigation.show()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
         }
     }
 
@@ -3098,8 +3104,10 @@ class ExploreFragment :
         mViewModel.calculateNavigationLine(it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)
-        if (isTablet) {
-            mBinding.bottomSheetNavigation.cardNavigationLocation.hide()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.bottomSheetNavigation.cardNavigationLocation.hide()
+            }
         }
     }
 
@@ -3420,9 +3428,11 @@ class ExploreFragment :
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
-            if (isTablet) {
-                mBinding.cardDirection.hide()
-                mBinding.cardNavigation.show()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardDirection.hide()
+                    mBinding.cardNavigation.show()
+                }
             }
         }
     }
@@ -3469,9 +3479,11 @@ class ExploreFragment :
             mMapHelper.addMarker(requireActivity(), MarkerEnum.DIRECTION_ICON, it)
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
-            if (isTablet) {
-                mBinding.cardNavigation.show()
-                mBinding.cardDirection.hide()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.hide()
+                }
             }
         }
     }
@@ -3519,9 +3531,11 @@ class ExploreFragment :
             )
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
-            if (isTablet) {
-                mBinding.cardNavigation.show()
-                mBinding.cardDirection.hide()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.hide()
+                }
             }
         }
     }
@@ -3875,17 +3889,19 @@ class ExploreFragment :
     }
 
     fun changeDirectionCardMargin(marginBottom: Int) {
-        if (!isTablet) {
-            showViews(mBinding.cardDirection, mBinding.cardNavigation)
-            val layoutParams: ViewGroup.MarginLayoutParams =
-                mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
-            layoutParams.setMargins(
-                0,
-                0,
-                resources.getDimension(R.dimen.dp_16).toInt(),
-                marginBottom
-            )
-            mBinding.cardDirection.requestLayout()
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                showViews(mBinding.cardDirection, mBinding.cardNavigation)
+                val layoutParams: ViewGroup.MarginLayoutParams =
+                    mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.setMargins(
+                    0,
+                    0,
+                    resources.getDimension(R.dimen.dp_16).toInt(),
+                    marginBottom
+                )
+                mBinding.cardDirection.requestLayout()
+            }
         }
     }
 
@@ -4073,10 +4089,12 @@ class ExploreFragment :
                 )
             }
         }
-        if (isTablet) {
-            mapStyleBottomSheetFragment.notifyAdapter()
-        } else {
-            mMapStyleAdapter?.notifyDataSetChanged()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mapStyleBottomSheetFragment.notifyAdapter()
+            } else {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
         }
     }
 

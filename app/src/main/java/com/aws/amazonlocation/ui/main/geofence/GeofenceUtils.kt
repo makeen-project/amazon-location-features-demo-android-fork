@@ -111,7 +111,9 @@ class GeofenceUtils {
                 )
             mGeofenceHelper?.initMapBoxStyle()
             mActivity?.let {
-                isTablet = it.resources.getBoolean(R.bool.is_tablet)
+                if ((it is MainActivity)) {
+                    isTablet = it.isTablet
+                }
             }
         }
     }
@@ -835,23 +837,25 @@ class GeofenceUtils {
             mBindingGeofenceList?.clEmptyGeofenceList?.hide()
             mBindingGeofenceList?.clGeofenceList?.show()
             mBindingGeofenceList?.clEmptyGeofenceList?.let {
-                val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                 if (isTablet) {
-                    mBottomSheetGeofenceListBehavior?.peekHeight = 140.px
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_140)
                 } else {
-                    mBottomSheetGeofenceListBehavior?.peekHeight = 104.px
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_104)
                 }
             }
         } else {
             mBindingGeofenceList?.clEmptyGeofenceList?.show()
             mBindingGeofenceList?.clGeofenceList?.hide()
             mBindingGeofenceList?.clEmptyGeofenceList?.let {
-                val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                 if (isTablet) {
-                    mBottomSheetGeofenceListBehavior?.peekHeight = 410.px
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_410)
                     mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                 } else {
-                    mBottomSheetGeofenceListBehavior?.peekHeight = 104.px
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_104)
                 }
             }
         }

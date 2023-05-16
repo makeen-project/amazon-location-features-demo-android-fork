@@ -18,6 +18,7 @@ import com.aws.amazonlocation.data.common.onSuccess
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.databinding.FragmentSettingBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
@@ -69,7 +70,9 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
+        if ((activity is MainActivity)) {
+            isTablet = (activity as MainActivity).isTablet
+        }
         init()
         getUnitSystem()
         getDataProvider()

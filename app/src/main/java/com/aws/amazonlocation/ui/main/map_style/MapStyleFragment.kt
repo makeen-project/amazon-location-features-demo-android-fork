@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.isInternetAvailable
@@ -44,7 +45,9 @@ class MapStyleFragment : BaseFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
+        if ((activity is MainActivity)) {
+            isTablet = (activity as MainActivity).isTablet
+        }
         isLargeTablet = requireContext().resources.getBoolean(R.bool.is_large_tablet)
         if (isTablet) {
             setColumnCount()

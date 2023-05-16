@@ -64,7 +64,6 @@ class MainActivity : BaseActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             checkMap()
         }
-    var isTablet = false
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
@@ -76,7 +75,7 @@ class MainActivity : BaseActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isTablet = resources.getBoolean(com.aws.amazonlocation.R.bool.is_tablet)
+        isTablet = resources.getBoolean(R.bool.is_tablet)
         if (!isTablet) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
@@ -403,16 +402,20 @@ class MainActivity : BaseActivity() {
     }
 
     fun showNavigationIcon() {
-        val fragment = mNavHostFragment.childFragmentManager.fragments[0]
-        if (fragment is ExploreFragment) {
-            fragment.showCurrentLocationIcon()
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                fragment.showCurrentLocationIcon()
+            }
         }
     }
 
     fun showDirectionAndCurrentLocationIcon() {
-        val fragment = mNavHostFragment.childFragmentManager.fragments[0]
-        if (fragment is ExploreFragment) {
-            fragment.showDirectionAndCurrentLocationIcon()
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                fragment.showDirectionAndCurrentLocationIcon()
+            }
         }
     }
 

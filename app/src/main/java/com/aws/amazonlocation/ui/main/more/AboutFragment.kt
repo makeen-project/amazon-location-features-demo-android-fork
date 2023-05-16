@@ -12,6 +12,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentAboutBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.about.VersionFragment
 import com.aws.amazonlocation.ui.main.attribution.AttributionFragment
 import com.aws.amazonlocation.ui.main.terms_condition.TermsAndConditionFragment
@@ -44,7 +45,9 @@ class AboutFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        isTablet = requireContext().resources.getBoolean(R.bool.is_tablet)
+        if ((activity is MainActivity)) {
+            isTablet = (activity as MainActivity).isTablet
+        }
         clickListener()
         if (isTablet) {
             addReplaceFragment(

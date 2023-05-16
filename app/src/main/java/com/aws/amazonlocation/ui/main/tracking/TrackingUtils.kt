@@ -113,9 +113,8 @@ class TrackingUtils(
             TrackingEnum.ENABLE_TRACKING -> {
                 mBottomSheetTrackingBehavior?.isDraggable = false
                 mBindingTracking?.clEnableTracking?.context?.let {
-                    val isTablet = it.resources.getBoolean(R.bool.is_tablet)
-                    if (isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = 430.px
+                    if ((activity as MainActivity).isTablet) {
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     } else {
                         mBottomSheetTrackingBehavior?.peekHeight = 390.px
@@ -155,11 +154,10 @@ class TrackingUtils(
             getCurrentDateData()
 
             mBottomSheetTrackingBehavior?.isDraggable = true
-            val isTablet = clTracking.context.resources.getBoolean(R.bool.is_tablet)
-            if (isTablet) {
-                mBottomSheetTrackingBehavior?.peekHeight = 150.px
+            if ((activity as MainActivity).isTablet) {
+                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_150)
             } else {
-                mBottomSheetTrackingBehavior?.peekHeight = 110.px
+                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_110)
             }
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
