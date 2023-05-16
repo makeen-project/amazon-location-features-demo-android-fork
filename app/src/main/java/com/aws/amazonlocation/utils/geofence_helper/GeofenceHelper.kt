@@ -25,7 +25,10 @@ import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_LINE_LAYER_ID
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.MapCameraZoom
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants.UNIT_METRES
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeasurement
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -59,7 +62,6 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textAllowOverlap
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import java.text.DecimalFormat
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -70,6 +72,7 @@ class GeofenceHelper(
     private var mSeekBar: SeekBar?,
     private var mMapboxMap: MapboxMap?,
     private var mGeofenceMapLatLngInterface: GeofenceMapLatLngInterface?,
+    private var mPrefrenceManager: PreferenceManager?,
 ) {
 
     var mDefaultLatLng = LatLng(49.281174, -123.116823)
@@ -396,13 +399,14 @@ class GeofenceHelper(
     }
 
     private fun upDateSeekbarText(radius: Int) {
-        if (radius >= 1000) {
-            val seekBarTextKm = "${DecimalFormat("##.#").format((radius.toDouble() / 1000))} km"
-            mTvSeekBar?.text = seekBarTextKm
+        val isMetric = Units.isMetric(mPrefrenceManager?.getValue(KEY_UNIT_SYSTEM, ""))
+        var seekbarText = ""
+        if (isMetric) {
+            seekbarText = Units.getMetricsNew(radius.toDouble(), true)
         } else {
-            val seekBarTextRadius = "$radius m"
-            mTvSeekBar?.text = seekBarTextRadius
+            seekbarText = Units.getMetricsNew(Units.meterToFeet(radius.toDouble()), false)
         }
+        mTvSeekBar?.text = seekbarText
     }
 
     fun mapClick(mapClickLatLng: LatLng) {

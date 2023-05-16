@@ -66,16 +66,19 @@ class GeofenceUtils {
     private var mMapHelper: MapHelper? = null
     private var mIsBtnEnable = false
     private var connectivityObserver: ConnectivityObserveInterface? = null
+    private var preferenceManager: PreferenceManager? = null
 
     fun setMapBox(
         activity: Activity,
         mapboxMap: MapboxMap,
         mMapHelper: MapHelper,
+        prefrenceManager: PreferenceManager
     ) {
         mClient = AmazonLocationClient(AWSMobileClient.getInstance())
         this.mMapHelper = mMapHelper
         this.mMapboxMap = mapboxMap
         this.mActivity = activity
+        this.preferenceManager = prefrenceManager
     }
 
     fun isGeofenceListExpandedOrHalfExpand(): Boolean {
@@ -103,6 +106,7 @@ class GeofenceUtils {
                     mBindingAddGeofence?.seekbarGeofenceRadius,
                     mMapboxMap,
                     mMapLatLngListener,
+                    preferenceManager
                 )
             mGeofenceHelper?.initMapBoxStyle()
         }
@@ -647,6 +651,7 @@ class GeofenceUtils {
             LinearLayoutManager(mActivity)
         mGeofenceSearchSuggestionAdapter = SearchPlacesSuggestionAdapter(
             mPlaceList,
+            preferenceManager,
             object : SearchPlacesSuggestionAdapter.SearchPlaceSuggestionInterface {
                 override fun suggestedPlaceClick(position: Int) {
                     if (checkInternetConnection()) {
@@ -718,6 +723,7 @@ class GeofenceUtils {
             rvGeofenceSearchPlaces.layoutManager = LinearLayoutManager(mActivity)
             mSearchPlacesAdapter = SearchPlacesAdapter(
                 mPlaceList,
+                preferenceManager,
                 object : SearchPlacesAdapter.SearchPlaceInterface {
                     override fun placeClick(position: Int) {
                         if (checkInternetConnection()) {

@@ -15,7 +15,7 @@
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

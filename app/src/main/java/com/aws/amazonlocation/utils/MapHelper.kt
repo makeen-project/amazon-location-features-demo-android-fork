@@ -27,6 +27,7 @@ import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
+import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_20
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1000
@@ -92,6 +93,7 @@ class MapHelper(private val appContext: Context) {
     private var mGeofenceDragSM: SymbolManager? = null
     var mSymbolOptionList = ArrayList<Symbol>()
     private var mMapLibreView: MapLibreView? = null
+    private var mapStyleChangeListener: MapStyleChangeListener? = null
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -99,6 +101,7 @@ class MapHelper(private val appContext: Context) {
         mapStyle: String,
         style: String,
         isMapLoadedInterface: IsMapLoadedInterface,
+        mapStyleChangedListener: MapStyleChangeListener
     ) {
         mapboxMap?.let {
             mMapLibreView = mapView
@@ -117,18 +120,22 @@ class MapHelper(private val appContext: Context) {
                 mGeofenceDragSM = SymbolManager(mapView, mapboxMap, style)
                 mapboxMap.uiSettings.isAttributionEnabled = false
                 isMapLoadedInterface.mapLoadedSuccess()
+                mapStyleChangedListener.onMapStyleChanged(mapStyle)
+                mapStyleChangeListener = mapStyleChangedListener
             }
         }
     }
 
     fun updateStyle(mapView: MapLibreView, mapStyle: String, style: String) {
         mapView.setStyle(MapStyle(mapStyle, style)) {
+            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
             updateZoomRange(it)
         }
     }
 
     fun updateMapStyle(mapStyle: String, style: String) {
         mMapLibreView?.setStyle(MapStyle(mapStyle, style)) {
+            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
             updateZoomRange(it)
         }
     }
