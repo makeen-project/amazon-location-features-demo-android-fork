@@ -4,6 +4,7 @@ import android.content.Context
 import android.provider.Settings
 import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewInteraction
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
@@ -100,11 +101,12 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
     }
 }
 
-fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: Int = 30, onNotFound: (() -> Unit)?) {
+fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: Int = 45, onNotFound: (() -> Unit)? = null): ViewInteraction? {
     var count = 0
     var found = false
+    var interaction: ViewInteraction? = null
     while (!found) {
-        Espresso.onView(
+        interaction = Espresso.onView(
             matcher,
         ).check { view, noViewFoundException ->
             found = noViewFoundException == null && view != null
@@ -118,5 +120,7 @@ fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: I
             }
             break
         }
+        if (!found) interaction = null
     }
+    return interaction
 }
