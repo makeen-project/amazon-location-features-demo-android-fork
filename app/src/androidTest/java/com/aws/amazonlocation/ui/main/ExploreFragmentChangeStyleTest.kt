@@ -36,19 +36,7 @@ import java.util.concurrent.CountDownLatch
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentChangeStyleTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 

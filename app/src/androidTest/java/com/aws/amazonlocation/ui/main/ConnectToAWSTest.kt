@@ -32,19 +32,7 @@ import org.junit.* // ktlint-disable no-wildcard-imports
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ConnectToAWSTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+class ConnectToAWSTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
     private lateinit var bottomNavigation: BottomNavigationView

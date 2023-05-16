@@ -1,13 +1,9 @@
 package com.aws.amazonlocation.ui.main
 
-import android.content.Context
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
@@ -21,26 +17,13 @@ import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingStartTrackingTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class TrackingStartTrackingTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 

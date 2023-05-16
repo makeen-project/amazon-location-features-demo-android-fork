@@ -1,7 +1,7 @@
 package com.aws.amazonlocation.ui
 
 import com.aws.amazonlocation.ui.main.AfterSearchDirectionButtonWorkingTest
-import com.aws.amazonlocation.ui.main.ExploreFragmentEnableLocationTest
+import com.aws.amazonlocation.ui.main.ExploreFragmentEnableLocation
 import com.aws.amazonlocation.ui.main.ExploreFragmentLiveNavigationTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentMapCurrentLocationTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentMapFunctionWithoutAwsLoginTest
@@ -21,7 +21,7 @@ import org.junit.runners.Suite
 
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
-    ExploreFragmentEnableLocationTest::class,
+    ExploreFragmentEnableLocation::class,
     ExploreFragmentMapLoadingTest::class,
     ExploreFragmentMapCurrentLocationTest::class,
     ExploreFragmentLiveNavigationTest::class,

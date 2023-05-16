@@ -12,7 +12,7 @@ import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
 import org.hamcrest.Matcher
 import org.junit.Assert
-import java.util.*
+import java.util.Calendar
 import kotlin.random.Random
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -87,7 +87,12 @@ val mockLocationsExit = listOf(
 )
 
 fun failTest(lineNo: Int, exception: Exception?) {
-    Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: ${exception?.stackTraceToString() ?: "Custom error"}")
+//    Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: ${exception?.stackTraceToString() ?: "Custom error"}")
+    if (exception != null) {
+        throw exception
+    } else {
+        Assert.fail("$TEST_FAILED - Exception caught at line $lineNo: Custom error")
+    }
 }
 
 fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
@@ -101,20 +106,22 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
     }
 }
 
-fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: Int = 45, onNotFound: (() -> Unit)? = null): ViewInteraction? {
+fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_2000, maxCount: Int = 60, onNotFound: (() -> Unit)? = null): ViewInteraction? {
     var count = 0
     var found = false
     var interaction: ViewInteraction? = null
+    var exception: Exception? = null
     while (!found) {
         interaction = Espresso.onView(
             matcher,
         ).check { view, noViewFoundException ->
-            found = noViewFoundException == null && view != null
+            exception = noViewFoundException
+            found = exception == null && view != null
             Thread.sleep(waitTime)
         }
         if (!found && maxCount <= ++count) {
             if (onNotFound == null) {
-                Assert.fail("$TEST_FAILED - Max count reached")
+                throw java.lang.Exception("$TEST_FAILED - Max count reached", exception)
             } else {
                 onNotFound()
             }

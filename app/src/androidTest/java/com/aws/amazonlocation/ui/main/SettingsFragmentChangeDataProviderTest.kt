@@ -29,19 +29,7 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentChangeDataProviderTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+class SettingsFragmentChangeDataProviderTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
@@ -160,9 +148,8 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
         }
     }
 
-    @After
-    fun tearDown() {
-        mActivityRule.finishActivity()
+    override fun after() {
+        super.after()
         val targetContext = ApplicationProvider.getApplicationContext<Context>()
         val packageName = targetContext.packageName
         // Clear app from recent apps list

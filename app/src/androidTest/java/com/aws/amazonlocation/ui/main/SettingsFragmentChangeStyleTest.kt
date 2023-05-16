@@ -32,19 +32,7 @@ import java.util.concurrent.CountDownLatch
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentChangeStyleTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+class SettingsFragmentChangeStyleTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
@@ -52,15 +40,13 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
     private val latch = CountDownLatch(1)
     private var mapbox: MapboxMap? = null
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
         preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
         preferenceManager.setValue(IS_APP_FIRST_TIME_OPENED, true)
         preferenceManager.removeValue(KEY_MAP_NAME)
         preferenceManager.removeValue(KEY_MAP_STYLE_NAME)
-
-        mActivityRule.launchActivity(null)
+        super.before()
     }
 
     private fun getActivity(): AppCompatActivity {
@@ -276,9 +262,8 @@ class SettingsFragmentChangeStyleTest : BaseTest() {
         latch.await()
     }
 
-    @After
-    fun tearDown() {
-        mActivityRule.finishActivity()
+    override fun after() {
+        super.after()
         val targetContext = ApplicationProvider.getApplicationContext<Context>()
         val packageName = targetContext.packageName
         // Clear app from recent apps list

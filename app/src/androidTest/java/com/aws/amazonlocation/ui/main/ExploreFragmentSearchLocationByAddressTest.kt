@@ -4,7 +4,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
@@ -16,9 +15,8 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
@@ -37,19 +35,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentSearchLocationByAddressTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class ExploreFragmentSearchLocationByAddressTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 

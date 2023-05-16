@@ -1,9 +1,8 @@
 package com.aws.amazonlocation.ui.main
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObjectNotFoundException
@@ -12,7 +11,7 @@ import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
@@ -29,22 +28,17 @@ import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.waitUntil
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentEnableLocationTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class ExploreFragmentEnableLocation : BaseTestMainActivity() {
+    override fun enablePermissions(): Array<String> {
+        return arrayOf()
+    }
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
@@ -109,5 +103,4 @@ class ExploreFragmentEnableLocationTest : BaseTest() {
             Assert.fail(TEST_FAILED)
         }
     }
-
 }

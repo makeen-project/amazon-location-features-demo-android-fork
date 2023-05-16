@@ -4,7 +4,6 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
@@ -15,12 +14,11 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until.hasObject
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
@@ -45,19 +43,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentMapZoomInOutTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 

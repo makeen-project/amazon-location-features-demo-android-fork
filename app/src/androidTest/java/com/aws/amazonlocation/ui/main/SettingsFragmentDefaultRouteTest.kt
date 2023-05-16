@@ -32,25 +32,12 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentDefaultRouteTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
         val preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
 
         // Default route options disabled by default.
@@ -58,7 +45,7 @@ class SettingsFragmentDefaultRouteTest : BaseTest() {
         preferenceManager.removeValue(KEY_AVOID_TOLLS)
         preferenceManager.removeValue(KEY_AVOID_FERRIES)
 
-        mActivityRule.launchActivity(null)
+        super.before()
     }
 
     @Test
@@ -227,8 +214,4 @@ class SettingsFragmentDefaultRouteTest : BaseTest() {
         }
     }
 
-    @After
-    fun tearDown() {
-        mActivityRule.finishActivity()
-    }
 }
