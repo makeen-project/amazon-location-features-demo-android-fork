@@ -43,15 +43,13 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
     private lateinit var preferenceManager: PreferenceManager
     private val latch = CountDownLatch(1)
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
         preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
         preferenceManager.setValue(IS_APP_FIRST_TIME_OPENED, true)
         preferenceManager.removeValue(KEY_MAP_NAME)
         preferenceManager.removeValue(KEY_MAP_STYLE_NAME)
-
-        mActivityRule.launchActivity(null)
+        super.before()
     }
 
     private fun getActivity(): AppCompatActivity {

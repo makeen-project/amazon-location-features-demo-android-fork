@@ -31,9 +31,9 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
 
     private lateinit var bottomNavigation: BottomNavigationView
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
+        super.before()
         val activity: MainActivity = mActivityRule.activity
         bottomNavigation = activity.findViewById(R.id.bottom_navigation_main)
     }

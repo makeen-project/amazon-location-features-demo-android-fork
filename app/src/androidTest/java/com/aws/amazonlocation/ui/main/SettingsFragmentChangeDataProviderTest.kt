@@ -35,14 +35,13 @@ class SettingsFragmentChangeDataProviderTest : BaseTestMainActivity() {
 
     private lateinit var preferenceManager: PreferenceManager
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
         preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
         preferenceManager.removeValue(KEY_MAP_NAME)
         preferenceManager.removeValue(KEY_MAP_STYLE_NAME)
 
-        mActivityRule.launchActivity(null)
+        super.before()
     }
 
     @Test
