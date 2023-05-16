@@ -77,7 +77,7 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
                     val clMyLocation =
                         onView(withId(R.id.cl_my_location)).check(matches(isDisplayed()))
                     clMyLocation.perform(click())
-                    onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_4))
+                    onView(withId(R.id.edt_search_dest)).perform(ViewActions.replaceText(TEST_WORD_4))
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),

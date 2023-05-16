@@ -8,15 +8,11 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
-import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
@@ -39,11 +35,9 @@ import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
@@ -71,7 +65,7 @@ class CheckRouteOptionsTest : BaseTestMainActivity() {
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
                 if (edtSearchDirection.visibility == View.VISIBLE) {
-                    onView(withId(R.id.edt_search_direction)).perform(ViewActions.typeText(TEST_WORD_5))
+                    onView(withId(R.id.edt_search_direction)).perform(ViewActions.replaceText(TEST_WORD_5))
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
@@ -89,7 +83,8 @@ class CheckRouteOptionsTest : BaseTestMainActivity() {
                             )
                         }
                     }
-                    onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_6))
+                    Thread.sleep(DELAY_2000)
+                    onView(withId(R.id.edt_search_dest)).perform(ViewActions.replaceText(TEST_WORD_6))
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
@@ -128,7 +123,7 @@ class CheckRouteOptionsTest : BaseTestMainActivity() {
                         if (cardDriveGo.visibility == View.VISIBLE) {
                             onView(withId(R.id.edt_search_direction)).perform(ViewActions.clearText())
                             Thread.sleep(DELAY_2000)
-                            onView(withId(R.id.edt_search_direction)).perform(ViewActions.typeText(TEST_WORD_7))
+                            onView(withId(R.id.edt_search_direction)).perform(ViewActions.replaceText(TEST_WORD_7))
                             Thread.sleep(DELAY_2000)
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
@@ -147,7 +142,7 @@ class CheckRouteOptionsTest : BaseTestMainActivity() {
                             Thread.sleep(DELAY_2000)
                             onView(withId(R.id.edt_search_dest)).perform(ViewActions.clearText())
                             Thread.sleep(DELAY_2000)
-                            onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_8))
+                            onView(withId(R.id.edt_search_dest)).perform(ViewActions.replaceText(TEST_WORD_8))
                             Thread.sleep(DELAY_2000)
                             uiDevice.wait(
                                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
