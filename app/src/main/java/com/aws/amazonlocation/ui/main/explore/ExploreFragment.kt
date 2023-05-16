@@ -56,7 +56,6 @@ import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
 import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.signin.CloudFormationBottomSheetFragment
-import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
@@ -69,7 +68,6 @@ import com.aws.amazonlocation.utils.Units.getDeviceId
 import com.aws.amazonlocation.utils.Units.getMetricsNew
 import com.aws.amazonlocation.utils.Units.getTime
 import com.aws.amazonlocation.utils.Units.isGPSEnabled
-import com.aws.amazonlocation.utils.Units.kiloMeterToMeter
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException

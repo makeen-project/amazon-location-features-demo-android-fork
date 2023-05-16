@@ -121,7 +121,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     private fun getUnitSystem() {
         val unitSystem =
             mPreferenceManager.getValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
-        mBinding.tvUnitSystemName.text = unitSystem
+        mBinding.tvUnitSystemName?.text = unitSystem
     }
 
     private fun getDataProvider() {
@@ -164,7 +164,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     private fun clickListener() {
         mBinding.apply {
-            clUnitSystem.setOnClickListener {
+            clUnitSystem?.setOnClickListener {
                 findNavController().navigate(R.id.unit_system_fragment)
             }
             clDataProvider.setOnClickListener {
