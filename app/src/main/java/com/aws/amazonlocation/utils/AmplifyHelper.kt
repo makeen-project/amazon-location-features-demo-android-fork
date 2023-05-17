@@ -45,6 +45,17 @@ class AmplifyHelper(
         val mAppClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
         val mDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
         val mRegion = mPreferenceManager.getValue(KEY_USER_REGION, "")
+        val mapStyleNameDisplay =
+            mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, mContext.getString(R.string.map_light))
+                ?: mContext.getString(R.string.map_light)
+
+        var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        var defaultRegion = BuildConfig.DEFAULT_REGION
+        if (mapStyleNameDisplay == mContext.getString(R.string.map_grab_light) ||
+            mapStyleNameDisplay == mContext.getString(R.string.map_grab_dark)) {
+            defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
+            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+        }
 
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
@@ -58,16 +69,16 @@ class AmplifyHelper(
             mAmplifyConfiguration = AmplifyConfiguration.fromJson(
                 JSONObject(
                     getAmplifyConfigJson(
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID,
-                        BuildConfig.DEFAULT_REGION
+                        defaultIdentityPoolId,
+                        defaultRegion
                     )
                 )
             )
             mAwsConfiguration = AWSConfiguration(
                 JSONObject(
                     getDefaultAwsConfigJson(
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID,
-                        BuildConfig.DEFAULT_REGION
+                        defaultIdentityPoolId,
+                        defaultRegion
                     )
                 )
             )

@@ -32,6 +32,8 @@ android {
 
         buildConfigField 'String', 'DEFAULT_IDENTITY_POOL_ID',"\"${customConfig.getProperty("DEFAULT_IDENTITY_POOL_ID")}\""
         buildConfigField 'String', 'DEFAULT_REGION',"\"${customConfig.getProperty("DEFAULT_REGION")}\""
+        buildConfigField 'String', 'DEFAULT_SE_IDENTITY_POOL_ID',"\"${customConfig.getProperty("DEFAULT_SE_IDENTITY_POOL_ID")}\""
+        buildConfigField 'String', 'DEFAULT_SE_REGION',"\"${customConfig.getProperty("DEFAULT_SE_REGION")}\""
         buildConfigField 'String', 'IDENTITY_POOL_ID',"\"${customConfig.getProperty("IDENTITY_POOL_ID")}\""
         buildConfigField 'String', 'USER_DOMAIN',"\"${customConfig.getProperty("USER_DOMAIN")}\""
         buildConfigField 'String', 'USER_POOL_CLIENT_ID',"\"${customConfig.getProperty("USER_POOL_CLIENT_ID")}\""

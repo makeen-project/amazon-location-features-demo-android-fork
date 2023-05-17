@@ -4026,6 +4026,7 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     fun mapStyleChange(position: Int, innerPosition: Int) {
         clearAllMapData()
+        var isRestartNeeded = false
         mViewModel.mStyleList.forEach {
             it.mapInnerData?.forEach { innerData ->
                 innerData.isSelected = false
@@ -4135,38 +4136,68 @@ class ExploreFragment :
                 )
             }
             it[innerPosition].mapName?.let { it1 ->
+                val mapStyleNameDisplay =
+                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
+                        ?: getString(R.string.map_light)
+                var isGrabSelected = false
+                if (mapStyleNameDisplay == getString(R.string.map_grab_dark) || mapStyleNameDisplay == getString(R.string.map_grab_light)) {
+                    isGrabSelected = true
+                }
+                isRestartNeeded = if (isGrabSelected) {
+                    !(it1 == getString(R.string.map_grab_dark) || it1 == getString(R.string.map_grab_light))
+                } else {
+                    it1 == getString(R.string.map_grab_dark) || it1 == getString(R.string.map_grab_light)
+                }
                 mPreferenceManager.setValue(
                     KEY_MAP_STYLE_NAME,
                     it1
                 )
             }
         }
-        mBaseActivity?.isTablet?.let {
-            if (it) {
-                mapStyleBottomSheetFragment.notifyAdapter()
-            } else {
-                mMapStyleAdapter?.notifyDataSetChanged()
+        if (isRestartNeeded) {
+            lifecycleScope.launch {
+                if (!isRunningTest) {
+                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                    activity?.restartApplication()
+                }
+            }
+        } else {
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mapStyleBottomSheetFragment.notifyAdapter()
+                } else {
+                    mMapStyleAdapter?.notifyDataSetChanged()
+                }
             }
         }
     }
 
     private fun updateMapGrab() {
+        val latNorth = 31.952162238024968
+        val lonEast = 146.25
+        val latSouth = -21.943045533438166
+        val lonWest = 90.0
         lifecycleScope.launch {
-            delay(3000)
-            // Set the map bounds
-            val cameraPosition = CameraPosition.Builder()
-                .target(
-                    LatLngBounds.from(
-                        31.952162238024968,
-                        146.25,
-                        -21.943045533438166,
-                        90.0
-                    ).center
-                )
-                .zoom(5.0)
-                .build()
+            delay(2000)
+            val currentLocation = mMapHelper.getLiveLocation()
+            currentLocation?.let {
+                if (!(it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)) {
+                    // Set the map bounds
+                    val cameraPosition = CameraPosition.Builder()
+                        .target(
+                            LatLngBounds.from(
+                                latNorth,
+                                lonEast,
+                                latSouth,
+                                lonWest
+                            ).center
+                        )
+                        .zoom(3.0)
+                        .build()
 
-            mMapboxMap?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                    mMapboxMap?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                }
+            }
         }
     }
 
