@@ -107,6 +107,6 @@ class SettingSignOutTest : BaseTest() {
         Thread.sleep(DELAY_1000)
         val btnSignIn =
             mActivityRule.activity.findViewById<AppCompatButton>(R.id.btn_sign_in)
-        Assert.assertTrue(TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE,btnSignIn.visibility == View.VISIBLE)
+        Assert.assertTrue(TEST_FAILED_SIGNIN_BUTTON_NOT_VISIBLE, btnSignIn.visibility == View.VISIBLE)
     }
 }

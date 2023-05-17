@@ -112,7 +112,8 @@ class TrackingUtils(
         when (enableTracking) {
             TrackingEnum.ENABLE_TRACKING -> {
                 mBottomSheetTrackingBehavior?.isDraggable = false
-                mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                mBottomSheetTrackingBehavior?.peekHeight = 390.px
+                mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                 mBindingTracking?.apply {
                     clPersistentBottomSheet.show()
                     clEnableTracking.show()

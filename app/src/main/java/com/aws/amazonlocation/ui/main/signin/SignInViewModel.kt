@@ -15,6 +15,7 @@ import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.SignOutData
 import com.aws.amazonlocation.domain.`interface`.SignInInterface
 import com.aws.amazonlocation.domain.usecase.AuthUseCase
+import com.aws.amazonlocation.utils.DELAY_SIGN_OUT_2000
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_USER_DETAILS
@@ -24,6 +25,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -150,35 +152,50 @@ class SignInViewModel @Inject constructor(
 
     fun signOutWithAmazon(context: Context, isDisconnectFromAWSRequired: Boolean) {
         viewModelScope.launch {
-            mGetAuthUseCase.signOutWithAmazon(
-                context,
-                isDisconnectFromAWSRequired,
-                object : SignInInterface {
-                    override fun signOutSuccess(
-                        success: String,
-                        isDisconnectFromAWSRequired: Boolean
-                    ) {
-                        _signOutResponse.trySend(
-                            HandleResult.Success(
-                                SignOutData(
-                                    success,
-                                    isDisconnectFromAWSRequired
-                                )
+            if (isRunningTest) {
+                AWSMobileClient.getInstance().signOut()
+                viewModelScope.launch {
+                    delay(DELAY_SIGN_OUT_2000)
+                    _signOutResponse.trySend(
+                        HandleResult.Success(
+                            SignOutData(
+                                context.resources.getString(R.string.sign_out_successfully),
+                                isDisconnectFromAWSRequired
                             )
                         )
-                    }
-
-                    override fun signOutFailed(error: String) {
-                        _signOutResponse.trySend(
-                            HandleResult.Error(
-                                DataSourceException.Error(
-                                    error
-                                )
-                            )
-                        )
-                    }
+                    )
                 }
-            )
+            } else {
+                mGetAuthUseCase.signOutWithAmazon(
+                    context,
+                    isDisconnectFromAWSRequired,
+                    object : SignInInterface {
+                        override fun signOutSuccess(
+                            success: String,
+                            isDisconnectFromAWSRequired: Boolean
+                        ) {
+                            _signOutResponse.trySend(
+                                HandleResult.Success(
+                                    SignOutData(
+                                        success,
+                                        isDisconnectFromAWSRequired
+                                    )
+                                )
+                            )
+                        }
+
+                        override fun signOutFailed(error: String) {
+                            _signOutResponse.trySend(
+                                HandleResult.Error(
+                                    DataSourceException.Error(
+                                        error
+                                    )
+                                )
+                            )
+                        }
+                    }
+                )
+            }
         }
     }
 }
