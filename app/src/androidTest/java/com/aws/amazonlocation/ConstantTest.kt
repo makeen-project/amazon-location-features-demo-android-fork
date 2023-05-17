@@ -1,5 +1,8 @@
 package com.aws.amazonlocation
 
+import com.aws.amazonlocation.utils.DESCRIPTION_TAG_ESRI
+import com.aws.amazonlocation.utils.DESCRIPTION_TAG_HERE
+
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
@@ -115,3 +118,14 @@ const val TEST_FAILED_MAP_NOT_FOUND = "Test failed due to map not found"
 const val TEST_FAILED_PINCH_OUT_FAILED = "Test failed due to pinch out failed"
 const val TEST_FAILED_PINCH_IN_FAILED = "Test failed due to pinch in failed"
 const val TEST_FAILED_ENABLE_TRACKING = "Test failed due to enable tracking not visible"
+
+val STYLE_TAG_ESRI_1 = DESCRIPTION_TAG_ESRI + 1
+val STYLE_TAG_ESRI_2 = DESCRIPTION_TAG_ESRI + 2
+val STYLE_TAG_ESRI_3 = DESCRIPTION_TAG_ESRI + 3
+val STYLE_TAG_ESRI_4 = DESCRIPTION_TAG_ESRI + 4
+val STYLE_TAG_ESRI_5 = DESCRIPTION_TAG_ESRI + 5
+
+val STYLE_TAG_HERE_1 = DESCRIPTION_TAG_HERE + 1
+val STYLE_TAG_HERE_2 = DESCRIPTION_TAG_HERE + 2
+val STYLE_TAG_HERE_3 = DESCRIPTION_TAG_HERE + 3
+val STYLE_TAG_HERE_4 = DESCRIPTION_TAG_HERE + 4

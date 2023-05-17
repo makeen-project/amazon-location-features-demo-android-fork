@@ -1,36 +1,29 @@
 package com.aws.amazonlocation.ui.main
 
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.ui.main.explore.MapStyleAdapter
-import com.aws.amazonlocation.ui.main.explore.MapStyleInnerAdapter
 import com.aws.amazonlocation.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.card.MaterialCardView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.CountDownLatch
 
@@ -60,7 +53,7 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
         val mapStyleNameDisplay =
             preferenceManager.getValue(
                 KEY_MAP_STYLE_NAME,
-                getActivity().getString(R.string.map_light)
+                getActivity().getString(R.string.map_light),
             )
                 ?: getActivity().getString(R.string.map_light)
         val mapName: String
@@ -120,105 +113,66 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
             Thread.sleep(DELAY_2000)
 
             goToMapStyles()
-            loadCountMap()
 
-            while (hasMore()) {
-                Thread.sleep(DELAY_2000)
-                changeStyle()
-                mapbox?.let {
-                    checkLoadedTheme(it)
-                }
-            }
+            // Check esri maps styles
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_ESRI_1), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_ESRI_2), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_ESRI_3), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_ESRI_4), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_ESRI_5), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+
+            // Check here maps styles
+            waitForView(withId(R.id.rv_map_style))?.perform(
+                actionOnItemAtPosition<ViewHolder>(
+                    1,
+                    click(),
+                ),
+            )
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_HERE_1), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_HERE_2), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_HERE_3), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+            waitForView(allOf(withContentDescription(STYLE_TAG_HERE_4), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
         } catch (e: Exception) {
             failTest(147, e)
             Assert.fail(TEST_FAILED)
         }
     }
 
-    private var countMap: HashMap<Int, Int> = HashMap()
+    private fun goToMapStyles() {
+        val cardMap = waitForView(allOf(withId(R.id.card_map), isDisplayed()))
+        cardMap?.perform(click())
 
-    private var mapNameIndex = 0
-    private var selectedPosition = -1
-
-    private fun loadCountMap() {
-        val mainRv = mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_map_style)
-        val adapter = mainRv.adapter as? MapStyleAdapter
-
-        for (i in 0 until (adapter?.itemCount ?: 0)) {
-            val holder = mainRv.findViewHolderForAdapterPosition(i)
-            if (holder != null) {
-                val recyclerView = holder.itemView.findViewById<RecyclerView>(R.id.rv_map_name)
-                val innerAdapter = recyclerView.adapter as? MapStyleInnerAdapter
-                countMap[i] = innerAdapter?.itemCount ?: 0
-            }
-        }
-    }
-
-    private fun hasMore(): Boolean {
-        if (mapNameIndex >= countMap.keys.size - 1) {
-            if (selectedPosition >= (countMap[mapNameIndex] ?: 0) - 1) {
-                return false
-            }
-        }
-        return true
-    }
-
-    private fun changeStyle() {
-        val mainRv = mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_map_style)
-        if (selectedPosition < (countMap[mapNameIndex] ?: 0) - 1) {
-            val holder = mainRv.findViewHolderForAdapterPosition(mapNameIndex)
-            val recyclerView = holder?.itemView?.findViewById<RecyclerView>(R.id.rv_map_name)
-            selectedPosition++
-            changeInnerStyle(recyclerView)
-        } else {
-            mapNameIndex++
-            selectedPosition = -1
-            val holder = mainRv.findViewHolderForAdapterPosition(mapNameIndex)
-            val recyclerView = holder?.itemView?.findViewById<RecyclerView>(R.id.rv_map_name)
-            onView(withId(R.id.rv_map_style)).perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    mapNameIndex,
-                    click()
-                )
-            )
-            Thread.sleep(DELAY_2000)
-            changeInnerStyle(recyclerView)
-        }
-    }
-
-    private fun changeInnerStyle(rv: RecyclerView?) {
-        val holder = rv?.findViewHolderForAdapterPosition(selectedPosition)
+        Thread.sleep(DELAY_2000)
 
         getInstrumentation().runOnMainSync {
-            holder?.itemView?.findViewById<MaterialCardView>(R.id.card_map_image)?.performClick()
-        }
-        Thread.sleep(DELAY_2000)
-    }
-
-    private fun goToMapStyles() {
-        val cardMap = mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_map)
-        mActivityRule.activity.runOnUiThread {
-            cardMap.performClick()
-        }
-
-        val clSearchSheet =
-            mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_map_style)
-        if (clSearchSheet.visibility == View.VISIBLE) {
-            val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =
-                BottomSheetBehavior.from(clSearchSheet)
-            getInstrumentation().runOnMainSync {
+            val clSearchSheet = mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_map_style)
+            if (clSearchSheet.isVisible) {
+                val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =
+                    BottomSheetBehavior.from(clSearchSheet)
                 mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_EXPANDED
+            } else {
+                Assert.fail(TEST_FAILED_STYLE_SHEET)
             }
-        } else {
-            Assert.fail(TEST_FAILED_STYLE_SHEET)
         }
     }
 
-    private fun checkLoadedTheme(mapboxMap: MapboxMap) {
+    private fun checkLoadedTheme(mapboxMap: MapboxMap?) {
         Thread.sleep(DELAY_3000)
 
+        getInstrumentation().waitForIdleSync()
         getInstrumentation().runOnMainSync {
-            mapboxMap.getStyle {
+            mapboxMap?.getStyle {
                 val correctStyleLoaded = it.json.let { json ->
 
                     val obj = JSONObject(json).getJSONObject(JSON_KEY_SOURCES)
@@ -254,7 +208,7 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
             }
         }
 
-        getInstrumentation().waitForIdleSync()
         latch.await()
+        Thread.sleep(DELAY_2000)
     }
 }

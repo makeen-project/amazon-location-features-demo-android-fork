@@ -52,6 +52,10 @@ const val JSON_KEY_STYLE_RASTER = "raster-tiles"
 const val JSON_KEY_STYLE_MINZOOM = "minzoom"
 const val JSON_KEY_STYLE_MAXZOOM = "maxzoom"
 
+const val HERE = "Here"
+const val DESCRIPTION_TAG_ESRI = "ESRI_"
+const val DESCRIPTION_TAG_HERE = "HERE_"
+
 /**
  *  * Validate Latitude and Longitude from string.
  *
