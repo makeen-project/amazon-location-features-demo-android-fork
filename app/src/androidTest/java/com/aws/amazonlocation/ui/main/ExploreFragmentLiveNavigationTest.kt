@@ -15,6 +15,7 @@ import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.GO
+import com.aws.amazonlocation.MY_LOCATION
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_LIST
 import com.aws.amazonlocation.TEST_WORD_4
@@ -22,6 +23,7 @@ import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.waitForView
+import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
@@ -59,7 +61,7 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
 
             val txtTime = waitForView(
                 allOf(
-                    withId(R.id.tv_direction_time),
+                    withId(R.id.tv_direction_distance),
                     isDisplayed(),
                 ),
             )
@@ -72,8 +74,25 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
             )
             btnDirection?.perform(click())
 
-            val tvGetLocation = waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
-            tvGetLocation?.perform(click())
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+
+            var shouldSetMyLocation = false
+            getInstrumentation().runOnMainSync {
+                val edtSearchDirection = mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
+                if (edtSearchDirection.text.isNullOrBlank() || edtSearchDirection.text?.trim() != MY_LOCATION) {
+                    shouldSetMyLocation = true
+                }
+            }
+
+            if (shouldSetMyLocation) {
+                getInstrumentation().runOnMainSync {
+                    val edtSearchDirection = mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
+                    edtSearchDirection.performClick()
+                }
+
+                val tvGetLocation = waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
+                tvGetLocation?.perform(click())
+            }
 
             val btnCarGo = waitForView(
                 allOf(
