@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main.map_style // ktlint-disable package-name
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.isInternetAvailable
+import kotlin.math.ceil
 
 class MapStyleFragment : BaseFragment() {
 
@@ -74,6 +76,7 @@ class MapStyleFragment : BaseFragment() {
         clickListener()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun init() {
         setColumnCount()
         mLayoutManagerHere.spanCount = columnCount
@@ -83,25 +86,12 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun setColumnCount() {
-        if (isLargeTablet) {
-            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 1400) {
-                2
-            } else if (requireContext().resources.displayMetrics.widthPixels < 2000) {
-                3
-            } else if (requireContext().resources.displayMetrics.widthPixels < 2400) {
-                4
-            } else {
-                5
-            }
-        } else {
-            columnCount = if (requireContext().resources.displayMetrics.widthPixels < 1250) {
-                2
-            } else if (requireContext().resources.displayMetrics.widthPixels < 1700) {
-                3
-            } else {
-                4
-            }
-        }
+        columnCount = calculateColumnCount()
+    }
+
+    private fun calculateColumnCount(): Int {
+        val calculatedColumn: Double = (requireContext().resources.displayMetrics.widthPixels).toDouble() / 650
+        return ceil(calculatedColumn).toInt()
     }
 
     private fun setHereMapStyleAdapter() {
