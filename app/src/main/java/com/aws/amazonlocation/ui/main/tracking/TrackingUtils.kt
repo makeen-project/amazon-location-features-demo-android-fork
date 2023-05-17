@@ -117,7 +117,7 @@ class TrackingUtils(
                         mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = 390.px
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_390)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                 }

@@ -72,6 +72,7 @@
     <dimen name="dp_250">250dp</dimen>
     <dimen name="dp_280">280dp</dimen>
     <dimen name="dp_350">350dp</dimen>
+    <dimen name="dp_390">390dp</dimen>
     <dimen name="dp_410">410dp</dimen>
     <dimen name="dp_430">430dp</dimen>
     <!--SP -->
