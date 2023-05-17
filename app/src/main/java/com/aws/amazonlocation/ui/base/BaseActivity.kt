@@ -59,6 +59,7 @@ open class BaseActivity : AppCompatActivity() {
     var mGeofenceUtils: GeofenceUtils? = null
 
     var mTrackingUtils: TrackingUtils? = null
+    var isTablet: Boolean = false
 
     @Inject
     lateinit var mBottomSheetHelper: BottomSheetHelper

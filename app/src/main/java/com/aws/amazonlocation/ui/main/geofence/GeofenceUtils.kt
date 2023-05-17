@@ -66,6 +66,7 @@ class GeofenceUtils {
     private var mMapHelper: MapHelper? = null
     private var mIsBtnEnable = false
     private var connectivityObserver: ConnectivityObserveInterface? = null
+    private var isTablet = false
     private var preferenceManager: PreferenceManager? = null
 
     fun setMapBox(
@@ -109,6 +110,11 @@ class GeofenceUtils {
                     preferenceManager
                 )
             mGeofenceHelper?.initMapBoxStyle()
+            mActivity?.let {
+                if ((it is MainActivity)) {
+                    isTablet = it.isTablet
+                }
+            }
         }
     }
 
@@ -201,22 +207,31 @@ class GeofenceUtils {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            showViews(cardGeofenceLiveLocation, imgAmazonLogoAddGeofence)
+                            if (!isTablet) {
+                                    imgAmazonLogoAddGeofence?.let {
+                                        showViews(
+                                            cardGeofenceLiveLocation,
+                                            it
+                                        )
+                                    }
+                                } else {
+                                    (mActivity as MainActivity).showNavigationIcon()
+                                }
                             cardGeofenceLiveLocation.alpha = 1f
-                            imgAmazonLogoAddGeofence.alpha = 1f
-                            ivAmazonInfoAddGeofence.alpha = 1f
+                            imgAmazonLogoAddGeofence?.alpha = 1f
+                            ivAmazonInfoAddGeofence?.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             cardGeofenceLiveLocation.alpha = 0f
-                            imgAmazonLogoAddGeofence.alpha = 0f
-                            ivAmazonInfoAddGeofence.alpha = 0f
+                            imgAmazonLogoAddGeofence?.alpha = 0f
+                            ivAmazonInfoAddGeofence?.alpha = 0f
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
                             cardGeofenceLiveLocation.alpha = 1f
-                            imgAmazonLogoAddGeofence.alpha = 1f
-                            ivAmazonInfoAddGeofence.alpha = 1f
+                            imgAmazonLogoAddGeofence?.alpha = 1f
+                            ivAmazonInfoAddGeofence?.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}
@@ -341,18 +356,18 @@ class GeofenceUtils {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            imgAmazonLogoGeofenceList.alpha = 1f
-                            ivAmazonInfoGeofenceList.alpha = 1f
+                            imgAmazonLogoGeofenceList?.alpha = 1f
+                            ivAmazonInfoGeofenceList?.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-                            imgAmazonLogoGeofenceList.alpha = 0f
-                            ivAmazonInfoGeofenceList.alpha = 0f
+                            imgAmazonLogoGeofenceList?.alpha = 0f
+                            ivAmazonInfoGeofenceList?.alpha = 0f
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                            imgAmazonLogoGeofenceList.alpha = 1f
-                            ivAmazonInfoGeofenceList.alpha = 1f
+                            imgAmazonLogoGeofenceList?.alpha = 1f
+                            ivAmazonInfoGeofenceList?.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {}
                         BottomSheetBehavior.STATE_SETTLING -> {}
@@ -449,6 +464,9 @@ class GeofenceUtils {
     }
 
     fun showGeofenceListBottomSheet(context: Activity) {
+        if (isTablet) {
+            (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
+        }
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -510,6 +528,9 @@ class GeofenceUtils {
         mBottomSheetAddGeofenceBehavior?.isHideable = false
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
+        if (isTablet) {
+            mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
+        }
     }
 
     fun expandAddGeofenceBottomSheet() {
@@ -815,9 +836,28 @@ class GeofenceUtils {
         if (!isListEmpty) {
             mBindingGeofenceList?.clEmptyGeofenceList?.hide()
             mBindingGeofenceList?.clGeofenceList?.show()
+            mBindingGeofenceList?.clEmptyGeofenceList?.let {
+                if (isTablet) {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_140)
+                } else {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_104)
+                }
+            }
         } else {
             mBindingGeofenceList?.clEmptyGeofenceList?.show()
             mBindingGeofenceList?.clGeofenceList?.hide()
+            mBindingGeofenceList?.clEmptyGeofenceList?.let {
+                if (isTablet) {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_410)
+                    mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_104)
+                }
+            }
         }
     }
 

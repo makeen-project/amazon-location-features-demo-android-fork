@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
+    android:id="@+id/cl_geofence_list_main"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/dp_104"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -232,6 +233,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
+            android:fontFamily="@font/inter_semi_bold"
             android:gravity="center"
             android:text="@string/menu_geofence"
             app:layout_constraintEnd_toEndOf="parent"

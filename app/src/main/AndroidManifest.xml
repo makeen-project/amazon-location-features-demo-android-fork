@@ -31,7 +31,7 @@
         android:largeHeap="true">
         <activity
             android:name=".ui.main.web_view.WebViewActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize"
             android:exported="false"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -47,9 +47,8 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
-            tools:ignore="LockedOrientationActivity">
+            android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

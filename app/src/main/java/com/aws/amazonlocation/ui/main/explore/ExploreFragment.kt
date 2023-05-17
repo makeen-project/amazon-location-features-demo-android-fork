@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentSender
+import android.content.res.Configuration
 import android.location.Location
 import android.net.ConnectivityManager
 import android.net.Network
@@ -37,26 +38,28 @@ import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.*
+import com.aws.amazonlocation.data.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.data.common.onError
 import com.aws.amazonlocation.data.common.onLoading
 import com.aws.amazonlocation.data.common.onSuccess
-import com.aws.amazonlocation.data.enum.*
+import com.aws.amazonlocation.data.enum.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.databinding.BottomSheetDirectionBinding
 import com.aws.amazonlocation.databinding.BottomSheetDirectionSearchBinding
 import com.aws.amazonlocation.databinding.FragmentExploreBinding
-import com.aws.amazonlocation.domain.`interface`.*
+import com.aws.amazonlocation.domain.`interface`.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
+import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
+import com.aws.amazonlocation.ui.main.signin.CloudFormationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
 import com.aws.amazonlocation.utils.MapNames.ESRI_LIGHT
 import com.aws.amazonlocation.utils.MapStyles.VECTOR_ESRI_TOPOGRAPHIC
@@ -68,7 +71,7 @@ import com.aws.amazonlocation.utils.Units.isGPSEnabled
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
+import com.google.android.gms.location.* // ktlint-disable no-wildcard-imports
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
@@ -83,7 +86,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import kotlinx.coroutines.*
+import kotlinx.coroutines.* // ktlint-disable no-wildcard-imports
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -103,6 +106,7 @@ class ExploreFragment :
     MapboxMap.OnScaleListener,
     MapStyleChangeListener {
 
+    private lateinit var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
     private var isCalculateTruckApiError: Boolean = false
@@ -135,12 +139,39 @@ class ExploreFragment :
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
+
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult(),
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             checkAndEnableLocation()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.bottomSheetSearch.clSearchSheet.layoutParams.width = width
+        mBinding.bottomSheetSearch.clSearchSheet.requestLayout()
+        mBinding.bottomSheetDirection.clPersistentBottomSheetDirection.layoutParams.width = width
+        mBinding.bottomSheetDirection.clPersistentBottomSheetDirection.requestLayout()
+        mBinding.bottomSheetDirectionSearch.clDirectionSearchSheet.layoutParams.width = width
+        mBinding.bottomSheetDirectionSearch.clDirectionSearchSheet.requestLayout()
+        mBinding.bottomSheetNavigation.clNavigationParent.layoutParams.width = width
+        mBinding.bottomSheetNavigation.clNavigationParent.requestLayout()
+        mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.layoutParams.width = width
+        mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.requestLayout()
+        mBinding.bottomSheetTracking.clPersistentBottomSheet.layoutParams.width = width
+        mBinding.bottomSheetTracking.clPersistentBottomSheet.requestLayout()
+        mBinding.bottomSheetGeofenceList.clGeofenceListMain.layoutParams.width = width
+        mBinding.bottomSheetGeofenceList.clGeofenceListMain.requestLayout()
+        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.layoutParams.width = width
+        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.requestLayout()
+        mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
+        mBinding.bottomSheetAttribution.clMain.requestLayout()
+        val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
+        mBinding.cardNavigationTimeDialog.layoutParams.width = widthTimeDialog
+        mBinding.cardNavigationTimeDialog.requestLayout()
     }
 
     override fun onCreateView(
@@ -217,7 +248,13 @@ class ExploreFragment :
         mBottomSheetHelper.setNavigationBottomSheet(mBinding.bottomSheetNavigation)
         mBottomSheetHelper.setNavigationCompleteBottomSheet(mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete)
         mBottomSheetHelper.setDirectionBottomSheet(mBinding.bottomSheetDirection.clPersistentBottomSheetDirection)
-        mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
+            } else {
+                mBinding.bottomSheetMapStyle.clMapStyleBottomSheet.hide()
+            }
+        }
         mBottomSheetHelper.setAttributeBottomSheet(mBinding.bottomSheetAttribution)
         mBottomSheetHelper.setDirectionSearchBottomSheet(
             mBinding.bottomSheetDirectionSearch,
@@ -1736,13 +1773,56 @@ class ExploreFragment :
             }
 
             cardMap.setOnClickListener {
-                mBottomSheetHelper.expandMapStyleSheet()
-                when {
-                    mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mTrackingUtils?.collapseTracking()
+                mBaseActivity?.isTablet?.let {
+                    if (it) {
+                        mapStyleBottomSheetFragment =
+                            MapStyleBottomSheetFragment(
+                                mViewModel,
+                                object : MapStyleAdapter.MapInterface {
+                                    override fun mapClick(position: Int) {
+                                        if (!mViewModel.mStyleList[position].isSelected) {
+                                            repeat(mViewModel.mStyleList.size) {
+                                                mViewModel.mStyleList[it].isSelected = false
+                                            }
+                                        } else {
+                                            return
+                                        }
+                                        mapStyleChange(position, 0)
+                                        mViewModel.mStyleList[position].isSelected =
+                                            !mViewModel.mStyleList[position].isSelected
+                                        mapStyleBottomSheetFragment.notifyAdapter()
+                                    }
+
+                                    override fun mapStyleClick(position: Int, innerPosition: Int) {
+                                        if (checkInternetConnection()) {
+                                            mViewModel.mStyleList[position].mapInnerData?.let {
+                                                if (it[innerPosition].isSelected) {
+                                                    return
+                                                }
+                                            }
+                                            mapStyleChange(position, innerPosition)
+                                        }
+                                    }
+                                }
+                            )
+                        activity?.supportFragmentManager.let {
+                            if (it != null) {
+                                mapStyleBottomSheetFragment.show(
+                                    it,
+                                    CloudFormationBottomSheetFragment::class.java.name
+                                )
+                            }
+                        }
+                    } else {
+                        mBottomSheetHelper.expandMapStyleSheet()
                     }
-                    mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
+                    when {
+                        mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
+                            mBaseActivity?.mTrackingUtils?.collapseTracking()
+                        }
+                        mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
+                            mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
+                        }
                     }
                 }
             }
@@ -2042,10 +2122,10 @@ class ExploreFragment :
                 bottomSheetDirectionSearch.ivAmazonInfoDirectionSearchSheet.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetDirection.ivAmazonInfoDirection.setOnClickListener {
+                bottomSheetDirection.ivAmazonInfoDirection?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetMapStyle.ivAmazonInfoMapStyle.setOnClickListener {
+                bottomSheetMapStyle.ivAmazonInfoMapStyle?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
                 bottomSheetNavigation.ivAmazonInfoNavigation.setOnClickListener {
@@ -2054,13 +2134,13 @@ class ExploreFragment :
                 bottomSheetNavigationComplete.ivAmazonInfoNavigationComplete.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetGeofenceList.ivAmazonInfoGeofenceList.setOnClickListener {
+                bottomSheetGeofenceList.ivAmazonInfoGeofenceList?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetAddGeofence.ivAmazonInfoAddGeofence.setOnClickListener {
+                bottomSheetAddGeofence.ivAmazonInfoAddGeofence?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetTracking.ivAmazonInfoTrackingSheet.setOnClickListener {
+                bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
                 mBinding.bottomSheetAttribution.apply {
@@ -2232,7 +2312,7 @@ class ExploreFragment :
         }
     }
 
-    private fun setAttributionDataAndExpandSheet() {
+    fun setAttributionDataAndExpandSheet() {
         setAttributionData()
         mBottomSheetHelper.expandAttributeSheet()
     }
@@ -2581,6 +2661,12 @@ class ExploreFragment :
         mBottomSheetHelper.hideDirectionSheet()
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         mIsDirectionSheetHalfExpanded = true
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
+        }
     }
 
     private fun checkLocationPermission() {
@@ -2772,6 +2858,12 @@ class ExploreFragment :
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         showDirectionAndCurrentLocationIcon()
         adjustMapBound()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -3010,6 +3102,11 @@ class ExploreFragment :
         mViewModel.calculateNavigationLine(it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.bottomSheetNavigation.cardNavigationLocation.hide()
+            }
+        }
     }
 
     private fun BottomSheetDirectionSearchBinding.changeRouteListUI() {
@@ -3096,6 +3193,13 @@ class ExploreFragment :
                 it.cardDirection,
                 it.cardNavigation,
             )
+        }
+    }
+
+    fun showCurrentLocationIcon() {
+        mBinding.let {
+            it.cardDirection.hide()
+            it.cardNavigation.show()
         }
     }
 
@@ -3322,6 +3426,12 @@ class ExploreFragment :
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardDirection.hide()
+                    mBinding.cardNavigation.show()
+                }
+            }
         }
     }
 
@@ -3367,6 +3477,12 @@ class ExploreFragment :
             mMapHelper.addMarker(requireActivity(), MarkerEnum.DIRECTION_ICON, it)
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.hide()
+                }
+            }
         }
     }
 
@@ -3413,6 +3529,12 @@ class ExploreFragment :
             )
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.hide()
+                }
+            }
         }
     }
 
@@ -3668,7 +3790,7 @@ class ExploreFragment :
                 mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
             }
         }
-        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this)
+        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this, activity)
         activity?.let {
             mBaseActivity?.mGeofenceUtils?.setMapBox(
                 it,
@@ -3765,11 +3887,20 @@ class ExploreFragment :
     }
 
     fun changeDirectionCardMargin(marginBottom: Int) {
-        showViews(mBinding.cardDirection, mBinding.cardNavigation)
-        val layoutParams: ViewGroup.MarginLayoutParams =
-            mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.setMargins(0, 0, resources.getDimension(R.dimen.dp_16).toInt(), marginBottom)
-        mBinding.cardDirection.requestLayout()
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                showViews(mBinding.cardDirection, mBinding.cardNavigation)
+                val layoutParams: ViewGroup.MarginLayoutParams =
+                    mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.setMargins(
+                    0,
+                    0,
+                    resources.getDimension(R.dimen.dp_16).toInt(),
+                    marginBottom
+                )
+                mBinding.cardDirection.requestLayout()
+            }
+        }
     }
 
     override fun onStart() {
@@ -3956,7 +4087,13 @@ class ExploreFragment :
                 )
             }
         }
-        mMapStyleAdapter?.notifyDataSetChanged()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mapStyleBottomSheetFragment.notifyAdapter()
+            } else {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun clearAllMapData() {
@@ -4025,9 +4162,9 @@ class ExploreFragment :
             mMapboxMap?.easeCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().target(mLatLng)
-                        .build(),
+                        .build()
                 ),
-                Durations.CAMERA_DURATION_1000,
+                Durations.CAMERA_DURATION_1000
             )
         }
     }
@@ -4047,26 +4184,30 @@ class ExploreFragment :
             MapNames.ESRI_LIGHT_GRAY_CANVAS,
             MapNames.HERE_CONTRAST,
             MapNames.HERE_EXPLORE,
-            MapNames.HERE_EXPLORE_TRUCK,
+            MapNames.HERE_EXPLORE_TRUCK
             -> R.drawable.ic_amazon_logo_on_light
 
             MapNames.ESRI_DARK_GRAY_CANVAS,
             MapNames.ESRI_IMAGERY,
             MapNames.HERE_IMAGERY,
-            MapNames.HERE_HYBRID,
+            MapNames.HERE_HYBRID
             -> R.drawable.ic_amazon_logo_on_dark
 
             else -> {
-                R.drawable.ic_amazon_logo_on_light }
+                R.drawable.ic_amazon_logo_on_light
+            }
+        }
+        if(activity is MainActivity) {
+            (activity as MainActivity).changeAmazonLogo(logoResId)
         }
         mBinding.bottomSheetSearch.imgAmazonLogoSearchSheet.setImageResource(logoResId)
-        mBinding.bottomSheetDirection.imgAmazonLogoDirection.setImageResource(logoResId)
+        mBinding.bottomSheetDirection.imgAmazonLogoDirection?.setImageResource(logoResId)
         mBinding.bottomSheetDirectionSearch.imgAmazonLogoDirectionSearchSheet.setImageResource(logoResId)
         mBinding.bottomSheetNavigation.imgAmazonLogoNavigation.setImageResource(logoResId)
         mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(logoResId)
-        mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList.setImageResource(logoResId)
-        mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence.setImageResource(logoResId)
-        mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet.setImageResource(logoResId)
-        mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle.setImageResource(logoResId)
+        mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
+        mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
+        mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
+        mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle?.setImageResource(logoResId)
     }
 }

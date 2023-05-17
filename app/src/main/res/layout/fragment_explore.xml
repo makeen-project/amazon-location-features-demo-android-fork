@@ -35,14 +35,13 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_navigation_time_dialog"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_80"
+            android:layout_height="@dimen/dp_64"
             android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_44"
+            android:layout_marginTop="@dimen/dp_40"
             android:visibility="gone"
-            app:cardBackgroundColor="@color/color_primary_green"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -57,6 +56,8 @@
                     style="@style/SP24BoldWhiteTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/color_medium_black"
+                    android:textSize="@dimen/sp_20"
                     android:gravity="center"
                     tools:text="300 m" />
 
@@ -64,6 +65,8 @@
                     android:id="@+id/tv_navigation_name"
                     style="@style/SP16RegularWhiteTextStyle"
                     android:layout_width="match_parent"
+                    android:textColor="@color/color_medium_black"
+                    android:textSize="@dimen/sp_13"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"

@@ -133,7 +133,16 @@ class ExploreFragmentChangeStyleTest : BaseTest() {
             }
             Thread.sleep(DELAY_1000)
 
-            goToMapStyles()
+            val cardMap = mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_map)
+            mActivityRule.activity.runOnUiThread {
+                cardMap.performClick()
+            }
+
+            val clSearchSheet =
+                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_map_style)
+            if (clSearchSheet.visibility == View.VISIBLE) {
+                goToMapStyles()
+            }
             loadCountMap()
 
             while (hasMore()) {
@@ -210,11 +219,6 @@ class ExploreFragmentChangeStyleTest : BaseTest() {
     }
 
     private fun goToMapStyles() {
-        val cardMap = mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_map)
-        mActivityRule.activity.runOnUiThread {
-            cardMap.performClick()
-        }
-
         val clSearchSheet =
             mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_map_style)
         if (clSearchSheet.visibility == View.VISIBLE) {

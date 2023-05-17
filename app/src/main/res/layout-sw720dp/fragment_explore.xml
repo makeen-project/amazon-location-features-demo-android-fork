@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.amplifyframework.geo.maplibre.view.MapLibreView
+            android:id="@+id/mapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mapbox_foregroundLoadColor="@color/white"
+            app:mapbox_renderTextureMode="true"
+            app:mapbox_renderTextureTranslucentSurface="true"
+            app:mapbox_uiAttribution="false"
+            app:mapbox_uiLogo="false" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mapLoading"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/black"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_map_loading" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_navigation_time_dialog"
+            android:layout_width="@dimen/navigation_top_dialog_size"
+            android:layout_height="@dimen/dp_64"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_40"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_8"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/dp_10">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_distance"
+                    style="@style/SP24BoldWhiteTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_medium_black"
+                    android:textSize="@dimen/sp_20"
+                    android:gravity="center"
+                    tools:text="300 m" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_navigation_name"
+                    style="@style/SP16RegularWhiteTextStyle"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/color_medium_black"
+                    android:textSize="@dimen/sp_13"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    tools:text="Victoria st" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_map"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_40"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardPreventCornerOverlap="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/CardViewTopRadius">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_28"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_map"
+                android:tint="@color/color_icon_tint" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.25dp"
+                android:layout_gravity="bottom"
+                android:background="@color/color_view_line" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_geofence_map"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_0"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/white"
+            app:cardPreventCornerOverlap="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_map"
+            app:shapeAppearanceOverlay="@style/CardViewBottomRadius">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.25dp"
+                android:layout_gravity="top"
+                android:background="@color/color_view_line" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_28"
+                android:layout_height="@dimen/dp_28"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_add_location"
+                android:tint="@color/color_icon_tint" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_navigation"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_0"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_8"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_8"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintBottom_toTopOf="@id/card_direction"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_navigation"
+                android:tint="@color/color_icon_tint"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_direction"
+            android:layout_width="@dimen/dp_48"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginStart="@dimen/dp_0"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginBottom="@dimen/dp_8"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_8"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintBottom_toTopOf="@+id/view_divider"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/dp_25"
+                android:layout_height="@dimen/dp_25"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_directions"
+                android:tint="@color/color_icon_tint" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:id="@+id/view_divider"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_map_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="mapLoading" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/bottom_sheet_search"
+        layout="@layout/bottom_sheet_search" />
+
+    <include
+        android:id="@+id/bottom_sheet_direction"
+        layout="@layout/bottom_sheet_direction" />
+
+    <include
+        android:id="@+id/bottom_sheet_direction_search"
+        layout="@layout/bottom_sheet_direction_search" />
+
+    <include
+        android:id="@+id/bottom_sheet_navigation"
+        layout="@layout/bottom_sheet_navigation" />
+
+    <include
+        android:id="@+id/bottom_sheet_navigation_complete"
+        layout="@layout/bottom_sheet_navigation_complete" />
+
+    <include
+        android:id="@+id/bottom_sheet_geofence_list"
+        layout="@layout/bottom_sheet_geofence_list" />
+
+    <include
+        android:id="@+id/bottom_sheet_add_geofence"
+        layout="@layout/bottom_sheet_add_geofence" />
+
+    <include
+        android:id="@+id/bottom_sheet_tracking"
+        layout="@layout/bottom_sheet_tracking" />
+
+    <include
+        android:id="@+id/bottom_sheet_map_style"
+        layout="@layout/bottom_sheet_map_style" />
+
+    <include
+        android:id="@+id/bottom_sheet_attribution"
+        layout="@layout/bottom_sheet_attribution" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

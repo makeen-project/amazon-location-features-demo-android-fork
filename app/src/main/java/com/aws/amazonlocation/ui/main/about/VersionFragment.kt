@@ -40,7 +40,7 @@ class VersionFragment : BaseFragment() {
                 append(" ")
                 append(BuildConfig.VERSION_NAME)
             }
-            ivBack.setOnClickListener {
+            ivBack?.setOnClickListener {
                 findNavController().popBackStack()
             }
         }
