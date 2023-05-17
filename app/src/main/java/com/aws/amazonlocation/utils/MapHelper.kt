@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.location.Location
 import android.os.Looper
 import android.view.View
@@ -31,6 +33,7 @@ import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1000
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1500
 import com.aws.amazonlocation.utils.Durations.DEFAULT_INTERVAL_IN_MILLISECONDS
+import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID
 import com.aws.amazonlocation.utils.MapCameraZoom.DEFAULT_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.NAVIGATION_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.TRACKING_CAMERA_ZOOM
@@ -51,6 +54,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.location.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
@@ -86,6 +90,7 @@ class MapHelper(private val appContext: Context) {
     private var mTrackingInterface: UpdateTrackingInterface? = null
     private var mOriginSymbol: Symbol? = null
     private var mGeofenceSM: SymbolManager? = null
+    private var mGeofenceDragSM: SymbolManager? = null
     var mSymbolOptionList = ArrayList<Symbol>()
     private var mMapLibreView: MapLibreView? = null
     private var mapStyleChangeListener: MapStyleChangeListener? = null
@@ -112,6 +117,7 @@ class MapHelper(private val appContext: Context) {
                 mSymbolManagerWithClick = SymbolManager(mapView, mapboxMap, style)
                 mSymbolManagerTracker = SymbolManager(mapView, mapboxMap, style)
                 mGeofenceSM = SymbolManager(mapView, mapboxMap, style)
+                mGeofenceDragSM = SymbolManager(mapView, mapboxMap, style)
                 mapboxMap.uiSettings.isAttributionEnabled = false
                 isMapLoadedInterface.mapLoadedSuccess()
                 mapStyleChangedListener.onMapStyleChanged(mapStyle)
@@ -989,6 +995,51 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
+    fun addGeofenceInvisibleDraggableMarker(activity: Activity?, latLng: LatLng, listener: OnSymbolDragListener) {
+        mGeofenceDragSM?.iconAllowOverlap = true
+        mGeofenceDragSM?.iconIgnorePlacement = true
+        mMapboxMap?.getStyle { style ->
+            activity?.let {
+                convertLayoutToGeofenceInvisibleDragBitmap(activity).let { bitmap ->
+                    style.addImage(
+                        CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID,
+                        bitmap,
+                    )
+                }
+            }
+
+            val symbolOptions = SymbolOptions()
+                .withLatLng(latLng)
+                .withIconImage(CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID)
+                .withIconAnchor(Property.ICON_ANCHOR_CENTER)
+                .withDraggable(true)
+
+            mGeofenceDragSM?.addDragListener(listener)
+
+            mGeofenceDragSM?.let {
+                it.create(symbolOptions)?.let { symbol ->
+                    mSymbolOptionList.add(symbol)
+                }
+            }
+        }
+    }
+
+    fun updateGeofenceInvisibleDraggableMarker(latLng: LatLng) {
+        mSymbolOptionList.firstOrNull { it.iconImage == CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID }?.let { symbol ->
+            symbol.latLng = latLng
+            mGeofenceDragSM?.update(symbol)
+        }
+    }
+
+    fun deleteGeofenceInvisibleDraggableMarker(listener: OnSymbolDragListener) {
+        mGeofenceDragSM?.removeDragListener(listener)
+        val temp = mSymbolOptionList.filter { it.isDraggable && it.iconImage == CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID }
+        temp.forEach {
+            mGeofenceDragSM?.delete(it)
+            mSymbolOptionList.remove(it)
+        }
+    }
+
     fun deleteGeofenceMarker(position: Int) {
         mGeofenceSM?.delete(mSymbolOptionList[position])
         mSymbolOptionList.removeAt(position)
@@ -1074,6 +1125,31 @@ class MapHelper(private val appContext: Context) {
         return bitmap
     }
 
+    private fun convertLayoutToGeofenceInvisibleDragBitmap(
+        context: Activity,
+    ): Bitmap {
+        val viewGroup: ViewGroup? = null
+        val view = context.layoutInflater.inflate(R.layout.layout_geofence_draggable_marker, viewGroup)
+        val llMain: ConstraintLayout = view.findViewById(R.id.ll_geofence_draggable_marker)
+        val ivGeofenceDragMarker: AppCompatImageView = view.findViewById(R.id.iv_geofence_draggable_marker)
+
+        ivGeofenceDragMarker.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+
+        llMain.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        )
+        llMain.layout(0, 0, llMain.measuredWidth, llMain.measuredHeight)
+        val bitmap = Bitmap.createBitmap(
+            llMain.measuredWidth,
+            llMain.measuredHeight,
+            Bitmap.Config.ARGB_8888,
+        )
+        val canvas = Canvas(bitmap)
+        llMain.draw(canvas)
+        return bitmap
+    }
+
     // convert layout to marker
     private fun convertGeofenceLayoutToBitmap(
         context: Activity,
@@ -1104,23 +1180,23 @@ class MapHelper(private val appContext: Context) {
 
     private fun updateZoomRange(style: Style) {
         mMapboxMap?.getStyle {
-        val cameraPosition = mMapboxMap?.cameraPosition
-        val zoom = cameraPosition?.zoom
-        val minZoom = minZoomLevel(style)
-        val maxZoom = MapCameraZoom.MAX_ZOOM
-        if (zoom != null) {
-            if (zoom < minZoom) {
-                mMapboxMap?.cameraPosition = CameraPosition.Builder()
-                    .zoom(minZoom)
-                    .build()
-            } else if (zoom > maxZoom) {
-                mMapboxMap?.cameraPosition = CameraPosition.Builder()
-                    .zoom(maxZoom)
-                    .build()
+            val cameraPosition = mMapboxMap?.cameraPosition
+            val zoom = cameraPosition?.zoom
+            val minZoom = minZoomLevel(style)
+            val maxZoom = MapCameraZoom.MAX_ZOOM
+            if (zoom != null) {
+                if (zoom < minZoom) {
+                    mMapboxMap?.cameraPosition = CameraPosition.Builder()
+                        .zoom(minZoom)
+                        .build()
+                } else if (zoom > maxZoom) {
+                    mMapboxMap?.cameraPosition = CameraPosition.Builder()
+                        .zoom(maxZoom)
+                        .build()
+                }
             }
-        }
-        mMapboxMap?.setMinZoomPreference(minZoom)
-        mMapboxMap?.setMaxZoomPreference(maxZoom)
+            mMapboxMap?.setMinZoomPreference(minZoom)
+            mMapboxMap?.setMaxZoomPreference(maxZoom)
         }
     }
 
