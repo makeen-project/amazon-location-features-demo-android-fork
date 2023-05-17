@@ -159,6 +159,7 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isDraggable = true
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetTrackingBehavior?.isFitToContents = false
+            mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
             btnEnableTracking.setOnClickListener {
                 mTrackingInterface?.getCheckPermission()
             }

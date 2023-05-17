@@ -2,15 +2,12 @@ package com.aws.amazonlocation.ui.main
 
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.* // ktlint-disable no-wildcard-imports
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
@@ -24,7 +21,6 @@ import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers
@@ -38,16 +34,15 @@ class ConnectToAWSTest : BaseTestMainActivity() {
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
     private lateinit var bottomNavigation: BottomNavigationView
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
         val targetContext: Context = getInstrumentation().targetContext.applicationContext
         val pm = PreferenceManager(targetContext)
         pm.setDefaultConfig()
         pm.setValue(IS_APP_FIRST_TIME_OPENED, true)
         pm.setValue(KEY_RE_START_APP, false)
 
-        mActivityRule.launchActivity(Intent())
+        super.before()
         val activity: MainActivity = mActivityRule.activity
         bottomNavigation = activity.findViewById(R.id.bottom_navigation_main)
     }
@@ -140,9 +135,9 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             val edtIdentityPoolId = scrollForView(
                 CoreMatchers.allOf(
                     withId(R.id.edt_identity_pool_id),
-                    isCompletelyDisplayed()
-                )
-            ){
+                    isCompletelyDisplayed(),
+                ),
+            ) {
                 appViews.scrollForward(2)
             }
             edtIdentityPoolId?.perform(replaceText(BuildConfig.IDENTITY_POOL_ID))
@@ -150,9 +145,9 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             val edtUserDomain = scrollForView(
                 CoreMatchers.allOf(
                     withId(R.id.edt_user_domain),
-                    isCompletelyDisplayed()
-                )
-            ){
+                    isCompletelyDisplayed(),
+                ),
+            ) {
                 appViews.scrollForward(2)
             }
             edtUserDomain?.perform(replaceText(BuildConfig.USER_DOMAIN))
@@ -160,8 +155,8 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             val edtUserPoolClientId = scrollForView(
                 CoreMatchers.allOf(
                     withId(R.id.edt_user_pool_client_id),
-                    isCompletelyDisplayed()
-                )
+                    isCompletelyDisplayed(),
+                ),
             ) {
                 appViews.scrollForward(2)
             }
@@ -170,8 +165,8 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             val edtUserPoolId = scrollForView(
                 CoreMatchers.allOf(
                     withId(R.id.edt_user_pool_id),
-                    isCompletelyDisplayed()
-                )
+                    isCompletelyDisplayed(),
+                ),
             ) {
                 appViews.scrollForward(2)
             }
@@ -180,8 +175,8 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             val edtWebSocketUrl = scrollForView(
                 CoreMatchers.allOf(
                     withId(R.id.edt_web_socket_url),
-                    isCompletelyDisplayed()
-                )
+                    isCompletelyDisplayed(),
+                ),
             ) {
                 appViews.scrollForward(2)
             }
@@ -236,16 +231,16 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             Thread.sleep(DELAY_1000)
             edtIdentityPoolId.perform(click())
             onView(withId(R.id.edt_identity_pool_id))
-                .perform(click(), replaceText(BuildConfig.IDENTITY_POOL_ID), closeSoftKeyboard())
+                .perform(click(), replaceText(BuildConfig.IDENTITY_POOL_ID), pressImeActionButton())
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_domain))
-                .perform(click(), replaceText(BuildConfig.USER_DOMAIN), closeSoftKeyboard())
+                .perform(click(), replaceText(BuildConfig.USER_DOMAIN), pressImeActionButton())
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_pool_client_id))
-                .perform(click(), replaceText(BuildConfig.USER_POOL_CLIENT_ID), closeSoftKeyboard())
+                .perform(click(), replaceText(BuildConfig.USER_POOL_CLIENT_ID), pressImeActionButton())
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_pool_id))
-                .perform(click(), replaceText(BuildConfig.USER_POOL_ID), closeSoftKeyboard())
+                .perform(click(), replaceText(BuildConfig.USER_POOL_ID), pressImeActionButton())
             Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_web_socket_url))
                 .perform(click(), replaceText(BuildConfig.WEB_SOCKET_URL), closeSoftKeyboard())
