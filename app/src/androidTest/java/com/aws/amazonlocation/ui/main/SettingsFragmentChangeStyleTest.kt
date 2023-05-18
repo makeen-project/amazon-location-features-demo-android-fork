@@ -3,31 +3,26 @@ package com.aws.amazonlocation.ui.main
 import android.app.ActivityManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
-import com.aws.amazonlocation.*
+import com.aws.amazonlocation.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.ui.main.map_style.EsriMapStyleAdapter
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.core.AllOf.allOf
 import org.json.JSONObject
-import org.junit.*
+import org.junit.* // ktlint-disable no-wildcard-imports
 import java.util.concurrent.CountDownLatch
 
 @UninstallModules(AppModule::class)
@@ -123,87 +118,61 @@ class SettingsFragmentChangeStyleTest : BaseTestMainActivity() {
         }
     }
 
+    private var isEsriStyle = true
+    private var item = 0
+
     private fun changeMapStyle(): Boolean {
         goToMapStyles()
 
-        var hasMoreStyles = false
+        var hasMoreStyles = true
 
-        val rvEsriStyles =
-            mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_esri)
-        val adapterEsri = rvEsriStyles.adapter as? EsriMapStyleAdapter
-
-        val rvHereStyles =
-            mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_here)
-        val adapterHere = rvHereStyles.adapter as? EsriMapStyleAdapter
-        adapterHere?.let { here ->
-            adapterEsri?.let {
-                if (it.itemCount > 0 && here.itemCount > 0) {
-                    val mapName = preferenceManager.getValue(KEY_MAP_NAME, getActivity().getString(R.string.map_esri))
-                    if (mapName == getActivity().getString(R.string.esri)) {
-                        if (it.selectedPosition in -1 until it.itemCount - 1) {
-                            onView(withId(R.id.rv_esri)).perform(
-                                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                    it.selectedPosition + 1,
-                                    click()
-                                )
-                            )
-                            hasMoreStyles = true
-                        } else {
-                            onView(withId(R.id.rv_here)).perform(
-                                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                    0,
-                                    click()
-                                )
-                            )
-                            hasMoreStyles = true
-                        }
-                    } else if (mapName == getActivity().getString(R.string.here)) {
-                        hasMoreStyles = if (it.selectedPosition in 0 until here.itemCount - 1) {
-                            onView(withId(R.id.rv_here)).perform(
-                                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                                    it.selectedPosition + 1,
-                                    click()
-                                )
-                            )
-                            true
-                        } else {
-                            false
-                        }
-                    }
-                }
+        if (isEsriStyle) {
+            waitForView(allOf(withId(R.id.rv_esri), isDisplayed()))?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(++item, click()),
+            )
+            if (item >= 5) {
+                item = -1
+                isEsriStyle = false
+            }
+        } else {
+            waitForView(allOf(withId(R.id.rv_here), isDisplayed()))?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(++item, click()),
+            )
+            if (item >= 4) {
+                item = -1
+                hasMoreStyles = false
             }
         }
+
         return hasMoreStyles
     }
 
     private fun goToMapStyles() {
-        onView(
+        waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )
-            .perform(click())
+            ?.perform(click())
 
-        uiDevice.wait(
-            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/cl_map_style")),
-            DELAY_10000,
-        )
         Thread.sleep(DELAY_3000)
 
-        onView(
+        waitForView(
             allOf(
                 withId(R.id.cl_map_style),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )
-            .perform(click())
+            ?.perform(click())
 
         Thread.sleep(DELAY_3000)
     }
 
     private fun checkLoadedTheme() {
+        Thread.sleep(DELAY_2000)
+
         if (getActivity().findViewById<BottomNavigationView>(R.id.bottom_navigation_main).selectedItemId != R.id.menu_explore) {
             uiDevice.pressBack()
         }
@@ -222,6 +191,7 @@ class SettingsFragmentChangeStyleTest : BaseTestMainActivity() {
             mapbox = it
         }
 
+        getInstrumentation().waitForIdleSync()
         getInstrumentation().runOnMainSync {
             mapbox?.getStyle {
                 val correctStyleLoaded = it.json.let { json ->
@@ -260,6 +230,7 @@ class SettingsFragmentChangeStyleTest : BaseTestMainActivity() {
         }
 
         latch.await()
+        Thread.sleep(DELAY_2000)
     }
 
     override fun after() {
