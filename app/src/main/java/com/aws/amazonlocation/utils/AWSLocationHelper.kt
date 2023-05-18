@@ -34,6 +34,7 @@ import com.amazonaws.services.geo.model.SearchPlaceIndexForTextRequest
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.response.AddGeofenceResponse
 import com.aws.amazonlocation.data.response.DeleteGeofence
@@ -80,20 +81,32 @@ class AWSLocationHelper(
         var identityPoolId = mPreferenceManager.getValue(KEY_POOL_ID, "")
         val provider = mPreferenceManager.getValue(KEY_PROVIDER, "")
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+        val mapStyleNameDisplay =
+            mBaseActivity?.getString(R.string.map_light)
+                ?.let { mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, it) }
+                ?: mBaseActivity?.getString(R.string.map_light)
 
+        var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        var defaultRegion = BuildConfig.DEFAULT_REGION
+        if (mapStyleNameDisplay == mBaseActivity?.getString(R.string.map_grab_light) ||
+            mapStyleNameDisplay == mBaseActivity?.getString(R.string.map_grab_dark)
+        ) {
+            defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
+            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+        }
         if (region.isNullOrEmpty()) {
-            region = BuildConfig.DEFAULT_REGION
+            region = defaultRegion
         }
 
         if (identityPoolId.isNullOrEmpty()) {
-            identityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            identityPoolId = defaultIdentityPoolId
         }
         mCognitoCredentialsProvider = CognitoCredentialsProvider(
             identityPoolId,
             Regions.fromName(region),
         )
         val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-        if (identityPoolId != BuildConfig.DEFAULT_IDENTITY_POOL_ID && mAuthStatus == AuthEnum.SIGNED_IN.name) {
+        if (identityPoolId != defaultIdentityPoolId && mAuthStatus == AuthEnum.SIGNED_IN.name) {
             mCognitoCredentialsProvider?.let {
                 idToken?.let { idToken ->
                     it.clear()

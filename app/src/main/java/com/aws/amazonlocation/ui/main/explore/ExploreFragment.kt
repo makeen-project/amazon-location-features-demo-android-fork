@@ -3264,6 +3264,13 @@ class ExploreFragment :
             mMapHelper.getLiveLocation()?.let { it1 ->
                 mMapHelper.moveCameraToLocation(it1)
             }
+            val mapStyleNameDisplay =
+                mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
+                    ?: getString(R.string.map_light)
+
+            if (mapStyleNameDisplay == resources.getString(R.string.map_grab_light) || mapStyleNameDisplay == resources.getString(R.string.map_grab_dark)) {
+                updateMapGrab()
+            }
         }
     }
 

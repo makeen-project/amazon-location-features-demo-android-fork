@@ -52,7 +52,8 @@ class AmplifyHelper(
         var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
         var defaultRegion = BuildConfig.DEFAULT_REGION
         if (mapStyleNameDisplay == mContext.getString(R.string.map_grab_light) ||
-            mapStyleNameDisplay == mContext.getString(R.string.map_grab_dark)) {
+            mapStyleNameDisplay == mContext.getString(R.string.map_grab_dark)
+        ) {
             defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
             defaultRegion = BuildConfig.DEFAULT_SE_REGION
         }
