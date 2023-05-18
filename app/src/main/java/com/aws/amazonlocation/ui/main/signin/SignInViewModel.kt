@@ -37,7 +37,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private var mGetAuthUseCase: AuthUseCase,
-    private var mPreferenceManager: PreferenceManager
+    private var mPreferenceManager: PreferenceManager,
 ) :
     ViewModel() {
 
@@ -52,7 +52,7 @@ class SignInViewModel @Inject constructor(
         _signOutResponse.receiveAsFlow()
 
     fun signInWithAmazon(
-        activity: Activity
+        activity: Activity,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isRunningTest) {
@@ -77,24 +77,24 @@ class SignInViewModel @Inject constructor(
 
                             mPreferenceManager.setValue(
                                 KEY_USER_DETAILS,
-                                Gson().toJson(mLoginResponse)
+                                Gson().toJson(mLoginResponse),
                             )
                             mLoginResponse.idToken?.let { idToken ->
                                 mPreferenceManager.setValue(
                                     KEY_ID_TOKEN,
-                                    idToken
+                                    idToken,
                                 )
                             }
 
                             mLoginResponse.provider?.let { provider ->
                                 mPreferenceManager.setValue(
                                     KEY_PROVIDER,
-                                    provider
+                                    provider,
                                 )
                             }
                             mPreferenceManager.setValue(
                                 KEY_USER_DETAILS,
-                                Gson().toJson(mLoginResponse)
+                                Gson().toJson(mLoginResponse),
                             )
                             _signInResponse.trySend(HandleResult.Success(mLoginResponse.success!!))
                         }
@@ -102,7 +102,7 @@ class SignInViewModel @Inject constructor(
                         override fun onError(e: Exception?) {
                             e?.printStackTrace()
                         }
-                    }
+                    },
                 )
             } else {
                 mGetAuthUseCase.signInWithAmazon(
@@ -111,24 +111,24 @@ class SignInViewModel @Inject constructor(
                         override fun getUserDetails(mLoginResponse: LoginResponse) {
                             mPreferenceManager.setValue(
                                 KEY_USER_DETAILS,
-                                Gson().toJson(mLoginResponse)
+                                Gson().toJson(mLoginResponse),
                             )
                             mLoginResponse.idToken?.let { idToken ->
                                 mPreferenceManager.setValue(
                                     KEY_ID_TOKEN,
-                                    idToken
+                                    idToken,
                                 )
                             }
 
                             mLoginResponse.provider?.let { provider ->
                                 mPreferenceManager.setValue(
                                     KEY_PROVIDER,
-                                    provider
+                                    provider,
                                 )
                             }
                             mPreferenceManager.setValue(
                                 KEY_USER_DETAILS,
-                                Gson().toJson(mLoginResponse)
+                                Gson().toJson(mLoginResponse),
                             )
                             _signInResponse.trySend(HandleResult.Success(mLoginResponse.success!!))
                         }
@@ -138,13 +138,13 @@ class SignInViewModel @Inject constructor(
                                 _signInResponse.trySend(
                                     HandleResult.Error(
                                         DataSourceException.Error(
-                                            it
-                                        )
-                                    )
+                                            it,
+                                        ),
+                                    ),
                                 )
                             }
                         }
-                    }
+                    },
                 )
             }
         }
@@ -154,17 +154,14 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             if (isRunningTest) {
                 AWSMobileClient.getInstance().signOut()
-                viewModelScope.launch {
-                    delay(DELAY_SIGN_OUT_2000)
-                    _signOutResponse.trySend(
-                        HandleResult.Success(
-                            SignOutData(
-                                context.resources.getString(R.string.sign_out_successfully),
-                                isDisconnectFromAWSRequired
-                            )
-                        )
-                    )
-                }
+                _signOutResponse.trySend(
+                    HandleResult.Success(
+                        SignOutData(
+                            context.resources.getString(R.string.sign_out_successfully),
+                            isDisconnectFromAWSRequired,
+                        ),
+                    ),
+                )
             } else {
                 mGetAuthUseCase.signOutWithAmazon(
                     context,
@@ -172,15 +169,15 @@ class SignInViewModel @Inject constructor(
                     object : SignInInterface {
                         override fun signOutSuccess(
                             success: String,
-                            isDisconnectFromAWSRequired: Boolean
+                            isDisconnectFromAWSRequired: Boolean,
                         ) {
                             _signOutResponse.trySend(
                                 HandleResult.Success(
                                     SignOutData(
                                         success,
-                                        isDisconnectFromAWSRequired
-                                    )
-                                )
+                                        isDisconnectFromAWSRequired,
+                                    ),
+                                ),
                             )
                         }
 
@@ -188,12 +185,12 @@ class SignInViewModel @Inject constructor(
                             _signOutResponse.trySend(
                                 HandleResult.Error(
                                     DataSourceException.Error(
-                                        error
-                                    )
-                                )
+                                        error,
+                                    ),
+                                ),
                             )
                         }
-                    }
+                    },
                 )
             }
         }

@@ -15,7 +15,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
@@ -29,7 +29,6 @@ import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.getRandomGeofenceName
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -41,19 +40,7 @@ import java.util.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class GeofenceAddTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class GeofenceAddTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 

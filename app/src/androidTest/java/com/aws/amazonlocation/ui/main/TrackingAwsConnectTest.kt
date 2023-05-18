@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
@@ -20,7 +19,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
@@ -31,30 +30,20 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_INVALID_IDENTITY_POOL_ID
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
+import com.aws.amazonlocation.scrollForView
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.PreferenceManager
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingAwsConnectTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class TrackingAwsConnectTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
@@ -73,32 +62,37 @@ class TrackingAwsConnectTest : BaseTest() {
             DELAY_10000,
         )
         val appViews = UiScrollable(UiSelector().scrollable(true))
-        appViews.scrollForward()
-        Thread.sleep(DELAY_1000)
-        val edtIdentityPoolId =
-            onView(withId(R.id.edt_identity_pool_id)).check(ViewAssertions.matches(isDisplayed()))
-        edtIdentityPoolId.perform(click())
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_identity_pool_id))
-            ?.perform(click(), replaceText(BuildConfig.IDENTITY_POOL_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_user_domain))
-            ?.perform(click(), replaceText(BuildConfig.USER_DOMAIN), closeSoftKeyboard())
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_user_pool_client_id))
-            ?.perform(click(), replaceText(BuildConfig.USER_POOL_CLIENT_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_user_pool_id))
-            ?.perform(click(), replaceText(BuildConfig.USER_POOL_ID), closeSoftKeyboard())
-        Thread.sleep(DELAY_2000)
-        onView(withId(R.id.edt_web_socket_url))
-            ?.perform(click(), replaceText(BuildConfig.WEB_SOCKET_URL), closeSoftKeyboard())
 
-        Thread.sleep(DELAY_2000)
+        val edtIdentityPoolId = scrollForView(allOf(withId(R.id.edt_identity_pool_id), isCompletelyDisplayed())){
+            appViews.scrollForward(2)
+        }
+        edtIdentityPoolId?.perform(replaceText(BuildConfig.IDENTITY_POOL_ID))
+
+        val edtUserDomain = scrollForView(allOf(withId(R.id.edt_user_domain), isCompletelyDisplayed())){
+            appViews.scrollForward(2)
+        }
+        edtUserDomain?.perform(replaceText(BuildConfig.USER_DOMAIN))
+
+        val edtUserPoolClientId = scrollForView(allOf(withId(R.id.edt_user_pool_client_id), isCompletelyDisplayed())) {
+            appViews.scrollForward(2)
+        }
+        edtUserPoolClientId?.perform(replaceText(BuildConfig.USER_POOL_CLIENT_ID))
+
+        val edtUserPoolId = scrollForView(allOf(withId(R.id.edt_user_pool_id), isCompletelyDisplayed())) {
+            appViews.scrollForward(2)
+        }
+        edtUserPoolId?.perform(replaceText(BuildConfig.USER_POOL_ID))
+
+        val edtWebSocketUrl = scrollForView(allOf(withId(R.id.edt_web_socket_url), isCompletelyDisplayed())) {
+            appViews.scrollForward(2)
+        }
+        edtWebSocketUrl?.perform(replaceText(BuildConfig.WEB_SOCKET_URL))
+
         val btnConnect =
             onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
         btnConnect.perform(click())
         Thread.sleep(DELAY_5000)
+
         val targetContext: Context = getInstrumentation().targetContext.applicationContext
         val pm = PreferenceManager(targetContext)
         val mPoolId = pm.getValue(KEY_POOL_ID, "")

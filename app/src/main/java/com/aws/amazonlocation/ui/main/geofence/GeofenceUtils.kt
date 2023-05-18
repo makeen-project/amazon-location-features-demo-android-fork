@@ -322,6 +322,7 @@ class GeofenceUtils {
             mBottomSheetGeofenceListBehavior?.isHideable = true
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetGeofenceListBehavior?.isFitToContents = false
+            mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.6f
             btnAddGeofence.setOnClickListener {
                 mGeofenceInterface?.hideShowBottomNavigationBar(
                     true,
