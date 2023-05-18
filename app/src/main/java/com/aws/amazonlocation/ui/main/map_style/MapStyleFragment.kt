@@ -154,7 +154,7 @@ class MapStyleFragment : BaseFragment() {
     private fun setGrabMapStyleAdapter() {
         val mLayoutManager = GridLayoutManager(this.context, 3)
         mBinding.apply {
-            rvGrab.layoutManager = mLayoutManager
+            rvGrab?.layoutManager = mLayoutManager
             mGrabAdapter = EsriMapStyleAdapter(
                 mViewModel.grabList,
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
@@ -167,7 +167,7 @@ class MapStyleFragment : BaseFragment() {
                     }
                 }
             )
-            rvGrab.adapter = mGrabAdapter
+            rvGrab?.adapter = mGrabAdapter
         }
     }
 

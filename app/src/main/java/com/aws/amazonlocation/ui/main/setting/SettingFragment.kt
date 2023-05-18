@@ -56,7 +56,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         mBinding = FragmentSettingBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -146,7 +146,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     mBaseActivity?.clearUserInFo()
                     mBaseActivity?.mPreferenceManager?.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.AWS_CONNECTED.name
+                        AuthEnum.AWS_CONNECTED.name,
                     )
                     init()
                     mPreferenceManager.removeValue(KEY_ID_TOKEN)
@@ -272,11 +272,42 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                             override fun logoutAndDisconnectAWS(dialog: DialogInterface) {
                             }
                         },
-                        AWSMobileClient.getInstance().isSignedIn
+                        AWSMobileClient.getInstance().isSignedIn,
                     )
                 }
             }
         }
+    }
+
+    private fun FragmentSettingBinding.setDefaultSelection() {
+        clAwsCloudformation.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
+            )
+        )
+        ivAwsCloudFormation.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+        clRouteOption.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivRouteOption.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+        clMapStyle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
+        clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivDataProvider.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
     }
 
     private fun FragmentSettingBinding.setDefaultSelection() {

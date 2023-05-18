@@ -93,7 +93,7 @@ class DataProviderFragment : BaseFragment() {
                 mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.here))
             }
 
-            llGrab.setOnClickListener {
+            llGrab?.setOnClickListener {
                 changeDataProvider(isEsri = false, isGrab = true)
                 val mapStyle = mPreferenceManager.getValue(
                     KEY_MAP_STYLE_NAME,
@@ -115,7 +115,7 @@ class DataProviderFragment : BaseFragment() {
     private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false) {
         mBinding.apply {
             if (isGrab) {
-                ivGrab.setImageDrawable(
+                ivGrab?.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_check_data_provider
@@ -148,7 +148,7 @@ class DataProviderFragment : BaseFragment() {
                         R.drawable.ic_radio_button_unchecked
                     )
                 )
-                ivGrab.setImageDrawable(
+                ivGrab?.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_radio_button_unchecked
@@ -167,7 +167,7 @@ class DataProviderFragment : BaseFragment() {
                         R.drawable.icon_checkmark
                     )
                 )
-                ivGrab.setImageDrawable(
+                ivGrab?.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_radio_button_unchecked
