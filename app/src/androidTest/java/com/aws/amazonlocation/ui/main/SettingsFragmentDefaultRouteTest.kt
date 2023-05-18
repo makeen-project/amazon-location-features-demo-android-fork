@@ -211,6 +211,7 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
         Thread.sleep(DELAY_2000)
 
+        getInstrumentation().waitForIdleSync()
         getInstrumentation().runOnMainSync {
             val switchAvoidToll = mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_tools)
             val switchAvoidFerry = mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_ferries)
