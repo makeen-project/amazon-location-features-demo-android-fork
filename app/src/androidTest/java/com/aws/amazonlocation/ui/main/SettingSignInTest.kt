@@ -7,15 +7,11 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
-import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.DELAY_1000
@@ -29,13 +25,11 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED_LOGOUT_BUTTON_NOT_VISIBLE
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.core.AllOf
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
@@ -72,8 +66,12 @@ class SettingSignInTest : BaseTestMainActivity() {
             ),
         ).perform(ViewActions.click())
 
-        val appViews = UiScrollable(UiSelector().scrollable(true))
-        appViews.scrollForward()
+        val isTablet = mActivityRule.activity.resources.getBoolean(R.bool.is_tablet)
+
+        if (!isTablet) {
+            val appViews = UiScrollable(UiSelector().scrollable(true))
+            appViews.scrollForward()
+        }
         Thread.sleep(DELAY_4000)
         val signIn =
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.sign_in)))

@@ -17,7 +17,7 @@
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -396,14 +396,11 @@
                         android:layout_marginHorizontal="@dimen/dp_12"
                         android:layout_marginVertical="@dimen/dp_12"
                         android:checked="false"
-                        android:scaleX="0.8"
-                        android:scaleY="0.9"
-                        android:theme="@style/SwitchTheme"
-                        android:thumb="@drawable/route_options_switch"
+                        app:thumbTint="@drawable/route_options_switch"
+                        app:trackTint="@drawable/route_options_switch_track"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:track="@drawable/route_options_switch_track" />
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
@@ -449,14 +446,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/dp_12"
                         android:layout_marginVertical="@dimen/dp_12"
-                        android:scaleX="0.8"
-                        android:scaleY="0.9"
-                        android:theme="@style/SwitchTheme"
-                        android:thumb="@drawable/route_options_switch"
+                        app:thumbTint="@drawable/route_options_switch"
+                        app:trackTint="@drawable/route_options_switch_track"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:track="@drawable/route_options_switch_track" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -502,14 +496,11 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/dp_12"
                         android:layout_marginVertical="@dimen/dp_12"
-                        android:scaleX="0.8"
-                        android:scaleY="0.9"
-                        android:theme="@style/SwitchTheme"
-                        android:thumb="@drawable/route_options_switch"
+                        app:thumbTint="@drawable/route_options_switch"
+                        app:trackTint="@drawable/route_options_switch_track"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:track="@drawable/route_options_switch_track" />
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 

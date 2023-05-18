@@ -65,7 +65,6 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
         val clEnableTracking =
             mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
         if (clEnableTracking.visibility == View.VISIBLE) {
-
             val btnEnableTracking =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
             mActivityRule.activity.runOnUiThread {

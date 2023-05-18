@@ -12,6 +12,7 @@ const val KEY_LOCATION_PERMISSION = "location_permission"
 const val SEARCH_MAX_RESULT = 15
 const val SEARCH_MAX_SUGGESTION_RESULT = 5
 const val KILOMETERS = "Kilometers"
+const val MILES = "Miles"
 const val KEY_POOL_ID = "POOL_ID"
 const val KEY_USER_POOL_ID = "KEY_USER_POOL_ID"
 const val KEY_USER_DOMAIN = "KEY_USER_DOMAIN"
@@ -22,12 +23,14 @@ const val KEY_RE_START_APP = "KEY_RE_START_APP"
 const val KEY_RE_START_APP_WITH_AWS_DISCONNECT = "key_restart_app_with_aws_disconnect"
 const val KEY_TAB_ENUM = "KEY_TAB_ENUM"
 const val KEY_CLOUD_FORMATION_STATUS = "KEY_CLOUD_FORMATION_STATUS"
+const val KEY_UNIT_SYSTEM = "KEY_UNIT_SYSTEM"
 const val HTTPS = "https://"
 const val KEY_URL = "KEY_URL"
 const val KEY_MAP_NAME = "key_map_name"
 const val KEY_MAP_STYLE_NAME = "key_map_style_name"
 const val CLICK_DEBOUNCE = 500L
 const val RESTART_DELAY = 800L
+const val DELAY_SIGN_OUT_2000 = 2000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"
@@ -122,6 +125,17 @@ object GeofenceCons {
     const val TURF_CALCULATION_LINE_LAYER_ID = "TURF_CALCULATION_LINE_LAYER_ID"
     const val RADIUS_SEEKBAR_MAX = 10000
     const val RADIUS_SEEKBAR_DIFFERENCE = 1
+
+    const val CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID = "CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID"
+    const val CIRCLE_DRAGGABLE_VISIBLE_ICON_ID = "CIRCLE_DRAGGABLE_VISIBLE_ICON_ID"
+    const val CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID = "CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID"
+
+    const val CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID = "CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID"
+
+    const val CIRCLE_DRAGGABLE_BEARING = 90.0
+
+    const val GEOFENCE_MIN_RADIUS = 10
+
 }
 
 object TrackerCons {

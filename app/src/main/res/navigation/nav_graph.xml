@@ -73,4 +73,10 @@
         android:label="TermsAndConditionFragment"
         tools:layout="@layout/fragment_terms_and_condition"/>
 
+    <fragment
+        android:id="@+id/unit_system_fragment"
+        android:name="com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment"
+        android:label="UnitSystemFragment"
+        tools:layout="@layout/fragment_unit_system"/>
+
 </navigation>

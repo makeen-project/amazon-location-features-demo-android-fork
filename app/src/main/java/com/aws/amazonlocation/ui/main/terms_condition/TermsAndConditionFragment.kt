@@ -35,7 +35,7 @@ class TermsAndConditionFragment : BaseFragment() {
     private fun init() {
         mBinding.apply {
             changeTermsAndConditionColor(tvTermsDesc)
-            ivBack.setOnClickListener {
+            ivBack?.setOnClickListener {
                 findNavController().popBackStack()
             }
         }

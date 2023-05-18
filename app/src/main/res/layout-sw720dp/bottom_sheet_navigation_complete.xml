@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_persistent_bottom_sheet_navigation_complete"
+    android:layout_width="@dimen/screen_size"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="@dimen/dp_240"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_amazon_logo_navigation_complete"
+        android:layout_width="@dimen/dp_118"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_amazon_logo_on_light"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_amazon_info_navigation_complete"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_4"
+        android:visibility="gone"
+        android:src="@drawable/ic_info"
+        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_navigation_complete"
+        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_navigation_complete"
+        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_navigation_complete" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_navigation_main_sheet_navigation_complete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="@dimen/dp_16"
+        app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_navigation_complete">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/sheet_navigation_complete_gl_direction_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/dp_16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/sheet_navigation_complete_gl_direction_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/dp_16" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_navigation_complete_close"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_14"
+            app:cardBackgroundColor="@color/number_bg_color"
+            app:cardCornerRadius="@dimen/dp_30"
+            app:cardElevation="@dimen/dp_0"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintEnd_toEndOf="@id/sheet_navigation_complete_gl_direction_end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@android:color/transparent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_close" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <View
+            android:id="@+id/view_navigation_complete"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_5"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/bottom_sheet_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_navigation_complete_address"
+            style="@style/SP20BoldMediumBlackTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_27"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toStartOf="@id/card_navigation_complete_close"
+            app:layout_constraintStart_toStartOf="@id/sheet_navigation_complete_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/view_navigation_complete"
+            tools:text="Mike’s Wings London" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sheet_navigation_complete_tv_direction_street"
+            style="@style/SP13HintRegularTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_2"
+            android:ellipsize="end"
+            android:maxLines="2"
+            app:layout_constraintEnd_toStartOf="@id/card_navigation_complete_close"
+            app:layout_constraintStart_toStartOf="@id/sheet_navigation_complete_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_navigation_complete_address"
+            tools:text="24 Heath Hill Road South,London,RG45" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_navigation_complete"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_24"
+            app:cardBackgroundColor="@color/color_primary_green"
+            app:cardUseCompatPadding="false"
+            app:cornerRadius="@dimen/dp_8"
+            app:layout_constraintEnd_toEndOf="@id/sheet_navigation_complete_gl_direction_end"
+            app:layout_constraintStart_toStartOf="@id/sheet_navigation_complete_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/sheet_navigation_complete_tv_direction_street">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_direction_navigation_complete"
+                    android:layout_width="@dimen/dp_22"
+                    android:layout_height="@dimen/dp_22"
+                    android:layout_marginEnd="@dimen/dp_19"
+                    android:src="@drawable/ic_directions"
+                    android:tint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_directions_navigation_complete"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_directions_navigation_complete"
+                    style="@style/SP16BoldWhiteTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/directions"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_direction_navigation_complete"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

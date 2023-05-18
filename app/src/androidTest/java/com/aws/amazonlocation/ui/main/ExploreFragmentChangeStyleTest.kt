@@ -5,18 +5,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
-import com.aws.amazonlocation.*
+import com.aws.amazonlocation.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidTest

@@ -112,7 +112,15 @@ class TrackingUtils(
         when (enableTracking) {
             TrackingEnum.ENABLE_TRACKING -> {
                 mBottomSheetTrackingBehavior?.isDraggable = false
-                mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                mBindingTracking?.clEnableTracking?.context?.let {
+                    if ((activity as MainActivity).isTablet) {
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
+                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    } else {
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_390)
+                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
+                }
                 mBindingTracking?.apply {
                     clPersistentBottomSheet.show()
                     clEnableTracking.show()
@@ -146,7 +154,11 @@ class TrackingUtils(
             getCurrentDateData()
 
             mBottomSheetTrackingBehavior?.isDraggable = true
-            mBottomSheetTrackingBehavior?.peekHeight = 110.px
+            if ((activity as MainActivity).isTablet) {
+                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_150)
+            } else {
+                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_110)
+            }
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
     }
@@ -215,13 +227,13 @@ class TrackingUtils(
                         when (newState) {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 if (!clEnableTracking.isVisible) {
-                                    imgAmazonLogoTrackingSheet.alpha = 1f
-                                    ivAmazonInfoTrackingSheet.alpha = 1f
+                                    imgAmazonLogoTrackingSheet?.alpha = 1f
+                                    ivAmazonInfoTrackingSheet?.alpha = 1f
                                 }
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
-                                imgAmazonLogoTrackingSheet.alpha = 0f
-                                ivAmazonInfoTrackingSheet.alpha = 0f
+                                imgAmazonLogoTrackingSheet?.alpha = 0f
+                                ivAmazonInfoTrackingSheet?.alpha = 0f
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
@@ -229,8 +241,8 @@ class TrackingUtils(
                                 if (clEnableTracking.isVisible) {
                                     mBottomSheetTrackingBehavior?.isDraggable = false
                                 }
-                                imgAmazonLogoTrackingSheet.alpha = 1f
-                                ivAmazonInfoTrackingSheet.alpha = 1f
+                                imgAmazonLogoTrackingSheet?.alpha = 1f
+                                ivAmazonInfoTrackingSheet?.alpha = 1f
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}

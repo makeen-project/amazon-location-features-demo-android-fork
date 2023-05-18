@@ -4,14 +4,14 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -38,7 +38,7 @@ class TrackingStartTrackingTest : BaseTestMainActivity() {
             tracking.click()
             uiDevice.wait(
                 Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker))),
-                DELAY_10000,
+                DELAY_10000
             )
             val labelContinue =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker)))
@@ -46,7 +46,7 @@ class TrackingStartTrackingTest : BaseTestMainActivity() {
 
             uiDevice.wait(
                 Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracking))),
-                DELAY_10000,
+                DELAY_10000
             )
 
             val clEnableTracking =

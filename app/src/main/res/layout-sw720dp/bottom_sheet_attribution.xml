@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/screen_size"
+    android:id="@+id/cl_main"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    app:behavior_hideable="false"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
+        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_50"
+        android:padding="@dimen/dp_8"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView"
+        style="@style/SP16BoldMediumBlackTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_50"
+        android:gravity="center"
+        android:text="@string/label_attribution"
+        android:textColor="@color/color_medium_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@color/color_view_line"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_back" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvPartnerAttribution"
+        style="@style/SP16BoldMediumBlackTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:textSize="@dimen/sp_20"
+        android:gravity="center"
+        android:text="@string/label_partner_attribution"
+        android:textColor="@color/color_medium_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_back"  />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_attribution"
+        style="@style/SP16HintRegularTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dp_12"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:lineHeight="@dimen/dp_28"
+        android:text="@string/label_esri_here"
+        android:textColor="@color/color_medium_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvPartnerAttribution"
+        tools:ignore="UnusedAttribute" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_learn_more"
+        style="@style/SigInHintTxt"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_48"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:layout_marginTop="@dimen/dp_24"
+        android:background="@drawable/continue_to_explore_bg"
+        android:fontFamily="@font/amazon_ember_bold"
+        android:text="@string/btn_learn_more"
+        android:textAllCaps="false"
+        android:textColor="@color/color_primary_green"
+        android:textSize="@dimen/sp_16"
+        app:cornerRadius="@dimen/dp_8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_attribution" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_software_attribution"
+        style="@style/SP16BoldMediumBlackTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_36"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:textSize="@dimen/sp_20"
+        android:gravity="center"
+        android:text="@string/label_software_attribution"
+        android:textColor="@color/color_medium_black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_learn_more"  />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_software_attribution_des"
+        style="@style/SP16HintRegularTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/dp_12"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:lineHeight="@dimen/dp_28"
+        android:text="@string/label_click_learn_more_for_software_attribution"
+        android:textColor="@color/color_medium_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_software_attribution"
+        tools:ignore="UnusedAttribute" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_learn_more_sa"
+        style="@style/SigInHintTxt"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_48"
+        android:layout_marginHorizontal="@dimen/dp_24"
+        android:layout_marginTop="@dimen/dp_24"
+        android:background="@drawable/continue_to_explore_bg"
+        android:fontFamily="@font/amazon_ember_bold"
+        android:text="@string/btn_learn_more"
+        android:textAllCaps="false"
+        android:textColor="@color/color_primary_green"
+        android:textSize="@dimen/sp_16"
+        app:cornerRadius="@dimen/dp_8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_software_attribution_des" />
+</androidx.constraintlayout.widget.ConstraintLayout>

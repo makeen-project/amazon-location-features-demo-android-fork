@@ -69,10 +69,12 @@ class SettingSignOutTest : BaseTestMainActivity() {
                 isDisplayed(),
             ),
         ).perform(ViewActions.click())
+        val isTablet = mActivityRule.activity.resources.getBoolean(R.bool.is_tablet)
 
-        val appViews = UiScrollable(UiSelector().scrollable(true))
-        appViews.scrollForward()
-
+        if (!isTablet) {
+            val appViews = UiScrollable(UiSelector().scrollable(true))
+            appViews.scrollForward()
+        }
         Thread.sleep(DELAY_1000)
         val logOut =
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.log_out)))
