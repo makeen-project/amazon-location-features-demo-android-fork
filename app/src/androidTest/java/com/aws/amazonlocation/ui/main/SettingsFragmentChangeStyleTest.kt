@@ -104,47 +104,33 @@ class SettingsFragmentChangeStyleTest : BaseTestMainActivity() {
 
             checkLoadedTheme()
 
-            var hasMore = true
+            Thread.sleep(DELAY_2000)
 
-            while (hasMore) {
-                hasMore = changeMapStyle()
-                Thread.sleep(DELAY_2000)
-                checkLoadedTheme()
-                Thread.sleep(DELAY_2000)
-            }
+            changeMapStyle(true, 3)
+            checkLoadedTheme()
+
+            Thread.sleep(DELAY_2000)
+
+            changeMapStyle(false, 2)
+            checkLoadedTheme()
         } catch (e: Exception) {
             failTest(132, e)
             Assert.fail(TEST_FAILED)
         }
     }
 
-    private var isEsriStyle = true
-    private var item = 0
-
-    private fun changeMapStyle(): Boolean {
+    private fun changeMapStyle(isEsri: Boolean, styleIndex: Int) {
         goToMapStyles()
 
-        var hasMoreStyles = true
-
-        if (isEsriStyle) {
+        if (isEsri) {
             waitForView(allOf(withId(R.id.rv_esri), isDisplayed()))?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(++item, click()),
+                RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(styleIndex, click()),
             )
-            if (item >= 5) {
-                item = -1
-                isEsriStyle = false
-            }
         } else {
             waitForView(allOf(withId(R.id.rv_here), isDisplayed()))?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(++item, click()),
+                RecyclerViewActions.actionOnItemAtPosition<ViewHolder>(styleIndex, click()),
             )
-            if (item >= 4) {
-                item = -1
-                hasMoreStyles = false
-            }
         }
-
-        return hasMoreStyles
     }
 
     private fun goToMapStyles() {

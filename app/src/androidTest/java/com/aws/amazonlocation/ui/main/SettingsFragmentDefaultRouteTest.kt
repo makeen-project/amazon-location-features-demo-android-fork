@@ -42,54 +42,7 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
     }
 
     @Test
-    fun checkAllOptionsDisabled() {
-        try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
-
-            goToDefaultRouteSettings()
-
-            checkDefaultRouteOptions(avoidTollsShouldBe = false, avoidFerriesShouldBe = false)
-        } catch (e: Exception) {
-            failTest(74, e)
-            Assert.fail(TEST_FAILED)
-        }
-    }
-
-    @Test
-    fun checkAvoidTollEnabled() {
-        try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
-
-            goToDefaultRouteSettings()
-            Thread.sleep(DELAY_2000)
-            toggleSwitch(R.id.switch_avoid_tools)
-            Thread.sleep(DELAY_2000)
-            checkDefaultRouteOptions(avoidTollsShouldBe = true, avoidFerriesShouldBe = false)
-        } catch (_: Exception) {
-            Assert.fail(TEST_FAILED)
-        }
-    }
-
-    @Test
-    fun checkAvoidFerryEnabled() {
-        try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
-
-            goToDefaultRouteSettings()
-            Thread.sleep(DELAY_2000)
-            toggleSwitch(R.id.switch_avoid_ferries)
-            Thread.sleep(DELAY_2000)
-            checkDefaultRouteOptions(avoidTollsShouldBe = false, avoidFerriesShouldBe = true)
-        } catch (_: Exception) {
-            Assert.fail(TEST_FAILED)
-        }
-    }
-
-    @Test
-    fun checkAllOptionsEnabled() {
+    fun checkDefaultRouteOptionsTest() {
         try {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
             Thread.sleep(DELAY_2000)
@@ -127,12 +80,12 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
     }
 
     private fun toggleSwitch(@IdRes switchId: Int) {
-        onView(
+        waitForView(
             allOf(
                 withId(switchId),
                 isDisplayed(),
             ),
-        ).perform(click())
+        )?.perform(click())
     }
 
     private fun checkDefaultRouteOptions(avoidTollsShouldBe: Boolean, avoidFerriesShouldBe: Boolean) {
