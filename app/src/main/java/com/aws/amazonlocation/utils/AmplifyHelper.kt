@@ -45,14 +45,11 @@ class AmplifyHelper(
         val mAppClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
         val mDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
         val mRegion = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val mapStyleNameDisplay =
-            mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, mContext.getString(R.string.map_light))
-                ?: mContext.getString(R.string.map_light)
+        val mapName = mContext.getString(R.string.map_esri).let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
 
         var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
         var defaultRegion = BuildConfig.DEFAULT_REGION
-        if (mapStyleNameDisplay == mContext.getString(R.string.map_grab_light) ||
-            mapStyleNameDisplay == mContext.getString(R.string.map_grab_dark)
+        if (mapName == mContext.getString(R.string.grab)
         ) {
             defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
             defaultRegion = BuildConfig.DEFAULT_SE_REGION

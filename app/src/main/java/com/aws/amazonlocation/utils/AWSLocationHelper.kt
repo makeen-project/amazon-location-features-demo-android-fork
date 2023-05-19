@@ -65,6 +65,7 @@ class AWSLocationHelper(
     private var mCognitoCredentialsProvider: CognitoCredentialsProvider? = null
     private var mBaseActivity: BaseActivity? = null
     private var apiError = "Please try again later"
+    private var mapGrabMaps = "GrabMaps"
 
     fun initAWSMobileClient(baseActivity: BaseActivity) {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
@@ -81,16 +82,10 @@ class AWSLocationHelper(
         var identityPoolId = mPreferenceManager.getValue(KEY_POOL_ID, "")
         val provider = mPreferenceManager.getValue(KEY_PROVIDER, "")
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val mapStyleNameDisplay =
-            mBaseActivity?.getString(R.string.map_light)
-                ?.let { mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, it) }
-                ?: mBaseActivity?.getString(R.string.map_light)
-
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
         var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
         var defaultRegion = BuildConfig.DEFAULT_REGION
-        if (mapStyleNameDisplay == mBaseActivity?.getString(R.string.map_grab_light) ||
-            mapStyleNameDisplay == mBaseActivity?.getString(R.string.map_grab_dark)
-        ) {
+        if (mapName == mapGrabMaps) {
             defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
             defaultRegion = BuildConfig.DEFAULT_SE_REGION
         }

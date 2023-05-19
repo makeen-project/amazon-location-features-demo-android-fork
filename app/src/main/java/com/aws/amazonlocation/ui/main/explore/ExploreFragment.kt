@@ -761,9 +761,9 @@ class ExploreFragment :
                                     isMetric(
                                         mPreferenceManager.getValue(
                                             KEY_UNIT_SYSTEM,
-                                            "",
-                                        ),
-                                    ),
+                                            ""
+                                        )
+                                    )
                                 )
                             }?.let { it2 ->
                                 getMetricsNew(
@@ -771,9 +771,9 @@ class ExploreFragment :
                                     isMetric(
                                         mPreferenceManager.getValue(
                                             KEY_UNIT_SYSTEM,
-                                            "",
-                                        ),
-                                    ),
+                                            ""
+                                        )
+                                    )
                                 )
                             }
                             tvNavigationTime.text = it.duration
@@ -1044,7 +1044,7 @@ class ExploreFragment :
                                             firstLeg.distance?.let { distance ->
                                                 tvDirectionDistance.text = mPreferenceManager.getValue(
                                                     KEY_UNIT_SYSTEM,
-                                                    "",
+                                                    ""
                                                 ).let { unitSystem ->
                                                     val isMetric = isMetric(unitSystem)
                                                     getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
@@ -1087,7 +1087,7 @@ class ExploreFragment :
                                         legs.firstOrNull()?.let { firstLeg ->
                                             tvDriveDistance.text = mPreferenceManager.getValue(
                                                 KEY_UNIT_SYSTEM,
-                                                "",
+                                                ""
                                             ).let { unitSystem ->
                                                 val isMetric = isMetric(unitSystem)
                                                 getMetricsNew(convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
@@ -1109,7 +1109,7 @@ class ExploreFragment :
                                     )
                                     tvWalkDistance.text = mPreferenceManager.getValue(
                                         KEY_UNIT_SYSTEM,
-                                        "",
+                                        ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
                                         getMetricsNew(convertToLowerUnit(walkingData[0].distance, isMetric), isMetric)
@@ -1147,7 +1147,7 @@ class ExploreFragment :
 
                                     tvTruckDistance.text = mPreferenceManager.getValue(
                                         KEY_UNIT_SYSTEM,
-                                        "",
+                                        ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
                                         getMetricsNew(convertToLowerUnit(truckData[0].distance, isMetric), isMetric)
@@ -1581,7 +1581,7 @@ class ExploreFragment :
                 if (!mRouteFinish) cardNavigationTimeDialog.show() else cardNavigationTimeDialog.hide()
                 tvDistance.text = mPreferenceManager.getValue(
                     KEY_UNIT_SYSTEM,
-                    "",
+                    ""
                 ).let { unitSystem ->
                     val isMetric = isMetric(unitSystem)
                     getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
@@ -3268,8 +3268,14 @@ class ExploreFragment :
                 mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                     ?: getString(R.string.map_light)
 
-            if (mapStyleNameDisplay == resources.getString(R.string.map_grab_light) || mapStyleNameDisplay == resources.getString(R.string.map_grab_dark)) {
-                updateMapGrab()
+            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+            if (mapName == getString(R.string.grab)) {
+                if (mapStyleNameDisplay == resources.getString(R.string.map_grab_light) || mapStyleNameDisplay == resources.getString(
+                        R.string.map_grab_dark
+                    )
+                ) {
+                    updateMapGrab()
+                }
             }
         }
     }
@@ -3772,64 +3778,76 @@ class ExploreFragment :
         val mapStyleNameDisplay =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                 ?: getString(R.string.map_light)
+        val mapNameSelected = mBaseActivity?.getString(R.string.map_esri)
+            ?.let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
+            ?: mBaseActivity?.getString(R.string.map_esri)
         val mapName: String
         val mapStyleName: String
-        when (mapStyleNameDisplay) {
-            getString(R.string.map_light) -> {
-                mapName = ESRI_LIGHT
-                mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+        if (mapNameSelected == getString(R.string.grab)) {
+            when (mapStyleNameDisplay) {
+                resources.getString(R.string.map_grab_light) -> {
+                    mapName = MapNames.GRAB_LIGHT
+                    mapStyleName = MapStyles.GRAB_LIGHT
+                }
+                resources.getString(R.string.map_grab_dark) -> {
+                    mapName = MapNames.GRAB_DARK
+                    mapStyleName = MapStyles.GRAB_DARK
+                }
+                else -> {
+                    mapName = ESRI_LIGHT
+                    mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+                }
             }
-            getString(R.string.map_streets) -> {
-                mapName = MapNames.ESRI_STREET_MAP
-                mapStyleName = MapStyles.VECTOR_ESRI_STREETS
-            }
-            getString(R.string.map_navigation) -> {
-                mapName = MapNames.ESRI_NAVIGATION
-                mapStyleName = MapStyles.VECTOR_ESRI_NAVIGATION
-            }
-            getString(R.string.map_dark_gray) -> {
-                mapName = MapNames.ESRI_DARK_GRAY_CANVAS
-                mapStyleName = MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
-            }
-            getString(R.string.map_light_gray) -> {
-                mapName = MapNames.ESRI_LIGHT_GRAY_CANVAS
-                mapStyleName = MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
-            }
-            getString(R.string.map_imagery) -> {
-                mapName = MapNames.ESRI_IMAGERY
-                mapStyleName = MapStyles.RASTER_ESRI_IMAGERY
-            }
-            resources.getString(R.string.map_contrast) -> {
-                mapName = MapNames.HERE_CONTRAST
-                mapStyleName = MapStyles.VECTOR_HERE_CONTRAST
-            }
-            resources.getString(R.string.map_explore) -> {
-                mapName = MapNames.HERE_EXPLORE
-                mapStyleName = MapStyles.VECTOR_HERE_EXPLORE
-            }
-            resources.getString(R.string.map_explore_truck) -> {
-                mapName = MapNames.HERE_EXPLORE_TRUCK
-                mapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK
-            }
-            resources.getString(R.string.map_hybrid) -> {
-                mapName = MapNames.HERE_HYBRID
-                mapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
-            }
-            resources.getString(R.string.map_raster) -> {
-                mapName = MapNames.HERE_IMAGERY
-                mapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
-            }
-            resources.getString(R.string.map_grab_light) -> {
-                mapName = MapNames.GRAB_LIGHT
-                mapStyleName = MapStyles.GRAB_LIGHT
-            }
-            resources.getString(R.string.map_grab_dark) -> {
-                mapName = MapNames.GRAB_DARK
-                mapStyleName = MapStyles.GRAB_DARK
-            }
-            else -> {
-                mapName = ESRI_LIGHT
-                mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+        } else {
+            when (mapStyleNameDisplay) {
+                getString(R.string.map_light) -> {
+                    mapName = ESRI_LIGHT
+                    mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+                }
+                getString(R.string.map_streets) -> {
+                    mapName = MapNames.ESRI_STREET_MAP
+                    mapStyleName = MapStyles.VECTOR_ESRI_STREETS
+                }
+                getString(R.string.map_navigation) -> {
+                    mapName = MapNames.ESRI_NAVIGATION
+                    mapStyleName = MapStyles.VECTOR_ESRI_NAVIGATION
+                }
+                getString(R.string.map_dark_gray) -> {
+                    mapName = MapNames.ESRI_DARK_GRAY_CANVAS
+                    mapStyleName = MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
+                }
+                getString(R.string.map_light_gray) -> {
+                    mapName = MapNames.ESRI_LIGHT_GRAY_CANVAS
+                    mapStyleName = MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
+                }
+                getString(R.string.map_imagery) -> {
+                    mapName = MapNames.ESRI_IMAGERY
+                    mapStyleName = MapStyles.RASTER_ESRI_IMAGERY
+                }
+                resources.getString(R.string.map_contrast) -> {
+                    mapName = MapNames.HERE_CONTRAST
+                    mapStyleName = MapStyles.VECTOR_HERE_CONTRAST
+                }
+                resources.getString(R.string.map_explore) -> {
+                    mapName = MapNames.HERE_EXPLORE
+                    mapStyleName = MapStyles.VECTOR_HERE_EXPLORE
+                }
+                resources.getString(R.string.map_explore_truck) -> {
+                    mapName = MapNames.HERE_EXPLORE_TRUCK
+                    mapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK
+                }
+                resources.getString(R.string.map_hybrid) -> {
+                    mapName = MapNames.HERE_HYBRID
+                    mapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
+                }
+                resources.getString(R.string.map_raster) -> {
+                    mapName = MapNames.HERE_IMAGERY
+                    mapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
+                }
+                else -> {
+                    mapName = ESRI_LIGHT
+                    mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+                }
             }
         }
         mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this, activity)
@@ -3838,7 +3856,7 @@ class ExploreFragment :
                 it,
                 mapboxMap,
                 mMapHelper,
-                mPreferenceManager,
+                mPreferenceManager
             )
             mBaseActivity?.mTrackingUtils?.setMapBox(
                 it,
@@ -3854,8 +3872,14 @@ class ExploreFragment :
                 mapboxMap.cameraPosition.target.longitude
             )
         }
-        if (mapName == MapNames.GRAB_LIGHT || mapName == MapNames.GRAB_DARK) {
-            updateMapGrab()
+        val mapNameOuter = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        if (mapNameOuter == getString(R.string.grab)) {
+            if (mapStyleNameDisplay == resources.getString(R.string.map_grab_light) || mapStyleNameDisplay == resources.getString(
+                    R.string.map_grab_dark
+                )
+            ) {
+                updateMapGrab()
+            }
         }
     }
 
@@ -4041,122 +4065,133 @@ class ExploreFragment :
         }
         mViewModel.mStyleList[position].mapInnerData?.let {
             it[innerPosition].isSelected = true
-            when (it[innerPosition].mapName) {
-                getString(R.string.map_light) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        ESRI_LIGHT,
-                        VECTOR_ESRI_TOPOGRAPHIC
-                    )
+            if (position != 2) {
+                when (it[innerPosition].mapName) {
+                    getString(R.string.map_light) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            ESRI_LIGHT,
+                            VECTOR_ESRI_TOPOGRAPHIC
+                        )
+                    }
+                    getString(R.string.map_streets) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_STREET_MAP,
+                            MapStyles.VECTOR_ESRI_STREETS
+                        )
+                    }
+                    getString(R.string.map_navigation) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_NAVIGATION,
+                            MapStyles.VECTOR_ESRI_NAVIGATION
+                        )
+                    }
+                    getString(R.string.map_dark_gray) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_DARK_GRAY_CANVAS,
+                            MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
+                        )
+                    }
+                    getString(R.string.map_light_gray) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_LIGHT_GRAY_CANVAS,
+                            MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
+                        )
+                    }
+                    getString(R.string.map_imagery) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_IMAGERY,
+                            MapStyles.RASTER_ESRI_IMAGERY
+                        )
+                    }
+                    resources.getString(R.string.map_contrast) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_CONTRAST,
+                            MapStyles.VECTOR_HERE_CONTRAST
+                        )
+                    }
+                    resources.getString(R.string.map_explore) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_EXPLORE,
+                            MapStyles.VECTOR_HERE_EXPLORE
+                        )
+                    }
+                    resources.getString(R.string.map_explore_truck) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_EXPLORE_TRUCK,
+                            MapStyles.VECTOR_HERE_EXPLORE_TRUCK
+                        )
+                    }
+                    resources.getString(R.string.map_hybrid) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_HYBRID,
+                            MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
+                        )
+                    }
+                    resources.getString(R.string.map_raster) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_IMAGERY,
+                            MapStyles.RASTER_HERE_EXPLORE_SATELLITE
+                        )
+                    }
                 }
-                getString(R.string.map_streets) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_STREET_MAP,
-                        MapStyles.VECTOR_ESRI_STREETS
-                    )
+            } else {
+                when (it[innerPosition].mapName) {
+                    resources.getString(R.string.map_grab_light) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.GRAB_LIGHT,
+                            MapStyles.GRAB_LIGHT
+                        )
+                        updateMapGrab()
+                    }
+                    resources.getString(R.string.map_grab_dark) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.GRAB_DARK,
+                            MapStyles.GRAB_DARK
+                        )
+                        updateMapGrab()
+                    }
                 }
-                getString(R.string.map_navigation) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_NAVIGATION,
-                        MapStyles.VECTOR_ESRI_NAVIGATION
-                    )
+            }
+            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+            var oldSelectedPosition = 0
+            when (mapName) {
+                getString(R.string.esri) -> {
+                    oldSelectedPosition = 0
                 }
-                getString(R.string.map_dark_gray) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_DARK_GRAY_CANVAS,
-                        MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
-                    )
+                getString(R.string.here) -> {
+                    oldSelectedPosition = 1
                 }
-                getString(R.string.map_light_gray) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_LIGHT_GRAY_CANVAS,
-                        MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
-                    )
+                getString(R.string.grab) -> {
+                    oldSelectedPosition = 2
                 }
-                getString(R.string.map_imagery) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_IMAGERY,
-                        MapStyles.RASTER_ESRI_IMAGERY
-                    )
+            }
+            it[innerPosition].mapName?.let { it1 ->
+                isRestartNeeded = if (oldSelectedPosition == 0 || oldSelectedPosition == 1) {
+                    position == 2
+                } else {
+                    position != 2
                 }
-                resources.getString(R.string.map_contrast) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_CONTRAST,
-                        MapStyles.VECTOR_HERE_CONTRAST
-                    )
-                }
-                resources.getString(R.string.map_explore) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_EXPLORE,
-                        MapStyles.VECTOR_HERE_EXPLORE
-                    )
-                }
-                resources.getString(R.string.map_explore_truck) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_EXPLORE_TRUCK,
-                        MapStyles.VECTOR_HERE_EXPLORE_TRUCK
-                    )
-                }
-                resources.getString(R.string.map_hybrid) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_HYBRID,
-                        MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
-                    )
-                }
-                resources.getString(R.string.map_raster) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_IMAGERY,
-                        MapStyles.RASTER_HERE_EXPLORE_SATELLITE
-                    )
-                }
-                resources.getString(R.string.map_grab_light) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.GRAB_LIGHT,
-                        MapStyles.GRAB_LIGHT
-                    )
-                    updateMapGrab()
-                }
-                resources.getString(R.string.map_grab_dark) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.GRAB_DARK,
-                        MapStyles.GRAB_DARK
-                    )
-                    updateMapGrab()
-                }
+                mPreferenceManager.setValue(
+                    KEY_MAP_STYLE_NAME,
+                    it1
+                )
             }
             mViewModel.mStyleList[position].styleNameDisplay?.let { it1 ->
                 mPreferenceManager.setValue(
                     KEY_MAP_NAME,
-                    it1
-                )
-            }
-            it[innerPosition].mapName?.let { it1 ->
-                val mapStyleNameDisplay =
-                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
-                        ?: getString(R.string.map_light)
-                var isGrabSelected = false
-                if (mapStyleNameDisplay == getString(R.string.map_grab_dark) || mapStyleNameDisplay == getString(R.string.map_grab_light)) {
-                    isGrabSelected = true
-                }
-                isRestartNeeded = if (isGrabSelected) {
-                    !(it1 == getString(R.string.map_grab_dark) || it1 == getString(R.string.map_grab_light))
-                } else {
-                    it1 == getString(R.string.map_grab_dark) || it1 == getString(R.string.map_grab_light)
-                }
-                mPreferenceManager.setValue(
-                    KEY_MAP_STYLE_NAME,
                     it1
                 )
             }
@@ -4311,7 +4346,7 @@ class ExploreFragment :
                 R.drawable.ic_amazon_logo_on_light
             }
         }
-        if(activity is MainActivity) {
+        if (activity is MainActivity) {
             (activity as MainActivity).changeAmazonLogo(logoResId)
         }
         mBinding.bottomSheetSearch.imgAmazonLogoSearchSheet.setImageResource(logoResId)

@@ -541,7 +541,7 @@ class ExploreViewModel @Inject constructor(
         grabList.add(
             MapStyleInnerData(
                 mapName = context.resources.getString(R.string.map_grab_light),
-                image = R.drawable.light_gray,
+                image = R.drawable.grab_light,
                 isSelected = false,
                 mMapName = MapNames.GRAB_LIGHT,
                 mMapStyleName = MapStyles.GRAB_LIGHT
@@ -550,7 +550,7 @@ class ExploreViewModel @Inject constructor(
         grabList.add(
             MapStyleInnerData(
                 mapName = context.resources.getString(R.string.map_grab_dark),
-                image = R.drawable.dark_gray,
+                image = R.drawable.grab_dark,
                 isSelected = false,
                 mMapName = MapNames.GRAB_DARK,
                 mMapStyleName = MapStyles.GRAB_DARK

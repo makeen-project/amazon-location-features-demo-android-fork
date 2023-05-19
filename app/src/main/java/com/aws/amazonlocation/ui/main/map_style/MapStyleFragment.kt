@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.aws.amazonlocation.R
@@ -16,7 +17,12 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.isInternetAvailable
+import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.restartApplication
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
 class MapStyleFragment : BaseFragment() {
@@ -32,6 +38,7 @@ class MapStyleFragment : BaseFragment() {
     private var isTablet = false
     private var isLargeTablet = false
     private var columnCount = 3
+    private var isRestartNeeded = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,8 +122,19 @@ class MapStyleFragment : BaseFragment() {
                     override fun esriStyleClick(position: Int) {
                         if (context?.isInternetAvailable() == true) {
                             if (isMapClickEnable) {
-                                isMapClickEnable = false
-                                changeStyle(position, isHere = true, isGrab = false)
+                                checkRestartNeeded()
+                                if (isRestartNeeded) {
+                                    saveHereData(position)
+                                    lifecycleScope.launch {
+                                        if (!isRunningTest) {
+                                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                            activity?.restartApplication()
+                                        }
+                                    }
+                                } else {
+                                    isMapClickEnable = false
+                                    changeStyle(position, isHere = true, isGrab = false)
+                                }
                             }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
@@ -138,8 +156,19 @@ class MapStyleFragment : BaseFragment() {
                     override fun esriStyleClick(position: Int) {
                         if (context?.isInternetAvailable() == true) {
                             if (isMapClickEnable) {
-                                isMapClickEnable = false
-                                changeStyle(position, isHere = false, isGrab = false)
+                                checkRestartNeeded()
+                                if (isRestartNeeded) {
+                                    saveEsriData(position)
+                                    lifecycleScope.launch {
+                                        if (!isRunningTest) {
+                                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                            activity?.restartApplication()
+                                        }
+                                    }
+                                } else {
+                                    isMapClickEnable = false
+                                    changeStyle(position, isHere = false, isGrab = false)
+                                }
                             }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
@@ -151,23 +180,68 @@ class MapStyleFragment : BaseFragment() {
         }
     }
 
+    private fun checkRestartNeeded() {
+        when (
+            mPreferenceManager.getValue(
+                KEY_MAP_NAME,
+                getString(R.string.map_esri)
+            )
+        ) {
+            getString(R.string.esri) -> {
+                isRestartNeeded = false
+            }
+            getString(R.string.here) -> {
+                isRestartNeeded = false
+            }
+            getString(R.string.grab) -> {
+                isRestartNeeded = true
+            }
+        }
+    }
+
     private fun setGrabMapStyleAdapter() {
         val mLayoutManager = GridLayoutManager(this.context, columnCount)
         mBinding.apply {
-            rvGrab?.layoutManager = mLayoutManager
+            rvGrab.layoutManager = mLayoutManager
             mGrabAdapter = EsriMapStyleAdapter(
                 mViewModel.grabList,
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
                     override fun esriStyleClick(position: Int) {
                         if (context?.isInternetAvailable() == true) {
-                            changeStyle(position, isHere = false, isGrab = true)
+                            when (
+                                mPreferenceManager.getValue(
+                                    KEY_MAP_NAME,
+                                    getString(R.string.map_esri)
+                                )
+                            ) {
+                                getString(R.string.esri) -> {
+                                    isRestartNeeded = true
+                                }
+                                getString(R.string.here) -> {
+                                    isRestartNeeded = true
+                                }
+                                getString(R.string.grab) -> {
+                                    isRestartNeeded = false
+                                }
+                            }
+                            if (isRestartNeeded) {
+                                saveGrabData(position)
+                                lifecycleScope.launch {
+                                    if (!isRunningTest) {
+                                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                        activity?.restartApplication()
+                                    }
+                                }
+                            } else {
+                                changeStyle(position, isHere = false, isGrab = true)
+                            }
                         } else {
                             showError(getString(R.string.check_your_internet_connection_and_try_again))
                         }
                     }
                 }
             )
-            rvGrab?.adapter = mGrabAdapter
+            rvGrab.adapter = mGrabAdapter
         }
     }
 
@@ -177,19 +251,10 @@ class MapStyleFragment : BaseFragment() {
                 mAdapter?.deselectAll()
                 mHereAdapter?.deselectAll()
                 mGrabAdapter?.singeSelection(position)
-                mViewModel.grabList[position].mapName?.let { it1 ->
-                    mPreferenceManager.setValue(
-                        KEY_MAP_STYLE_NAME,
-                        it1
-                    )
-                }
+                saveGrabData(position)
                 mMapHelper.updateMapStyle(
                     mViewModel.grabList[position].mMapName!!,
                     mViewModel.grabList[position].mMapStyleName!!
-                )
-                mPreferenceManager.setValue(
-                    KEY_MAP_NAME,
-                    resources.getString(R.string.grab)
                 )
                 return
             }
@@ -197,12 +262,7 @@ class MapStyleFragment : BaseFragment() {
                 mAdapter?.deselectAll()
                 mGrabAdapter?.deselectAll()
                 mHereAdapter?.singeSelection(position)
-                mViewModel.hereList[position].mapName?.let { it1 ->
-                    mPreferenceManager.setValue(
-                        KEY_MAP_STYLE_NAME,
-                        it1
-                    )
-                }
+                saveHereData(position)
                 mViewModel.hereList[position].mMapName?.let {
                     mViewModel.hereList[position].mMapStyleName?.let { it1 ->
                         mMapHelper.updateMapStyle(
@@ -211,24 +271,11 @@ class MapStyleFragment : BaseFragment() {
                         )
                     }
                 }
-                mPreferenceManager.setValue(
-                    KEY_MAP_NAME,
-                    resources.getString(R.string.here)
-                )
             } else {
                 mHereAdapter?.deselectAll()
                 mGrabAdapter?.deselectAll()
                 mAdapter?.singeSelection(position)
-                mViewModel.esriList[position].mapName?.let { it1 ->
-                    mPreferenceManager.setValue(
-                        KEY_MAP_STYLE_NAME,
-                        it1
-                    )
-                }
-                mPreferenceManager.setValue(
-                    KEY_MAP_NAME,
-                    resources.getString(R.string.map_esri)
-                )
+                saveEsriData(position)
                 mViewModel.esriList[position].mMapName?.let {
                     mViewModel.esriList[position].mMapStyleName?.let { it1 ->
                         mMapHelper.updateMapStyle(
@@ -240,6 +287,45 @@ class MapStyleFragment : BaseFragment() {
             }
         }
         isMapClickEnable = true
+    }
+
+    private fun saveEsriData(position: Int) {
+        mViewModel.esriList[position].mapName?.let { it1 ->
+            mPreferenceManager.setValue(
+                KEY_MAP_STYLE_NAME,
+                it1
+            )
+        }
+        mPreferenceManager.setValue(
+            KEY_MAP_NAME,
+            resources.getString(R.string.map_esri)
+        )
+    }
+
+    private fun saveHereData(position: Int) {
+        mViewModel.hereList[position].mapName?.let { it1 ->
+            mPreferenceManager.setValue(
+                KEY_MAP_STYLE_NAME,
+                it1
+            )
+        }
+        mPreferenceManager.setValue(
+            KEY_MAP_NAME,
+            resources.getString(R.string.here)
+        )
+    }
+
+    private fun saveGrabData(position: Int) {
+        mViewModel.grabList[position].mapName?.let { it1 ->
+            mPreferenceManager.setValue(
+                KEY_MAP_STYLE_NAME,
+                it1
+            )
+        }
+        mPreferenceManager.setValue(
+            KEY_MAP_NAME,
+            resources.getString(R.string.grab)
+        )
     }
 
     private fun clickListener() {
