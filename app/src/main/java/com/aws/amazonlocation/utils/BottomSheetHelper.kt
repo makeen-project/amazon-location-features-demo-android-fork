@@ -102,6 +102,9 @@ class BottomSheetHelper {
         return mBottomSheetSearchPlaces.state == BottomSheetBehavior.STATE_HALF_EXPANDED
     }
     fun isMapStyleExpandedOrHalfExpand(): Boolean {
+        if (!::mBottomSheetMapStyle.isInitialized) {
+            return false
+        }
         return mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_HALF_EXPANDED || mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_EXPANDED
     }
 
