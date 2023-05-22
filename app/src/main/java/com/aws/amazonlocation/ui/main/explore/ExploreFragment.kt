@@ -38,18 +38,18 @@ import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.data.*
 import com.aws.amazonlocation.data.common.onError
 import com.aws.amazonlocation.data.common.onLoading
 import com.aws.amazonlocation.data.common.onSuccess
-import com.aws.amazonlocation.data.enum.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.data.enum.*
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.databinding.BottomSheetDirectionBinding
 import com.aws.amazonlocation.databinding.BottomSheetDirectionSearchBinding
 import com.aws.amazonlocation.databinding.FragmentExploreBinding
-import com.aws.amazonlocation.domain.`interface`.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.domain.`interface`.*
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
@@ -59,7 +59,7 @@ import com.aws.amazonlocation.ui.main.signin.CloudFormationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
-import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
 import com.aws.amazonlocation.utils.MapNames.ESRI_LIGHT
 import com.aws.amazonlocation.utils.MapStyles.VECTOR_ESRI_TOPOGRAPHIC
@@ -71,7 +71,7 @@ import com.aws.amazonlocation.utils.Units.isGPSEnabled
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.* // ktlint-disable no-wildcard-imports
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
@@ -87,7 +87,7 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import kotlinx.coroutines.* // ktlint-disable no-wildcard-imports
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -593,7 +593,7 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun setMapStyleAdapter() {
         mBinding.bottomSheetMapStyle.rvMapStyle.apply {
-            mViewModel.setMapListData(context)
+            mViewModel.setMapListData(context, isGrabMapEnable(mPreferenceManager))
             val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 ?: getString(R.string.map_esri)
             val mapStyleName =
@@ -757,6 +757,7 @@ class ExploreFragment :
                         mBinding.bottomSheetNavigation.apply {
                             tvNavigationDistance.text = it.distance?.let { it1 ->
                                 convertToLowerUnit(
+
                                     it1,
                                     isMetric(
                                         mPreferenceManager.getValue(

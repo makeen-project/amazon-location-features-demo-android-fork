@@ -60,6 +60,8 @@ const val HERE = "Here"
 const val DESCRIPTION_TAG_ESRI = "ESRI_"
 const val DESCRIPTION_TAG_HERE = "HERE_"
 
+val SE_REGION_LIST = arrayListOf("ap-southeast-1")
+
 /**
  *  * Validate Latitude and Longitude from string.
  *

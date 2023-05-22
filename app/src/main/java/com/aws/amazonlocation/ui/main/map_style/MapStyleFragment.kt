@@ -18,6 +18,7 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.restartApplication
@@ -29,6 +30,7 @@ class MapStyleFragment : BaseFragment() {
 
     private lateinit var mLayoutManagerEsri: GridLayoutManager
     private lateinit var mLayoutManagerHere: GridLayoutManager
+    private lateinit var mLayoutManagerGrab: GridLayoutManager
     private lateinit var mBinding: FragmentMapStyleBinding
     private val mViewModel: MapStyleViewModel by viewModels()
     private var mAdapter: EsriMapStyleAdapter? = null
@@ -39,6 +41,7 @@ class MapStyleFragment : BaseFragment() {
     private var isLargeTablet = false
     private var columnCount = 3
     private var isRestartNeeded = false
+    private var isGrabMapEnable = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +61,7 @@ class MapStyleFragment : BaseFragment() {
         if ((activity is MainActivity)) {
             isTablet = (activity as MainActivity).isTablet
         }
+        isGrabMapEnable = isGrabMapEnable(mPreferenceManager)
         isLargeTablet = requireContext().resources.getBoolean(R.bool.is_large_tablet)
         if (isTablet) {
             setColumnCount()
@@ -68,7 +72,9 @@ class MapStyleFragment : BaseFragment() {
 
         mViewModel.setEsriMapListData(requireContext())
         mViewModel.setHereMapListData(requireContext())
-        mViewModel.setGrabMapListData(requireContext())
+        if (isGrabMapEnable) {
+            mViewModel.setGrabMapListData(requireContext())
+        }
         when (mapName) {
             resources.getString(R.string.esri) -> {
                 for (i in 0 until mViewModel.esriList.size) {
@@ -89,7 +95,9 @@ class MapStyleFragment : BaseFragment() {
 
         setEsriMapStyleAdapter()
         setHereMapStyleAdapter()
-        setGrabMapStyleAdapter()
+        if (isGrabMapEnable) {
+            setGrabMapStyleAdapter()
+        }
         backPress()
         clickListener()
     }
@@ -101,6 +109,10 @@ class MapStyleFragment : BaseFragment() {
         mLayoutManagerEsri.spanCount = columnCount
         mHereAdapter?.notifyDataSetChanged()
         mAdapter?.notifyDataSetChanged()
+        if (isGrabMapEnable) {
+            mLayoutManagerGrab.spanCount = columnCount
+            mGrabAdapter?.notifyDataSetChanged()
+        }
     }
 
     private fun setColumnCount() {
@@ -200,9 +212,9 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun setGrabMapStyleAdapter() {
-        val mLayoutManager = GridLayoutManager(this.context, columnCount)
+        mLayoutManagerGrab = GridLayoutManager(this.context, columnCount)
         mBinding.apply {
-            rvGrab.layoutManager = mLayoutManager
+            rvGrab.layoutManager = mLayoutManagerGrab
             mGrabAdapter = EsriMapStyleAdapter(
                 mViewModel.grabList,
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
