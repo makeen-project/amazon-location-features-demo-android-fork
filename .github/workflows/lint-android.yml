@@ -1,11 +1,11 @@
-name: Run Unit Tests for Android
+name: Lint Android
 on:
   workflow_dispatch:
   pull_request:
     branches: [ develop, main ]
 jobs:
-  test-android:
-    name: Test Android
+  lint-android:
+    name: Lint Android
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v3
@@ -33,14 +33,10 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Run Unit Tests
-        run: |
-          ./gradlew testDebugUnitTest
+      - name: Run Lint
+        run: ./gradlew lint
 
-      - name: Upload test results
-        uses: actions/upload-artifact@v2
-        if: always()
+      - uses: yutailang0119/action-android-lint@v3
         with:
-          name: test-results
-          path: app/build/reports/androidTests/connected/
-          retention-days: 1
+          report-path: build/reports/*.xml
+        continue-on-error: false
