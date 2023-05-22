@@ -1856,6 +1856,11 @@ class ExploreFragment :
                 }
             }
 
+            bottomSheetSearch.apply {
+                tvSearchCancel?.setOnClickListener {
+                    mBottomSheetHelper.collapseSearchBottomSheet()
+                }
+            }
             bottomSheetSearch.edtSearchPlaces.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                 updateSearchUI(text.isNullOrEmpty())
                 if (mViewModel.mIsPlaceSuggestion) {

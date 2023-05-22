@@ -17,8 +17,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_welcome"
             android:layout_width="@dimen/screen_size"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/welcome_screen_height"
             android:layout_marginHorizontal="@dimen/dp_80"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,9 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_24"
                 android:src="@drawable/powered_by_aws"
-                android:layout_marginTop="@dimen/dp_175"
                 app:layout_constraintBottom_toTopOf="@+id/tv_terms_desc"
-                app:layout_constraintTop_toBottomOf="@id/tv_welcome_app"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
