@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/cl_map_style_main"
     tools:context=".ui.main.map_style.MapStyleFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
