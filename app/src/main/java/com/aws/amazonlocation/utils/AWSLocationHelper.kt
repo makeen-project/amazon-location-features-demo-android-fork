@@ -69,8 +69,13 @@ class AWSLocationHelper(
 
     fun initAWSMobileClient(baseActivity: BaseActivity) {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
+        var defaultRegion = BuildConfig.DEFAULT_REGION
+        if (mapName == mapGrabMaps) {
+            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+        }
         if (region.isNullOrEmpty()) {
-            region = BuildConfig.DEFAULT_REGION
+            region = defaultRegion
         }
         mClient = AmazonLocationClient(initCognitoCachingCredentialsProvider())
         mClient?.setRegion(Region.getRegion(region))
@@ -131,6 +136,9 @@ class AWSLocationHelper(
                 "HERE" -> {
                     HERE_PLACE_INDEX
                 }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
+                }
                 else -> ESRI_PLACE_INDEX
             }
             return mClient?.searchPlaceIndexForSuggestions(
@@ -165,6 +173,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_ROUTE_CALCULATOR
+                }
+                "GrabMaps" -> {
+                    GRAB_ROUTE_CALCULATOR
                 }
                 else -> ESRI_ROUTE_CALCULATOR
             }
@@ -337,6 +348,9 @@ class AWSLocationHelper(
                 "HERE" -> {
                     HERE_PLACE_INDEX
                 }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
+                }
                 else -> ESRI_PLACE_INDEX
             }
             val liveLocation = mMapHelper.getLiveLocation()
@@ -390,6 +404,9 @@ class AWSLocationHelper(
                 "HERE" -> {
                     HERE_PLACE_INDEX
                 }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
+                }
                 else -> ESRI_PLACE_INDEX
             }
             mClient?.getPlace(
@@ -413,6 +430,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_PLACE_INDEX
+                }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
                 }
                 else -> ESRI_PLACE_INDEX
             }
@@ -460,6 +480,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_PLACE_INDEX
+                }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
                 }
                 else -> ESRI_PLACE_INDEX
             }
