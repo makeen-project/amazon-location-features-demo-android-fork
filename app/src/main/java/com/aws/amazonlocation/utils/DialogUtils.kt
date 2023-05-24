@@ -171,6 +171,26 @@ fun Context.userSignOutDialog() {
     mDialog.show()
 }
 
+fun Context.restartAppMapStyleDialog(
+    restartInterface: MapStyleRestartInterface
+) {
+    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
+    mDialog.setTitle(resources.getString(R.string.label_restart_app_title))
+    mDialog.setMessage(resources.getString(R.string.label_restart_app_description))
+    mDialog.setPositiveButton(
+        this.resources.getString(R.string.ok)
+    ) { dialog, _ ->
+        restartInterface.onOkClick(dialog)
+        dialog.dismiss()
+    }
+    mDialog.setNegativeButton(
+        this.resources.getString(R.string.cancel)
+    ) { dialog, _ ->
+        dialog.dismiss()
+    }
+    mDialog.show()
+}
+
 interface EnableTrackerInterface {
     fun continueToTracker(dialog: DialogInterface)
     fun cancel()
@@ -200,4 +220,8 @@ interface DeleteTrackingDataInterface {
 
 interface MessageInterface {
     fun onMessageClick(dialog: DialogInterface)
+}
+
+interface MapStyleRestartInterface {
+    fun onOkClick(dialog: DialogInterface)
 }

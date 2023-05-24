@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main.map_style // ktlint-disable package-name
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,10 +18,12 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.MapStyleRestartInterface
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.restartAppMapStyleDialog
 import com.aws.amazonlocation.utils.restartApplication
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -136,13 +139,11 @@ class MapStyleFragment : BaseFragment() {
                             if (isMapClickEnable) {
                                 checkRestartNeeded()
                                 if (isRestartNeeded) {
-                                    saveHereData(position)
-                                    lifecycleScope.launch {
-                                        if (!isRunningTest) {
-                                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                            activity?.restartApplication()
-                                        }
-                                    }
+                                    showRestartDialog(
+                                        isHere = true,
+                                        isGrab = false,
+                                        position = position
+                                    )
                                 } else {
                                     isMapClickEnable = false
                                     changeStyle(position, isHere = true, isGrab = false)
@@ -170,13 +171,11 @@ class MapStyleFragment : BaseFragment() {
                             if (isMapClickEnable) {
                                 checkRestartNeeded()
                                 if (isRestartNeeded) {
-                                    saveEsriData(position)
-                                    lifecycleScope.launch {
-                                        if (!isRunningTest) {
-                                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                            activity?.restartApplication()
-                                        }
-                                    }
+                                    showRestartDialog(
+                                        isHere = false,
+                                        isGrab = false,
+                                        position = position
+                                    )
                                 } else {
                                     isMapClickEnable = false
                                     changeStyle(position, isHere = false, isGrab = false)
@@ -237,13 +236,7 @@ class MapStyleFragment : BaseFragment() {
                                 }
                             }
                             if (isRestartNeeded) {
-                                saveGrabData(position)
-                                lifecycleScope.launch {
-                                    if (!isRunningTest) {
-                                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                        activity?.restartApplication()
-                                    }
-                                }
+                                showRestartDialog(isHere = false, isGrab = true, position = position)
                             } else {
                                 changeStyle(position, isHere = false, isGrab = true)
                             }
@@ -257,6 +250,28 @@ class MapStyleFragment : BaseFragment() {
         }
     }
 
+    private fun showRestartDialog(isHere: Boolean, isGrab: Boolean, position: Int) {
+        activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+            override fun onOkClick(dialog: DialogInterface) {
+                if (isGrab) {
+                    saveGrabData(position)
+                } else {
+                    if (isHere) {
+                        saveHereData(position)
+                    } else {
+                        saveEsriData(position)
+                    }
+                }
+                lifecycleScope.launch {
+                    if (!isRunningTest) {
+                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                        activity?.restartApplication()
+                    }
+                }
+            }
+        })
+    }
+
     fun changeStyle(position: Int, isHere: Boolean, isGrab: Boolean) {
         if (position != -1) {
             if (isGrab) {
@@ -264,10 +279,14 @@ class MapStyleFragment : BaseFragment() {
                 mHereAdapter?.deselectAll()
                 mGrabAdapter?.singeSelection(position)
                 saveGrabData(position)
-                mMapHelper.updateMapStyle(
-                    mViewModel.grabList[position].mMapName!!,
-                    mViewModel.grabList[position].mMapStyleName!!
-                )
+                mViewModel.grabList[position].mMapName?.let {
+                    mViewModel.grabList[position].mMapStyleName?.let { it1 ->
+                        mMapHelper.updateMapStyle(
+                            it,
+                            it1
+                        )
+                    }
+                }
                 return
             }
             if (isHere) {

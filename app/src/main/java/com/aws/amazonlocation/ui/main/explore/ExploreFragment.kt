@@ -618,17 +618,10 @@ class ExploreFragment :
                     object : MapStyleAdapter.MapInterface {
                         override fun mapClick(position: Int) {
                             if (position != -1) {
-                                if (!mViewModel.mStyleList[position].isSelected) {
-                                    repeat(mViewModel.mStyleList.size) {
-                                        mViewModel.mStyleList[it].isSelected = false
-                                    }
-                                } else {
+                                if (mViewModel.mStyleList[position].isSelected) {
                                     return
                                 }
-                                mapStyleChange(position, 0)
-                                mViewModel.mStyleList[position].isSelected =
-                                    !mViewModel.mStyleList[position].isSelected
-                                mMapStyleAdapter?.notifyDataSetChanged()
+                                mapStyleChange(position, 0, true)
                             }
                         }
 
@@ -640,7 +633,7 @@ class ExploreFragment :
                                             return
                                         }
                                     }
-                                    mapStyleChange(position, innerPosition)
+                                    mapStyleChange(position, innerPosition, false)
                                 }
                             }
                         }
@@ -1782,34 +1775,29 @@ class ExploreFragment :
             }
 
             cardMap.setOnClickListener {
-                mBaseActivity?.isTablet?.let {
-                    if (it) {
+                mBaseActivity?.isTablet?.let { it1 ->
+                    if (it1) {
                         mapStyleBottomSheetFragment =
                             MapStyleBottomSheetFragment(
                                 mViewModel,
                                 object : MapStyleAdapter.MapInterface {
                                     override fun mapClick(position: Int) {
-                                        if (!mViewModel.mStyleList[position].isSelected) {
-                                            repeat(mViewModel.mStyleList.size) {
-                                                mViewModel.mStyleList[it].isSelected = false
-                                            }
-                                        } else {
+                                        if (mViewModel.mStyleList[position].isSelected) {
                                             return
                                         }
-                                        mapStyleChange(position, 0)
-                                        mViewModel.mStyleList[position].isSelected =
-                                            !mViewModel.mStyleList[position].isSelected
-                                        mapStyleBottomSheetFragment.notifyAdapter()
+                                        mapStyleChange(position, 0, true)
                                     }
 
                                     override fun mapStyleClick(position: Int, innerPosition: Int) {
                                         if (checkInternetConnection()) {
-                                            mViewModel.mStyleList[position].mapInnerData?.let {
-                                                if (it[innerPosition].isSelected) {
-                                                    return
+                                            if (position != -1 && innerPosition != -1) {
+                                                mViewModel.mStyleList[position].mapInnerData?.let {
+                                                    if (it[innerPosition].isSelected) {
+                                                        return
+                                                    }
                                                 }
+                                                mapStyleChange(position, innerPosition, false)
                                             }
-                                            mapStyleChange(position, innerPosition)
                                         }
                                     }
                                 }
@@ -4056,9 +4044,71 @@ class ExploreFragment :
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun mapStyleChange(position: Int, innerPosition: Int) {
+    fun mapStyleChange(position: Int, innerPosition: Int, isMapClick: Boolean) {
+        val isRestartNeeded: Boolean
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        var oldSelectedPosition = 0
+        when (mapName) {
+            getString(R.string.esri) -> {
+                oldSelectedPosition = 0
+            }
+            getString(R.string.here) -> {
+                oldSelectedPosition = 1
+            }
+            getString(R.string.grab) -> {
+                oldSelectedPosition = 2
+            }
+        }
+        isRestartNeeded = if (oldSelectedPosition == 0 || oldSelectedPosition == 1) {
+            position == 2
+        } else {
+            position != 2
+        }
+        if (isRestartNeeded) {
+            activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                override fun onOkClick(dialog: DialogInterface) {
+                    changeMapStyle(isMapClick, position, innerPosition)
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
+                    }
+                }
+            })
+        } else {
+            changeMapStyle(isMapClick, position, innerPosition)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun changeMapStyle(
+        isMapClick: Boolean,
+        position: Int,
+        innerPosition: Int
+    ) {
+        if (isMapClick) {
+            repeat(mViewModel.mStyleList.size) {
+                mViewModel.mStyleList[it].isSelected = false
+            }
+            changeStyle(position, innerPosition)
+            mViewModel.mStyleList[position].isSelected =
+                !mViewModel.mStyleList[position].isSelected
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mapStyleBottomSheetFragment.notifyAdapter()
+                } else {
+                    mMapStyleAdapter?.notifyDataSetChanged()
+                }
+            }
+        } else {
+            changeStyle(position, innerPosition)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun changeStyle(position: Int, innerPosition: Int) {
         clearAllMapData()
-        var isRestartNeeded = false
         mViewModel.mStyleList.forEach {
             it.mapInnerData?.forEach { innerData ->
                 innerData.isSelected = false
@@ -4166,25 +4216,7 @@ class ExploreFragment :
                     }
                 }
             }
-            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
-            var oldSelectedPosition = 0
-            when (mapName) {
-                getString(R.string.esri) -> {
-                    oldSelectedPosition = 0
-                }
-                getString(R.string.here) -> {
-                    oldSelectedPosition = 1
-                }
-                getString(R.string.grab) -> {
-                    oldSelectedPosition = 2
-                }
-            }
             it[innerPosition].mapName?.let { it1 ->
-                isRestartNeeded = if (oldSelectedPosition == 0 || oldSelectedPosition == 1) {
-                    position == 2
-                } else {
-                    position != 2
-                }
                 mPreferenceManager.setValue(
                     KEY_MAP_STYLE_NAME,
                     it1
@@ -4197,51 +4229,39 @@ class ExploreFragment :
                 )
             }
         }
-        if (isRestartNeeded) {
-            lifecycleScope.launch {
-                if (!isRunningTest) {
-                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                    activity?.restartApplication()
-                }
-            }
-        } else {
-            mBaseActivity?.isTablet?.let {
-                if (it) {
-                    mapStyleBottomSheetFragment.notifyAdapter()
-                } else {
-                    mMapStyleAdapter?.notifyDataSetChanged()
-                }
+
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mapStyleBottomSheetFragment.notifyAdapter()
+            } else {
+                mMapStyleAdapter?.notifyDataSetChanged()
             }
         }
     }
 
     private fun updateMapGrab() {
-        val latNorth = 31.952162238024968
-        val lonEast = 146.25
-        val latSouth = -21.943045533438166
-        val lonWest = 90.0
         lifecycleScope.launch {
             delay(2000)
             val currentLocation = mMapHelper.getLiveLocation()
             currentLocation?.let {
-                if (!(it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)) {
-                    // Set the map bounds
-                    val cameraPosition = CameraPosition.Builder()
-                        .target(
-                            LatLngBounds.from(
-                                latNorth,
-                                lonEast,
-                                latSouth,
-                                lonWest
-                            ).center
-                        )
-                        .zoom(3.0)
-                        .build()
-
-                    mMapboxMap?.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                if (!(it.latitude in mViewModel.latSouth..mViewModel.latNorth && it.longitude in mViewModel.lonWest..mViewModel.lonEast)) {
+                    setBounds()
                 }
             }
         }
+    }
+
+    private fun setBounds() {
+        // Set the map bounds
+        val bounds = LatLngBounds.Builder()
+            .include(LatLng(mViewModel.latNorth, mViewModel.lonEast))
+            .include(LatLng(mViewModel.latSouth, mViewModel.lonWest))
+            .build()
+        mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
+        val padding = 0 // Adjust the padding as needed
+        val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
+        mMapboxMap?.moveCamera(cameraUpdate)
+        mMapboxMap?.setMinZoomPreference(2.4)
     }
 
     private fun clearAllMapData() {
@@ -4326,7 +4346,7 @@ class ExploreFragment :
 
     override fun onMapStyleChanged(mapStyle: String) {
         val logoResId = when (mapStyle) {
-            MapNames.ESRI_LIGHT,
+            ESRI_LIGHT,
             MapNames.ESRI_STREET_MAP,
             MapNames.ESRI_NAVIGATION,
             MapNames.ESRI_LIGHT_GRAY_CANVAS,
@@ -4347,14 +4367,21 @@ class ExploreFragment :
                 R.drawable.ic_amazon_logo_on_light
             }
         }
+        if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
+            setBounds()
+        }
         if (activity is MainActivity) {
             (activity as MainActivity).changeAmazonLogo(logoResId)
         }
         mBinding.bottomSheetSearch.imgAmazonLogoSearchSheet.setImageResource(logoResId)
         mBinding.bottomSheetDirection.imgAmazonLogoDirection?.setImageResource(logoResId)
-        mBinding.bottomSheetDirectionSearch.imgAmazonLogoDirectionSearchSheet.setImageResource(logoResId)
+        mBinding.bottomSheetDirectionSearch.imgAmazonLogoDirectionSearchSheet.setImageResource(
+            logoResId
+        )
         mBinding.bottomSheetNavigation.imgAmazonLogoNavigation.setImageResource(logoResId)
-        mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(logoResId)
+        mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(
+            logoResId
+        )
         mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
         mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
