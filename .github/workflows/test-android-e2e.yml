@@ -1,0 +1,75 @@
+name: Run E2E Tests for Android
+on:
+  workflow_dispatch:
+jobs:
+  test-android:
+    name: Test Android
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Bundler
+        run: |
+          bundle config --local path ./vendor/bundle
+          bundle config --local deployment true
+          bundle install
+
+      - name: Setup Config
+        env:
+          custom_config: ${{ secrets.SECRETS }}
+        if: ${{ env.custom_config != '' }}
+        run: |
+          base64 -d <<< ${{ env.custom_config }} > custom.properties
+
+      - name: Ensure config files exist
+        run: |
+          touch custom.properties
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Run Unit Tests
+        run: |
+          ./gradlew testDebugUnitTest
+
+      - name: e2e tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          emulator-boot-timeout: 1200
+          target: playstore
+          avd-name: test
+          disable-animations: true
+          profile: Nexus 6
+          script: |
+            adb emu geo fix 72.58727 23.02579
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.DefaultConnectionFlowSuite
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.DefaultConnectionFlowSuite2
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.AWSConnectionSuite
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.AWSSignInSuite
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingStartTrackingTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingStopTrackingTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingDeleteTrackingHistoryTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingStartTrackingHistoryLoggedTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingStartTrackingMapDisplayTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.GeofenceAddTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingGeofenceEnterTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingGeofenceExitTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.TrackingDeleteTrackingHistoryTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.GeofenceEditTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.GeofenceDeleteTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.SettingSignOutTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.SettingSignInTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.SettingAWSDisconnectingTest
+            ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.ConnectToAWSTest
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: test-results
+          path: app/build/reports/androidTests/connected/
+          retention-days: 1
