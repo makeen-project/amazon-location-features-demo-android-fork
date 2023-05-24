@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main.welcome
 
 import android.app.Dialog
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class WelcomeBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var mBinding: BottomSheetWelcomeBinding
     private lateinit var dialog: BottomSheetDialog
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val height = resources.getDimensionPixelSize(R.dimen.welcome_screen_height)
+        mBinding.clWelcome?.layoutParams?.height = height
+        mBinding.clWelcome?.requestLayout()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

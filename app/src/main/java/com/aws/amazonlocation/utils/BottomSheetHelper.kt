@@ -59,12 +59,14 @@ class BottomSheetHelper {
                             fragment.clearKeyboardFocus()
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
+                            view.tvSearchCancel?.hide()
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             view.imgAmazonLogoSearchSheet.alpha = 0f
                             view.ivAmazonInfoSearchSheet.alpha = 0f
                             isSearchSheetOpen = true
+                            view.tvSearchCancel?.show()
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
@@ -72,10 +74,13 @@ class BottomSheetHelper {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
+                            view.tvSearchCancel?.show()
                             isSearchSheetOpen = true
                             activity.hideKeyboard()
                         }
-                        BottomSheetBehavior.STATE_HIDDEN -> {}
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            view.tvSearchCancel?.hide()
+                        }
                         BottomSheetBehavior.STATE_SETTLING -> {}
                     }
                 }
@@ -97,6 +102,9 @@ class BottomSheetHelper {
         return mBottomSheetSearchPlaces.state == BottomSheetBehavior.STATE_HALF_EXPANDED
     }
     fun isMapStyleExpandedOrHalfExpand(): Boolean {
+        if (!::mBottomSheetMapStyle.isInitialized) {
+            return false
+        }
         return mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_HALF_EXPANDED || mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_EXPANDED
     }
 

@@ -23,6 +23,7 @@ import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
+import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -55,7 +56,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentSettingBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -82,13 +83,13 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         if (isTablet) {
             addReplaceFragment(
                 R.id.frame_container,
-                DataProviderFragment(),
+                UnitSystemFragment(),
                 addFragment = true,
                 addToBackStack = false
             )
             mBinding.apply {
-                clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                ivDataProvider.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
             }
         }
     }
@@ -121,7 +122,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     private fun getUnitSystem() {
         val unitSystem =
             mPreferenceManager.getValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
-        mBinding.tvUnitSystemName?.text = unitSystem
+        mBinding.tvUnitSystemName.text = unitSystem
     }
 
     private fun getDataProvider() {
@@ -145,7 +146,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     mBaseActivity?.clearUserInFo()
                     mBaseActivity?.mPreferenceManager?.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.AWS_CONNECTED.name,
+                        AuthEnum.AWS_CONNECTED.name
                     )
                     init()
                     mPreferenceManager.removeValue(KEY_ID_TOKEN)
@@ -164,8 +165,22 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     private fun clickListener() {
         mBinding.apply {
-            clUnitSystem?.setOnClickListener {
-                findNavController().navigate(R.id.unit_system_fragment)
+            clUnitSystem.setOnClickListener {
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        UnitSystemFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.unit_system_fragment)
+                }
             }
             clDataProvider.setOnClickListener {
                 if (isTablet) {
@@ -257,7 +272,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                             override fun logoutAndDisconnectAWS(dialog: DialogInterface) {
                             }
                         },
-                        AWSMobileClient.getInstance().isSignedIn,
+                        AWSMobileClient.getInstance().isSignedIn
                     )
                 }
             }
@@ -265,6 +280,18 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
 
     private fun FragmentSettingBinding.setDefaultSelection() {
+        clUnitSystem.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
+            )
+        )
+        ivUnitSystem.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
         clAwsCloudformation.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),

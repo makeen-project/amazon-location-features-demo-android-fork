@@ -8,9 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/sign_in_required_width"
-        android:layout_height="560dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/bottom_sheet_top_all_corner_curved_white_bg"
-        android:paddingBottom="@dimen/dp_40"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
