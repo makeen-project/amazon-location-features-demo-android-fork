@@ -1060,7 +1060,7 @@ class ExploreFragment :
                                             mIsDirectionDataSet = true
                                             edtSearchDest.setText(tvDirectionAddress.text)
                                             lifecycleScope.launch {
-                                                delay(600)
+                                                delay(CLICK_DEBOUNCE_ENABLE)
                                                 mIsDirectionDataSet = false
                                             }
                                         } else {
@@ -2104,7 +2104,7 @@ class ExploreFragment :
                     }
                     checkMyLocationUI(text, edtSearchDest)
                     lifecycleScope.launch {
-                        delay(600)
+                        delay(CLICK_DEBOUNCE_ENABLE)
                         mIsDirectionDataSet = false
                     }
                 }.launchIn(lifecycleScope)
@@ -2347,7 +2347,7 @@ class ExploreFragment :
             edtSearchDirection.requestFocus()
             mIsDirectionDataSet = true
             lifecycleScope.launch {
-                delay(600)
+                delay(CLICK_DEBOUNCE_ENABLE)
                 mIsDirectionDataSet = false
             }
             hideViews(
@@ -2581,7 +2581,7 @@ class ExploreFragment :
             mIsDirectionDataSet = true
             edtSearchDest.setText("")
             lifecycleScope.launch {
-                delay(600)
+                delay(CLICK_DEBOUNCE_ENABLE)
                 mIsDirectionDataSet = false
             }
             hideViews(
@@ -3228,6 +3228,9 @@ class ExploreFragment :
                 tvDriveSelected.show()
                 hideViews(tvTruckSelected, tvWalkSelected, layoutCardError.root)
             }
+            mBinding.bottomSheetDirection.apply {
+                tvDirectionError.invisible()
+            }
             showViews(
                 mBinding.cardDirection,
                 mBinding.cardNavigation,
@@ -3383,7 +3386,7 @@ class ExploreFragment :
 
     private fun enableDirectionSearch() {
         lifecycleScope.launch {
-            delay(600)
+            delay(CLICK_DEBOUNCE_ENABLE)
             mIsDirectionDataSet = false
             mViewModel.mIsPlaceSuggestion = true
         }
@@ -3638,7 +3641,8 @@ class ExploreFragment :
             mBinding.bottomSheetDirection.apply {
                 tvDirectionTime.invisible()
                 groupDistance.invisible()
-                hideViews(tvDirectionError, tvDirectionError2, ivInfo)
+                hideViews(tvDirectionError, ivInfo)
+                tvDirectionError2.invisible()
                 val liveLocationLatLng = mMapHelper.getLiveLocation()
                 isCalculateDriveApiError = false
                 mViewModel.calculateDistance(
@@ -3648,7 +3652,7 @@ class ExploreFragment :
                     lngDestination = data.amazonLocationPlace?.coordinates?.longitude,
                     isAvoidFerries = mIsAvoidFerries,
                     isAvoidTolls = mIsAvoidTolls,
-                    isWalkingAndTruckCall = false,
+                    isWalkingAndTruckCall = false
                 )
                 if (data.amazonLocationPlace?.label?.let { validateLatLng(it) } != null) {
                     tvDirectionAddress.text = data.amazonLocationPlace?.label
