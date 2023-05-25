@@ -1266,7 +1266,7 @@
                         android:imeOptions="actionSearch"
                         android:maxLength="200"
                         android:singleLine="true"
-                        android:text="@string/label_truck"
+                        android:text="@string/label_bicycle"
                         app:layout_constraintStart_toEndOf="@id/iv_bicycle"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -1481,7 +1481,7 @@
                         android:imeOptions="actionSearch"
                         android:maxLength="200"
                         android:singleLine="true"
-                        android:text="@string/label_truck"
+                        android:text="@string/label_motorcycle"
                         app:layout_constraintStart_toEndOf="@id/iv_motorcycle"
                         app:layout_constraintTop_toTopOf="parent" />
 

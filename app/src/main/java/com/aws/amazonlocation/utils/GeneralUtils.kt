@@ -592,3 +592,12 @@ fun isGrabMapEnable(mPreferenceManager: PreferenceManager): Boolean {
     }
     return isGrabMapEnable
 }
+
+fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): Boolean {
+    var isGrabMapEnable = false
+    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
+    if (mapName == context.getString(R.string.grab)) {
+        isGrabMapEnable = true
+    }
+    return isGrabMapEnable
+}

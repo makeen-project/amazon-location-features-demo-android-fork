@@ -55,6 +55,8 @@ const val JSON_KEY_STYLE_HERE = "omv"
 const val JSON_KEY_STYLE_RASTER = "raster-tiles"
 const val JSON_KEY_STYLE_MINZOOM = "minzoom"
 const val JSON_KEY_STYLE_MAXZOOM = "maxzoom"
+const val TRAVEL_MODE_BICYCLE = "Bicycle"
+const val TRAVEL_MODE_MOTORCYCLE = "Motorcycle"
 
 const val HERE = "Here"
 const val DESCRIPTION_TAG_ESRI = "ESRI_"

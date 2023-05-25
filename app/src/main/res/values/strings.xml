@@ -88,6 +88,8 @@
     <string name="label_walk">Walk</string>
     <string name="label_drive">Drive</string>
     <string name="label_truck">Truck</string>
+    <string name="label_bicycle">Bicycle</string>
+    <string name="label_motorcycle">Motorcycle</string>
     <string name="label_search_starting_point">Search starting point</string>
     <string name="exit">Exit</string>
 
