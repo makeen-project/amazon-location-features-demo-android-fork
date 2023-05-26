@@ -108,11 +108,15 @@ class MapStyleBottomSheetFragment(
                         mViewModel.mStyleList,
                         object : MapStyleAdapter.MapInterface {
                             override fun mapClick(position: Int) {
-                                mapInterface.mapClick(position)
+                                if (position != -1) {
+                                    mapInterface.mapClick(position)
+                                }
                             }
 
                             override fun mapStyleClick(position: Int, innerPosition: Int) {
-                                mapInterface.mapStyleClick(position, innerPosition)
+                                if (position != -1 && innerPosition != -1) {
+                                    mapInterface.mapStyleClick(position, innerPosition)
+                                }
                             }
                         }
                     )
