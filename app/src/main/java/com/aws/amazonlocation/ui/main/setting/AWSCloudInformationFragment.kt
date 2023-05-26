@@ -29,6 +29,8 @@ import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
+import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
@@ -40,6 +42,7 @@ import com.aws.amazonlocation.utils.KEY_USER_POOL_CLIENT_ID
 import com.aws.amazonlocation.utils.KEY_USER_POOL_ID
 import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.SE_REGION_LIST
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
@@ -48,6 +51,7 @@ import com.aws.amazonlocation.utils.changeTermsAndConditionColor
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
+import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
@@ -347,6 +351,15 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             )
         }
         mPreferenceManager.setValue(KEY_TAB_ENUM, TabEnum.TAB_EXPLORE.name)
+        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+            if (!SE_REGION_LIST.contains(regionData)) {
+                mPreferenceManager.setValue(
+                    KEY_MAP_STYLE_NAME,
+                    resources.getString(R.string.map_light)
+                )
+                mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+            }
+        }
         if (!isRunningTest) {
             lifecycleScope.launch {
                 delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting

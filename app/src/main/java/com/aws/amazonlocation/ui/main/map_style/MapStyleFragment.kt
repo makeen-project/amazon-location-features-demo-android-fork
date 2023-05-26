@@ -20,11 +20,13 @@ import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.restartAppMapStyleDialog
 import com.aws.amazonlocation.utils.restartApplication
+import com.aws.amazonlocation.utils.showViews
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
@@ -75,8 +77,13 @@ class MapStyleFragment : BaseFragment() {
 
         mViewModel.setEsriMapListData(requireContext())
         mViewModel.setHereMapListData(requireContext())
-        if (isGrabMapEnable) {
-            mViewModel.setGrabMapListData(requireContext())
+        mBinding.apply {
+            if (isGrabMapEnable) {
+                showViews(viewHere, tvGrab)
+                mViewModel.setGrabMapListData(requireContext())
+            } else {
+                hideViews(viewHere, tvGrab)
+            }
         }
         when (mapName) {
             resources.getString(R.string.esri) -> {

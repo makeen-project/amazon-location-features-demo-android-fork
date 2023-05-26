@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
@@ -22,6 +23,8 @@ import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
+import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_TAB_ENUM
@@ -32,10 +35,12 @@ import com.aws.amazonlocation.utils.KEY_USER_POOL_ID
 import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.SE_REGION_LIST
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
 import com.aws.amazonlocation.utils.changeLearnMoreColor
 import com.aws.amazonlocation.utils.changeTermsAndConditionColor
+import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.validateIdentityPoolId
@@ -46,9 +51,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -144,6 +149,13 @@ class CloudFormationBottomSheetFragment(
 
     private fun clickListener() {
         mBinding.apply {
+            if (BuildConfig.DEBUG) {
+                edtIdentityPoolId.setText("ap-southeast-1:903ecdfa-4190-443c-a742-1abb7e55ded3")
+                edtUserDomain.setText("https://973950707761.auth.ap-southeast-1.amazoncognito.com/")
+                edtUserPoolClientId.setText("4qie7t9pifr2p1jo8urcduo4lo")
+                edtUserPoolId.setText("ap-southeast-1_ZO2wrn1NT")
+                edtWebSocketUrl.setText("a26uyuci0gtnky-ats.iot.ap-southeast-1.amazonaws.com")
+            }
             edtIdentityPoolId.doOnTextChanged { _, _, _, _ ->
                 cloudFormationValidation()
             }
@@ -199,6 +211,15 @@ class CloudFormationBottomSheetFragment(
 
     private fun storeDataAndRestartApp() {
         lifecycleScope.launch {
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                if (!SE_REGION_LIST.contains(regionData)) {
+                    mPreferenceManager.setValue(
+                        KEY_MAP_STYLE_NAME,
+                        resources.getString(R.string.map_light)
+                    )
+                    mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+                }
+            }
             mPreferenceManager.setValue(
                 KEY_CLOUD_FORMATION_STATUS,
                 AuthEnum.AWS_CONNECTED.name

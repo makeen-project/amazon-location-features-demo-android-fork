@@ -2809,7 +2809,11 @@ class ExploreFragment :
                 cardRoutingOption,
                 cardMapOption
             )
-            clMyLocation.root.show()
+            if (!mBinding.cardNavigation.isEnabled) {
+                clMyLocation.root.hide()
+            } else {
+                clMyLocation.root.show()
+            }
             switchAvoidTools.isChecked = mIsAvoidTolls
             switchAvoidFerries.isChecked = mIsAvoidFerries
             mPlaceList.clear()
@@ -3053,7 +3057,11 @@ class ExploreFragment :
             mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
         } else {
             if (mBinding.bottomSheetDirectionSearch.cardMapOption.visibility == View.GONE) {
-                mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                if (!mBinding.cardNavigation.isEnabled) {
+                    mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
+                } else {
+                    mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                }
             }
         }
     }
@@ -3515,19 +3523,6 @@ class ExploreFragment :
             mMapHelper.getLiveLocation()?.let { it1 ->
                 mMapHelper.moveCameraToLocation(it1)
             }
-            val mapStyleNameDisplay =
-                mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
-                    ?: getString(R.string.map_light)
-
-            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
-            if (mapName == getString(R.string.grab)) {
-                if (mapStyleNameDisplay == resources.getString(R.string.map_grab_light) || mapStyleNameDisplay == resources.getString(
-                        R.string.map_grab_dark
-                    )
-                ) {
-                    updateMapGrab()
-                }
-            }
         }
     }
 
@@ -3870,6 +3865,12 @@ class ExploreFragment :
                 clBicycle.invisible()
                 clMotorcycleLoader.show()
                 clMotorcycle.invisible()
+                clTruckLoader.hide()
+                clTruck.hide()
+                clTruck.hide()
+                viewDividerOptionTruck.hide()
+                viewDividerOptionBicycle.show()
+                viewDividerOptionMotorcycle.show()
             } else {
                 clTruckLoader.show()
                 clTruck.invisible()
@@ -4140,7 +4141,7 @@ class ExploreFragment :
                 }
             }
         }
-        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this, activity)
+        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this, activity, mPreferenceManager)
         activity?.let {
             mBaseActivity?.mGeofenceUtils?.setMapBox(
                 it,
@@ -4161,15 +4162,6 @@ class ExploreFragment :
                 mapboxMap.cameraPosition.target.latitude,
                 mapboxMap.cameraPosition.target.longitude
             )
-        }
-        val mapNameOuter = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
-        if (mapNameOuter == getString(R.string.grab)) {
-            if (mapStyleNameDisplay == resources.getString(R.string.map_grab_light) || mapStyleNameDisplay == resources.getString(
-                    R.string.map_grab_dark
-                )
-            ) {
-                updateMapGrab()
-            }
         }
     }
 
@@ -4292,6 +4284,20 @@ class ExploreFragment :
                             }
                         }
                     }
+                }
+            }
+        }
+        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+            lifecycleScope.launch {
+                delay(DELAY_1000)
+                if (activity?.checkLocationPermission() == true) {
+                    if (isGPSEnabled(requireContext())) {
+                        enableNavigationComponent()
+                    } else {
+                        disableNavigationComponent()
+                    }
+                } else {
+                    disableNavigationComponent()
                 }
             }
         }
@@ -4505,7 +4511,6 @@ class ExploreFragment :
                             MapNames.GRAB_LIGHT,
                             MapStyles.GRAB_LIGHT
                         )
-                        updateMapGrab()
                     }
                     resources.getString(R.string.map_grab_dark) -> {
                         mMapHelper.updateStyle(
@@ -4513,7 +4518,6 @@ class ExploreFragment :
                             MapNames.GRAB_DARK,
                             MapStyles.GRAB_DARK
                         )
-                        updateMapGrab()
                     }
                 }
             }
@@ -4540,29 +4544,37 @@ class ExploreFragment :
         }
     }
 
-    private fun updateMapGrab() {
-        lifecycleScope.launch {
-            delay(2000)
-            val currentLocation = mMapHelper.getLiveLocation()
-            currentLocation?.let {
-                if (!(it.latitude in mViewModel.latSouth..mViewModel.latNorth && it.longitude in mViewModel.lonWest..mViewModel.lonEast)) {
-                    setBounds()
-                }
-            }
-        }
-    }
-
-    private fun setBounds() {
+    private fun setBounds(latLng: LatLng) {
         // Set the map bounds
         val bounds = LatLngBounds.Builder()
             .include(LatLng(mViewModel.latNorth, mViewModel.lonEast))
             .include(LatLng(mViewModel.latSouth, mViewModel.lonWest))
             .build()
         mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
-        val padding = 0 // Adjust the padding as needed
-        val cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, padding)
-        mMapboxMap?.moveCamera(cameraUpdate)
         mMapboxMap?.setMinZoomPreference(2.4)
+        if (latLng.latitude == mMapHelper.mDefaultLatLngGrab.latitude && latLng.longitude == mMapHelper.mDefaultLatLngGrab.longitude) {
+            disableNavigationComponent()
+        } else {
+            enableNavigationComponent()
+        }
+        lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE)
+            mMapHelper.navigationZoomCamera(latLng, false)
+        }
+    }
+
+    private fun disableNavigationComponent() {
+        mBinding.cardNavigation.isEnabled = false
+        mBinding.cardNavigation.alpha = 0.5f
+        mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = false
+        mBinding.bottomSheetNavigation.cardNavigationLocation.alpha = 0.5f
+    }
+
+    private fun enableNavigationComponent() {
+        mBinding.cardNavigation.isEnabled = true
+        mBinding.cardNavigation.alpha = 1f
+        mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = true
+        mBinding.bottomSheetNavigation.cardNavigationLocation.alpha = 1f
     }
 
     private fun clearAllMapData() {
@@ -4669,7 +4681,10 @@ class ExploreFragment :
             }
         }
         if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
-            setBounds()
+            lifecycleScope.launch {
+                delay(DELAY_500)
+                checkGrabMapInsideBounds()
+            }
         }
         if (activity is MainActivity) {
             (activity as MainActivity).changeAmazonLogo(logoResId)
@@ -4687,5 +4702,12 @@ class ExploreFragment :
         mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
         mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle?.setImageResource(logoResId)
+    }
+
+    private fun checkGrabMapInsideBounds() {
+        val currentLocation = mMapHelper.getLiveLocation()
+        currentLocation?.let {
+            setBounds(it)
+        }
     }
 }
