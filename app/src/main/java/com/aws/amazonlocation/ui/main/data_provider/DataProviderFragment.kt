@@ -95,7 +95,7 @@ class DataProviderFragment : BaseFragment() {
                 ivEsri.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_check_data_provider
+                        R.drawable.icon_checkmark
                     )
                 )
                 ivHere.setImageDrawable(
@@ -114,7 +114,7 @@ class DataProviderFragment : BaseFragment() {
                 ivHere.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_check_data_provider
+                        R.drawable.icon_checkmark
                     )
                 )
             }

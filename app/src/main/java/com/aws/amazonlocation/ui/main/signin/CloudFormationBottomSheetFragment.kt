@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
@@ -144,6 +145,13 @@ class CloudFormationBottomSheetFragment(
 
     private fun clickListener() {
         mBinding.apply {
+            if (BuildConfig.DEBUG) {
+                edtIdentityPoolId.setText("Us-west-2:68a39c34-8097-4237-a443-668eceab2179")
+                edtUserDomain.setText("https://203801677567.auth.us-west-2.amazoncognito.com/")
+                edtUserPoolClientId.setText("5caiki846e3vdagl5g7svqteed")
+                edtUserPoolId.setText("us-west-2_MTUePIG5l")
+                edtWebSocketUrl.setText("ay35i3abtft49-ats.iot.us-west-2.amazonaws.com")
+            }
             edtIdentityPoolId.doOnTextChanged { _, _, _, _ ->
                 cloudFormationValidation()
             }
@@ -167,7 +175,7 @@ class CloudFormationBottomSheetFragment(
             }
 
             btnConnect.setOnClickListener {
-                mIdentityPoolId = edtIdentityPoolId.text.toString().trim()
+                mIdentityPoolId = edtIdentityPoolId.text.toString().trim().lowercase()
                 mUserDomain = edtUserDomain.text.toString().trim()
                 mUserPoolClientId = edtUserPoolClientId.text.toString().trim()
                 mUserPoolId = edtUserPoolId.text.toString().trim()

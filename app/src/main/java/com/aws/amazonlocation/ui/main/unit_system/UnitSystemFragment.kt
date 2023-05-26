@@ -70,7 +70,7 @@ class UnitSystemFragment : BaseFragment() {
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_check_data_provider,
+                            R.drawable.icon_checkmark,
                         ),
                     )
                     ivImperial.setImageDrawable(
@@ -96,7 +96,7 @@ class UnitSystemFragment : BaseFragment() {
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_check_data_provider,
+                            R.drawable.icon_checkmark,
                         ),
                     )
                 }
@@ -104,7 +104,7 @@ class UnitSystemFragment : BaseFragment() {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_check_data_provider,
+                            R.drawable.icon_checkmark,
                         ),
                     )
                     ivMetric.setImageDrawable(
