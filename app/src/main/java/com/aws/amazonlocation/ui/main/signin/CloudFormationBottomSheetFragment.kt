@@ -167,7 +167,7 @@ class CloudFormationBottomSheetFragment(
             }
 
             btnConnect.setOnClickListener {
-                mIdentityPoolId = edtIdentityPoolId.text.toString().trim()
+                mIdentityPoolId = edtIdentityPoolId.text.toString().trim().lowercase()
                 mUserDomain = edtUserDomain.text.toString().trim()
                 mUserPoolClientId = edtUserPoolClientId.text.toString().trim()
                 mUserPoolId = edtUserPoolId.text.toString().trim()

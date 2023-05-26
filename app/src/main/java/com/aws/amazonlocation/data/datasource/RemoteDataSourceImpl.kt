@@ -6,7 +6,6 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.HostedUIOptions
 import com.amazonaws.mobile.client.SignInUIOptions
-import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserStateDetails
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.amazonaws.services.geo.model.Step
@@ -132,23 +131,10 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         signInInterface: SignInInterface
     ) {
         try {
-            val sop = SignOutOptions.builder()
-                .invalidateTokens(true)
-                .build()
-            AWSMobileClient.getInstance().signOut(
-                sop,
-                object : Callback<Void> {
-                    override fun onResult(result: Void?) {
-                        signInInterface.signOutSuccess(
-                            context.resources.getString(R.string.sign_out_successfully),
-                            isDisconnectFromAWSRequired,
-                        )
-                    }
-
-                    override fun onError(e: Exception) {
-                        signInInterface.signOutFailed(context.resources.getString(R.string.sign_out_failed))
-                    }
-                },
+            AWSMobileClient.getInstance().signOut()
+            signInInterface.signOutSuccess(
+                context.resources.getString(R.string.sign_out_successfully),
+                isDisconnectFromAWSRequired
             )
         } catch (e: Exception) {
             signInInterface.signOutFailed(context.resources.getString(R.string.sign_out_failed))
