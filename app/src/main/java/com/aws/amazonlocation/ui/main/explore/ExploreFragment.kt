@@ -1254,7 +1254,7 @@ class ExploreFragment :
                             bottomSheetDirection.apply {
                                 groupDistanceLoad.hide()
                                 groupDistance.show()
-                                tvDirectionTime.invisible()
+                                tvDirectionTime.hide()
                                 tvDirectionDot.invisible()
                                 tvDirectionTime.text = ""
                                 tvDirectionDistance.text = ""
@@ -1462,7 +1462,7 @@ class ExploreFragment :
                 }.onError {
                     mBinding.bottomSheetDirection.apply {
                         groupDistance.invisible()
-                        tvDirectionTime.invisible()
+                        tvDirectionTime.hide()
                     }
                 }
             }
@@ -3975,10 +3975,10 @@ class ExploreFragment :
             mViewModel.mSearchDirectionDestinationData?.isDestination = true
             hideViews(mBinding.cardDirection, mBinding.cardNavigation)
             mBinding.bottomSheetDirection.apply {
-                tvDirectionTime.invisible()
+                tvDirectionTime.hide()
                 groupDistance.invisible()
                 hideViews(tvDirectionError, ivInfo)
-                tvDirectionError2.invisible()
+                tvDirectionError2.hide()
                 val liveLocationLatLng = mMapHelper.getLiveLocation()
                 isCalculateDriveApiError = false
                 mViewModel.calculateDistance(
