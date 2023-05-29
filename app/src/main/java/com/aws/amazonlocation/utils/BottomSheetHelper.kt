@@ -257,11 +257,7 @@ class BottomSheetHelper {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            if (view.cardNavigationLocation.isEnabled) {
-                                view.cardNavigationLocation.alpha = 1f
-                            } else {
-                                view.cardNavigationLocation.alpha = 0.5f
-                            }
+                            view.cardNavigationLocation.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             view.cardNavigationLocation.alpha = 0f
@@ -269,11 +265,7 @@ class BottomSheetHelper {
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                            if (view.cardNavigationLocation.isEnabled) {
-                                view.cardNavigationLocation.alpha = 1f
-                            } else {
-                                view.cardNavigationLocation.alpha = 0.5f
-                            }
+                            view.cardNavigationLocation.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                         }

@@ -4580,16 +4580,16 @@ class ExploreFragment :
 
     private fun disableNavigationComponent() {
         mBinding.cardNavigation.isEnabled = false
-        mBinding.cardNavigation.alpha = 0.5f
+        mBinding.cardNavigation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btn_go_disable))
         mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = false
-        mBinding.bottomSheetNavigation.cardNavigationLocation.alpha = 0.5f
+        mBinding.bottomSheetNavigation.cardNavigationLocation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btn_go_disable))
     }
 
     private fun enableNavigationComponent() {
         mBinding.cardNavigation.isEnabled = true
-        mBinding.cardNavigation.alpha = 1f
+        mBinding.cardNavigation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = true
-        mBinding.bottomSheetNavigation.cardNavigationLocation.alpha = 1f
+        mBinding.bottomSheetNavigation.cardNavigationLocation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
 
     private fun clearAllMapData() {
