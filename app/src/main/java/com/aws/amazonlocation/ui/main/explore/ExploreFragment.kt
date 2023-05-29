@@ -1587,14 +1587,17 @@ class ExploreFragment :
                         return@onSuccess
                     }
                     it.searchPlaceIndexForPositionResult?.let { searchPlaceIndexForPositionResult ->
-                        val label = searchPlaceIndexForPositionResult.results[0].place.label
-                        if (label != null) {
-                            if (label.contains(",")) {
-                                val index = label.indexOf(",")
-                                val result: String = index.let { it1 -> label.substring(0, it1) }
-                                mBaseActivity?.mGeofenceUtils?.setSearchText(result)
-                            } else {
-                                mBaseActivity?.mGeofenceUtils?.setSearchText(label)
+                        if (!searchPlaceIndexForPositionResult.results.isNullOrEmpty()) {
+                            val label = searchPlaceIndexForPositionResult.results?.get(0)?.place?.label
+                            if (label != null) {
+                                if (label.contains(",")) {
+                                    val index = label.indexOf(",")
+                                    val result: String =
+                                        index.let { it1 -> label.substring(0, it1) }
+                                    mBaseActivity?.mGeofenceUtils?.setSearchText(result)
+                                } else {
+                                    mBaseActivity?.mGeofenceUtils?.setSearchText(label)
+                                }
                             }
                         }
                     }
@@ -1737,21 +1740,13 @@ class ExploreFragment :
         searchPlaceIndexText: SearchApiEnum
     ) {
         val mText = mBinding.bottomSheetSearch.edtSearchPlaces.text.toString()
-        if (!it.text.isNullOrEmpty() && it.text == mText) {
-            mPlaceList.clear()
-            mPlaceList.addAll(it.data)
-            if (mPlaceList.isNotEmpty()) {
-                activity?.hideKeyboard()
-                mBottomSheetHelper.halfExpandBottomSheet()
+        if (validateLatLng(mText) != null) {
+            val mLatLng = validateLatLng(mText)
+            if (it.text == (mLatLng?.latitude.toString() + "," + mLatLng?.longitude.toString())) {
+                setPlaceData(it, searchPlaceIndexText)
             }
-            mBaseActivity?.bottomNavigationVisibility(false)
-            mMapHelper.addMultipleMarker(
-                requireActivity(),
-                MarkerEnum.NONE,
-                it.data,
-                mMarkerClickInterface
-            )
-            showNoPlaceFoundUI(searchPlaceIndexText)
+        } else if (!it.text.isNullOrEmpty() && it.text == mText) {
+            setPlaceData(it, searchPlaceIndexText)
         }
         mBinding.apply {
             if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -1765,6 +1760,26 @@ class ExploreFragment :
                 }
             }
         }
+    }
+
+    private fun setPlaceData(
+        it: SearchSuggestionResponse,
+        searchPlaceIndexText: SearchApiEnum
+    ) {
+        mPlaceList.clear()
+        mPlaceList.addAll(it.data)
+        if (mPlaceList.isNotEmpty()) {
+            activity?.hideKeyboard()
+            mBottomSheetHelper.halfExpandBottomSheet()
+        }
+        mBaseActivity?.bottomNavigationVisibility(false)
+        mMapHelper.addMultipleMarker(
+            requireActivity(),
+            MarkerEnum.NONE,
+            it.data,
+            mMarkerClickInterface
+        )
+        showNoPlaceFoundUI(searchPlaceIndexText)
     }
 
     private fun addPlaceDirectionDataInList(
@@ -4547,8 +4562,8 @@ class ExploreFragment :
     private fun setBounds(latLng: LatLng) {
         // Set the map bounds
         val bounds = LatLngBounds.Builder()
-            .include(LatLng(mViewModel.latNorth, mViewModel.lonEast))
-            .include(LatLng(mViewModel.latSouth, mViewModel.lonWest))
+            .include(LatLng(latNorth, lonEast))
+            .include(LatLng(latSouth, lonWest))
             .build()
         mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
         mMapboxMap?.setMinZoomPreference(2.4)

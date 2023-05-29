@@ -66,6 +66,11 @@ const val DESCRIPTION_TAG_HERE = "HERE_"
 
 val SE_REGION_LIST = arrayListOf("ap-southeast-1")
 
+const val latNorth = 31.952162238024968
+const val lonEast = 146.25
+const val latSouth = -21.943045533438166
+const val lonWest = 90.0
+
 /**
  *  * Validate Latitude and Longitude from string.
  *
@@ -144,7 +149,6 @@ object GeofenceCons {
     const val CIRCLE_DRAGGABLE_BEARING = 90.0
 
     const val GEOFENCE_MIN_RADIUS = 10
-
 }
 
 object TrackerCons {
@@ -163,8 +167,8 @@ object MapNames {
     const val HERE_EXPLORE_TRUCK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.ExploreTruck"
     const val HERE_HYBRID = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Hybrid"
     const val HERE_IMAGERY = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Imagery"
-    const val GRAB_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.Light"
-    const val GRAB_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.Dark"
+    const val GRAB_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardLight"
+    const val GRAB_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardDark"
 }
 
 object MapStyles {

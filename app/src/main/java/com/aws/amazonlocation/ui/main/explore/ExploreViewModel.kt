@@ -63,10 +63,6 @@ class ExploreViewModel @Inject constructor(
     private val mNavigationListModel = ArrayList<NavigationData>()
     private val listMapInnerData = arrayListOf<MapStyleInnerData>()
     var mStyleList = ArrayList<MapStyleData>()
-    val latNorth = 31.952162238024968
-    val lonEast = 146.25
-    val latSouth = -21.943045533438166
-    val lonWest = 90.0
 
     private val _searchForSuggestionsResultList =
         Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)

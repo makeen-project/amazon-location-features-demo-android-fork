@@ -97,10 +97,6 @@ class MapHelper(private val appContext: Context) {
     private var mMapLibreView: MapLibreView? = null
     private var mapStyleChangeListener: MapStyleChangeListener? = null
     private var mPreferenceManager: PreferenceManager? = null
-    private val latNorth = 31.952162238024968
-    private val lonEast = 146.25
-    private val latSouth = -21.943045533438166
-    private val lonWest = 90.0
 
     fun initSymbolManager(
         mapView: MapLibreView,
