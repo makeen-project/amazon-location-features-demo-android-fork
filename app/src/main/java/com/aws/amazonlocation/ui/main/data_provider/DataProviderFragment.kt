@@ -181,10 +181,10 @@ class DataProviderFragment : BaseFragment() {
     private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false) {
         mBinding.apply {
             if (isGrab) {
-                ivGrab?.setImageDrawable(
+                ivGrab.setImageDrawable(
                     ContextCompat.getDrawable(
                         requireContext(),
-                        R.drawable.ic_check_data_provider
+                        R.drawable.icon_checkmark
                     )
                 )
                 ivHere.setImageDrawable(

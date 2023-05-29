@@ -752,7 +752,6 @@ class ExploreFragment :
                         mBinding.bottomSheetNavigation.apply {
                             tvNavigationDistance.text = it.distance?.let { it1 ->
                                 convertToLowerUnit(
-
                                     it1,
                                     isMetric(
                                         mPreferenceManager.getValue(

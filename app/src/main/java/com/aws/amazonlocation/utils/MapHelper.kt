@@ -1034,7 +1034,7 @@ class MapHelper(private val appContext: Context) {
                 convertLayoutToGeofenceInvisibleDragBitmap(activity).let { bitmap ->
                     style.addImage(
                         CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID,
-                        bitmap
+                        bitmap,
                     )
                 }
             }
@@ -1157,7 +1157,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     private fun convertLayoutToGeofenceInvisibleDragBitmap(
-        context: Activity
+        context: Activity,
     ): Bitmap {
         val viewGroup: ViewGroup? = null
         val view = context.layoutInflater.inflate(R.layout.layout_geofence_draggable_marker, viewGroup)

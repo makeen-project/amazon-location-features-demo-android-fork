@@ -126,7 +126,7 @@ class GeofenceHelper(
             mMapboxMap?.locationComponent?.lastKnownLocation?.apply {
                 mLatLng = LatLng(
                     latitude,
-                    longitude
+                    longitude,
                 )
             }
         }
@@ -197,7 +197,7 @@ class GeofenceHelper(
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
-                    fromUser: Boolean
+                    fromUser: Boolean,
                 ) {
                     adjustRadius(seekBar?.progress)
                     if (fromUser) {
@@ -236,20 +236,20 @@ class GeofenceHelper(
         )?.let {
             style.addImage(
                 CIRCLE_CENTER_ICON_ID,
-                it
+                it,
             )
         }
         if (style.getSource(CIRCLE_CENTER_SOURCE_ID) == null) {
             style.addSource(
                 GeoJsonSource(
                     CIRCLE_CENTER_SOURCE_ID,
-                    Feature.fromGeometry(mDefaultLocationPoint)
-                )
+                    Feature.fromGeometry(mDefaultLocationPoint),
+                ),
             )
         }
 
         if (style.getSource(CIRCLE_CENTER_LAYER_ID) == null && style.getLayer(
-                CIRCLE_CENTER_LAYER_ID
+                CIRCLE_CENTER_LAYER_ID,
             ) == null
         ) {
             style.addLayer(
@@ -258,8 +258,8 @@ class GeofenceHelper(
                     iconIgnorePlacement(false),
                     iconAllowOverlap(true),
                     textAllowOverlap(true),
-                    iconAnchor(Property.ICON_ANCHOR_CENTER)
-                )
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
+                ),
             )
         }
     }
@@ -267,24 +267,24 @@ class GeofenceHelper(
     private fun drawVisibleDraggableMarkerOnMap(style: Style, point: Point, radius: Int) {
         ContextCompat.getDrawable(
             mAppContext,
-            R.drawable.ic_geofence_drag_thumb
+            R.drawable.ic_geofence_drag_thumb,
         )?.let {
             style.addImage(
                 CIRCLE_DRAGGABLE_VISIBLE_ICON_ID,
-                it
+                it,
             )
         }
         if (style.getSource(CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID) == null) {
             style.addSource(
                 GeoJsonSource(
                     CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID,
-                    Feature.fromGeometry(mDefaultLocationPoint)
-                )
+                    Feature.fromGeometry(mDefaultLocationPoint),
+                ),
             )
         }
 
         if (style.getSource(CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID) == null && style.getLayer(
-                CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID
+                CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID,
             ) == null
         ) {
             style.addLayer(
@@ -293,8 +293,8 @@ class GeofenceHelper(
                     iconIgnorePlacement(false),
                     iconAllowOverlap(true),
                     textAllowOverlap(true),
-                    iconAnchor(Property.ICON_ANCHOR_CENTER)
-                )
+                    iconAnchor(Property.ICON_ANCHOR_CENTER),
+                ),
             )
         } else {
             style.getSourceAs<GeoJsonSource>(CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID)?.apply {
@@ -322,12 +322,12 @@ class GeofenceHelper(
         mMapboxMap?.getStyle { style ->
             val fillLayer = FillLayer(
                 TURF_CALCULATION_FILL_LAYER_ID,
-                TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID
+                TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID,
             )
 
             val lineLayer = LineLayer(
                 TURF_CALCULATION_LINE_LAYER_ID,
-                TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID
+                TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID,
             )
 
             lineLayer.setProperties(
@@ -335,15 +335,15 @@ class GeofenceHelper(
                 lineColor(
                     ContextCompat.getColor(
                         mAppContext,
-                        R.color.color_bn_selected
-                    )
-                )
+                        R.color.color_bn_selected,
+                    ),
+                ),
             )
 
             fillLayer.setProperties(
                 fillColor(ContextCompat.getColor(mAppContext, R.color.color_bn_selected)),
                 fillOutlineColor(ContextCompat.getColor(mAppContext, R.color.color_bn_selected)),
-                fillOpacity(0.2f)
+                fillOpacity(0.2f),
             )
             if (style.getLayer(TURF_CALCULATION_FILL_LAYER_ID) == null) {
                 style.addLayerBelow(fillLayer, CIRCLE_CENTER_LAYER_ID)
@@ -369,8 +369,8 @@ class GeofenceHelper(
                 style.getSourceAs<GeoJsonSource>(TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID)
             polygonCircleSource?.setGeoJson(
                 Polygon.fromOuterInner(
-                    LineString.fromLngLats(pointList)
-                )
+                    LineString.fromLngLats(pointList),
+                ),
             )
 
             // Update the source's GeoJSON to draw a new circle
@@ -393,9 +393,9 @@ class GeofenceHelper(
                     CAMERA_TOP_RIGHT_LEFT_PADDING,
                     CAMERA_TOP_RIGHT_LEFT_PADDING,
                     CAMERA_TOP_RIGHT_LEFT_PADDING,
-                    CAMERA_BOTTOM_PADDING
+                    CAMERA_BOTTOM_PADDING,
                 ),
-                CAMERA_DURATION_1500
+                CAMERA_DURATION_1500,
             )
         }
     }
@@ -410,7 +410,7 @@ class GeofenceHelper(
      */
     private fun getTurfPolygon(
         centerPoint: Point,
-        radius: Double
+        radius: Double,
     ): Polygon {
         return TurfTransformation.circle(centerPoint, radius, 360, mCircleUnit)
     }
@@ -479,9 +479,9 @@ class GeofenceHelper(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition.Builder().zoom(MapCameraZoom.DEFAULT_CAMERA_ZOOM)
                     .target(mDefaultLatLng)
-                    .build()
+                    .build(),
             ),
-            CAMERA_DURATION_1000
+            CAMERA_DURATION_1000,
         )
         drawGeofence(fromLngLat(mDefaultLatLng.longitude, mDefaultLatLng.latitude))
     }

@@ -225,7 +225,7 @@ class MapStyleFragment : BaseFragment() {
                 mViewModel.grabList,
                 object : EsriMapStyleAdapter.EsriMapStyleInterface {
                     override fun esriStyleClick(position: Int) {
-                        if (context?.isInternetAvailable() == true) {
+                        if (position != -1) {
                             when (
                                 mPreferenceManager.getValue(
                                     KEY_MAP_NAME,

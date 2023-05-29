@@ -280,6 +280,18 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
 
     private fun FragmentSettingBinding.setDefaultSelection() {
+        clUnitSystem.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
+            )
+        )
+        ivUnitSystem.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
         clAwsCloudformation.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),
