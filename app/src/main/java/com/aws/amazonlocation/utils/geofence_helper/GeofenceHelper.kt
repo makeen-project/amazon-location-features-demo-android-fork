@@ -202,7 +202,7 @@ class GeofenceHelper(
         BitmapUtils.getBitmapFromDrawable(
             ContextCompat.getDrawable(
                 mAppContext,
-                R.drawable.ic_geofence_marker,
+                R.drawable.ic_geofence_marker_1,
             ),
         )?.let {
             style.addImage(
