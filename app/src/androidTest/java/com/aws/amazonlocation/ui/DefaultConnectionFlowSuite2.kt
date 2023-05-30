@@ -6,6 +6,7 @@ import com.aws.amazonlocation.ui.main.CheckRouteMapAdjustedTest
 import com.aws.amazonlocation.ui.main.CheckRouteOptionsTest
 import com.aws.amazonlocation.ui.main.CheckRouteUserEnterMyLocationTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentChangeStyleTest
+import com.aws.amazonlocation.ui.main.ExploreFragmentGrabChangeStyleTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentSearchResultTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentSearchTotalResultTest
 import com.aws.amazonlocation.ui.main.RouteOptionShowingTest
@@ -19,6 +20,7 @@ import com.aws.amazonlocation.ui.main.SettingsFragmentChangeDataProviderTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentChangeStyleTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentContentTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentDefaultRouteTest
+import com.aws.amazonlocation.ui.main.SettingsFragmentGrabChangeStyleTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -42,6 +44,8 @@ import org.junit.runners.Suite
     SettingsFragmentChangeStyleTest::class,
     SettingsFragmentContentTest::class,
     SettingsFragmentDefaultRouteTest::class,
+    SettingsFragmentGrabChangeStyleTest::class,
+    ExploreFragmentGrabChangeStyleTest::class,
     ExploreFragmentChangeStyleTest::class
 )
 class DefaultConnectionFlowSuite2

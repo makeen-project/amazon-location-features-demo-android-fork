@@ -22,6 +22,8 @@ import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
+import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_TAB_ENUM
@@ -32,10 +34,12 @@ import com.aws.amazonlocation.utils.KEY_USER_POOL_ID
 import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.SE_REGION_LIST
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
 import com.aws.amazonlocation.utils.changeLearnMoreColor
 import com.aws.amazonlocation.utils.changeTermsAndConditionColor
+import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.validateIdentityPoolId
@@ -199,6 +203,15 @@ class CloudFormationBottomSheetFragment(
 
     private fun storeDataAndRestartApp() {
         lifecycleScope.launch {
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                if (!SE_REGION_LIST.contains(regionData)) {
+                    mPreferenceManager.setValue(
+                        KEY_MAP_STYLE_NAME,
+                        resources.getString(R.string.map_light)
+                    )
+                    mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+                }
+            }
             mPreferenceManager.setValue(
                 KEY_CLOUD_FORMATION_STATUS,
                 AuthEnum.AWS_CONNECTED.name

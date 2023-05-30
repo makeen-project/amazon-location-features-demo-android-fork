@@ -79,6 +79,7 @@ class MapHelper(private val appContext: Context) {
     private var mDotLayerId: String = "dot-layer"
     private var mDotDestinationLayerId: String = "dot-destination-layer"
     private val mDefaultLatLng = LatLng(49.281174, -123.116823)
+    val mDefaultLatLngGrab = LatLng(1.2840123, 103.8487542)
     var mSymbolManager: SymbolManager? = null
     private var mSymbolManagerWithClick: SymbolManager? = null
     private var mSymbolManagerTracker: SymbolManager? = null
@@ -95,6 +96,7 @@ class MapHelper(private val appContext: Context) {
     var mSymbolOptionList = ArrayList<Symbol>()
     private var mMapLibreView: MapLibreView? = null
     private var mapStyleChangeListener: MapStyleChangeListener? = null
+    private var mPreferenceManager: PreferenceManager? = null
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -103,13 +105,19 @@ class MapHelper(private val appContext: Context) {
         style: String,
         isMapLoadedInterface: IsMapLoadedInterface,
         mapStyleChangedListener: MapStyleChangeListener,
-        activity: FragmentActivity?
+        activity: FragmentActivity?,
+        mPreferenceManager: PreferenceManager
     ) {
+        this.mPreferenceManager = mPreferenceManager
         mapboxMap?.let {
             mMapLibreView = mapView
             this.mMapboxMap = it
             if (!it.locationComponent.isLocationComponentActivated) {
-                moveCameraToLocation(mDefaultLatLng)
+                if (isGrabMapSelected(mPreferenceManager, appContext)) {
+                    moveCameraToLocation(mDefaultLatLngGrab)
+                } else {
+                    moveCameraToLocation(mDefaultLatLng)
+                }
             }
             mapView.setStyle(MapStyle(mapStyle, style)) { style ->
                 updateZoomRange(style)
@@ -818,8 +826,27 @@ class MapHelper(private val appContext: Context) {
                 )
             }
         }
+        mPreferenceManager?.let { preferenceManager ->
+            if (isGrabMapSelected(preferenceManager, appContext)) {
+                if (mLatLng != null) {
+                    mLatLng?.let {
+                        if (!(it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)) {
+                            return mDefaultLatLngGrab
+                        }
+                    }
+                } else {
+                    return mDefaultLatLngGrab
+                }
+            }
+        }
         return if (mLatLng == null) {
-            mDefaultLatLng
+            mPreferenceManager?.let {
+                if (isGrabMapSelected(it, appContext)) {
+                    mDefaultLatLngGrab
+                } else {
+                    mDefaultLatLng
+                }
+            }
         } else {
             mLatLng
         }
@@ -1141,13 +1168,13 @@ class MapHelper(private val appContext: Context) {
 
         llMain.measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         llMain.layout(0, 0, llMain.measuredWidth, llMain.measuredHeight)
         val bitmap = Bitmap.createBitmap(
             llMain.measuredWidth,
             llMain.measuredHeight,
-            Bitmap.Config.ARGB_8888,
+            Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
         llMain.draw(canvas)

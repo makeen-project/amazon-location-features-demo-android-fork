@@ -27,6 +27,7 @@ import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningRemoteDataSourceImplTest
+import com.aws.amazonlocation.utils.validateLatLng
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
 import javax.inject.Inject
@@ -47,7 +48,16 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         if (mContext.isInternetAvailable()) {
             val mSearchSuggestionResponse =
                 mAWSLocationHelper.searchPlaceSuggestion(lat, lng, searchText)
-            if (mSearchSuggestionResponse.text == searchText) {
+            if (validateLatLng(searchText) != null) {
+                val mLatLng = validateLatLng(searchText)
+                if (mSearchSuggestionResponse.text == (mLatLng?.latitude.toString() + "," + mLatLng?.longitude.toString())) {
+                    searchPlace.getSearchPlaceSuggestionResponse(mSearchSuggestionResponse)
+                } else {
+                    if (!mSearchSuggestionResponse.error.isNullOrEmpty()) {
+                        searchPlace.error(mSearchSuggestionResponse)
+                    }
+                }
+            } else if (mSearchSuggestionResponse.text == searchText) {
                 searchPlace.getSearchPlaceSuggestionResponse(mSearchSuggestionResponse)
             } else {
                 if (!mSearchSuggestionResponse.error.isNullOrEmpty()) {

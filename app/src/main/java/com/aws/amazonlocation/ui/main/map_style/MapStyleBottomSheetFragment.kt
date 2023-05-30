@@ -15,6 +15,7 @@ import com.aws.amazonlocation.ui.main.explore.MapStyleAdapter
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -83,7 +84,7 @@ class MapStyleBottomSheetFragment(
     private fun init() {
         mBinding.apply {
             rvMapStyle.apply {
-                mViewModel.setMapListData(context)
+                mViewModel.setMapListData(context, isGrabMapEnable(mPreferenceManager))
                 val mapName =
                     mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                         ?: getString(R.string.map_esri)

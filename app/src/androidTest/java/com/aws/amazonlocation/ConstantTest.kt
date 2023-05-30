@@ -40,6 +40,7 @@ const val TEST_WORD_7 = "port fuad"
 const val TEST_WORD_8 = "port said"
 const val TEST_WORD_9 = "cloverdale perth"
 const val TEST_WORD_10 = "Kewdale Perth"
+const val TEST_WORD_11 = "Singapore"
 const val TEST_IMAGE_LABEL = "Rio Tinto, Esposende, Braga, PRT"
 const val TEST_IMAGE_LABEL_1 = "Rio Tinto, Gondomar, Porto, PRT"
 const val ACCESS_FINE_LOCATION = "android.permission.ACCESS_FINE_LOCATION"
@@ -74,6 +75,7 @@ const val JSON_KEY_TILES = "tiles"
 const val JSON_KEY_ESRI = "esri"
 const val JSON_KEY_HERE = "omv"
 const val JSON_KEY_RASTER_TILES = "raster-tiles"
+const val MAP_STYLE_GRAB = "GrabMaps"
 
 const val TEST_FAILED_NO_TRACKING_HISTORY_NULL = "Test failed due to no tracking history itemCount is null"
 const val TEST_FAILED_NO_TRACKING_HISTORY = "Test failed due to no tracking history"
@@ -118,6 +120,7 @@ const val TEST_FAILED_MAP_NOT_FOUND = "Test failed due to map not found"
 const val TEST_FAILED_PINCH_OUT_FAILED = "Test failed due to pinch out failed"
 const val TEST_FAILED_PINCH_IN_FAILED = "Test failed due to pinch in failed"
 const val TEST_FAILED_ENABLE_TRACKING = "Test failed due to enable tracking not visible"
+const val TEST_FAILED_MAP_STYLE_NOT_CHANGED = "Map style not changed"
 
 val STYLE_TAG_ESRI_1 = DESCRIPTION_TAG_ESRI + 1
 val STYLE_TAG_ESRI_2 = DESCRIPTION_TAG_ESRI + 2

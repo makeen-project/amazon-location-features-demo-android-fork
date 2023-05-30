@@ -31,6 +31,8 @@ const val KEY_MAP_STYLE_NAME = "key_map_style_name"
 const val CLICK_DEBOUNCE = 1000L
 const val CLICK_DEBOUNCE_ENABLE = 1100L
 const val RESTART_DELAY = 800L
+const val DELAY_500 = 500L
+const val DELAY_1000 = 1000L
 const val DELAY_SIGN_OUT_2000 = 2000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
@@ -55,10 +57,19 @@ const val JSON_KEY_STYLE_HERE = "omv"
 const val JSON_KEY_STYLE_RASTER = "raster-tiles"
 const val JSON_KEY_STYLE_MINZOOM = "minzoom"
 const val JSON_KEY_STYLE_MAXZOOM = "maxzoom"
+const val TRAVEL_MODE_BICYCLE = "Bicycle"
+const val TRAVEL_MODE_MOTORCYCLE = "Motorcycle"
 
 const val HERE = "Here"
 const val DESCRIPTION_TAG_ESRI = "ESRI_"
 const val DESCRIPTION_TAG_HERE = "HERE_"
+
+val SE_REGION_LIST = arrayListOf("ap-southeast-1")
+
+const val latNorth = 31.952162238024968
+const val lonEast = 146.25
+const val latSouth = -21.943045533438166
+const val lonWest = 90.0
 
 /**
  *  * Validate Latitude and Longitude from string.
@@ -81,8 +92,10 @@ const val LOCATION_PLACES_PREFIX = "places."
 
 const val ESRI_PLACE_INDEX = LOCATION_AWS_PREFIX + LOCATION_PLACES_PREFIX + "Esri.PlaceIndex"
 const val HERE_PLACE_INDEX = LOCATION_AWS_PREFIX + LOCATION_PLACES_PREFIX + "HERE.PlaceIndex"
+const val GRAB_PLACE_INDEX = LOCATION_AWS_PREFIX + LOCATION_PLACES_PREFIX + "Grab.PlaceIndex"
 const val ESRI_ROUTE_CALCULATOR = LOCATION_AWS_PREFIX + LOCATION_ROUTES_PREFIX + "Esri.RouteCalculator"
 const val HERE_ROUTE_CALCULATOR = LOCATION_AWS_PREFIX + LOCATION_ROUTES_PREFIX + "HERE.RouteCalculator"
+const val GRAB_ROUTE_CALCULATOR = LOCATION_AWS_PREFIX + LOCATION_ROUTES_PREFIX + "Grab.RouteCalculator"
 
 object Credentials {
     const val CLOUD_FORMATION_REMOVE_URL = BuildConfig.CLOUD_FORMATION_URL
@@ -136,7 +149,6 @@ object GeofenceCons {
     const val CIRCLE_DRAGGABLE_BEARING = 90.0
 
     const val GEOFENCE_MIN_RADIUS = 10
-
 }
 
 object TrackerCons {
@@ -155,6 +167,8 @@ object MapNames {
     const val HERE_EXPLORE_TRUCK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.ExploreTruck"
     const val HERE_HYBRID = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Hybrid"
     const val HERE_IMAGERY = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Imagery"
+    const val GRAB_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardLight"
+    const val GRAB_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardDark"
 }
 
 object MapStyles {
@@ -169,6 +183,8 @@ object MapStyles {
     const val VECTOR_HERE_EXPLORE_TRUCK = "VectorHereExploreTruck"
     const val HYBRID_HERE_EXPLORE_SATELLITE = "HybridHereExploreSatellite"
     const val RASTER_HERE_EXPLORE_SATELLITE = "RasterHereExploreSatellite"
+    const val GRAB_LIGHT = "VectorGrabStandardLight"
+    const val GRAB_DARK = "VectorGrabStandardDark"
 }
 
 object DateFormat {

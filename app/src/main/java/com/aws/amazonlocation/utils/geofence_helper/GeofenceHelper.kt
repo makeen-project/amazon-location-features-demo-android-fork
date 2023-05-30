@@ -33,6 +33,11 @@ import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants.UNIT_METR
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeasurement
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
+import com.aws.amazonlocation.utils.isGrabMapSelected
+import com.aws.amazonlocation.utils.latNorth
+import com.aws.amazonlocation.utils.latSouth
+import com.aws.amazonlocation.utils.lonEast
+import com.aws.amazonlocation.utils.lonWest
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
@@ -72,10 +77,11 @@ class GeofenceHelper(
     private var mSeekBar: SeekBar?,
     private var mMapboxMap: MapboxMap?,
     private var mGeofenceMapLatLngInterface: GeofenceMapLatLngInterface?,
-    private var mPrefrenceManager: PreferenceManager?,
+    private var mPrefrenceManager: PreferenceManager?
 ) {
 
     var mDefaultLatLng = LatLng(49.281174, -123.116823)
+    val mDefaultLatLngGrab = LatLng(1.2840123, 103.8487542)
     private var mDefaultLocationPoint =
         fromLngLat(mDefaultLatLng.longitude, mDefaultLatLng.latitude)
     private val mCircleUnit: String = UNIT_METRES
@@ -124,7 +130,30 @@ class GeofenceHelper(
                 )
             }
         }
-        return mLatLng
+        mPrefrenceManager?.let { preferenceManager ->
+            if (isGrabMapSelected(preferenceManager, mAppContext)) {
+                if (mLatLng != null) {
+                    mLatLng?.let {
+                        if (!(it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)) {
+                            return mDefaultLatLngGrab
+                        }
+                    }
+                } else {
+                    return mDefaultLatLngGrab
+                }
+            }
+        }
+        return if (mLatLng == null) {
+            mPrefrenceManager?.let {
+                if (isGrabMapSelected(it, mAppContext)) {
+                    mDefaultLatLngGrab
+                } else {
+                    mDefaultLatLng
+                }
+            }
+        } else {
+            mLatLng
+        }
     }
 
     fun initMapBoxStyle() {

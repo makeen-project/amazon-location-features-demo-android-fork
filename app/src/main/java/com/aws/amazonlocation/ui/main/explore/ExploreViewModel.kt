@@ -25,6 +25,8 @@ import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyles
+import com.aws.amazonlocation.utils.TRAVEL_MODE_BICYCLE
+import com.aws.amazonlocation.utils.TRAVEL_MODE_MOTORCYCLE
 import com.aws.amazonlocation.utils.Units
 import com.mapbox.mapboxsdk.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,10 +57,13 @@ class ExploreViewModel @Inject constructor(
     var mCarData: CalculateRouteResult? = null
     var mWalkingData: CalculateRouteResult? = null
     var mTruckData: CalculateRouteResult? = null
+    var mBicycleData: CalculateRouteResult? = null
+    var mMotorcycleData: CalculateRouteResult? = null
     var mNavigationResponse: NavigationResponse? = null
     private val mNavigationListModel = ArrayList<NavigationData>()
     private val listMapInnerData = arrayListOf<MapStyleInnerData>()
     var mStyleList = ArrayList<MapStyleData>()
+
     private val _searchForSuggestionsResultList =
         Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)
     val searchForSuggestionsResultList: Flow<HandleResult<SearchSuggestionResponse>> =
@@ -220,6 +225,54 @@ class ExploreViewModel @Inject constructor(
                 }
                 one.await()
             }
+        }
+    }
+
+    fun calculateGrabDistance(
+        latitude: Double?,
+        longitude: Double?,
+        latDestination: Double?,
+        lngDestination: Double?,
+        isAvoidFerries: Boolean?,
+        isAvoidTolls: Boolean?
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val two = async {
+                calculateDistanceFromMode(
+                    latitude,
+                    longitude,
+                    latDestination,
+                    lngDestination,
+                    isAvoidFerries,
+                    isAvoidTolls,
+                    TravelMode.Walking.value
+                )
+            }
+            two.await()
+            val three = async {
+                calculateDistanceFromMode(
+                    latitude,
+                    longitude,
+                    latDestination,
+                    lngDestination,
+                    isAvoidFerries,
+                    isAvoidTolls,
+                    TRAVEL_MODE_BICYCLE
+                )
+            }
+            three.await()
+            val one = async {
+                calculateDistanceFromMode(
+                    latitude,
+                    longitude,
+                    latDestination,
+                    lngDestination,
+                    isAvoidFerries,
+                    isAvoidTolls,
+                    TRAVEL_MODE_MOTORCYCLE
+                )
+            }
+            one.await()
         }
     }
 
@@ -437,7 +490,7 @@ class ExploreViewModel @Inject constructor(
         )
     }
 
-    fun setMapListData(context: Context) {
+    fun setMapListData(context: Context, isGrabMapEnable: Boolean = false) {
         mStyleList.clear()
         listMapInnerData.clear()
         listMapInnerData.add(
@@ -535,5 +588,35 @@ class ExploreViewModel @Inject constructor(
             ),
         )
         mStyleList.add(MapStyleData(context.resources.getString(R.string.here), false, hereList))
+
+        if (isGrabMapEnable) {
+            val grabList = ArrayList<MapStyleInnerData>()
+
+            grabList.add(
+                MapStyleInnerData(
+                    mapName = context.resources.getString(R.string.map_grab_light),
+                    image = R.drawable.grab_light,
+                    isSelected = false,
+                    mMapName = MapNames.GRAB_LIGHT,
+                    mMapStyleName = MapStyles.GRAB_LIGHT
+                )
+            )
+            grabList.add(
+                MapStyleInnerData(
+                    mapName = context.resources.getString(R.string.map_grab_dark),
+                    image = R.drawable.grab_dark,
+                    isSelected = false,
+                    mMapName = MapNames.GRAB_DARK,
+                    mMapStyleName = MapStyles.GRAB_DARK
+                )
+            )
+            mStyleList.add(
+                MapStyleData(
+                    context.resources.getString(R.string.grab),
+                    false,
+                    grabList
+                )
+            )
+        }
     }
 }

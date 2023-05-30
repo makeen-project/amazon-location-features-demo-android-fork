@@ -38,7 +38,7 @@ class ExploreVMSetMapListData : BaseTest() {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun setMapListDataSuccess() = runTest {
-        mExploreVM.setMapListData(context)
+        mExploreVM.setMapListData(context, true)
 
         mExploreVM.mStyleList[0].styleNameDisplay = ESRI
         mExploreVM.mStyleList[0].isSelected = mExploreVM.mStyleList[0].isSelected
@@ -53,12 +53,17 @@ class ExploreVMSetMapListData : BaseTest() {
 
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED,
-            mExploreVM.mStyleList.size == 2
+            mExploreVM.mStyleList.size == 3
         )
 
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_ESRI,
             mExploreVM.mStyleList[0].styleNameDisplay == ESRI
+        )
+
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_ESRI,
+            mExploreVM.mStyleList[2].styleNameDisplay == GRAB
         )
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI,

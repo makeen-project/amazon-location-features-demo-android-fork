@@ -245,6 +245,104 @@ object Responses {
                 )
         )
 
+    val RESPONSE_CALCULATE_DISTANCE_BICYCLE = CalculateRouteResult()
+        .withLegs(
+            Leg()
+                .withDistance(0.19504914469655174)
+                .withDurationSeconds(140.439713998)
+                .withEndPosition(72.83338298024672, 18.921575535610945)
+                .withGeometry(
+                    LegGeometry()
+                        .withLineString(
+                            listOf(72.83371801248408, 18.922163986834548),
+                            listOf(72.83368999799727, 18.922080011205793),
+                            listOf(72.83332001005944, 18.92124998876538),
+                            listOf(72.83326001293212, 18.92112999451072),
+                            listOf(72.83318000545705, 18.92106999738339),
+                            listOf(72.83317999485907, 18.92106998837811),
+                            listOf(72.83324999683737, 18.921269989185305),
+                            listOf(72.83338298024672, 18.921575535610945)
+                        )
+                )
+                .withStartPosition(72.83371801248408, 18.922163986834548)
+                .withSteps(
+                    Step()
+                        .withDistance(0.1349945068479063)
+                        .withDurationSeconds(97.199218758)
+                        .withEndPosition(72.83318000545705, 18.92106999738339)
+                        .withGeometryOffset(1)
+                        .withStartPosition(72.83368999799727, 18.922080011205793),
+                    Step()
+                        .withDistance(0.060054637848645454)
+                        .withDurationSeconds(43.24049524)
+                        .withEndPosition(72.83338298024672, 18.921575535610945)
+                        .withGeometryOffset(5)
+                        .withStartPosition(72.83317999485907, 18.92106998837811)
+                )
+        )
+        .withSummary(
+            CalculateRouteSummary()
+                .withDataSource(GRAB)
+                .withDistance(0.19504914469655174)
+                .withDistanceUnit(DistanceUnit.Kilometers)
+                .withDurationSeconds(140.439713998)
+                .withRouteBBox(
+                    72.83317999485907,
+                    18.92106998837811,
+                    72.83371801248408,
+                    18.922163986834548
+                )
+        )
+
+    val RESPONSE_CALCULATE_DISTANCE_MOTORCYCLE = CalculateRouteResult()
+        .withLegs(
+            Leg()
+                .withDistance(0.19504914469655174)
+                .withDurationSeconds(141.439713998)
+                .withEndPosition(72.83338298024672, 18.921575535610945)
+                .withGeometry(
+                    LegGeometry()
+                        .withLineString(
+                            listOf(72.83371801248408, 18.922163986834548),
+                            listOf(72.83368999799727, 18.922080011205793),
+                            listOf(72.83332001005944, 18.92124998876538),
+                            listOf(72.83326001293212, 18.92112999451072),
+                            listOf(72.83318000545705, 18.92106999738339),
+                            listOf(72.83317999485907, 18.92106998837811),
+                            listOf(72.83324999683737, 18.921269989185305),
+                            listOf(72.83338298024672, 18.921575535610945)
+                        )
+                )
+                .withStartPosition(72.83371801248408, 18.922163986834548)
+                .withSteps(
+                    Step()
+                        .withDistance(0.1349945068479063)
+                        .withDurationSeconds(97.199218758)
+                        .withEndPosition(72.83318000545705, 18.92106999738339)
+                        .withGeometryOffset(1)
+                        .withStartPosition(72.83368999799727, 18.922080011205793),
+                    Step()
+                        .withDistance(0.060054637848645454)
+                        .withDurationSeconds(43.24049524)
+                        .withEndPosition(72.83338298024672, 18.921575535610945)
+                        .withGeometryOffset(5)
+                        .withStartPosition(72.83317999485907, 18.92106998837811)
+                )
+        )
+        .withSummary(
+            CalculateRouteSummary()
+                .withDataSource(GRAB)
+                .withDistance(0.19504914469655174)
+                .withDistanceUnit(DistanceUnit.Kilometers)
+                .withDurationSeconds(140.439713998)
+                .withRouteBBox(
+                    72.83317999485907,
+                    18.92106998837811,
+                    72.83371801248408,
+                    18.922163986834548
+                )
+        )
+
     val RESPONSE_CALCULATE_DISTANCE_WALKING = CalculateRouteResult()
         .withLegs(
             Leg()

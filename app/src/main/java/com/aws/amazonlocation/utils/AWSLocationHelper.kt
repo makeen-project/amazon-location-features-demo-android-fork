@@ -34,6 +34,7 @@ import com.amazonaws.services.geo.model.SearchPlaceIndexForTextRequest
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.response.AddGeofenceResponse
 import com.aws.amazonlocation.data.response.DeleteGeofence
@@ -64,11 +65,17 @@ class AWSLocationHelper(
     private var mCognitoCredentialsProvider: CognitoCredentialsProvider? = null
     private var mBaseActivity: BaseActivity? = null
     private var apiError = "Please try again later"
+    private var mapGrabMaps = "GrabMaps"
 
     fun initAWSMobileClient(baseActivity: BaseActivity) {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
+        var defaultRegion = BuildConfig.DEFAULT_REGION
+        if (mapName == mapGrabMaps) {
+            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+        }
         if (region.isNullOrEmpty()) {
-            region = BuildConfig.DEFAULT_REGION
+            region = defaultRegion
         }
         mClient = AmazonLocationClient(initCognitoCachingCredentialsProvider())
         mClient?.setRegion(Region.getRegion(region))
@@ -80,20 +87,26 @@ class AWSLocationHelper(
         var identityPoolId = mPreferenceManager.getValue(KEY_POOL_ID, "")
         val provider = mPreferenceManager.getValue(KEY_PROVIDER, "")
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
-
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
+        var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        var defaultRegion = BuildConfig.DEFAULT_REGION
+        if (mapName == mapGrabMaps) {
+            defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
+            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+        }
         if (region.isNullOrEmpty()) {
-            region = BuildConfig.DEFAULT_REGION
+            region = defaultRegion
         }
 
         if (identityPoolId.isNullOrEmpty()) {
-            identityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            identityPoolId = defaultIdentityPoolId
         }
         mCognitoCredentialsProvider = CognitoCredentialsProvider(
             identityPoolId,
             Regions.fromName(region),
         )
         val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-        if (identityPoolId != BuildConfig.DEFAULT_IDENTITY_POOL_ID && mAuthStatus == AuthEnum.SIGNED_IN.name) {
+        if (identityPoolId != defaultIdentityPoolId && mAuthStatus == AuthEnum.SIGNED_IN.name) {
             mCognitoCredentialsProvider?.let {
                 idToken?.let { idToken ->
                     it.clear()
@@ -122,6 +135,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_PLACE_INDEX
+                }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
                 }
                 else -> ESRI_PLACE_INDEX
             }
@@ -157,6 +173,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_ROUTE_CALCULATOR
+                }
+                "GrabMaps" -> {
+                    GRAB_ROUTE_CALCULATOR
                 }
                 else -> ESRI_ROUTE_CALCULATOR
             }
@@ -329,6 +348,9 @@ class AWSLocationHelper(
                 "HERE" -> {
                     HERE_PLACE_INDEX
                 }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
+                }
                 else -> ESRI_PLACE_INDEX
             }
             val liveLocation = mMapHelper.getLiveLocation()
@@ -382,6 +404,9 @@ class AWSLocationHelper(
                 "HERE" -> {
                     HERE_PLACE_INDEX
                 }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
+                }
                 else -> ESRI_PLACE_INDEX
             }
             mClient?.getPlace(
@@ -405,6 +430,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_PLACE_INDEX
+                }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
                 }
                 else -> ESRI_PLACE_INDEX
             }
@@ -452,6 +480,9 @@ class AWSLocationHelper(
                 }
                 "HERE" -> {
                     HERE_PLACE_INDEX
+                }
+                "GrabMaps" -> {
+                    GRAB_PLACE_INDEX
                 }
                 else -> ESRI_PLACE_INDEX
             }
