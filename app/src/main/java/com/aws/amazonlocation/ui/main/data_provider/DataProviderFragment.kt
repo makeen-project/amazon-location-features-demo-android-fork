@@ -1,6 +1,8 @@
 package com.aws.amazonlocation.ui.main.data_provider // ktlint-disable package-name
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentDataProviderBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
@@ -141,25 +144,40 @@ class DataProviderFragment : BaseFragment() {
     }
 
     private fun showRestartDialog(isHere: Boolean, isGrab: Boolean) {
-        activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-            override fun onOkClick(dialog: DialogInterface) {
-                if (isGrab) {
+        if (isGrab) {
+            activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                override fun onOkClick(dialog: DialogInterface) {
                     changeDataProviderGrab()
-                } else {
-                    if (isHere) {
-                        changeDataProviderHere()
-                    } else {
-                        changeDataProviderEsri()
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
-                    }
+
+                override fun onLearnMoreClick(dialog: DialogInterface) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                        )
+                    )
+                }
+            })
+        } else {
+            if (isHere) {
+                changeDataProviderHere()
+            } else {
+                changeDataProviderEsri()
+            }
+            lifecycleScope.launch {
+                if (!isRunningTest) {
+                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                    activity?.restartApplication()
                 }
             }
-        })
+        }
     }
     private fun changeDataProviderGrab() {
         changeDataProvider(isEsri = false, isGrab = true)

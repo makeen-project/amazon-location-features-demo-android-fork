@@ -174,19 +174,24 @@ fun Context.userSignOutDialog() {
 fun Context.restartAppMapStyleDialog(
     restartInterface: MapStyleRestartInterface
 ) {
-    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
+    val mDialog = MaterialAlertDialogBuilder(this, R.style.MyGrabDialogTheme)
     mDialog.setTitle(resources.getString(R.string.label_restart_app_title))
     mDialog.setMessage(resources.getString(R.string.label_restart_app_description))
     mDialog.setPositiveButton(
-        this.resources.getString(R.string.ok)
+        this.resources.getString(R.string.enable_grab)
     ) { dialog, _ ->
         restartInterface.onOkClick(dialog)
         dialog.dismiss()
     }
-    mDialog.setNegativeButton(
+    mDialog.setNeutralButton(
         this.resources.getString(R.string.cancel)
     ) { dialog, _ ->
         dialog.dismiss()
+    }
+    mDialog.setNegativeButton(
+        this.resources.getString(R.string.learn_more)
+    ) { dialog, _ ->
+        restartInterface.onLearnMoreClick(dialog)
     }
     mDialog.show()
 }
@@ -224,4 +229,5 @@ interface MessageInterface {
 
 interface MapStyleRestartInterface {
     fun onOkClick(dialog: DialogInterface)
+    fun onLearnMoreClick(dialog: DialogInterface)
 }

@@ -1248,7 +1248,7 @@
                         android:id="@+id/iv_bicycle"
                         android:layout_width="@dimen/dp_16"
                         android:layout_height="@dimen/dp_16"
-                        android:src="@drawable/icon_truck"
+                        android:src="@drawable/icon_bicycle"
                         android:tint="@color/color_hint_text"
                         app:layout_constraintBottom_toBottomOf="@id/tv_bicycle_distance"
                         app:layout_constraintStart_toStartOf="parent"
@@ -1268,7 +1268,7 @@
                         android:imeOptions="actionSearch"
                         android:maxLength="200"
                         android:singleLine="true"
-                        android:text="@string/label_truck"
+                        android:text="@string/label_bicycle"
                         app:layout_constraintStart_toEndOf="@id/iv_bicycle"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -1462,7 +1462,7 @@
                         android:id="@+id/iv_motorcycle"
                         android:layout_width="@dimen/dp_16"
                         android:layout_height="@dimen/dp_16"
-                        android:src="@drawable/icon_truck"
+                        android:src="@drawable/icon_motorcycle"
                         android:tint="@color/color_hint_text"
                         app:layout_constraintBottom_toBottomOf="@id/tv_motorcycle_distance"
                         app:layout_constraintStart_toStartOf="parent"
@@ -1482,7 +1482,7 @@
                         android:imeOptions="actionSearch"
                         android:maxLength="200"
                         android:singleLine="true"
-                        android:text="@string/label_truck"
+                        android:text="@string/label_motorcycle"
                         app:layout_constraintStart_toEndOf="@id/iv_motorcycle"
                         app:layout_constraintTop_toTopOf="parent" />
 

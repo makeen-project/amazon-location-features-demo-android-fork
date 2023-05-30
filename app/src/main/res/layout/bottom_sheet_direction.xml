@@ -167,13 +167,13 @@
             android:layout_marginTop="@dimen/dp_8"
             android:ellipsize="end"
             android:gravity="start"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:textAlignment="viewStart"
             android:text="@string/error_switch_to_here"
             android:textColor="@color/color_32ADE6"
             app:layout_constraintEnd_toEndOf="@id/sheet_direction_gl_direction_end"
             app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
-            app:layout_constraintTop_toBottomOf="@id/tv_direction_time" />
+            app:layout_constraintTop_toBottomOf="@id/tv_direction_distance" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_direction_error_2"
@@ -183,7 +183,7 @@
             android:layout_marginTop="@dimen/dp_8"
             android:ellipsize="end"
             android:gravity="start"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:textAlignment="viewStart"
             android:text="@string/label_location_permission_denied"
             android:textColor="@color/color_32ADE6"

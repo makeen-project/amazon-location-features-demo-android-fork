@@ -2,7 +2,9 @@ package com.aws.amazonlocation.ui.main.map_style // ktlint-disable package-name
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
@@ -258,25 +261,40 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun showRestartDialog(isHere: Boolean, isGrab: Boolean, position: Int) {
-        activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-            override fun onOkClick(dialog: DialogInterface) {
-                if (isGrab) {
+        if (isGrab) {
+            activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                override fun onOkClick(dialog: DialogInterface) {
                     saveGrabData(position)
-                } else {
-                    if (isHere) {
-                        saveHereData(position)
-                    } else {
-                        saveEsriData(position)
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
-                    }
+
+                override fun onLearnMoreClick(dialog: DialogInterface) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                        )
+                    )
+                }
+            })
+        } else {
+            if (isHere) {
+                saveHereData(position)
+            } else {
+                saveEsriData(position)
+            }
+            lifecycleScope.launch {
+                if (!isRunningTest) {
+                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                    activity?.restartApplication()
                 }
             }
-        })
+        }
     }
 
     fun changeStyle(position: Int, isHere: Boolean, isGrab: Boolean) {

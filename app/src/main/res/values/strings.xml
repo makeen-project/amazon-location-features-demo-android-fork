@@ -216,6 +216,7 @@
     <string name="imperial">Imperial</string>
     <string name="subtitle_imperial">Miles, pounds</string>
     <string name="automatic">Automatic</string>
-    <string name="label_restart_app_title">Change map style confirmation</string>
-    <string name="label_restart_app_description">Changing map style from grab from other data provider or other data provider to grab will need restart.So clicking ok will restart application.</string>
+    <string name="label_restart_app_title">Enable Grab</string>
+    <string name="label_restart_app_description">Grab map provider only operates in Southeast Asia and Asia Pacific (Singapore) Region</string>
+    <string name="enable_grab">Enable Grab</string>
 </resources>

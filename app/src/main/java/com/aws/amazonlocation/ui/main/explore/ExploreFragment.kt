@@ -1641,11 +1641,13 @@ class ExploreFragment :
             mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
         if (mapName == getString(R.string.map_esri)) {
             val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
-                        if (isMetric) {layoutCardError.tvCardError1.text =
-                getString(R.string.distance_is_greater_than_400_km)} else {
-                            layoutCardError.tvCardError1.text =
-                                getString(R.string.distance_is_greater_than_248_mi)
-                        }
+            if (isMetric) {
+                layoutCardError.tvCardError1.text =
+                    getString(R.string.distance_is_greater_than_400_km)
+            } else {
+                layoutCardError.tvCardError1.text =
+                    getString(R.string.distance_is_greater_than_248_mi)
+            }
             layoutCardError.tvCardError2.text =
                 getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
             layoutCardError.tvCardError2.show()
@@ -4386,17 +4388,35 @@ class ExploreFragment :
             position != 2
         }
         if (isRestartNeeded) {
-            activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-                override fun onOkClick(dialog: DialogInterface) {
-                    changeMapStyle(isMapClick, position, innerPosition)
-                    lifecycleScope.launch {
-                        if (!isRunningTest) {
-                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                            activity?.restartApplication()
+            if (position == 2) {
+                activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface) {
+                        changeMapStyle(isMapClick, position, innerPosition)
+                        lifecycleScope.launch {
+                            if (!isRunningTest) {
+                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                activity?.restartApplication()
+                            }
                         }
                     }
+                    override fun onLearnMoreClick(dialog: DialogInterface) {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                            )
+                        )
+                    }
+                })
+            } else {
+                changeMapStyle(isMapClick, position, innerPosition)
+                lifecycleScope.launch {
+                    if (!isRunningTest) {
+                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                        activity?.restartApplication()
+                    }
                 }
-            })
+            }
         } else {
             changeMapStyle(isMapClick, position, innerPosition)
         }
