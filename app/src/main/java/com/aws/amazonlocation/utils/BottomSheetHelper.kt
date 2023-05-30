@@ -77,6 +77,7 @@ class BottomSheetHelper {
                             view.tvSearchCancel?.show()
                             isSearchSheetOpen = true
                             activity.hideKeyboard()
+                            fragment.clearKeyboardFocus()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             view.tvSearchCancel?.hide()
@@ -213,6 +214,7 @@ class BottomSheetHelper {
                             mBaseActivity?.bottomNavigationVisibility(true)
                             view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
                             view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
+                            mBaseActivity?.hideKeyboard()
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             mBaseActivity?.bottomNavigationVisibility(false)
@@ -227,6 +229,7 @@ class BottomSheetHelper {
                             mBottomSheetDirectionsSearch.isHideable = false
                             view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
                             view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
+                            mBaseActivity?.hideKeyboard()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                         }

@@ -1501,7 +1501,14 @@ class ExploreFragment :
                     layoutCardError.root.show()
                     val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                     if (mapName == getString(R.string.map_esri)) {
-                        layoutCardError.tvCardError1.text = getString(R.string.distance_is_greater_than_400_km)
+                        val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+                        if (isMetric) {
+                            layoutCardError.tvCardError1.text =
+                                getString(R.string.distance_is_greater_than_400_km)
+                        } else {
+                            layoutCardError.tvCardError1.text =
+                                getString(R.string.distance_is_greater_than_248_mi)
+                        }
                         layoutCardError.tvCardError2.text = getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
                         layoutCardError.tvCardError2.show()
                     } else {
@@ -2476,8 +2483,13 @@ class ExploreFragment :
                             } else {
                                 mBinding.bottomSheetDirection.tvDirectionDistance.text =
                                     getMetricsNew(distance, isMetric)
-                                mBinding.bottomSheetDirection.tvDirectionError.text =
-                                    getString(R.string.error_switch_to_here)
+                                if (isMetric) {
+                                    mBinding.bottomSheetDirection.tvDirectionError.text =
+                                        getString(R.string.error_switch_to_here)
+                                } else {
+                                    mBinding.bottomSheetDirection.tvDirectionError.text =
+                                        getString(R.string.error_switch_to_here_miles)
+                                }
                             }
                         } else {
                             mBinding.bottomSheetDirection.tvDirectionError.text =
@@ -2531,7 +2543,12 @@ class ExploreFragment :
                     if (distance < 400) {
                         showError(getString(R.string.no_route_found))
                     } else {
-                        showError(getString(R.string.error_distance_400))
+                        val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+                        if (isMetric) {
+                            showError(getString(R.string.error_distance_400))
+                        } else {
+                            showError(getString(R.string.error_distance_248_miles))
+                        }
                     }
                 } else {
                     showError(getString(R.string.no_route_found))

@@ -790,7 +790,7 @@ class MapHelper(private val appContext: Context) {
             BitmapUtils.getBitmapFromDrawable(
                 ContextCompat.getDrawable(
                     activity,
-                    if (markerType.name == MarkerEnum.ORIGIN_ICON.name) R.drawable.ic_geofence_marker else R.drawable.ic_tracker
+                    if (markerType.name == MarkerEnum.ORIGIN_ICON.name) R.drawable.ic_geofence_marker_1 else R.drawable.ic_tracker
                 )
             )?.let {
                 style.addImage(trackerImageName, it)
