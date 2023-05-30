@@ -322,49 +322,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         )
     }
 
-    private fun FragmentSettingBinding.setDefaultSelection() {
-        clUnitSystem.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.white
-            )
-        )
-        ivUnitSystem.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_img_tint
-            )
-        )
-        clAwsCloudformation.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.white
-            )
-        )
-        ivAwsCloudFormation.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_img_tint
-            )
-        )
-        clRouteOption.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        ivRouteOption.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_img_tint
-            )
-        )
-        clMapStyle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
-        clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        ivDataProvider.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_img_tint
-            )
-        )
-    }
-
     override fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean) {
         mSignInViewModel.signOutWithAmazon(requireContext(), isDisconnectFromAWSRequired)
     }
