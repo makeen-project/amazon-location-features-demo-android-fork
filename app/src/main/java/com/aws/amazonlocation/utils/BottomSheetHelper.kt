@@ -77,6 +77,7 @@ class BottomSheetHelper {
                             view.tvSearchCancel?.show()
                             isSearchSheetOpen = true
                             activity.hideKeyboard()
+                            fragment.clearKeyboardFocus()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             view.tvSearchCancel?.hide()
