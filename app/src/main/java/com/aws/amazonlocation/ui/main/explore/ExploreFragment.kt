@@ -4582,6 +4582,7 @@ class ExploreFragment :
         mBinding.cardNavigation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btn_go_disable))
         mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = false
         mBinding.bottomSheetNavigation.cardNavigationLocation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btn_go_disable))
+        (activity as MainActivity).mGeofenceUtils?.disableLiveLocationMarker(requireContext())
     }
 
     private fun enableNavigationComponent() {
@@ -4589,6 +4590,7 @@ class ExploreFragment :
         mBinding.cardNavigation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = true
         mBinding.bottomSheetNavigation.cardNavigationLocation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        (activity as MainActivity).mGeofenceUtils?.enableLiveLocationMarker(requireContext())
     }
 
     private fun clearAllMapData() {
