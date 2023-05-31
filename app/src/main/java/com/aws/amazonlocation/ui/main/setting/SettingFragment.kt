@@ -48,6 +48,7 @@ import kotlinx.coroutines.launch
 // SPDX-License-Identifier: MIT-0
 class SettingFragment : BaseFragment(), SignOutInterface {
 
+    private lateinit var aWSCloudInformationFragment: AWSCloudInformationFragment
     private lateinit var mBinding: FragmentSettingBinding
     private val mSignInViewModel: SignInViewModel by viewModels()
     private var mAuthStatus: String? = null
@@ -56,7 +57,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentSettingBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -146,7 +147,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     mBaseActivity?.clearUserInFo()
                     mBaseActivity?.mPreferenceManager?.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.AWS_CONNECTED.name,
+                        AuthEnum.AWS_CONNECTED.name
                     )
                     init()
                     mPreferenceManager.removeValue(KEY_ID_TOKEN)
@@ -235,9 +236,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             }
             clAwsCloudformation.setOnClickListener {
                 if (isTablet) {
+                    aWSCloudInformationFragment = AWSCloudInformationFragment()
                     addReplaceFragment(
                         R.id.frame_container,
-                        AWSCloudInformationFragment(),
+                        aWSCloudInformationFragment,
                         addFragment = false,
                         addToBackStack = false
                     )
@@ -272,10 +274,16 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                             override fun logoutAndDisconnectAWS(dialog: DialogInterface) {
                             }
                         },
-                        AWSMobileClient.getInstance().isSignedIn,
+                        AWSMobileClient.getInstance().isSignedIn
                     )
                 }
             }
+        }
+    }
+
+    fun hideKeyBoard() {
+        if (isTablet) {
+            aWSCloudInformationFragment.hideKeyBoard()
         }
     }
 

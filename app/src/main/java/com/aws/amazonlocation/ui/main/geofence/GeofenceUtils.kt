@@ -218,9 +218,7 @@ class GeofenceUtils {
                                 } else {
                                     (mActivity as MainActivity).showNavigationIcon()
                                 }
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence?.alpha = 1f
-                                ivAmazonInfoAddGeofence?.alpha = 1f
+                                setDataAddGeofence()
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
                                 cardGeofenceLiveLocation.alpha = 0f
@@ -230,9 +228,7 @@ class GeofenceUtils {
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence?.alpha = 1f
-                                ivAmazonInfoAddGeofence?.alpha = 1f
+                                setDataAddGeofence()
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}
@@ -243,6 +239,15 @@ class GeofenceUtils {
                     }
                 })
         }
+    }
+
+    private fun BottomSheetAddGeofenceBinding.setDataAddGeofence() {
+        cardGeofenceLiveLocation.alpha = 1f
+        imgAmazonLogoAddGeofence?.alpha = 1f
+        ivAmazonInfoAddGeofence?.alpha = 1f
+        mActivity?.hideKeyboard()
+        edtAddGeofenceSearch.clearFocus()
+        edtEnterGeofenceName.clearFocus()
     }
 
     private fun closeAddGeofence() {

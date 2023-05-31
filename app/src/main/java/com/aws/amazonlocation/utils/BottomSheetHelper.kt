@@ -212,9 +212,7 @@ class BottomSheetHelper {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             mBaseActivity?.bottomNavigationVisibility(true)
-                            view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
-                            view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
-                            mBaseActivity?.hideKeyboard()
+                            setBottomSheetDirectionSearchData(view, mBaseActivity)
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             mBaseActivity?.bottomNavigationVisibility(false)
@@ -227,9 +225,7 @@ class BottomSheetHelper {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             exploreFragment.changeDirectionCardMargin(175.px)
                             mBottomSheetDirectionsSearch.isHideable = false
-                            view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
-                            view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
-                            mBaseActivity?.hideKeyboard()
+                            setBottomSheetDirectionSearchData(view, mBaseActivity)
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                         }
@@ -241,6 +237,17 @@ class BottomSheetHelper {
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             })
+    }
+
+    private fun setBottomSheetDirectionSearchData(
+        view: BottomSheetDirectionSearchBinding,
+        mBaseActivity: BaseActivity?
+    ) {
+        view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
+        view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
+        mBaseActivity?.hideKeyboard()
+        view.edtSearchDirection.clearFocus()
+        view.edtSearchDest.clearFocus()
     }
 
     fun setNavigationBottomSheet(view: BottomSheetNavigationBinding) {
