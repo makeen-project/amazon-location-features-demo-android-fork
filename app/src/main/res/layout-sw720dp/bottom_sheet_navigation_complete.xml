@@ -60,7 +60,7 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_14"
-            app:cardBackgroundColor="@color/number_bg_color"
+            app:cardBackgroundColor="@color/color_close_bg"
             app:cardCornerRadius="@dimen/dp_30"
             app:cardElevation="@dimen/dp_0"
             app:cardUseCompatPadding="false"
@@ -69,8 +69,8 @@
             app:strokeColor="@android:color/transparent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_close" />
 

@@ -133,7 +133,10 @@ class MapStyleFragment : BaseFragment() {
     }
 
     private fun calculateColumnCount(): Int {
-        val calculatedColumn: Double = (requireContext().resources.displayMetrics.widthPixels).toDouble() / 650
+        val imageWidth = resources.getDimensionPixelSize(R.dimen.dp_104)
+        val imageMargin = resources.getDimensionPixelSize(R.dimen.dp_48)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        val calculatedColumn: Double = ((requireContext().resources.displayMetrics.widthPixels).toDouble() - width) / (imageWidth + imageMargin)
         return ceil(calculatedColumn).toInt()
     }
 

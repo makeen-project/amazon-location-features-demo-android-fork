@@ -38,7 +38,7 @@
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_14"
-            app:cardBackgroundColor="@color/number_bg_color"
+            app:cardBackgroundColor="@color/color_close_bg"
             app:cardCornerRadius="@dimen/dp_30"
             app:cardElevation="@dimen/dp_0"
             app:cardUseCompatPadding="false"
@@ -47,8 +47,8 @@
             app:strokeColor="@android:color/transparent">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_close" />
 
@@ -63,7 +63,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textAlignment="viewStart"
-            app:layout_constraintEnd_toStartOf="@id/card_direction_close_direction"
+            app:layout_constraintEnd_toStartOf="@+id/card_direction_close_direction"
             app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Mike’s Wings London" />

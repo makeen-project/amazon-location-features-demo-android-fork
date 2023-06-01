@@ -114,6 +114,7 @@ class GeofenceUtils {
             mActivity?.let {
                 if ((it is MainActivity)) {
                     isTablet = it.isTablet
+                    mGeofenceHelper?.isTablet = it.isTablet
                 }
             }
         }
@@ -215,24 +216,25 @@ class GeofenceUtils {
                                             it
                                         )
                                     }
+                                    cardGeofenceLiveLocation.show()
                                 } else {
                                     (mActivity as MainActivity).showNavigationIcon()
                                 }
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence?.alpha = 1f
-                                ivAmazonInfoAddGeofence?.alpha = 1f
+                                setDataAddGeofence()
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
                                 cardGeofenceLiveLocation.alpha = 0f
                                 imgAmazonLogoAddGeofence?.alpha = 0f
                                 ivAmazonInfoAddGeofence?.alpha = 0f
+                                cardGeofenceLiveLocation.hide()
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence?.alpha = 1f
-                                ivAmazonInfoAddGeofence?.alpha = 1f
+                                setDataAddGeofence()
+                                if (!isTablet) {
+                                    cardGeofenceLiveLocation.show()
+                                }
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}
@@ -243,6 +245,15 @@ class GeofenceUtils {
                     }
                 })
         }
+    }
+
+    private fun BottomSheetAddGeofenceBinding.setDataAddGeofence() {
+        cardGeofenceLiveLocation.alpha = 1f
+        imgAmazonLogoAddGeofence?.alpha = 1f
+        ivAmazonInfoAddGeofence?.alpha = 1f
+        mActivity?.hideKeyboard()
+        edtAddGeofenceSearch.clearFocus()
+        edtEnterGeofenceName.clearFocus()
     }
 
     private fun closeAddGeofence() {
@@ -456,6 +467,9 @@ class GeofenceUtils {
             mBindingAddGeofence?.edtAddGeofenceSearch?.clearFocus()
             mBindingAddGeofence?.edtEnterGeofenceName?.clearFocus()
             mActivity?.geofenceDeleteDialog(position, data, deleteGeofence)
+        }
+        if (isTablet) {
+            mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
         }
     }
 

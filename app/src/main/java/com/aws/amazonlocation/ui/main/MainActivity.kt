@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Window
+import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -39,6 +40,8 @@ import com.aws.amazonlocation.domain.`interface`.SignInConnectInterface
 import com.aws.amazonlocation.domain.`interface`.SignInRequiredInterface
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
+import com.aws.amazonlocation.ui.main.setting.AWSCloudInformationFragment
+import com.aws.amazonlocation.ui.main.setting.SettingFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
@@ -75,6 +78,9 @@ class MainActivity : BaseActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        )
         isTablet = resources.getBoolean(R.bool.is_tablet)
         if (!isTablet) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -147,6 +153,37 @@ class MainActivity : BaseActivity() {
             }
         }
         initClick()
+        KeyBoardUtils.attachKeyboardListeners(
+            mBinding.root,
+            object : KeyBoardUtils.KeyBoardInterface {
+                override fun showKeyBoard() {
+                    val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                    if (fragment is ExploreFragment) {
+                        fragment.showKeyBoard()
+                    }
+                }
+
+                override fun hideKeyBoard() {
+                    val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                    if (fragment is ExploreFragment) {
+                        if (mGeofenceBottomSheetHelper.isCloudFormationBottomSheetVisible()) {
+                            mGeofenceBottomSheetHelper.cloudFormationBottomSheetHideKeyboard()
+                        } else {
+                            fragment.hideKeyBoard()
+                        }
+                    } else if (fragment is AWSCloudInformationFragment) {
+                        fragment.hideKeyBoard()
+                    } else if (fragment is SettingFragment) {
+                        fragment.hideKeyBoard()
+                    }
+                }
+            }
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KeyBoardUtils.detachKeyboardListeners(mBinding.root)
     }
 
     private fun initClick() {

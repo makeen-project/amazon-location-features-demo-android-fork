@@ -121,6 +121,7 @@ object Durations {
     const val CAMERA_DURATION_1000 = 1000
     const val CAMERA_BOTTOM_PADDING = 800
     const val CAMERA_TOP_RIGHT_LEFT_PADDING = 225
+    const val CAMERA_RIGHT_PADDING = 180
     const val DEFAULT_RADIUS = 80
     const val DELAY_FOR_GEOFENCE = 500L
 }

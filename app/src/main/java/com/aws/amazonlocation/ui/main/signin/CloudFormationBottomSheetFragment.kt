@@ -115,6 +115,14 @@ class CloudFormationBottomSheetFragment(
         return mBinding.root
     }
 
+    fun hideKeyBoard() {
+        mBinding.edtIdentityPoolId.clearFocus()
+        mBinding.edtUserDomain.clearFocus()
+        mBinding.edtUserPoolId.clearFocus()
+        mBinding.edtWebSocketUrl.clearFocus()
+        mBinding.edtUserPoolClientId.clearFocus()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.setOnKeyListener { _, keyCode, _ ->

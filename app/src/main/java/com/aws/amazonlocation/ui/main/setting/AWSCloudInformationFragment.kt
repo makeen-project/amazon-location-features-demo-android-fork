@@ -396,6 +396,13 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
         }
     }
 
+    fun hideKeyBoard() {
+        mBinding.edtIdentityPoolId.clearFocus()
+        mBinding.edtUserDomain.clearFocus()
+        mBinding.edtUserPoolId.clearFocus()
+        mBinding.edtWebSocketUrl.clearFocus()
+        mBinding.edtUserPoolClientId.clearFocus()
+    }
     override fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean) {
         mSignInViewModel.signOutWithAmazon(requireContext(), isDisconnectFromAWSRequired)
     }
