@@ -114,6 +114,7 @@ class GeofenceUtils {
             mActivity?.let {
                 if ((it is MainActivity)) {
                     isTablet = it.isTablet
+                    mGeofenceHelper?.isTablet = it.isTablet
                 }
             }
         }
@@ -215,6 +216,7 @@ class GeofenceUtils {
                                             it
                                         )
                                     }
+                                    cardGeofenceLiveLocation.show()
                                 } else {
                                     (mActivity as MainActivity).showNavigationIcon()
                                 }
@@ -224,11 +226,15 @@ class GeofenceUtils {
                                 cardGeofenceLiveLocation.alpha = 0f
                                 imgAmazonLogoAddGeofence?.alpha = 0f
                                 ivAmazonInfoAddGeofence?.alpha = 0f
+                                cardGeofenceLiveLocation.hide()
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
                                 setDataAddGeofence()
+                                if (!isTablet) {
+                                    cardGeofenceLiveLocation.show()
+                                }
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}
@@ -461,6 +467,9 @@ class GeofenceUtils {
             mBindingAddGeofence?.edtAddGeofenceSearch?.clearFocus()
             mBindingAddGeofence?.edtEnterGeofenceName?.clearFocus()
             mActivity?.geofenceDeleteDialog(position, data, deleteGeofence)
+        }
+        if (isTablet) {
+            mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
         }
     }
 

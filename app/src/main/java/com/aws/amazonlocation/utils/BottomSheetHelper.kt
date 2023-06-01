@@ -45,7 +45,7 @@ class BottomSheetHelper {
         context = view.clSearchSheet.context
         if (!(activity as MainActivity).isTablet) {
             mBottomSheetSearchPlaces.expandedOffset =
-                view.clSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+                view.clSearchSheet.context.resources.getDimension(R.dimen.dp_10).toInt()
         }
 
         mBottomSheetSearchPlaces.addBottomSheetCallback(object :
@@ -137,7 +137,7 @@ class BottomSheetHelper {
         mBottomSheetMapStyle.state = BottomSheetBehavior.STATE_HIDDEN
         mBottomSheetMapStyle.isFitToContents = false
         mBottomSheetMapStyle.expandedOffset =
-            view.clMapStyleBottomSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+            view.clMapStyleBottomSheet.context.resources.getDimension(R.dimen.dp_15).toInt()
 
         mBottomSheetMapStyle.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
@@ -203,7 +203,7 @@ class BottomSheetHelper {
         mBaseActivity?.isTablet?.let {
             if (!it) {
                 mBottomSheetDirectionsSearch.expandedOffset =
-                    view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+                    view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_15).toInt()
             }
         }
         mBottomSheetDirectionsSearch.addBottomSheetCallback(object :

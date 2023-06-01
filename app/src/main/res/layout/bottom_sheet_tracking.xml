@@ -8,6 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     app:behavior_hideable="false"
+    android:paddingTop="@dimen/dp_10"
     app:behavior_peekHeight="@dimen/dp_110"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
