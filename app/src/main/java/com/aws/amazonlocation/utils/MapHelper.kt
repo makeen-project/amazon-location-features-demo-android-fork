@@ -28,6 +28,7 @@ import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
+import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_20
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
@@ -985,11 +986,18 @@ class MapHelper(private val appContext: Context) {
     }
 
     // check map box location component enable or not for get live location
-    fun checkLocationComponentEnable() {
+    fun checkLocationComponentEnable(mBaseActivity: BaseActivity?, isLiveLocationClicked: Boolean) {
         mMapboxMap?.let {
             if (it.locationComponent.isLocationComponentActivated) {
                 getLiveLocation()
-                    ?.let { LatLng -> moveCameraToLocation(LatLng) }
+                    ?.let { LatLng ->
+                        if (isLiveLocationClicked) {
+                            if (LatLng.longitude == mDefaultLatLngGrab.longitude && LatLng.latitude == mDefaultLatLngGrab.latitude) {
+                                mBaseActivity?.showError(mBaseActivity.getString(R.string.your_location_not_supported_by_grab))
+                            }
+                        }
+                        moveCameraToLocation(LatLng)
+                    }
             } else {
                 enableLocationComponent()
             }
