@@ -219,4 +219,5 @@
     <string name="label_restart_app_title">Enable Grab</string>
     <string name="label_restart_app_description">Grab map provider only operates in Southeast Asia and Asia Pacific (Singapore) Region</string>
     <string name="enable_grab">Enable Grab</string>
+    <string name="your_location_not_supported_by_grab">Your current location is not supported by Grab</string>
 </resources>

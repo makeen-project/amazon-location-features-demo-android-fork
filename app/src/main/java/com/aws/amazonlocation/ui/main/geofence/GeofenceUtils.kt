@@ -22,6 +22,7 @@ import com.aws.amazonlocation.databinding.BottomSheetGeofenceListBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
+import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
@@ -149,7 +150,7 @@ class GeofenceUtils {
             setGeofenceSearchSuggestionAdapter()
             setGeofenceSearchPlaceAdapter()
             cardGeofenceLiveLocation.setOnClickListener {
-                mMapHelper?.checkLocationComponentEnable()
+                mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
             }
 
             cardAddGeofenceClose.setOnClickListener {
@@ -845,7 +846,7 @@ class GeofenceUtils {
         mangeAddGeofenceUI(context = context)
         mGeofenceList.removeAt(position)
         if (mGeofenceList.isEmpty()) {
-            mMapHelper?.checkLocationComponentEnable()
+            mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), false)
             mMapHelper?.mSymbolOptionList?.clear()
             mMapHelper?.deleteAllGeofenceMarker()
             checkGeofenceList(true)

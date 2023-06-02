@@ -120,6 +120,7 @@ class ExploreFragment :
     private var mIsLocationAlreadyEnabled: Boolean = false
     private var mIsCurrentLocationClicked: Boolean = false
     private var mIsTrackingLocationClicked: Boolean = false
+    private var isLiveLocationClick: Boolean = false
     private lateinit var mBinding: FragmentExploreBinding
     private var mMapboxMap: MapboxMap? = null
     private var mAdapter: SearchPlacesAdapter? = null
@@ -573,7 +574,7 @@ class ExploreFragment :
 
         override fun getCheckPermission() {
             mIsTrackingLocationClicked = true
-            checkLocationPermission()
+            checkLocationPermission(false)
         }
 
         override fun getDeleteTrackingData() {
@@ -1900,7 +1901,11 @@ class ExploreFragment :
     // check permission granted or not
     private fun checkPermission() {
         if (activity?.checkLocationPermission() == true) {
-            checkGpsLocationProvider(true, isCurrentLocationClicked = false)
+            checkGpsLocationProvider(
+                true,
+                isCurrentLocationClicked = false,
+                false
+            )
         } else {
             permissionReqLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -1910,7 +1915,11 @@ class ExploreFragment :
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             when {
                 it -> {
-                    checkGpsLocationProvider(false, isCurrentLocationClicked = false)
+                    checkGpsLocationProvider(
+                        false,
+                        isCurrentLocationClicked = false,
+                        false
+                    )
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -1933,7 +1942,7 @@ class ExploreFragment :
             }
 
             cardNavigation.setOnClickListener {
-                checkLocationPermission()
+                checkLocationPermission(true)
             }
 
             cardMap.setOnClickListener {
@@ -2001,9 +2010,7 @@ class ExploreFragment :
 
             bottomSheetNavigation.cardNavigationLocation.setOnClickListener {
                 if (checkInternetConnection()) {
-                    mMapHelper.getLiveLocation()?.let { mLatLng ->
-                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
-                    }
+                    checkLocationPermission(true)
                 }
             }
 
@@ -2127,7 +2134,7 @@ class ExploreFragment :
                             mTravelMode = TravelMode.Car.value
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -2143,7 +2150,7 @@ class ExploreFragment :
                             mTravelMode = TravelMode.Walking.value
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -2159,7 +2166,7 @@ class ExploreFragment :
                             mTravelMode = TravelMode.Truck.value
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -2175,7 +2182,7 @@ class ExploreFragment :
                             mTravelMode = TRAVEL_MODE_BICYCLE
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -2191,7 +2198,7 @@ class ExploreFragment :
                             mTravelMode = TRAVEL_MODE_MOTORCYCLE
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -2337,7 +2344,7 @@ class ExploreFragment :
                 clMyLocation.root.setOnClickListener {
                     if (checkInternetConnection()) {
                         mRedirectionType = RedirectionType.MY_LOCATION.name
-                        checkLocationPermission()
+                        checkLocationPermission(false)
                     }
                 }
                 cardRoutingOption.setOnClickListener {
@@ -2957,7 +2964,7 @@ class ExploreFragment :
         }
     }
 
-    private fun checkLocationPermission() {
+    private fun checkLocationPermission(isCurrentLocationClicked: Boolean) {
         if (activity?.checkLocationPermission() != true) {
             if (mBaseActivity?.getLocationPermissionCount() == 2) {
                 mBaseActivity?.showLocationPermissionDialogBox()
@@ -2965,7 +2972,7 @@ class ExploreFragment :
                 checkPermission()
             }
         } else {
-            checkGpsLocationProvider(false, isCurrentLocationClicked = true)
+            checkGpsLocationProvider(false, isCurrentLocationClicked = true, isCurrentLocationClicked)
         }
     }
 
@@ -4185,7 +4192,8 @@ class ExploreFragment :
     @SuppressLint("VisibleForTests")
     private fun checkGpsLocationProvider(
         isLocationAlreadyEnabled: Boolean,
-        isCurrentLocationClicked: Boolean
+        isCurrentLocationClicked: Boolean,
+        isLiveLocationClick: Boolean
     ) {
         val locationRequest: LocationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -4196,6 +4204,7 @@ class ExploreFragment :
         builder.setAlwaysShow(true)
         this.mIsLocationAlreadyEnabled = isLocationAlreadyEnabled
         this.mIsCurrentLocationClicked = isCurrentLocationClicked
+        this.isLiveLocationClick = isLiveLocationClick
         result.addOnCompleteListener {
             try {
                 it.getResult(ApiException::class.java)
@@ -4227,17 +4236,17 @@ class ExploreFragment :
         } else {
             if (mIsCurrentLocationClicked) {
                 mBaseActivity?.resetLocationPermission()
-                mMapHelper.checkLocationComponentEnable()
+                mMapHelper.checkLocationComponentEnable(mBaseActivity, isLiveLocationClick)
             } else {
                 if (mIsLocationAlreadyEnabled) {
-                    mMapHelper.checkLocationComponentEnable()
+                    mMapHelper.checkLocationComponentEnable(mBaseActivity, false)
                 } else {
                     mBaseActivity?.resetLocationPermission()
                     mMapHelper.enableLocationComponent()
                     mMapHelper.setInitialLocation()
                 }
             }
-
+            isLiveLocationClick = false
             mRedirectionType?.let { type ->
                 when (type) {
                     RedirectionType.ROUTE_OPTION.name -> {
@@ -4300,20 +4309,6 @@ class ExploreFragment :
                             }
                         }
                     }
-                }
-            }
-        }
-        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
-            lifecycleScope.launch {
-                delay(DELAY_1000)
-                if (activity?.checkLocationPermission() == true) {
-                    if (isGPSEnabled(requireContext())) {
-                        enableNavigationComponent()
-                    } else {
-                        disableNavigationComponent()
-                    }
-                } else {
-                    disableNavigationComponent()
                 }
             }
         }
@@ -4586,31 +4581,10 @@ class ExploreFragment :
             .build()
         mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
         mMapboxMap?.setMinZoomPreference(2.4)
-        if (latLng.latitude == mMapHelper.mDefaultLatLngGrab.latitude && latLng.longitude == mMapHelper.mDefaultLatLngGrab.longitude) {
-            disableNavigationComponent()
-        } else {
-            enableNavigationComponent()
-        }
         lifecycleScope.launch {
             delay(CLICK_DEBOUNCE)
             mMapHelper.navigationZoomCamera(latLng, false)
         }
-    }
-
-    private fun disableNavigationComponent() {
-        mBinding.cardNavigation.isEnabled = false
-        mBinding.cardNavigation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btn_go_disable))
-        mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = false
-        mBinding.bottomSheetNavigation.cardNavigationLocation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.btn_go_disable))
-        (activity as MainActivity).mGeofenceUtils?.disableLiveLocationMarker(requireContext())
-    }
-
-    private fun enableNavigationComponent() {
-        mBinding.cardNavigation.isEnabled = true
-        mBinding.cardNavigation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        mBinding.bottomSheetNavigation.cardNavigationLocation.isEnabled = true
-        mBinding.bottomSheetNavigation.cardNavigationLocation.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        (activity as MainActivity).mGeofenceUtils?.enableLiveLocationMarker(requireContext())
     }
 
     private fun clearAllMapData() {
