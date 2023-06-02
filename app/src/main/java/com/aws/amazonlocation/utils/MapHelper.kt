@@ -73,6 +73,7 @@ import java.util.*
 // SPDX-License-Identifier: MIT-0
 class MapHelper(private val appContext: Context) {
 
+    var isGrabSelectedAndOutsideBound: Boolean = false
     private val mSourceId: String = "line-source"
     private val mDotSourceId: String = "dot-source"
     private val mDotDestinationSourceId: String = "dot-destination-source"
@@ -818,6 +819,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun getLiveLocation(): LatLng? {
+        isGrabSelectedAndOutsideBound = false
         var mLatLng: LatLng? = null
         if (mMapboxMap?.locationComponent?.isLocationComponentActivated == true) {
             mMapboxMap?.locationComponent?.lastKnownLocation?.apply {
@@ -832,10 +834,12 @@ class MapHelper(private val appContext: Context) {
                 if (mLatLng != null) {
                     mLatLng?.let {
                         if (!(it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)) {
+                            isGrabSelectedAndOutsideBound = true
                             return mDefaultLatLngGrab
                         }
                     }
                 } else {
+                    isGrabSelectedAndOutsideBound = true
                     return mDefaultLatLngGrab
                 }
             }

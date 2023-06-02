@@ -3,6 +3,7 @@ package com.aws.amazonlocation.utils
 import android.content.Context
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetAttributionBinding
@@ -246,8 +247,10 @@ class BottomSheetHelper {
         view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
         view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
         mBaseActivity?.hideKeyboard()
-        view.edtSearchDirection.clearFocus()
-        view.edtSearchDest.clearFocus()
+        if (!view.rvSearchPlacesDirection.isVisible && !view.rvSearchPlacesSuggestionDirection.isVisible) {
+            view.edtSearchDirection.clearFocus()
+            view.edtSearchDest.clearFocus()
+        }
     }
 
     fun setNavigationBottomSheet(view: BottomSheetNavigationBinding) {

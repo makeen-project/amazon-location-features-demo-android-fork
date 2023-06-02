@@ -142,7 +142,7 @@ class AWSLocationHelper(
                 else -> ESRI_PLACE_INDEX
             }
             return mClient?.searchPlaceIndexForSuggestions(
-                SearchPlaceIndexForSuggestionsRequest().withBiasPosition(arrayListOf(lng, lat))
+                SearchPlaceIndexForSuggestionsRequest()
                     .withText(text).withLanguage(Locale.getDefault().language)
                     .withIndexName(indexName)
                     .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT),
