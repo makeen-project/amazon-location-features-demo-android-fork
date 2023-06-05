@@ -1147,11 +1147,6 @@ class ExploreFragment :
                                         cardTruckGo,
                                         clTruck
                                     )
-                                    setGOButtonState(
-                                        edtSearchDirection.text.toString(),
-                                        cardDriveGo,
-                                        clDrive
-                                    )
 
                                     tvTruckDistance.text = mPreferenceManager.getValue(
                                         KEY_UNIT_SYSTEM,
@@ -1185,12 +1180,6 @@ class ExploreFragment :
                                         cardBicycleGo,
                                         clBicycle
                                     )
-                                    setGOButtonState(
-                                        edtSearchDirection.text.toString(),
-                                        cardDriveGo,
-                                        clDrive
-                                    )
-
                                     tvBicycleDistance.text = mPreferenceManager.getValue(
                                         KEY_UNIT_SYSTEM,
                                         ""
@@ -1222,11 +1211,6 @@ class ExploreFragment :
                                         edtSearchDirection.text.toString(),
                                         cardMotorcycleGo,
                                         clMotorcycle
-                                    )
-                                    setGOButtonState(
-                                        edtSearchDirection.text.toString(),
-                                        cardDriveGo,
-                                        clDrive
                                     )
 
                                     tvMotorcycleDistance.text = mPreferenceManager.getValue(
