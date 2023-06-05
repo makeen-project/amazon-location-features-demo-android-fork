@@ -4059,13 +4059,9 @@ class ExploreFragment :
                             val index = label.indexOf(",")
                             val result: String = index.let { label.substring(0, it) }
                             tvDirectionAddress.text = result
-                            if (!data.amazonLocationPlace?.region.isNullOrEmpty()) {
-                                sheetDirectionTvDirectionStreet.show()
-                                sheetDirectionTvDirectionStreet.text =
-                                    index.let { label.substring(index + 1, label.length).trim() }
-                            } else {
-                                sheetDirectionTvDirectionStreet.hide()
-                            }
+                            sheetDirectionTvDirectionStreet.show()
+                            sheetDirectionTvDirectionStreet.text =
+                                index.let { label.substring(index + 1, label.length).trim() }
                         } else {
                             tvDirectionAddress.text = label
                         }
