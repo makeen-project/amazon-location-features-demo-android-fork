@@ -25,7 +25,8 @@ interface RemoteDataSource {
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface
+        searchPlace: SearchPlaceInterface,
+        isGrabMapSelected: Boolean
     )
 
     fun searchPlaceIndexForText(

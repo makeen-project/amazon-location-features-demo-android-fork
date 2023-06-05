@@ -17,9 +17,10 @@ class LocationSearchUseCase @Inject constructor(private val mLocationSearchRepos
         lat: Double?,
         lng: Double?,
         searchText: String,
+        isGrabMapSelected: Boolean,
         searchPlace: SearchPlaceInterface
     ) =
-        mLocationSearchRepository.searchPlaceSuggestions(lat, lng, searchText, searchPlace)
+        mLocationSearchRepository.searchPlaceSuggestions(lat, lng, searchText, searchPlace, isGrabMapSelected)
 
     fun searchPlaceIndexForText(
         lat: Double?,

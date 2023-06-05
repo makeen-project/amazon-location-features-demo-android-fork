@@ -43,11 +43,12 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface
+        searchPlace: SearchPlaceInterface,
+        isGrabMapSelected: Boolean
     ) {
         if (mContext.isInternetAvailable()) {
             val mSearchSuggestionResponse =
-                mAWSLocationHelper.searchPlaceSuggestion(lat, lng, searchText)
+                mAWSLocationHelper.searchPlaceSuggestion(lat, lng, searchText, isGrabMapSelected)
             if (validateLatLng(searchText) != null) {
                 val mLatLng = validateLatLng(searchText)
                 if (mSearchSuggestionResponse.text == (mLatLng?.latitude.toString() + "," + mLatLng?.longitude.toString())) {

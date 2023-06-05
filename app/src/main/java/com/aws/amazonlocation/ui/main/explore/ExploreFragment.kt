@@ -1893,7 +1893,7 @@ class ExploreFragment :
     private fun searchPlaces(searchText: String) {
         clearSearchList()
         mViewModel.searchPlaceSuggestion(
-            searchText
+            searchText , isGrabMapSelected(mPreferenceManager, requireContext())
         )
     }
 
@@ -2563,7 +2563,8 @@ class ExploreFragment :
                             if (dataToSearch.isNotEmpty()) {
                                 mGeofenceViewModel.geofenceSearchPlaceSuggestion(
                                     dataToSearch,
-                                    mViewModel.mLatLng
+                                    mViewModel.mLatLng,
+                                    isGrabMapSelected(mPreferenceManager, requireContext())
                                 )
                             }
                         }

@@ -54,6 +54,7 @@ class GeofenceVMSearchSuggestionTest : BaseTest() {
                 anyOrNull(),
                 anyOrNull(),
                 any(),
+                any(),
                 any()
             )
         ).thenAnswer {
@@ -64,7 +65,8 @@ class GeofenceVMSearchSuggestionTest : BaseTest() {
         mGeofenceViewModel.mGeofenceSearchForSuggestionsResultList.test {
             mGeofenceViewModel.geofenceSearchPlaceSuggestion(
                 SEARCH_TEXT_RIO_TINTO,
-                DEFAULT_LOCATION
+                DEFAULT_LOCATION,
+                true
             )
             val result = awaitItem()
             assert(result is HandleResult.Success)
