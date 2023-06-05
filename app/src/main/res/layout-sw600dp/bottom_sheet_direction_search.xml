@@ -232,12 +232,12 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         app:barrierDirection="start"
-                        app:constraint_referenced_ids="card_user_profile_dest,iv_close_dest" />
+                        app:constraint_referenced_ids="card_user_profile_dest" />
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/card_user_profile_dest"
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="@dimen/dp_24"
+                        android:layout_width="22dp"
+                        android:layout_height="27dp"
                         app:cardCornerRadius="@dimen/dp_100"
                         app:cardElevation="@dimen/dp_0"
                         app:cardUseCompatPadding="false"
@@ -246,18 +246,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:strokeColor="@android:color/transparent">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_user_profile_dest"
-                            style="@style/SP13BoldMediumBlackTextStyle"
-                            android:layout_width="@dimen/dp_18"
-                            android:layout_height="@dimen/dp_18"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:maxLength="2"
-                            android:textColor="@color/white"
-                            android:visibility="gone"
-                            tools:text="AS" />
-
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/iv_swap_location"
                             android:layout_width="@dimen/dp_22"
@@ -265,16 +253,6 @@
                             android:src="@drawable/ic_switch"
                             android:visibility="visible" />
                     </com.google.android.material.card.MaterialCardView>
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/iv_close_dest"
-                        android:layout_width="@dimen/dp_24"
-                        android:layout_height="@dimen/dp_24"
-                        android:src="@drawable/ic_close"
-                        android:visibility="gone"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
