@@ -207,10 +207,6 @@ interface DisconnectAWSInterface {
     fun logoutAndDisconnectAWS(dialog: DialogInterface)
 }
 
-interface PermissionInterface {
-    fun givePermission(dialog: DialogInterface)
-}
-
 interface SignOutInterface {
     fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean)
 }

@@ -106,6 +106,7 @@ class ExploreViewModel @Inject constructor(
 
     fun searchPlaceSuggestion(
         searchText: String,
+        isGrabMapSelected: Boolean
     ) {
         _searchForSuggestionsResultList.trySend(
             HandleResult.Loading,
@@ -115,6 +116,7 @@ class ExploreViewModel @Inject constructor(
                 mLatLng?.latitude,
                 mLatLng?.longitude,
                 searchText,
+                isGrabMapSelected,
                 object : SearchPlaceInterface {
                     override fun getSearchPlaceSuggestionResponse(suggestionResponse: SearchSuggestionResponse?) {
                         _searchForSuggestionsResultList.trySend(

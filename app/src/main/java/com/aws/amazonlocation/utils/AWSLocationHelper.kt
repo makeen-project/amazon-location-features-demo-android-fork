@@ -127,6 +127,7 @@ class AWSLocationHelper(
         lat: Double?,
         lng: Double?,
         text: String,
+        isGrabMapSelected: Boolean
     ): SearchPlaceIndexForSuggestionsResult? {
         return try {
             val indexName = when (mPreferenceManager.getValue(KEY_MAP_NAME, "Esri")) {
@@ -141,12 +142,21 @@ class AWSLocationHelper(
                 }
                 else -> ESRI_PLACE_INDEX
             }
-            return mClient?.searchPlaceIndexForSuggestions(
-                SearchPlaceIndexForSuggestionsRequest().withBiasPosition(arrayListOf(lng, lat))
-                    .withText(text).withLanguage(Locale.getDefault().language)
-                    .withIndexName(indexName)
-                    .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT),
-            )
+            if (isGrabMapSelected) {
+                return mClient?.searchPlaceIndexForSuggestions(
+                    SearchPlaceIndexForSuggestionsRequest()
+                        .withText(text).withLanguage(Locale.getDefault().language)
+                        .withIndexName(indexName)
+                        .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT),
+                )
+            } else {
+                return mClient?.searchPlaceIndexForSuggestions(
+                    SearchPlaceIndexForSuggestionsRequest().withBiasPosition(arrayListOf(lng, lat))
+                        .withText(text).withLanguage(Locale.getDefault().language)
+                        .withIndexName(indexName)
+                        .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT),
+                )
+            }
         } catch (e: Exception) {
             mBaseActivity?.handleException(e)
             SearchPlaceIndexForSuggestionsResult()
@@ -233,6 +243,7 @@ class AWSLocationHelper(
         lat: Double?,
         lng: Double?,
         searchText: String,
+        isGrabMapSelected: Boolean
     ): SearchSuggestionResponse {
         try {
             val liveLocation = mMapHelper.getLiveLocation()
@@ -249,6 +260,7 @@ class AWSLocationHelper(
                     lat = lat,
                     lng = lng,
                     text = searchText,
+                    isGrabMapSelected
                 )
             }
 

@@ -139,13 +139,15 @@ class GeofenceViewModel @Inject constructor(
 
     fun geofenceSearchPlaceSuggestion(
         searchText: String,
-        latLng: LatLng?
+        latLng: LatLng?,
+        isGrabMapSelected: Boolean
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             mGetGeofenceUseCase.searchPlaceSuggestionList(
                 latLng?.latitude,
                 latLng?.longitude,
                 searchText,
+                isGrabMapSelected,
                 object : SearchPlaceInterface {
                     override fun getSearchPlaceSuggestionResponse(suggestionResponse: SearchSuggestionResponse?) {
                         _geofenceSearchForSuggestionsResultList.trySend(
