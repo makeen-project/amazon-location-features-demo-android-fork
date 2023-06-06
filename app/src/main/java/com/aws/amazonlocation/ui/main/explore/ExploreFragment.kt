@@ -2054,16 +2054,7 @@ class ExploreFragment :
                         mTravelMode = TravelMode.Walking.value
                         mViewModel.mWalkingData?.let {
                             tvWalkSelected.show()
-                            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
-                                hideViews(cardRoutingOption)
-                                if (mIsRouteOptionsOpened) {
-                                    cardListRoutesOption.hide()
-                                    mIsRouteOptionsOpened = !mIsRouteOptionsOpened
-                                    changeRouteListUI()
-                                }
-                            } else {
-                                showViews(cardRoutingOption, cardListRoutesOption)
-                            }
+                            showViews(cardRoutingOption)
                             hideViews(tvDriveSelected, tvTruckSelected, tvBicycleSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
@@ -2850,7 +2841,6 @@ class ExploreFragment :
                 mIsDirectionDataSet = false
             }
             hideViews(
-                cardListRoutesOption,
                 cardListRoutesOption,
                 cardRoutingOption,
                 cardMapOption
@@ -4622,8 +4612,8 @@ class ExploreFragment :
     private fun setBounds(latLng: LatLng) {
         // Set the map bounds
         val bounds = LatLngBounds.Builder()
-            .include(LatLng(latNorth, lonEast))
-            .include(LatLng(latSouth, lonWest))
+            .include(LatLng(latNorth, lonWest))
+            .include(LatLng(latSouth, lonEast))
             .build()
         mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
         mBaseActivity?.isTablet?.let {
