@@ -18,6 +18,7 @@ import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_NO_DATA_FOUND
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_13
 import com.aws.amazonlocation.di.AppModule
@@ -55,7 +56,7 @@ class AfterSearchOutsideViewPortTest : BaseTestMainActivity() {
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
                 rvSearchPlaceSuggestion.adapter?.itemCount?.let {
-                    Assert.assertTrue(it >= 0)
+                    Assert.assertTrue(TEST_FAILED_NO_DATA_FOUND, it >= 0)
                 }
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
