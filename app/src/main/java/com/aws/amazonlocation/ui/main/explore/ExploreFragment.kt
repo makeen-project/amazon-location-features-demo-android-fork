@@ -2585,10 +2585,12 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun openDirectionWithError() {
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         mBinding.bottomSheetDirectionSearch.apply {
             clearDirectionData()
-            switchAvoidTools.isChecked = false
-            switchAvoidFerries.isChecked = false
+            switchAvoidTools.isChecked = mIsAvoidTolls
+            switchAvoidFerries.isChecked = mIsAvoidFerries
             tvDriveGo.text = getString(R.string.btn_go)
             mIsDirectionDataSet = true
             if (mViewModel.mCarData?.legs == null) {
@@ -2829,6 +2831,8 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun FragmentExploreBinding.openDirectionBottomSheet() {
         notifyAdapters()
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         cardDirection.hide()
         bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root.hide()
         bottomSheetSearch.edtSearchPlaces.setText("")
@@ -2866,6 +2870,8 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun routeOption() {
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         if (mViewModel.mCarData?.legs != null) {
             mIsDirectionDataSetNew = true
             mViewModel.mCarData?.legs?.let { legs ->
