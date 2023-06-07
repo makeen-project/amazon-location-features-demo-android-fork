@@ -23,7 +23,6 @@ import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
-import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -32,7 +31,6 @@ import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
-import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
@@ -76,7 +74,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             isTablet = (activity as MainActivity).isTablet
         }
         init()
-        getUnitSystem()
         getDataProvider()
         getMapStyle()
         initObserver()
@@ -84,13 +81,23 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         if (isTablet) {
             addReplaceFragment(
                 R.id.frame_container,
-                UnitSystemFragment(),
+                DataProviderFragment(),
                 addFragment = true,
                 addToBackStack = false
             )
             mBinding.apply {
-                clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                clDataProvider.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_view
+                    )
+                )
+                ivDataProvider.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
             }
         }
     }
@@ -118,12 +125,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 clDisconnect.hide()
             }
         }
-    }
-
-    private fun getUnitSystem() {
-        val unitSystem =
-            mPreferenceManager.getValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
-        mBinding.tvUnitSystemName.text = unitSystem
     }
 
     private fun getDataProvider() {
@@ -166,23 +167,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     private fun clickListener() {
         mBinding.apply {
-            clUnitSystem.setOnClickListener {
-                if (isTablet) {
-                    addReplaceFragment(
-                        R.id.frame_container,
-                        UnitSystemFragment(),
-                        addFragment = false,
-                        addToBackStack = false
-                    )
-                    mBinding.apply {
-                        setDefaultSelection()
-                        clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
-                    }
-                } else {
-                    findNavController().navigate(R.id.unit_system_fragment)
-                }
-            }
             clDataProvider.setOnClickListener {
                 if (isTablet) {
                     addReplaceFragment(
@@ -288,18 +272,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
 
     private fun FragmentSettingBinding.setDefaultSelection() {
-        clUnitSystem.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.white
-            )
-        )
-        ivUnitSystem.setColorFilter(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_img_tint
-            )
-        )
         clAwsCloudformation.setBackgroundColor(
             ContextCompat.getColor(
                 requireContext(),

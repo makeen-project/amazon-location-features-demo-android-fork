@@ -6,12 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.databinding.ItemNavigationRouteListBinding
-import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.PreferenceManager
-import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.Units.convertToLowerUnit
-import com.aws.amazonlocation.utils.Units.getMetricsNew
-import com.aws.amazonlocation.utils.Units.isMetric
+import com.aws.amazonlocation.utils.Units.getMetrics
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
 
@@ -31,10 +28,7 @@ class NavigationAdapter(
                 tvNavigationAddress.text = data.getRegions()
 
                 data.distance?.let { distance ->
-                    tvNavigationDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
-                        val isMetric = isMetric(unitSystem)
-                        getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
-                    }
+                    tvNavigationDistance.text = getMetrics(convertToLowerUnit(distance))
                 }
             }
         }

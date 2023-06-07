@@ -26,7 +26,6 @@ import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID
 import com.aws.amazonlocation.utils.GeofenceCons.TURF_CALCULATION_LINE_LAYER_ID
-import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.MapCameraZoom
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.Units
@@ -430,13 +429,7 @@ class GeofenceHelper(
     }
 
     private fun upDateSeekbarText(radius: Int) {
-        val isMetric = Units.isMetric(mPrefrenceManager?.getValue(KEY_UNIT_SYSTEM, ""))
-        var seekbarText = ""
-        if (isMetric) {
-            seekbarText = Units.getMetricsNew(radius.toDouble(), true)
-        } else {
-            seekbarText = Units.getMetricsNew(Units.meterToFeet(radius.toDouble()), false)
-        }
+        val seekbarText: String = Units.getMetrics(radius.toDouble())
         mTvSeekBar?.text = seekbarText
     }
 

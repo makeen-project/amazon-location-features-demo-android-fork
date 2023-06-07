@@ -177,9 +177,7 @@
     <string name="error_route">Route not found.</string>
     <string name="no_route_found">No route found</string>
     <string name="error_switch_to_here">Distance is greater than 400 km, can\'t calculate via Esri, kindly switch to HERE provider</string>
-    <string name="error_switch_to_here_miles">Distance is greater than 248.5 mi, can\'t calculate via Esri, kindly switch to HERE provider</string>
     <string name="error_distance_400">In DataSource Esri, all waypoints must be within 400km.</string>
-    <string name="error_distance_248_miles">In DataSource Esri, all waypoints must be within 248.5mi.</string>
     <string name="connect_to_aws_account">Connect AWS Account</string>
     <string name="label_preview">Preview</string>
     <string name="label_location_permission_denied">Location permission denied</string>
@@ -201,7 +199,6 @@
     <string name="label_version">Version</string>
     <string name="label_sign_out">Sign out</string>
     <string name="distance_is_greater_than_400_km">Distance is greater than 400 km</string>
-    <string name="distance_is_greater_than_248_mi">Distance is greater than 248.5 mi</string>
     <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">Can\'t calculate via Esri, kindly switch to \nHERE provider.</string>
     <string name="label_here_attribution_text">© 2022 HERE</string>
     <string name="label_partner_attribution">Partner Attribution</string>
@@ -210,12 +207,6 @@
     <string name="label_app_version">App version:</string>
     <string name="label_warning">Warning</string>
     <string name="label_session_expired">The session has expired. Please sign in again to access all features.</string>
-    <string name="units">Units</string>
-    <string name="metric">Metric</string>
-    <string name="subtitle_metric">Kilometers, kilograms</string>
-    <string name="imperial">Imperial</string>
-    <string name="subtitle_imperial">Miles, pounds</string>
-    <string name="automatic">Automatic</string>
     <string name="label_restart_app_title">Enable Grab</string>
     <string name="label_restart_app_description">Grab map provider only operates in Southeast Asia and Asia Pacific (Singapore) Region</string>
     <string name="enable_grab">Enable Grab</string>

@@ -5,7 +5,6 @@ import android.content.Context
 import android.location.LocationManager
 import android.provider.Settings
 import java.text.DecimalFormat
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -13,40 +12,20 @@ import java.util.concurrent.TimeUnit
 // SPDX-License-Identifier: MIT-0
 object Units {
 
-    fun getMetricsNew(distance: Double, isMetric: Boolean): String {
-        return if (isMetric) {
-            if (distance <= 1000) {
-                "${DecimalFormat("##.##").format((distance.toInt()))} m"
-            } else {
-                "${DecimalFormat("##.#").format((distance / 1000))} km"
-            }
+    fun getMetrics(distance: Double): String {
+        return if (distance <= 1000) {
+            "${DecimalFormat("##.##").format((distance.toInt()))} m"
         } else {
-            if (distance <= 5280) {
-                "${DecimalFormat("##.##").format((distance.toInt()))} ft"
-            } else {
-                "${DecimalFormat("##.#").format((distance / 5280))} mi"
-            }
+            "${DecimalFormat("##.#").format((distance / 1000))} km"
         }
     }
 
-    fun convertToLowerUnit(distance: Double, isMetric: Boolean): Double {
-        return if (isMetric) {
-            kiloMeterToMeter(distance)
-        } else {
-            milesToFeet(distance)
-        }
+    fun convertToLowerUnit(distance: Double): Double {
+        return kiloMeterToMeter(distance)
     }
 
     fun kiloMeterToMeter(kiloMeter: Double): Double {
         return kiloMeter * 1000
-    }
-
-    fun milesToFeet(miles: Double): Double {
-        return miles * 5280
-    }
-
-    fun meterToFeet(meter: Double): Double {
-        return meter * 3.2808399
     }
 
     fun getTime(second: Double): String {
@@ -83,7 +62,7 @@ object Units {
 
     fun getDefaultAwsConfigJson(
         poolID: String?,
-        region: String?,
+        region: String?
     ): String {
         return "{\n" +
             "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
@@ -108,7 +87,7 @@ object Units {
         appClientId: String?,
         domain: String?,
         region: String?,
-        schema: String,
+        schema: String
     ): String {
         return "{\n" +
             "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
@@ -151,7 +130,7 @@ object Units {
 
     fun getAmplifyConfigJson(
         poolID: String?,
-        region: String?,
+        region: String?
     ): String {
         return "{\n" +
             "    \"UserAgent\": \"aws-amplify-cli/2.0\",\n" +
@@ -197,40 +176,12 @@ object Units {
     fun getDeviceId(context: Context): String {
         return Settings.Secure.getString(
             context.contentResolver,
-            Settings.Secure.ANDROID_ID,
+            Settings.Secure.ANDROID_ID
         )
     }
 
     fun isGPSEnabled(mContext: Context): Boolean {
         val locationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
-
-    fun isMetricUsingCountry(): Boolean {
-        val locale = Locale.getDefault()
-        return when (locale.country.uppercase()) {
-            "US", "MM", "LR" -> false
-            else -> true
-        }
-    }
-
-    fun getDistanceUnit(distanceUnit: String?): String {
-        return when (distanceUnit) {
-            "Metric", "metric" -> KILOMETERS
-            "Imperial", "imperial" -> MILES
-            else -> {
-                if (isMetricUsingCountry()) KILOMETERS else MILES
-            }
-        }
-    }
-
-    fun isMetric(distanceUnit: String?): Boolean {
-        return when (distanceUnit) {
-            "Metric", "metric" -> true
-            "Imperial", "imperial" -> false
-            else -> {
-                isMetricUsingCountry()
-            }
-        }
     }
 }

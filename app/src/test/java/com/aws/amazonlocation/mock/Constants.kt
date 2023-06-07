@@ -182,15 +182,6 @@ const val PREF_MANAGER_VALUE_BOOL = true
 
 const val DELAY_5000 = 5000L
 
-const val UNIT_METRICS_M_INPUT_1 = 1000.0
-const val UNIT_METRICS_M_INPUT_2 = 1001.0
-const val UNIT_METRICS_M_OUTPUT_1 = "1000 m"
-const val UNIT_METRICS_M_OUTPUT_2 = "1 km"
-const val UNIT_METRICS_I_INPUT_1 = 5280.0
-const val UNIT_METRICS_I_INPUT_2 = 5281.0
-const val UNIT_METRICS_I_OUTPUT_1 = "5280 ft"
-const val UNIT_METRICS_I_OUTPUT_2 = "1 mi"
-
 const val UNIT_KM_TO_M_INPUT = 1.0
 const val UNIT_KM_TO_M_OUTPUT = 1000.0
 
@@ -351,7 +342,6 @@ const val UNIT_AMPLIFY_JSON_CONFIG = "{\n" +
 
 val LOCALE_IN = Locale("en", "IN")
 val LOCALE_US = Locale.US
-val METRIC = "Metric"
 val IMPERIAL = "Imperial"
 val AUTOMATIC = "Automatic"
 val SE_REGION = "ap-southeast-1"

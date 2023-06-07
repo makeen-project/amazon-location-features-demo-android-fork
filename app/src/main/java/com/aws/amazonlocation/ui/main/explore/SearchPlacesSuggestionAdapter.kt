@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.databinding.ItemSearchPlacesSuggestionBinding
-import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.hide
@@ -43,11 +42,9 @@ class SearchPlacesSuggestionAdapter(
                 }
 
                 if (data.distance != null && preferenceManager != null) {
-                    tvDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
-                        val isMetric = Units.isMetric(unitSystem)
-                        Units.getMetricsNew(
-                            data.distance!!,
-                            isMetric,
+                    data.distance?.let {
+                        tvDistance.text = Units.getMetrics(
+                            it
                         )
                     }
                     groupDistance.show()
