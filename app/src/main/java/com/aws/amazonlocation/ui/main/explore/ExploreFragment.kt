@@ -15,7 +15,6 @@ import android.net.Network
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -144,6 +143,10 @@ class ExploreFragment :
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
+    private val bounds = LatLngBounds.Builder()
+        .include(LatLng(latNorth, lonWest))
+        .include(LatLng(latSouth, lonEast))
+        .build()
 
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -4217,10 +4220,14 @@ class ExploreFragment :
         mapboxMap.uiSettings.isCompassEnabled = false
         this.mMapboxMap = mapboxMap
         mapboxMap.addOnCameraIdleListener {
-            mViewModel.mLatLng = LatLng(
-                mapboxMap.cameraPosition.target.latitude,
-                mapboxMap.cameraPosition.target.longitude
-            )
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                mMapboxMap?.limitViewToBounds(bounds)
+            } else {
+                mViewModel.mLatLng = LatLng(
+                    mapboxMap.cameraPosition.target.latitude,
+                    mapboxMap.cameraPosition.target.longitude
+                )
+            }
         }
     }
 
@@ -4611,18 +4618,8 @@ class ExploreFragment :
 
     private fun setBounds(latLng: LatLng) {
         // Set the map bounds
-        val bounds = LatLngBounds.Builder()
-            .include(LatLng(latNorth, lonWest))
-            .include(LatLng(latSouth, lonEast))
-            .build()
-        mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
-        mBaseActivity?.isTablet?.let {
-            if (it) {
-                mMapboxMap?.setMinZoomPreference(3.5)
-            } else {
-                mMapboxMap?.setMinZoomPreference(2.5)
-            }
-        }
+        mMapboxMap?.limitViewToBounds(bounds)
+        mMapboxMap?.setMinZoomPreference(5.0)
         lifecycleScope.launch {
             delay(CLICK_DEBOUNCE)
             mMapHelper.navigationZoomCamera(latLng, false)
@@ -4761,5 +4758,23 @@ class ExploreFragment :
         currentLocation?.let {
             setBounds(it)
         }
+    }
+
+    private fun MapboxMap.limitViewToBounds(bounds: LatLngBounds) {
+        val newBoundsHeight = bounds.latitudeSpan - projection.visibleRegion.latLngBounds.latitudeSpan
+        val newBoundsWidth = bounds.longitudeSpan - projection.visibleRegion.latLngBounds.longitudeSpan
+        val leftTopLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth,
+        )
+        val rightBottomLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2 - newBoundsHeight,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2,
+        )
+        val newBounds = LatLngBounds.Builder()
+            .include(leftTopLatLng)
+            .include(rightBottomLatLng)
+            .build()
+        setLatLngBoundsForCameraTarget(newBounds)
     }
 }
