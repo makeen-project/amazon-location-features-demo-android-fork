@@ -35,7 +35,7 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_navigation_time_dialog"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_64"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_40"
             android:visibility="gone"
