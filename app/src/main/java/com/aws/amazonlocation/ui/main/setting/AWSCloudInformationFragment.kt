@@ -345,9 +345,13 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
+            var webSocketUrlToSave = webSocketUrl
+            if (webSocketUrl.endsWith("/", true)) {
+                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
+            }
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrl
+                webSocketUrlToSave
             )
         }
         mPreferenceManager.setValue(KEY_TAB_ENUM, TabEnum.TAB_EXPLORE.name)

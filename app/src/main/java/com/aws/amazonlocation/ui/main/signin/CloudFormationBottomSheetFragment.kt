@@ -323,9 +323,13 @@ class CloudFormationBottomSheetFragment(
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
+            var webSocketUrlToSave = webSocketUrl
+            if (webSocketUrl.endsWith("/", true)) {
+                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
+            }
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrl
+                webSocketUrlToSave
             )
         }
     }

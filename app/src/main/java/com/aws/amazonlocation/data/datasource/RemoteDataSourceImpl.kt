@@ -208,10 +208,16 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
             navigationData.startLng = step.startPosition[1]
             navigationData.endLat = step.endPosition[0]
             navigationData.endLng = step.endPosition[1]
-            navigationData.destinationAddress = indexResponse?.results?.get(0)?.place?.label
-            navigationData.region = indexResponse?.results?.get(0)?.place?.region
-            navigationData.subRegion = indexResponse?.results?.get(0)?.place?.subRegion
-            navigationData.country = indexResponse?.results?.get(0)?.place?.country
+            if (!indexResponse?.results.isNullOrEmpty()) {
+                navigationData.destinationAddress = indexResponse?.results?.get(0)?.place?.label
+                navigationData.region = indexResponse?.results?.get(0)?.place?.region
+                navigationData.subRegion = indexResponse?.results?.get(0)?.place?.subRegion
+                navigationData.country = indexResponse?.results?.get(0)?.place?.country
+                navigationData.isDataSuccess = true
+            } else {
+                navigationData.destinationAddress = "$lat, $lng"
+                navigationData.isDataSuccess = false
+            }
             searchPlace.getNavigationList(navigationData)
         } else {
             searchPlace.internetConnectionError(

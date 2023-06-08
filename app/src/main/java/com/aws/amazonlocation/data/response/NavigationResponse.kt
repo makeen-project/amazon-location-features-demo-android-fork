@@ -25,20 +25,25 @@ class NavigationData(
     var destinationAddress: String? = null,
     var region: String? = null,
     var subRegion: String? = null,
-    var country: String? = null
+    var country: String? = null,
+    var isDataSuccess: Boolean = false
 ) {
     fun getRegions(): String {
-        val address = destinationAddress?.split(",")?.toTypedArray()?.get(0)
-            ?: destinationAddress
         var mRegion = ""
-        mRegion += if (!subRegion.isNullOrEmpty() && !region.isNullOrEmpty()) {
-            "$address, $subRegion, $region"
-        } else if (!region.isNullOrEmpty() && !country.isNullOrEmpty()) {
-            "$address, $region, $country"
-        } else if (!country.isNullOrEmpty()) {
-            country
+        if (isDataSuccess) {
+            mRegion += if (!destinationAddress.isNullOrEmpty()) {
+                destinationAddress
+            } else if (!subRegion.isNullOrEmpty() && !region.isNullOrEmpty()) {
+                "$subRegion, $region"
+            } else if (!region.isNullOrEmpty() && !country.isNullOrEmpty()) {
+                "$region, $country"
+            } else if (!country.isNullOrEmpty()) {
+                country
+            } else {
+                ""
+            }
         } else {
-            ""
+            mRegion = destinationAddress.toString()
         }
         return mRegion
     }

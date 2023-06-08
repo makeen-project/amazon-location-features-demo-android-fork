@@ -217,7 +217,7 @@
     <string name="subtitle_imperial">Miles, pounds</string>
     <string name="automatic">Automatic</string>
     <string name="label_restart_app_title">Enable Grab</string>
-    <string name="label_restart_app_description">Grab map provider only operates in Southeast Asia and Asia Pacific (Singapore) Region</string>
+    <string name="label_restart_app_description">Grab provides Maps, Routes and Place search in Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, and Cambodia.\n\nWhile car and motorcycle routes are available across the above countries, the bicycle and walking routes are supported in only key cities such as Singapore, Jakarta, Manila, Klang Valley, Bangkok, Ho Chi Minh City, and Hanoi. </string>
     <string name="enable_grab">Enable Grab</string>
     <string name="your_location_not_supported_by_grab">Your current location is not supported by Grab</string>
     <string name="label_current_location_disabled">Current location disabled</string>
