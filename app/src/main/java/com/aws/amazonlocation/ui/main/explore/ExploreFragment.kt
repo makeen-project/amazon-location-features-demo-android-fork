@@ -2057,7 +2057,11 @@ class ExploreFragment :
                         mTravelMode = TravelMode.Walking.value
                         mViewModel.mWalkingData?.let {
                             tvWalkSelected.show()
-                            showViews(cardRoutingOption)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
                             hideViews(tvDriveSelected, tvTruckSelected, tvBicycleSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
@@ -2093,7 +2097,11 @@ class ExploreFragment :
                         mTravelMode = TRAVEL_MODE_BICYCLE
                         mViewModel.mBicycleData?.let {
                             tvBicycleSelected.show()
-                            showViews(cardRoutingOption)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
                             hideViews(tvDriveSelected, tvWalkSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
@@ -2111,7 +2119,11 @@ class ExploreFragment :
                         mTravelMode = TRAVEL_MODE_MOTORCYCLE
                         mViewModel.mMotorcycleData?.let {
                             tvMotorcycleSelected.show()
-                            showViews(cardRoutingOption)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
                             hideViews(tvDriveSelected, tvWalkSelected, tvBicycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
