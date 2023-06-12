@@ -12,5 +12,5 @@
     <dimen name="map_style_height">520dp</dimen>
     <bool name="is_tablet">true</bool>
     <bool name="is_large_tablet">false</bool>
-
+    <dimen name="region_dropdown_width">80dp</dimen>
 </resources>

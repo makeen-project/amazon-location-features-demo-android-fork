@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.URLUtil
+import android.widget.AdapterView
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
@@ -41,6 +42,7 @@ import com.aws.amazonlocation.utils.changeLearnMoreColor
 import com.aws.amazonlocation.utils.changeTermsAndConditionColor
 import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionMapList
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.validateIdentityPoolId
 import com.aws.amazonlocation.utils.validateUserPoolClientId
@@ -75,6 +77,7 @@ class CloudFormationBottomSheetFragment(
     private var mIdentityPoolId: String? = null
     private var mUserDomain: String? = null
     private var regionData: String? = null
+    private var selectedRegion = regionMapList[regionMapList.keys.first()]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,6 +155,33 @@ class CloudFormationBottomSheetFragment(
         )
         clickListener()
         cloudFormationValidation()
+        setSpinnerData()
+    }
+
+    private fun setSpinnerData() {
+        mBinding.apply {
+            val regionNameList = arrayListOf<String>()
+            for (data in regionMapList.keys) {
+                regionNameList.add(data)
+            }
+            val adapter = CustomSpinnerAdapter(requireContext(), regionNameList)
+            spinnerRegion.adapter = adapter
+
+            spinnerRegion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    selectedRegion = regionMapList[parent.getItemAtPosition(position)]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do something when nothing is selected
+                }
+            }
+        }
     }
 
     private fun clickListener() {
@@ -323,19 +353,24 @@ class CloudFormationBottomSheetFragment(
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
+            var webSocketUrlToSave = webSocketUrl
+            if (webSocketUrl.endsWith("/", true)) {
+                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
+            }
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrl
+                webSocketUrlToSave
             )
         }
     }
 
     private var clickHere = object : CloudFormationInterface {
         override fun clickHere(url: String) {
+            val urlToPass = String.format(url, selectedRegion, selectedRegion)
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                    Uri.parse(urlToPass)
                 )
             )
         }

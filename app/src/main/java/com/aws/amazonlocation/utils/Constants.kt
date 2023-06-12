@@ -71,6 +71,22 @@ const val lonEast = 146.25
 const val latSouth = -21.943045533438166
 const val lonWest = 90.0
 
+val regionMapList: MutableMap<String, String> = mutableMapOf(
+    Pair("US East (Ohio) us-east-2", "us-east-2"),
+    Pair("US East (N. Virginia) us-east-1", "us-east-1"),
+    Pair("US West (Oregon) us-west-2", "us-west-2"),
+    Pair("Asia Pacific (Mumbai) ap-south-1", "ap-south-1"),
+    Pair("Asia Pacific (Singapore) ap-southeast-1", "ap-southeast-1"),
+    Pair("Asia Pacific (Sydney) ap-southeast-2", "ap-southeast-2"),
+    Pair("Asia Pacific (Tokyo) ap-northeast-1", "ap-northeast-1"),
+    Pair("Canada (Central) ca-central-1", "ca-central-1"),
+    Pair("Europe (Frankfurt) eu-central-1", "eu-central-1"),
+    Pair("Europe (Ireland) eu-west-1", "eu-west-1"),
+    Pair("Europe (London) eu-west-2", "eu-west-2"),
+    Pair("Europe (Stockholm) eu-north-1", "eu-north-1"),
+    Pair("South America (São Paulo) sa-east-1", "sa-east-1")
+)
+
 /**
  *  * Validate Latitude and Longitude from string.
  *

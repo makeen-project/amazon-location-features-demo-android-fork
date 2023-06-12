@@ -22,6 +22,7 @@ import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_NO_DATA_FOUND
 import com.aws.amazonlocation.TEST_FAILED_NO_SEARCH_RESULT
 import com.aws.amazonlocation.TEST_WORD_12
 import com.aws.amazonlocation.di.AppModule
@@ -78,7 +79,7 @@ class AfterSearchDirectionErrorExistsTest : BaseTestMainActivity() {
                         if (btnDirection1.visibility == View.VISIBLE) {
                             val tvDirectionError2 =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_direction_error_2)
-                            Assert.assertTrue(tvDirectionError2.visibility == View.VISIBLE)
+                            Assert.assertTrue(TEST_FAILED_NO_DATA_FOUND, tvDirectionError2.visibility == View.VISIBLE)
                         }
                     } else {
                         Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)

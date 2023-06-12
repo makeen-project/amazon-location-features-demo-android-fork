@@ -102,8 +102,12 @@ class MainActivity : BaseActivity() {
 
         isAppNotFirstOpened = mPreferenceManager.getValue(IS_APP_FIRST_TIME_OPENED, false)
 
+        if (!isAppNotFirstOpened) {
+            mPreferenceManager.setValue(KEY_AVOID_TOLLS, true)
+            mPreferenceManager.setValue(KEY_AVOID_FERRIES, true)
+        }
         val inflater = mNavHostFragment.navController.navInflater
-        val graph = inflater.inflate(com.aws.amazonlocation.R.navigation.nav_graph)
+        val graph = inflater.inflate(R.navigation.nav_graph)
         if (!isAppNotFirstOpened) {
             val welcomeSheet = WelcomeBottomSheetFragment()
             this.supportFragmentManager.let {

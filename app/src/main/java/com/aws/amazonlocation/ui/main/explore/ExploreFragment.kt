@@ -15,7 +15,6 @@ import android.net.Network
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.view.inputmethod.EditorInfo
@@ -144,6 +143,10 @@ class ExploreFragment :
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
+    private val bounds = LatLngBounds.Builder()
+        .include(LatLng(latNorth, lonWest))
+        .include(LatLng(latSouth, lonEast))
+        .build()
 
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
@@ -2054,16 +2057,11 @@ class ExploreFragment :
                         mTravelMode = TravelMode.Walking.value
                         mViewModel.mWalkingData?.let {
                             tvWalkSelected.show()
-                            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
-                                hideViews(cardRoutingOption)
-                                if (mIsRouteOptionsOpened) {
-                                    cardListRoutesOption.hide()
-                                    mIsRouteOptionsOpened = !mIsRouteOptionsOpened
-                                    changeRouteListUI()
-                                }
-                            } else {
-                                showViews(cardRoutingOption, cardListRoutesOption)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
                             }
+                            cardRoutingOption.hide()
                             hideViews(tvDriveSelected, tvTruckSelected, tvBicycleSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
@@ -2099,7 +2097,11 @@ class ExploreFragment :
                         mTravelMode = TRAVEL_MODE_BICYCLE
                         mViewModel.mBicycleData?.let {
                             tvBicycleSelected.show()
-                            showViews(cardRoutingOption)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
                             hideViews(tvDriveSelected, tvWalkSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
@@ -2117,7 +2119,11 @@ class ExploreFragment :
                         mTravelMode = TRAVEL_MODE_MOTORCYCLE
                         mViewModel.mMotorcycleData?.let {
                             tvMotorcycleSelected.show()
-                            showViews(cardRoutingOption)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
                             hideViews(tvDriveSelected, tvWalkSelected, tvBicycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
@@ -2591,10 +2597,12 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun openDirectionWithError() {
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         mBinding.bottomSheetDirectionSearch.apply {
             clearDirectionData()
-            switchAvoidTools.isChecked = false
-            switchAvoidFerries.isChecked = false
+            switchAvoidTools.isChecked = mIsAvoidTolls
+            switchAvoidFerries.isChecked = mIsAvoidFerries
             tvDriveGo.text = getString(R.string.btn_go)
             mIsDirectionDataSet = true
             if (mViewModel.mCarData?.legs == null) {
@@ -2835,6 +2843,8 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun FragmentExploreBinding.openDirectionBottomSheet() {
         notifyAdapters()
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         cardDirection.hide()
         bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root.hide()
         bottomSheetSearch.edtSearchPlaces.setText("")
@@ -2850,7 +2860,6 @@ class ExploreFragment :
                 mIsDirectionDataSet = false
             }
             hideViews(
-                cardListRoutesOption,
                 cardListRoutesOption,
                 cardRoutingOption,
                 cardMapOption
@@ -2873,6 +2882,8 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun routeOption() {
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         if (mViewModel.mCarData?.legs != null) {
             mIsDirectionDataSetNew = true
             mViewModel.mCarData?.legs?.let { legs ->
@@ -4227,10 +4238,14 @@ class ExploreFragment :
         mapboxMap.uiSettings.isCompassEnabled = false
         this.mMapboxMap = mapboxMap
         mapboxMap.addOnCameraIdleListener {
-            mViewModel.mLatLng = LatLng(
-                mapboxMap.cameraPosition.target.latitude,
-                mapboxMap.cameraPosition.target.longitude
-            )
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                mMapboxMap?.limitViewToBounds(bounds)
+            } else {
+                mViewModel.mLatLng = LatLng(
+                    mapboxMap.cameraPosition.target.latitude,
+                    mapboxMap.cameraPosition.target.longitude
+                )
+            }
         }
     }
 
@@ -4621,18 +4636,8 @@ class ExploreFragment :
 
     private fun setBounds(latLng: LatLng) {
         // Set the map bounds
-        val bounds = LatLngBounds.Builder()
-            .include(LatLng(latNorth, lonEast))
-            .include(LatLng(latSouth, lonWest))
-            .build()
-        mMapboxMap?.setLatLngBoundsForCameraTarget(bounds)
-        mBaseActivity?.isTablet?.let {
-            if (it) {
-                mMapboxMap?.setMinZoomPreference(3.5)
-            } else {
-                mMapboxMap?.setMinZoomPreference(2.5)
-            }
-        }
+        mMapboxMap?.limitViewToBounds(bounds)
+        mMapboxMap?.setMinZoomPreference(5.0)
         lifecycleScope.launch {
             delay(CLICK_DEBOUNCE)
             mMapHelper.navigationZoomCamera(latLng, false)
@@ -4771,5 +4776,23 @@ class ExploreFragment :
         currentLocation?.let {
             setBounds(it)
         }
+    }
+
+    private fun MapboxMap.limitViewToBounds(bounds: LatLngBounds) {
+        val newBoundsHeight = bounds.latitudeSpan - projection.visibleRegion.latLngBounds.latitudeSpan
+        val newBoundsWidth = bounds.longitudeSpan - projection.visibleRegion.latLngBounds.longitudeSpan
+        val leftTopLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth,
+        )
+        val rightBottomLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2 - newBoundsHeight,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2,
+        )
+        val newBounds = LatLngBounds.Builder()
+            .include(leftTopLatLng)
+            .include(rightBottomLatLng)
+            .build()
+        setLatLngBoundsForCameraTarget(newBounds)
     }
 }
