@@ -106,6 +106,7 @@ class ExploreFragment :
     MapboxMap.OnScaleListener,
     MapStyleChangeListener {
 
+    private var isDataSearchForDestination: Boolean = false
     private lateinit var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
@@ -217,10 +218,8 @@ class ExploreFragment :
             } else if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                 mBinding.apply {
                     bottomSheetDirectionSearch.apply {
-                        if (mPlaceList.isEmpty()) {
-                            edtSearchDest.clearFocus()
-                            edtSearchDirection.clearFocus()
-                        }
+                        edtSearchDest.clearFocus()
+                        edtSearchDirection.clearFocus()
                     }
                 }
             } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
@@ -1779,7 +1778,7 @@ class ExploreFragment :
         it: SearchSuggestionResponse,
         searchPlaceIndexText: SearchApiEnum
     ) {
-        val mText: String = if (mBinding.bottomSheetDirectionSearch.edtSearchDirection.hasFocus()) {
+        val mText: String = if (!isDataSearchForDestination) {
             mBinding.bottomSheetDirectionSearch.edtSearchDirection.text.toString().trim()
         } else {
             mBinding.bottomSheetDirectionSearch.edtSearchDest.text.toString().trim()
@@ -2287,12 +2286,12 @@ class ExploreFragment :
                             }
                         }
 
-                        if (edtSearchDirection.hasFocus()) {
-                            edtSearchDest.requestFocus()
-                            edtSearchDest.setSelection(edtSearchDest.text.toString().length)
-                        } else if (edtSearchDest.hasFocus()) {
+                        if (isDataSearchForDestination) {
                             edtSearchDirection.requestFocus()
                             edtSearchDirection.setSelection(edtSearchDirection.text.toString().length)
+                        } else {
+                            edtSearchDest.requestFocus()
+                            edtSearchDest.setSelection(edtSearchDest.text.toString().length)
                         }
                         activity?.hideKeyboard()
                     }
@@ -2330,7 +2329,16 @@ class ExploreFragment :
                         } else if (!edtSearchDirection.text.isNullOrEmpty() && !edtSearchDest.text.isNullOrEmpty()) showOriginToDestinationRoute()
                     }
                 }
-
+                edtSearchDest.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        isDataSearchForDestination = true
+                    }
+                }
+                edtSearchDirection.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        isDataSearchForDestination = false
+                    }
+                }
                 edtSearchDest.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (!mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty() && text != getString(R.string.label_my_location)) {
@@ -3067,7 +3075,7 @@ class ExploreFragment :
     private fun directionMyLocation() {
         mBinding.bottomSheetDirectionSearch.apply {
             mIsDirectionDataSet = true
-            if (edtSearchDirection.hasFocus()) {
+            if (!isDataSearchForDestination) {
                 edtSearchDirection.setText(getString(R.string.label_my_location))
                 edtSearchDirection.text?.length?.let { it1 -> edtSearchDirection.setSelection(it1) }
             } else {
@@ -3679,7 +3687,7 @@ class ExploreFragment :
                         if (checkInternetConnection()) {
                             mViewModel.mIsPlaceSuggestion = false
                             mIsDirectionDataSet = true
-                            if (edtSearchDirection.hasFocus()) {
+                            if (!isDataSearchForDestination) {
                                 edtSearchDirection.setText(mPlaceList[position].text)
                                 edtSearchDirection.text?.length?.let { edtSearchDirection.setSelection(it) }
                             } else {
@@ -3713,7 +3721,7 @@ class ExploreFragment :
         activity?.hideKeyboard()
         changeRouteListUI()
         mPlaceList[position].let {
-            if (edtSearchDirection.hasFocus()) {
+            if (!isDataSearchForDestination) {
                 edtSearchDirection.setText(it.text)
                 mViewModel.mSearchDirectionOriginData = it
                 mViewModel.mSearchDirectionOriginData?.isDestination = false
@@ -3727,11 +3735,17 @@ class ExploreFragment :
             clMyLocation.root.hide()
             enableDirectionSearch()
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
-                showCurrentLocationDestinationRoute(it)
+                if (mViewModel.mSearchDirectionDestinationData != null) {
+                    showCurrentLocationDestinationRoute(it)
+                }
             } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
-                showCurrentLocationOriginRoute(it)
+                if (mViewModel.mSearchDirectionOriginData != null) {
+                    showCurrentLocationOriginRoute(it)
+                }
             } else if (!edtSearchDirection.text.isNullOrEmpty() && !edtSearchDest.text.isNullOrEmpty()) {
-                showOriginToDestinationRoute()
+                if (mViewModel.mSearchDirectionOriginData != null && mViewModel.mSearchDirectionDestinationData != null) {
+                    showOriginToDestinationRoute()
+                }
             }
         }
     }

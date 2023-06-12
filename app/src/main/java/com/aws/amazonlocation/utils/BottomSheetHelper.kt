@@ -48,6 +48,8 @@ class BottomSheetHelper {
             mBottomSheetSearchPlaces.expandedOffset =
                 view.clSearchSheet.context.resources.getDimension(R.dimen.dp_10).toInt()
         }
+        view.edtSearchPlaces.clearFocus()
+        activity.hideKeyboard()
 
         mBottomSheetSearchPlaces.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
