@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +24,7 @@ import com.aws.amazonlocation.databinding.FragmentAwsCloudInformationBinding
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.signin.CustomSpinnerAdapter
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
@@ -53,6 +55,7 @@ import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionMapList
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
@@ -77,6 +80,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
     private var mUserPoolId: String? = null
     private var mWebSocketUrl: String? = null
     private var regionData: String? = null
+    private var selectedRegion = regionMapList[regionMapList.keys.first()]
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -128,6 +132,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             }
         )
         changeTermsAndConditionColor(mBinding.tvTermsCondition)
+        setSpinnerData()
     }
 
     private fun initObserver() {
@@ -179,6 +184,32 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
                     it.messageResource?.let {
                         showError(it.toString())
                     }
+                }
+            }
+        }
+    }
+
+    private fun setSpinnerData() {
+        mBinding.apply {
+            val regionNameList = arrayListOf<String>()
+            for (data in regionMapList.keys) {
+                regionNameList.add(data)
+            }
+            val adapter = CustomSpinnerAdapter(requireContext(), regionNameList)
+            spinnerRegion.adapter = adapter
+
+            spinnerRegion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    selectedRegion = regionMapList[parent.getItemAtPosition(position)]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do something when nothing is selected
                 }
             }
         }
@@ -391,10 +422,11 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
 
     private var clickHere = object : CloudFormationInterface {
         override fun clickHere(url: String) {
+            val urlToPass = String.format(url, selectedRegion, selectedRegion)
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                    Uri.parse(urlToPass)
                 )
             )
         }

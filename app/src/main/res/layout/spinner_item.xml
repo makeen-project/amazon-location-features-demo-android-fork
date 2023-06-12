@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingEnd="@dimen/dp_30"
+    android:orientation="horizontal">
+
+    <!-- Customize the layout of the spinner item -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/spinner_item_text"
+        style="@style/SP13BoldMediumBlackTextStyle"
+        android:layout_width="@dimen/region_dropdown_width"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/color_primary_green"
+        android:textSize="@dimen/sp_12"
+        tools:text="@string/label_preview" />
+
+</LinearLayout>
