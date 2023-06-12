@@ -16,7 +16,7 @@ Below are the requirements for development, running and testing.
 #### Pre-requisites
 
 1. Sign in to [Amazon AWS account](https://aws.amazon.com/)
-2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
+2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
 
 Follow this [Document](https://location.aws.com/demo/help) for detailed info to create & configure a new Cloud formation.
 
@@ -25,21 +25,25 @@ The required values can be found from the `Outputs` tab on your stack page creat
 
 Create *`custom.properties`* file inside the project root folder and add the details as below.
 
-KEY to be added in custom.properties | Corresponding Key from stack output |
---- | --- |
-DEFAULT_IDENTITY_POOL_ID | IdentityPoolId |
-DEFAULT_REGION | Take regin from IdentityPoolId (Cahracters before ':') |
-IDENTITY_POOL_ID | IdentityPoolId |
-USER_DOMAIN | UserDomain |
-USER_POOL_CLIENT_ID | UserPoolClientId |
-USER_POOL_ID | UserPoolId |
-WEB_SOCKET_URL | WebSocketUrl |
+| KEY to be added in custom.properties | Corresponding Key from stack output                                   |
+|--------------------------------------|-----------------------------------------------------------------------|
+| DEFAULT_IDENTITY_POOL_ID             | IdentityPoolId                                                        |
+| DEFAULT_REGION                       | Take region from IdentityPoolId (Character before ':')                |
+| DEFAULT_SE_IDENTITY_POOL_ID          | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
+| DEFAULT_SE_REGION                    | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
+| IDENTITY_POOL_ID                     | IdentityPoolId                                                        |
+| USER_DOMAIN                          | UserDomain                                                            |
+| USER_POOL_CLIENT_ID                  | UserPoolClientId                                                      |
+| USER_POOL_ID                         | UserPoolId                                                            |
+| WEB_SOCKET_URL                       | WebSocketUrl                                                          |
 
 #### For Build (Required for building and running the app)
 
 ```
 DEFAULT_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_REGION=xx-xxxx-x
+DEFAULT_SE_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+DEFAULT_SE_REGION=xx-xxxx-x
 ```
 
 #### optional values to add after above if you want to run tests locally. (This can be a different stack only for testing)
@@ -66,16 +70,16 @@ To run the application locally either an emulator needs to be running or a physi
 
 ## Running Tests
 
-To run tests locally remember to add the values in `secrets.properties` mentiond above in configure section.
+To run tests locally remember to add the values in `secrets.properties` mentioned above in configure section.
 
 ### Unit Tests
 
 UnitTests are configured to run with jacoco and can be executed using various commands having different uses as below:
 
-| Command | Use |
-| --- | --- |
-| ./gradlew testDebugUnitTest | Runs unit tests without jacoco coverage report. |
-| ./gradlew testDebugUnitTestCoverage | Runs unit tests with jacoco coverage report. |
+| Command                                         | Use                                                                                                             |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| ./gradlew testDebugUnitTest                     | Runs unit tests without jacoco coverage report.                                                                 |
+| ./gradlew testDebugUnitTestCoverage             | Runs unit tests with jacoco coverage report.                                                                    |
 | ./gradlew testDebugUnitTestCoverageVerification | Runs unit tests with jacoco code coverage report and verifies if minimum code coverage constraint is satisfied. |
 
 The code coverage report can be found at the following path:
@@ -127,14 +131,18 @@ Note:
 - location.aws.com.demo.maps.HERE.ExploreTruck - VectorHereExploreTruck
 - location.aws.com.demo.maps.HERE.Hybrid - HybridHereExploreSatellite
 - location.aws.com.demo.maps.HERE.Imagery - RasterHereExploreSatellite
+- location.aws.com.demo.maps.Grab.StandardLight - VectorGrabStandardLight
+- location.aws.com.demo.maps.Grab.StandardDark - VectorGrabStandardDark
 
 > Place indexes (Name)
 - location.aws.com.demo.places.Esri.PlaceIndex
 - location.aws.com.demo.places.HERE.PlaceIndex
+- location.aws.com.demo.places.Grab.PlaceIndex
 
 > Route calculators (Name)
 - location.aws.com.demo.routes.Esri.RouteCalculator
 - location.aws.com.demo.routes.HERE.RouteCalculator
+- location.aws.com.demo.routes.Grab.RouteCalculator
 
 > Geofence collections (Name)
 - location.aws.com.demo.geofences.GeofenceCollection
