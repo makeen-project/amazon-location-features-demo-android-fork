@@ -25,17 +25,17 @@ The required values can be found from the `Outputs` tab on your stack page creat
 
 Create *`custom.properties`* file inside the project root folder and add the details as below.
 
-KEY to be added in custom.properties | Corresponding Key from stack output                                   |
---- |-----------------------------------------------------------------------|
-DEFAULT_IDENTITY_POOL_ID | IdentityPoolId                                                        |
-DEFAULT_REGION | Take region from IdentityPoolId (Character before ':')                |
-DEFAULT_SE_IDENTITY_POOL_ID | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
-DEFAULT_SE_REGION | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
-IDENTITY_POOL_ID | IdentityPoolId                                                        |
-USER_DOMAIN | UserDomain                                                            |
-USER_POOL_CLIENT_ID | UserPoolClientId                                                      |
-USER_POOL_ID | UserPoolId                                                            |
-WEB_SOCKET_URL | WebSocketUrl                                                          |
+| KEY to be added in custom.properties | Corresponding Key from stack output                                   |
+|--------------------------------------|-----------------------------------------------------------------------|
+| DEFAULT_IDENTITY_POOL_ID             | IdentityPoolId                                                        |
+| DEFAULT_REGION                       | Take region from IdentityPoolId (Character before ':')                |
+| DEFAULT_SE_IDENTITY_POOL_ID          | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
+| DEFAULT_SE_REGION                    | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
+| IDENTITY_POOL_ID                     | IdentityPoolId                                                        |
+| USER_DOMAIN                          | UserDomain                                                            |
+| USER_POOL_CLIENT_ID                  | UserPoolClientId                                                      |
+| USER_POOL_ID                         | UserPoolId                                                            |
+| WEB_SOCKET_URL                       | WebSocketUrl                                                          |
 
 #### For Build (Required for building and running the app)
 
@@ -76,10 +76,10 @@ To run tests locally remember to add the values in `secrets.properties` mentione
 
 UnitTests are configured to run with jacoco and can be executed using various commands having different uses as below:
 
-| Command | Use |
-| --- | --- |
-| ./gradlew testDebugUnitTest | Runs unit tests without jacoco coverage report. |
-| ./gradlew testDebugUnitTestCoverage | Runs unit tests with jacoco coverage report. |
+| Command                                         | Use                                                                                                             |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| ./gradlew testDebugUnitTest                     | Runs unit tests without jacoco coverage report.                                                                 |
+| ./gradlew testDebugUnitTestCoverage             | Runs unit tests with jacoco coverage report.                                                                    |
 | ./gradlew testDebugUnitTestCoverageVerification | Runs unit tests with jacoco code coverage report and verifies if minimum code coverage constraint is satisfied. |
 
 The code coverage report can be found at the following path:
