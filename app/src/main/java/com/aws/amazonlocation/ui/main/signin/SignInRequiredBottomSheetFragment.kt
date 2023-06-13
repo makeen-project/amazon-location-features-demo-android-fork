@@ -101,7 +101,7 @@ class SignInRequiredBottomSheetFragment(private var mSignInRequiredInterface: Si
                 mSignInRequiredInterface.mayBeLaterClick(dialog)
             }
 
-            cardSignInRequiredClose?.setOnClickListener {
+            ivSignInRequiredClose?.setOnClickListener {
                 mSignInRequiredInterface.mayBeLaterClick(dialog)
             }
         }

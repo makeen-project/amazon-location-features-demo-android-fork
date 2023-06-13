@@ -8,27 +8,15 @@
     android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
     android:paddingBottom="@dimen/dp_32">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card_sign_in_connected_close"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_sign_in_connected_close"
         android:layout_width="@dimen/dp_30"
         android:layout_height="@dimen/dp_30"
         android:layout_marginTop="@dimen/dp_14"
         android:layout_marginEnd="@dimen/dp_10"
-        app:cardBackgroundColor="@color/color_close_bg"
-        app:cardCornerRadius="@dimen/dp_30"
-        app:cardElevation="@dimen/dp_0"
-        app:cardUseCompatPadding="false"
+        android:src="@drawable/ic_close"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:strokeColor="@android:color/transparent">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/dp_16"
-            android:layout_height="@dimen/dp_16"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_close" />
-
-    </com.google.android.material.card.MaterialCardView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_aws_cloud_formation_required"
@@ -57,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="card_sign_in_connected_close,view_scroll" />
+        app:constraint_referenced_ids="iv_sign_in_connected_close,view_scroll" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/ns_cloud_formation"

@@ -89,7 +89,7 @@ class SignInConnectedBottomSheetFragment(private var mSignInConnectInterface: Si
                 mSignInConnectInterface.continueToExplore(dialog)
             }
 
-            cardSignInConnectedClose.setOnClickListener {
+            ivSignInConnectedClose.setOnClickListener {
                 mSignInConnectInterface.continueToExplore(dialog)
             }
         }

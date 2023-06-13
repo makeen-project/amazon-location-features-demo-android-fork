@@ -1987,7 +1987,7 @@ class ExploreFragment :
                 }
             }
 
-            bottomSheetNavigationComplete.cardNavigationCompleteClose.setOnClickListener {
+            bottomSheetNavigationComplete.ivNavigationCompleteClose.setOnClickListener {
                 if (checkInternetConnection()) {
                     hideArrivedBottomSheet()
                 }
@@ -2484,15 +2484,15 @@ class ExploreFragment :
                 }
             }
 
-            bottomSheetDirection.cardDirectionCloseDirection.setOnClickListener {
+            bottomSheetDirection.ivDirectionCloseDirection.setOnClickListener {
                 clearDirectionBottomSheet()
             }
 
-            bottomSheetMapStyle.cardMapStyleClose.setOnClickListener {
+            bottomSheetMapStyle.ivMapStyleClose.setOnClickListener {
                 mBottomSheetHelper.hideMapStyleSheet()
             }
 
-            bottomSheetDirectionSearch.cardDirectionCloseDirectionSearch.setOnClickListener {
+            bottomSheetDirectionSearch.ivDirectionCloseDirectionSearch.setOnClickListener {
                 mBinding.bottomSheetSearch.clSearchLoaderSearchSheet.root.hide()
                 mMapHelper.addLiveLocationMarker(false)
                 mBottomSheetHelper.hideDirectionSearchBottomSheet(this@ExploreFragment)

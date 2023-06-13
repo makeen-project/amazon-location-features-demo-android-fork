@@ -202,7 +202,7 @@ class CloudFormationBottomSheetFragment(
                 cloudFormationValidation()
             }
 
-            cardSignInConnectedClose.setOnClickListener {
+            ivSignInConnectedClose.setOnClickListener {
                 mPreferenceManager.setValue(KEY_TAB_ENUM, "")
                 mPreferenceManager.setValue(KEY_CLOUD_FORMATION_STATUS, "")
                 mCloudFormationInterface.dialogDismiss(dialog)

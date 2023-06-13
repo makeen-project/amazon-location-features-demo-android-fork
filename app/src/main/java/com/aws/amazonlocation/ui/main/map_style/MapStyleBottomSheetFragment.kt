@@ -123,7 +123,7 @@ class MapStyleBottomSheetFragment(
                     )
                 this.adapter = mMapStyleAdapter
             }
-            cardMapStyleClose.setOnClickListener {
+            ivMapStyleClose.setOnClickListener {
                 dismiss()
             }
         }

@@ -53,26 +53,14 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/dp_16" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_direction_close_direction"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_direction_close_direction"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_14"
-            app:cardBackgroundColor="@color/color_close_bg"
-            app:cardCornerRadius="@dimen/dp_30"
-            app:cardElevation="@dimen/dp_0"
-            app:cardUseCompatPadding="false"
+            android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="@id/sheet_direction_gl_direction_end"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeColor="@android:color/transparent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_close" />
-
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_direction_address"
@@ -83,7 +71,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:textAlignment="viewStart"
-            app:layout_constraintEnd_toStartOf="@id/card_direction_close_direction"
+            app:layout_constraintEnd_toStartOf="@id/iv_direction_close_direction"
             app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Mike’s Wings London" />
@@ -97,7 +85,7 @@
             android:ellipsize="end"
             android:lines="2"
             android:maxLines="2"
-            app:layout_constraintEnd_toStartOf="@id/card_direction_close_direction"
+            app:layout_constraintEnd_toStartOf="@id/iv_direction_close_direction"
             app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
             app:layout_constraintTop_toBottomOf="@id/tv_direction_address"
             tools:text="24 Heath Hill Road South,London,RG45" />
