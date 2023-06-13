@@ -77,9 +77,9 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
             ?.click()
 
         Thread.sleep(DELAY_2000)
-        val cardMapStyleClose =
-            onView(withId(R.id.card_map_style_close)).check(ViewAssertions.matches(isDisplayed()))
-        cardMapStyleClose?.perform(click())
+        val ivMapStyleClose =
+            onView(withId(R.id.iv_map_style_close)).check(ViewAssertions.matches(isDisplayed()))
+        ivMapStyleClose?.perform(click())
 
         Thread.sleep(DELAY_2000)
         val edtSearch =

@@ -153,7 +153,7 @@ class GeofenceUtils {
                 mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
             }
 
-            cardAddGeofenceClose.setOnClickListener {
+            ivAddGeofenceClose.setOnClickListener {
                 closeAddGeofence()
             }
 

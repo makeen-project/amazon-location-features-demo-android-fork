@@ -73,27 +73,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_add_geofence_close"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_add_geofence_close"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginTop="@dimen/dp_14"
             android:layout_marginEnd="@dimen/dp_16"
-            app:cardBackgroundColor="@color/color_close_bg"
-            app:cardCornerRadius="@dimen/dp_30"
-            app:cardElevation="@dimen/dp_0"
-            app:cardUseCompatPadding="false"
+            android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeColor="@android:color/transparent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="@dimen/dp_16"
-                android:layout_height="@dimen/dp_16"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_close" />
-
-        </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_add_geofence_sheet"
@@ -103,10 +91,10 @@
             android:layout_marginStart="@dimen/dp_16"
             android:text="@string/add_geofence"
             android:textAlignment="viewStart"
-            app:layout_constraintBottom_toBottomOf="@id/card_add_geofence_close"
-            app:layout_constraintEnd_toStartOf="@id/card_add_geofence_close"
+            app:layout_constraintBottom_toBottomOf="@id/iv_add_geofence_close"
+            app:layout_constraintEnd_toStartOf="@id/iv_add_geofence_close"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/card_add_geofence_close" />
+            app:layout_constraintTop_toTopOf="@id/iv_add_geofence_close" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_add_geofence_search"
