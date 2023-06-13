@@ -48,6 +48,7 @@
             android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateHidden"
             android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

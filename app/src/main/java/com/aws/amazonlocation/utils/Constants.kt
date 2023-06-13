@@ -75,7 +75,6 @@ val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
     Pair("US East (N. Virginia) us-east-1", "us-east-1"),
     Pair("US West (Oregon) us-west-2", "us-west-2"),
-    Pair("Asia Pacific (Mumbai) ap-south-1", "ap-south-1"),
     Pair("Asia Pacific (Singapore) ap-southeast-1", "ap-southeast-1"),
     Pair("Asia Pacific (Sydney) ap-southeast-2", "ap-southeast-2"),
     Pair("Asia Pacific (Tokyo) ap-northeast-1", "ap-northeast-1"),

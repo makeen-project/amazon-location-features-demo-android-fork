@@ -106,6 +106,7 @@ class ExploreFragment :
     MapboxMap.OnScaleListener,
     MapStyleChangeListener {
 
+    private var isDataSearchForDestination: Boolean = false
     private lateinit var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
@@ -115,6 +116,7 @@ class ExploreFragment :
     private var isLocationUpdatedNeeded: Boolean = false
     private var isZooming: Boolean = false
     private var mLastClickTime: Long = 0
+    private var mIsSwapClicked: Boolean = false
     private var mIsDirectionDataSet: Boolean = false
     private var mIsDirectionDataSetNew: Boolean = false
     private var mIsDirectionSheetHalfExpanded: Boolean = false
@@ -217,10 +219,8 @@ class ExploreFragment :
             } else if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                 mBinding.apply {
                     bottomSheetDirectionSearch.apply {
-                        if (mPlaceList.isEmpty()) {
-                            edtSearchDest.clearFocus()
-                            edtSearchDirection.clearFocus()
-                        }
+                        edtSearchDest.clearFocus()
+                        edtSearchDirection.clearFocus()
                     }
                 }
             } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
@@ -1779,7 +1779,7 @@ class ExploreFragment :
         it: SearchSuggestionResponse,
         searchPlaceIndexText: SearchApiEnum
     ) {
-        val mText: String = if (mBinding.bottomSheetDirectionSearch.edtSearchDirection.hasFocus()) {
+        val mText: String = if (!isDataSearchForDestination) {
             mBinding.bottomSheetDirectionSearch.edtSearchDirection.text.toString().trim()
         } else {
             mBinding.bottomSheetDirectionSearch.edtSearchDest.text.toString().trim()
@@ -1880,7 +1880,8 @@ class ExploreFragment :
     private fun searchPlaces(searchText: String) {
         clearSearchList()
         mViewModel.searchPlaceSuggestion(
-            searchText , isGrabMapSelected(mPreferenceManager, requireContext())
+            searchText,
+            isGrabMapSelected(mPreferenceManager, requireContext())
         )
     }
 
@@ -2221,17 +2222,13 @@ class ExploreFragment :
                         if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
                             return@setOnClickListener
                         }
+                        mIsSwapClicked = true
                         mLastClickTime = SystemClock.elapsedRealtime()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
-                            mIsDirectionDataSet = true
                             edtSearchDirection.setText(edtSearchDest.text.toString().trim())
                             edtSearchDest.setText(resources.getString(R.string.label_my_location))
-                            lifecycleScope.launch {
-                                delay(CLICK_DEBOUNCE_ENABLE)
-                                mIsDirectionDataSet = false
-                            }
                             clMyLocation.root.hide()
                             enableDirectionSearch()
                             mViewModel.mSearchDirectionOriginData =
@@ -2246,13 +2243,8 @@ class ExploreFragment :
                         } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
-                            mIsDirectionDataSet = true
                             edtSearchDest.setText(edtSearchDirection.text.toString().trim())
                             edtSearchDirection.setText(resources.getString(R.string.label_my_location))
-                            lifecycleScope.launch {
-                                delay(CLICK_DEBOUNCE_ENABLE)
-                                mIsDirectionDataSet = false
-                            }
                             clMyLocation.root.hide()
                             enableDirectionSearch()
                             mViewModel.mSearchDirectionDestinationData =
@@ -2267,14 +2259,9 @@ class ExploreFragment :
                         } else {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
-                            mIsDirectionDataSet = true
                             val searchDest = edtSearchDest.text.toString().trim()
                             edtSearchDest.setText(edtSearchDirection.text.toString().trim())
                             edtSearchDirection.setText(searchDest)
-                            lifecycleScope.launch {
-                                delay(CLICK_DEBOUNCE_ENABLE)
-                                mIsDirectionDataSet = false
-                            }
                             enableDirectionSearch()
                             if (mViewModel.mSearchDirectionOriginData != null && mViewModel.mSearchDirectionDestinationData != null) {
                                 val originData = mViewModel.mSearchDirectionOriginData
@@ -2286,15 +2273,11 @@ class ExploreFragment :
                                 showOriginToDestinationRoute()
                             }
                         }
-
-                        if (edtSearchDirection.hasFocus()) {
-                            edtSearchDest.requestFocus()
-                            edtSearchDest.setSelection(edtSearchDest.text.toString().length)
-                        } else if (edtSearchDest.hasFocus()) {
-                            edtSearchDirection.requestFocus()
-                            edtSearchDirection.setSelection(edtSearchDirection.text.toString().length)
-                        }
                         activity?.hideKeyboard()
+                        lifecycleScope.launch {
+                            delay(CLICK_DEBOUNCE_ENABLE)
+                            mIsSwapClicked = false
+                        }
                     }
                 }
                 switchAvoidTools.setOnCheckedChangeListener { _, isChecked ->
@@ -2330,10 +2313,22 @@ class ExploreFragment :
                         } else if (!edtSearchDirection.text.isNullOrEmpty() && !edtSearchDest.text.isNullOrEmpty()) showOriginToDestinationRoute()
                     }
                 }
-
+                edtSearchDest.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        isDataSearchForDestination = true
+                    }
+                }
+                edtSearchDirection.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        isDataSearchForDestination = false
+                    }
+                }
                 edtSearchDest.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
-                    if (!mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty() && text != getString(R.string.label_my_location)) {
+                    if (!mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty() && text != getString(
+                            R.string.label_my_location
+                        )
+                    ) {
                         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                             cardRouteOptionHide()
                             clearMapLineMarker()
@@ -2346,7 +2341,7 @@ class ExploreFragment :
 
                 edtSearchDirection.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
-                    if (!mIsDirectionDataSetNew && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion) {
+                    if (!mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion) {
                         if (!text.isNullOrEmpty() && text != getString(R.string.label_my_location) && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                             cardRouteOptionHide()
                             clearMapLineMarker()
@@ -2608,7 +2603,6 @@ class ExploreFragment :
             if (mViewModel.mCarData?.legs == null) {
                 edtSearchDest.setText(mBinding.bottomSheetDirection.tvDirectionAddress.text.trim())
             }
-            edtSearchDirection.requestFocus()
             lifecycleScope.launch {
                 delay(CLICK_DEBOUNCE_ENABLE)
                 mIsDirectionDataSet = false
@@ -2872,7 +2866,6 @@ class ExploreFragment :
             switchAvoidTools.isChecked = mIsAvoidTolls
             switchAvoidFerries.isChecked = mIsAvoidFerries
             mPlaceList.clear()
-            edtSearchDirection.requestFocus()
             mAdapterDirection?.notifyDataSetChanged()
             mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
         }
@@ -3067,7 +3060,7 @@ class ExploreFragment :
     private fun directionMyLocation() {
         mBinding.bottomSheetDirectionSearch.apply {
             mIsDirectionDataSet = true
-            if (edtSearchDirection.hasFocus()) {
+            if (!isDataSearchForDestination) {
                 edtSearchDirection.setText(getString(R.string.label_my_location))
                 edtSearchDirection.text?.length?.let { it1 -> edtSearchDirection.setSelection(it1) }
             } else {
@@ -3679,7 +3672,7 @@ class ExploreFragment :
                         if (checkInternetConnection()) {
                             mViewModel.mIsPlaceSuggestion = false
                             mIsDirectionDataSet = true
-                            if (edtSearchDirection.hasFocus()) {
+                            if (!isDataSearchForDestination) {
                                 edtSearchDirection.setText(mPlaceList[position].text)
                                 edtSearchDirection.text?.length?.let { edtSearchDirection.setSelection(it) }
                             } else {
@@ -3713,7 +3706,7 @@ class ExploreFragment :
         activity?.hideKeyboard()
         changeRouteListUI()
         mPlaceList[position].let {
-            if (edtSearchDirection.hasFocus()) {
+            if (!isDataSearchForDestination) {
                 edtSearchDirection.setText(it.text)
                 mViewModel.mSearchDirectionOriginData = it
                 mViewModel.mSearchDirectionOriginData?.isDestination = false
@@ -3727,11 +3720,17 @@ class ExploreFragment :
             clMyLocation.root.hide()
             enableDirectionSearch()
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
-                showCurrentLocationDestinationRoute(it)
+                if (mViewModel.mSearchDirectionDestinationData != null) {
+                    showCurrentLocationDestinationRoute(it)
+                }
             } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
-                showCurrentLocationOriginRoute(it)
+                if (mViewModel.mSearchDirectionOriginData != null) {
+                    showCurrentLocationOriginRoute(it)
+                }
             } else if (!edtSearchDirection.text.isNullOrEmpty() && !edtSearchDest.text.isNullOrEmpty()) {
-                showOriginToDestinationRoute()
+                if (mViewModel.mSearchDirectionOriginData != null && mViewModel.mSearchDirectionDestinationData != null) {
+                    showOriginToDestinationRoute()
+                }
             }
         }
     }
@@ -4783,11 +4782,11 @@ class ExploreFragment :
         val newBoundsWidth = bounds.longitudeSpan - projection.visibleRegion.latLngBounds.longitudeSpan
         val leftTopLatLng = LatLng(
             bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2,
-            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth
         )
         val rightBottomLatLng = LatLng(
             bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2 - newBoundsHeight,
-            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2
         )
         val newBounds = LatLngBounds.Builder()
             .include(leftTopLatLng)
