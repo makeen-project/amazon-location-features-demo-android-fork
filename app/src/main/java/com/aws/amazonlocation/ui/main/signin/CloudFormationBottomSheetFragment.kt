@@ -181,6 +181,11 @@ class CloudFormationBottomSheetFragment(
                     // Do something when nothing is selected
                 }
             }
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                spinnerRegion.setSelection(3)
+            } else {
+                spinnerRegion.setSelection(2)
+            }
         }
     }
 

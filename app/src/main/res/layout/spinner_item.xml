@@ -3,18 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingEnd="@dimen/dp_30"
     android:orientation="horizontal">
 
     <!-- Customize the layout of the spinner item -->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/spinner_item_text"
-        style="@style/SP13BoldMediumBlackTextStyle"
-        android:layout_width="@dimen/region_dropdown_width"
+        style="@style/SP16InterSemiBoldMediumBlackTextStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="viewEnd"
+        android:singleLine="true"
+        android:drawablePadding="@dimen/dp_10"
+        android:textSize="@dimen/sp_14"
+        android:drawableEnd="@drawable/spinner_bg"
         android:textColor="@color/color_primary_green"
-        android:textSize="@dimen/sp_12"
         tools:text="@string/label_preview" />
 
 </LinearLayout>
