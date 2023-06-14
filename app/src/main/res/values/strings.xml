@@ -28,7 +28,7 @@
     <string name="aws_cloudformation_required">Connect AWS Account</string>
     <string name="geofencing_and_tracking_features">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="connect">Connect</string>
-    <string name="how_to_connect">How to connect:</string>
+    <string name="how_to_connect">How to connect to</string>
     <string name="how_to_connect_1_1">Click here to run a CloudFormation template to securely create required resources.</string>
     <string name="how_to_connect_1_2">It will securely create all required resources.</string>
     <string name="how_to_connect_1_3">You can delete these resources through the stack deletion option or ‘Manage resources’ pages in the menu on the left.</string>
@@ -219,7 +219,7 @@
     <string name="label_restart_app_title">Enable Grab</string>
     <string name="label_restart_app_description">Grab provides Maps, Routes and Place search in Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, and Cambodia.\n\nWhile car and motorcycle routes are available across the above countries, the bicycle and walking routes are supported in only key cities such as Singapore, Jakarta, Manila, Klang Valley, Bangkok, Ho Chi Minh City, and Hanoi. </string>
     <string name="enable_grab">Enable Grab</string>
-    <string name="your_location_not_supported_by_grab">Your current location is not supported by Grab</string>
+    <string name="your_location_not_supported_by_grab">Your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia.</string>
     <string name="label_current_location_disabled">Current location disabled</string>
     <string name="label_grab_limitation">Distance can\'t be calculated, since your current location has been disabled due to grab limitation</string>
 </resources>

@@ -33,7 +33,6 @@ const val CLICK_DEBOUNCE_ENABLE = 1200L
 const val RESTART_DELAY = 800L
 const val DELAY_500 = 500L
 const val DELAY_1000 = 1000L
-const val DELAY_SIGN_OUT_2000 = 2000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"

@@ -116,23 +116,22 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_how_to_connect"
                         style="@style/SP16InterSemiBoldMediumBlackTextStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dp_24"
                         android:text="@string/how_to_connect"
-                        app:layout_constraintEnd_toStartOf="@id/spinnerRegion"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_sign_in_description" />
 
                     <androidx.appcompat.widget.AppCompatSpinner
                         android:id="@+id/spinnerRegion"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:overlapAnchor="false"
-                        android:textAlignment="viewEnd"
-                        android:background="@drawable/spinner_bg"
-                        app:layout_constraintStart_toEndOf="@+id/tv_how_to_connect"
+                        android:background="@null"
+                        android:layout_marginStart="@dimen/dp_4"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tv_how_to_connect"
                         app:layout_constraintTop_toTopOf="@id/tv_how_to_connect"
                         app:layout_constraintBottom_toBottomOf="@id/tv_how_to_connect"/>
 

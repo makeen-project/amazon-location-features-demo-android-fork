@@ -2219,7 +2219,7 @@ class ExploreFragment :
 
                 ivSwapLocation.setOnClickListener {
                     if (checkInternetConnection()) {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < CLICK_DEBOUNCE_ENABLE) {
                             return@setOnClickListener
                         }
                         mIsSwapClicked = true
@@ -2275,7 +2275,7 @@ class ExploreFragment :
                         }
                         activity?.hideKeyboard()
                         lifecycleScope.launch {
-                            delay(CLICK_DEBOUNCE_ENABLE)
+                            delay(CLICK_DEBOUNCE)
                             mIsSwapClicked = false
                         }
                     }

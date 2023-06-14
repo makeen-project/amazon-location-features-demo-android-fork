@@ -15,7 +15,6 @@ import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.SignOutData
 import com.aws.amazonlocation.domain.`interface`.SignInInterface
 import com.aws.amazonlocation.domain.usecase.AuthUseCase
-import com.aws.amazonlocation.utils.DELAY_SIGN_OUT_2000
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_USER_DETAILS
@@ -23,13 +22,12 @@ import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.isRunningTest
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 

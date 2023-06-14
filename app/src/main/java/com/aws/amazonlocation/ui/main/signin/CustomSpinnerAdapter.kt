@@ -16,8 +16,7 @@ class CustomSpinnerAdapter(context: Context, private val items: ArrayList<String
             .inflate(R.layout.spinner_item, parent, false)
 
         val textView = view.findViewById<TextView>(R.id.spinner_item_text)
-        val removeRegion = items[position].substring(0, items[position].lastIndexOf(" "))
-        textView.text = removeRegion
+        textView.text = items[position]
         return view
     }
 
