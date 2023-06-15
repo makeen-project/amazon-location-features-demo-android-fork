@@ -2325,35 +2325,30 @@ class ExploreFragment :
                 }
                 edtSearchDest.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
-                    if (!mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty() && text != getString(
-                            R.string.label_my_location
-                        )
-                    ) {
-                        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                            cardRouteOptionHide()
-                            clearMapLineMarker()
-                            mViewModel.mSearchDirectionDestinationData = null
-                            searchPlaces(text.toString())
-                        }
+                    if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                        cardRouteOptionHide()
+                        clearMapLineMarker()
+                        mViewModel.mSearchDirectionDestinationData = null
+                        searchPlaces(text.toString())
                     }
                     checkMyLocationUI(text, edtSearchDirection)
                 }.launchIn(lifecycleScope)
 
                 edtSearchDirection.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
-                    if (!mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion) {
-                        if (!text.isNullOrEmpty() && text != getString(R.string.label_my_location) && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                            cardRouteOptionHide()
-                            clearMapLineMarker()
-                            mViewModel.mSearchDirectionOriginData = null
-                            searchPlaces(text.toString())
-                        }
+                    if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                        cardRouteOptionHide()
+                        clearMapLineMarker()
+                        mViewModel.mSearchDirectionOriginData = null
+                        searchPlaces(text.toString())
                     }
                     checkMyLocationUI(text, edtSearchDest)
-                    lifecycleScope.launch {
-                        delay(CLICK_DEBOUNCE_ENABLE)
-                        mIsDirectionDataSet = false
-                    }
                 }.launchIn(lifecycleScope)
 
                 clMyLocation.root.setOnClickListener {
@@ -3067,7 +3062,6 @@ class ExploreFragment :
                 edtSearchDest.setText(getString(R.string.label_my_location))
                 edtSearchDest.text?.length?.let { it1 -> edtSearchDest.setSelection(it1) }
             }
-            enableDirectionSearch()
             requireActivity().hideKeyboard()
             clMyLocation.root.hide()
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
@@ -3095,6 +3089,7 @@ class ExploreFragment :
                     hideViews(rvSearchPlacesDirection, rvSearchPlacesSuggestionDirection)
                 }
             }
+            enableDirectionSearch()
         }
     }
 
@@ -3517,6 +3512,7 @@ class ExploreFragment :
 
     fun hideDirectionBottomSheet() {
         mIsDirectionDataSet = true
+        isDataSearchForDestination = false
         mBinding.bottomSheetDirectionSearch.edtSearchDirection.setText("")
         mBinding.bottomSheetDirectionSearch.edtSearchDest.setText("")
         clearDirectionBottomSheet()

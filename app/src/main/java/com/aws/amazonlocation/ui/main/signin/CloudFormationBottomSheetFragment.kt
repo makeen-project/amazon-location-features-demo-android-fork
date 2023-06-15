@@ -174,6 +174,7 @@ class CloudFormationBottomSheetFragment(
                     position: Int,
                     id: Long
                 ) {
+                    adapter.setSelection(position)
                     selectedRegion = regionMapList[parent.getItemAtPosition(position)]
                 }
 
