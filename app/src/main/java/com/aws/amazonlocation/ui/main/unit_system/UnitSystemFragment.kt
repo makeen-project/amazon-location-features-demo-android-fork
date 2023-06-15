@@ -11,6 +11,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentUnitSystemBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
+import com.aws.amazonlocation.utils.Units
 
 class UnitSystemFragment : BaseFragment() {
 
@@ -41,8 +42,8 @@ class UnitSystemFragment : BaseFragment() {
             }
 
             llAutomatic.setOnClickListener {
-                changeDataProvider(resources.getString(R.string.automatic))
                 mPreferenceManager.setValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
+                changeDataProvider(resources.getString(R.string.automatic))
             }
 
             llMetric.setOnClickListener {
@@ -101,6 +102,7 @@ class UnitSystemFragment : BaseFragment() {
                     )
                 }
                 else -> {
+                    setAutomaticLabel()
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
@@ -121,6 +123,15 @@ class UnitSystemFragment : BaseFragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun FragmentUnitSystemBinding.setAutomaticLabel() {
+        val isMetric = Units.isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+        if (isMetric) {
+            tvAutomaticSubLabel.text = getString(R.string.label_automatic_sub_title_km)
+        } else {
+            tvAutomaticSubLabel.text = getString(R.string.label_automatic_sub_title_mile)
         }
     }
 

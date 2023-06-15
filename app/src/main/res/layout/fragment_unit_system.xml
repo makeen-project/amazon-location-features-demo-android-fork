@@ -43,7 +43,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_automatic"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dp_16"
@@ -51,14 +51,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/view_bottom">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_automatic"
-            style="@style/SP16RegularWhiteTextStyle"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/automatic"
-            android:textColor="@color/color_medium_black" />
+            android:layout_marginVertical="@dimen/dp_8"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_automatic"
+                style="@style/SP16RegularWhiteTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/automatic"
+                android:textColor="@color/color_medium_black" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_automatic_sub_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_automatic_sub_title_mile" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_automatic"
@@ -71,7 +86,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_imperial"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dp_16"
@@ -83,6 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginVertical="@dimen/dp_8"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -112,7 +128,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_metric"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/dp_16"
@@ -124,6 +140,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginVertical="@dimen/dp_8"
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
