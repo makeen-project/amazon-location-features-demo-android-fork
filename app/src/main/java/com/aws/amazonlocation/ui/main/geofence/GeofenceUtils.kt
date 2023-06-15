@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.services.geo.AmazonLocationClient
@@ -40,6 +41,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.text.DecimalFormat
 import java.util.regex.Pattern
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -154,7 +157,11 @@ class GeofenceUtils {
             }
 
             ivAddGeofenceClose.setOnClickListener {
-                closeAddGeofence()
+                mFragmentActivity?.lifecycleScope?.launch {
+                    mActivity?.hideKeyboard()
+                    delay(DELAY_300)
+                    closeAddGeofence()
+                }
             }
 
             btnAddGeofenceSave.setOnClickListener {

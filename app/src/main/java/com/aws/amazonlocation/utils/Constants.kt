@@ -32,6 +32,7 @@ const val CLICK_DEBOUNCE = 1000L
 const val CLICK_DEBOUNCE_ENABLE = 1200L
 const val RESTART_DELAY = 800L
 const val DELAY_500 = 500L
+const val DELAY_300 = 300L
 const val DELAY_1000 = 1000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
