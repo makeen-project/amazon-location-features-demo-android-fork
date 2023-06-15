@@ -2488,10 +2488,14 @@ class ExploreFragment :
             }
 
             bottomSheetDirectionSearch.ivDirectionCloseDirectionSearch.setOnClickListener {
-                mBinding.bottomSheetSearch.clSearchLoaderSearchSheet.root.hide()
-                mMapHelper.addLiveLocationMarker(false)
-                mBottomSheetHelper.hideDirectionSearchBottomSheet(this@ExploreFragment)
-                hideDirectionBottomSheet()
+                lifecycleScope.launch {
+                    activity?.hideKeyboard()
+                    delay(DELAY_300)
+                    mBinding.bottomSheetSearch.clSearchLoaderSearchSheet.root.hide()
+                    mMapHelper.addLiveLocationMarker(false)
+                    mBottomSheetHelper.hideDirectionSearchBottomSheet(this@ExploreFragment)
+                    hideDirectionBottomSheet()
+                }
             }
 
             mBinding.bottomSheetDirection.apply {
