@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_55"
         android:gravity="center"
+        android:textDirection="locale"
         android:text="@string/map_style"
         android:textColor="@color/color_medium_black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,6 +65,8 @@
                 android:layout_marginHorizontal="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/esri"
+                android:gravity="start"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -96,6 +99,8 @@
                 android:layout_marginHorizontal="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/here"
+                android:gravity="start"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_esri" />
@@ -128,6 +133,8 @@
                 android:layout_marginHorizontal="@dimen/dp_16"
                 android:layout_marginTop="@dimen/dp_16"
                 android:text="@string/grab"
+                android:gravity="start"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view_here" />

@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_55"
         android:gravity="center"
+        android:textDirection="locale"
         android:text="@string/data_provider"
         android:textColor="@color/color_medium_black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,6 +58,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="start"
+            android:textDirection="locale"
             android:text="@string/esri"
             android:textColor="@color/color_medium_black" />
 
@@ -85,6 +88,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="start"
+            android:textDirection="locale"
             android:text="@string/here"
             android:textColor="@color/color_medium_black" />
 
@@ -114,6 +119,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/grab"
+            android:gravity="start"
+            android:textDirection="locale"
             android:textColor="@color/color_medium_black" />
 
         <androidx.appcompat.widget.AppCompatImageView

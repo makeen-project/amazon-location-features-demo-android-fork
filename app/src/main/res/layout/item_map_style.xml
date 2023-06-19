@@ -39,6 +39,7 @@
                 android:id="@+id/tv_style_name"
                 style="@style/SP16HintRegularTextStyle"
                 android:layout_width="@dimen/dp_0"
+                android:textDirection="locale"
                 android:layout_marginHorizontal="@dimen/dp_16"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"

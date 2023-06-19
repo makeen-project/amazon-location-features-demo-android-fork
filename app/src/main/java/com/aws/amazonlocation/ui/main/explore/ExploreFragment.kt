@@ -4338,7 +4338,7 @@ class ExploreFragment :
                 val layoutParams: ViewGroup.MarginLayoutParams =
                     mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
                 layoutParams.setMargins(
-                    0,
+                    resources.getDimension(R.dimen.dp_16).toInt(),
                     0,
                     resources.getDimension(R.dimen.dp_16).toInt(),
                     marginBottom

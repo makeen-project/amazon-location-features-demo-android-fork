@@ -59,6 +59,7 @@
                     android:textColor="@color/color_medium_black"
                     android:textSize="@dimen/sp_20"
                     android:gravity="center"
+                    android:textDirection="locale"
                     tools:text="300 m" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -70,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
+                    android:textDirection="locale"
                     android:maxLines="1"
                     tools:text="Victoria st" />
 
