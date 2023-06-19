@@ -2860,7 +2860,16 @@ class ExploreFragment :
             if (mMapHelper.isGrabSelectedAndOutsideBound) {
                 clMyLocation.root.hide()
             } else {
-                clMyLocation.root.show()
+                if (activity?.checkLocationPermission() == true) {
+                    if (isGPSEnabled(requireContext())) {
+                        edtSearchDirection.setText(getString(R.string.label_my_location))
+                        clMyLocation.root.hide()
+                    } else {
+                        clMyLocation.root.show()
+                    }
+                } else {
+                    clMyLocation.root.show()
+                }
             }
             switchAvoidTools.isChecked = mIsAvoidTolls
             switchAvoidFerries.isChecked = mIsAvoidFerries
