@@ -58,6 +58,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_medium_black"
                     android:textSize="@dimen/sp_20"
+                    android:textDirection="locale"
                     android:gravity="center"
                     tools:text="300 m" />
 
@@ -71,6 +72,7 @@
                     android:ellipsize="end"
                     android:gravity="center"
                     android:maxLines="1"
+                    android:textDirection="locale"
                     tools:text="Victoria st" />
 
             </LinearLayout>
