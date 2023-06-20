@@ -219,6 +219,7 @@
                     style="@style/SP13BoldMediumBlackTextStyle"
                     android:layout_width="@dimen/dp_0"
                     android:layout_height="wrap_content"
+                    android:textDirection="locale"
                     android:layout_marginStart="@dimen/dp_16"
                     android:text="@string/how_to_connect_2_1"
                     app:layout_constraintEnd_toEndOf="parent"

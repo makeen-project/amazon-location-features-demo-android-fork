@@ -927,6 +927,7 @@ class ExploreFragment :
                                 )
                             }?.let { it2 ->
                                 getMetricsNew(
+                                    requireContext(),
                                     it2,
                                     isMetric(
                                         mPreferenceManager.getValue(
@@ -1215,13 +1216,13 @@ class ExploreFragment :
                                                     ""
                                                 ).let { unitSystem ->
                                                     val isMetric = isMetric(unitSystem)
-                                                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                                                    getMetricsNew(requireContext(), convertToLowerUnit(distance, isMetric), isMetric)
                                                 }
                                             }
                                             groupDistance.show()
                                             tvDirectionDot.show()
                                             tvDirectionTime.show()
-                                            tvDirectionTime.text = getTime(firstLeg.durationSeconds)
+                                            tvDirectionTime.text = getTime(requireContext(), firstLeg.durationSeconds)
                                         }
                                     }
                                     mBinding.bottomSheetDirectionSearch.apply {
@@ -1258,9 +1259,9 @@ class ExploreFragment :
                                                 ""
                                             ).let { unitSystem ->
                                                 val isMetric = isMetric(unitSystem)
-                                                getMetricsNew(convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
+                                                getMetricsNew(requireContext(), convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
                                             }
-                                            tvDriveMinute.text = getTime(firstLeg.durationSeconds)
+                                            tvDriveMinute.text = getTime(requireContext(), firstLeg.durationSeconds)
                                         }
                                     }
                                 }
@@ -1280,9 +1281,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(walkingData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(walkingData[0].distance, isMetric), isMetric)
                                     }
-                                    tvWalkMinute.text = getTime(walkingData[0].durationSeconds)
+                                    tvWalkMinute.text = getTime(requireContext(), walkingData[0].durationSeconds)
                                     if (mTravelMode == TravelMode.Walking.value) {
                                         tvWalkSelected.show()
                                         hideViews(tvTruckSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
@@ -1313,9 +1314,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(truckData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(truckData[0].distance, isMetric), isMetric)
                                     }
-                                    tvTruckMinute.text = getTime(truckData[0].durationSeconds)
+                                    tvTruckMinute.text = getTime(requireContext(), truckData[0].durationSeconds)
                                     if (mTravelMode == TravelMode.Truck.value) {
                                         tvTruckSelected.show()
                                         hideViews(tvWalkSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
@@ -1345,9 +1346,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(bicycleData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(bicycleData[0].distance, isMetric), isMetric)
                                     }
-                                    tvBicycleMinute.text = getTime(bicycleData[0].durationSeconds)
+                                    tvBicycleMinute.text = getTime(requireContext(), bicycleData[0].durationSeconds)
                                     if (mTravelMode == TRAVEL_MODE_BICYCLE) {
                                         tvBicycleSelected.show()
                                         hideViews(tvWalkSelected, tvDriveSelected, tvTruckSelected, tvMotorcycleSelected)
@@ -1378,9 +1379,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(motorcycleData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(motorcycleData[0].distance, isMetric), isMetric)
                                     }
-                                    tvMotorcycleMinute.text = getTime(motorcycleData[0].durationSeconds)
+                                    tvMotorcycleMinute.text = getTime(requireContext(), motorcycleData[0].durationSeconds)
                                     if (mTravelMode == TRAVEL_MODE_MOTORCYCLE) {
                                         tvMotorcycleSelected.show()
                                         hideViews(tvWalkSelected, tvDriveSelected, tvTruckSelected, tvBicycleSelected)
@@ -1525,6 +1526,7 @@ class ExploreFragment :
                             tvNavigationTime.text =
                                 it.calculateRouteResult?.legs?.get(0)?.durationSeconds?.let { it1 ->
                                     getTime(
+                                        requireContext(),
                                         it1
                                     )
                                 }
@@ -1532,7 +1534,7 @@ class ExploreFragment :
                             tvNavigationDistance.text =
                                 it.calculateRouteResult?.legs?.get(0)?.distance?.let { it1 ->
                                     convertToLowerUnit(it1, isMetric)
-                                }?.let { it2 -> getMetricsNew(it2, isMetric) }
+                                }?.let { it2 -> getMetricsNew(requireContext(), it2, isMetric) }
                         }
                     }
                     CoroutineScope(Dispatchers.IO).launch {
@@ -1877,7 +1879,7 @@ class ExploreFragment :
                     ""
                 ).let { unitSystem ->
                     val isMetric = isMetric(unitSystem)
-                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                    getMetricsNew(requireContext(), convertToLowerUnit(distance, isMetric), isMetric)
                 }
                 tvNavigationName.text = region
                 hideViews(cardDirection, cardMap, cardGeofenceMap)
@@ -3385,7 +3387,7 @@ class ExploreFragment :
                                     getString(R.string.error_route)
                             } else {
                                 mBinding.bottomSheetDirection.tvDirectionDistance.text =
-                                    getMetricsNew(distance, isMetric)
+                                    getMetricsNew(requireContext(), distance, isMetric)
                                 if (isMetric) {
                                     mBinding.bottomSheetDirection.tvDirectionError.text =
                                         getString(R.string.error_switch_to_here)
@@ -4105,7 +4107,7 @@ class ExploreFragment :
     private fun fetchAddressFromLatLng(it: CalculateRouteResult) {
         mRouteFinish = false
         activity?.hideKeyboard()
-        mViewModel.calculateNavigationLine(it)
+        mViewModel.calculateNavigationLine(requireContext(), it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)
         mBaseActivity?.isTablet?.let {
@@ -4782,7 +4784,7 @@ class ExploreFragment :
                         it > 248.5
                     }
                     if (showDistance) {
-                        tvDirectionDistance.text = getMetricsNew(it, isMetric)
+                        tvDirectionDistance.text = getMetricsNew(requireContext(), it, isMetric)
                     }
                 }
                 notifyAdapters()

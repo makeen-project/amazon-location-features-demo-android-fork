@@ -8,7 +8,6 @@ import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.databinding.ItemNavigationRouteListBinding
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.PreferenceManager
-import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.Units.convertToLowerUnit
 import com.aws.amazonlocation.utils.Units.getMetricsNew
 import com.aws.amazonlocation.utils.Units.isMetric
@@ -33,7 +32,11 @@ class NavigationAdapter(
                 data.distance?.let { distance ->
                     tvNavigationDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
                         val isMetric = isMetric(unitSystem)
-                        getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                        getMetricsNew(
+                            tvNavigationAddress.context,
+                            convertToLowerUnit(distance, isMetric),
+                            isMetric
+                        )
                     }
                 }
             }
