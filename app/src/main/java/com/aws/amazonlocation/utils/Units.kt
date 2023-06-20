@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.location.LocationManager
 import android.provider.Settings
+import com.aws.amazonlocation.R
 import java.text.DecimalFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -13,18 +14,18 @@ import java.util.concurrent.TimeUnit
 // SPDX-License-Identifier: MIT-0
 object Units {
 
-    fun getMetricsNew(distance: Double, isMetric: Boolean): String {
+    fun getMetricsNew(context: Context, distance: Double, isMetric: Boolean): String {
         return if (isMetric) {
             if (distance <= 1000) {
-                "${DecimalFormat("##.##").format((distance.toInt()))} m"
+                "${DecimalFormat("##.##").format((distance.toInt()))} ${context.getString(R.string.label_m)}"
             } else {
-                "${DecimalFormat("##.#").format((distance / 1000))} km"
+                "${DecimalFormat("##.#").format((distance / 1000))} ${context.getString(R.string.label_km)}"
             }
         } else {
             if (distance <= 5280) {
-                "${DecimalFormat("##.##").format((distance.toInt()))} ft"
+                "${DecimalFormat("##.##").format((distance.toInt()))} ${context.getString(R.string.label_ft)}"
             } else {
-                "${DecimalFormat("##.#").format((distance / 5280))} mi"
+                "${DecimalFormat("##.#").format((distance / 5280))} ${context.getString(R.string.label_mi)}"
             }
         }
     }
@@ -49,7 +50,7 @@ object Units {
         return meter * 3.2808399
     }
 
-    fun getTime(second: Double): String {
+    fun getTime(context: Context, second: Double): String {
         val mSeconds = second.toInt().toLong()
         TimeUnit.SECONDS.toDays(mSeconds).toInt()
         val mHours: Long =
@@ -62,19 +63,23 @@ object Units {
         var mTime = if (mMinute == 0L && mHours == 0L) {
             buildString {
                 append(mSecondNew)
-                append(" sec")
+                append(" ")
+                append(context.getString(R.string.label_sec))
             }
         } else {
             buildString {
                 append(mMinute)
-                append(" min")
+                append(" ")
+                append(context.getString(R.string.label_min))
             }
         }
 
         if (mHours != 0L) {
             mTime = buildString {
                 append(mHours)
-                append(" hr ")
+                append(" ")
+                append(context.getString(R.string.label_hr))
+                append(" ")
                 append(mTime)
             }
         }

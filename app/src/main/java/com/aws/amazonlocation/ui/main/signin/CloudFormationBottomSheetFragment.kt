@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
@@ -192,6 +193,13 @@ class CloudFormationBottomSheetFragment(
 
     private fun clickListener() {
         mBinding.apply {
+            if (BuildConfig.DEBUG) {
+                edtIdentityPoolId.setText(BuildConfig.IDENTITY_POOL_ID)
+                edtUserDomain.setText(BuildConfig.USER_DOMAIN)
+                edtUserPoolClientId.setText(BuildConfig.USER_POOL_CLIENT_ID)
+                edtUserPoolId.setText(BuildConfig.USER_POOL_ID)
+                edtWebSocketUrl.setText(BuildConfig.WEB_SOCKET_URL)
+            }
             edtIdentityPoolId.doOnTextChanged { _, _, _, _ ->
                 cloudFormationValidation()
             }
