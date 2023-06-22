@@ -354,6 +354,11 @@ class BottomSheetHelper {
     }
 
     fun expandMapStyleSheet() {
+        mBottomSheetMapStyle.state = BottomSheetBehavior.STATE_EXPANDED
+        hideSearchBottomSheet(true)
+    }
+
+    fun halfExpandMapStyleSheet() {
         mBottomSheetMapStyle.halfExpandedRatio = 0.5f
         mBottomSheetMapStyle.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         hideSearchBottomSheet(true)

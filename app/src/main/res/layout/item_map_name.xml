@@ -20,7 +20,7 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_checked"
-            android:layout_width="@dimen/dp_80"
+            android:layout_width="@dimen/dp_104"
             android:layout_height="@dimen/dp_80"
             android:scaleType="fitXY"
             android:layout_gravity="center"

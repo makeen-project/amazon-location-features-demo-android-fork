@@ -40,6 +40,7 @@ import com.aws.amazonlocation.domain.`interface`.SignInConnectInterface
 import com.aws.amazonlocation.domain.`interface`.SignInRequiredInterface
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
+import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.setting.AWSCloudInformationFragment
 import com.aws.amazonlocation.ui.main.setting.SettingFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
@@ -176,6 +177,8 @@ class MainActivity : BaseActivity() {
                             fragment.hideKeyBoard()
                         }
                     } else if (fragment is AWSCloudInformationFragment) {
+                        fragment.hideKeyBoard()
+                    } else if (fragment is MapStyleFragment) {
                         fragment.hideKeyBoard()
                     } else if (fragment is SettingFragment) {
                         fragment.hideKeyBoard()

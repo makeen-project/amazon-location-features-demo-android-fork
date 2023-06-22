@@ -48,6 +48,7 @@ import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.databinding.BottomSheetDirectionBinding
 import com.aws.amazonlocation.databinding.BottomSheetDirectionSearchBinding
+import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.databinding.FragmentExploreBinding
 import com.aws.amazonlocation.domain.`interface`.*
 import com.aws.amazonlocation.ui.base.BaseFragment
@@ -86,13 +87,14 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
+import java.util.*
+import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
-import java.util.*
-import kotlin.math.roundToInt
+
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -106,6 +108,9 @@ class ExploreFragment :
     MapboxMap.OnScaleListener,
     MapStyleChangeListener {
 
+    private var mProviderAdapter: SortingAdapter? = null
+    private var mAttributeAdapter: SortingAdapter? = null
+    private var mTypeAdapter: SortingAdapter? = null
     private var isDataSearchForDestination: Boolean = false
     private lateinit var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment
     private var isCalculateDriveApiError: Boolean = false
@@ -201,6 +206,8 @@ class ExploreFragment :
                 mBottomSheetHelper.expandDirectionSearchSheet(this@ExploreFragment)
             } else if (it.geofenceBottomSheetVisibility()) {
                 mBaseActivity?.mGeofenceUtils?.expandAddGeofenceBottomSheet()
+            } else if (mBottomSheetHelper.isMapStyleExpandedOrHalfExpand()) {
+                mBottomSheetHelper.expandMapStyleSheet()
             } else {
                 if (mBottomSheetHelper.isSearchSheetOpen && !mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
                     mBottomSheetHelper.expandSearchBottomSheet()
@@ -221,6 +228,12 @@ class ExploreFragment :
                     bottomSheetDirectionSearch.apply {
                         edtSearchDest.clearFocus()
                         edtSearchDirection.clearFocus()
+                    }
+                }
+            } else if (mBottomSheetHelper.isMapStyleExpandedOrHalfExpand()) {
+                mBinding.apply {
+                    bottomSheetMapStyle.apply {
+                        etSearchMap.clearFocus()
                     }
                 }
             } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
@@ -602,8 +615,8 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setMapStyleAdapter() {
-        mBinding.bottomSheetMapStyle.rvMapStyle.apply {
-            mViewModel.setMapListData(context, isGrabMapEnable(mPreferenceManager))
+        mBinding.bottomSheetMapStyle.apply {
+            mViewModel.setMapListData(rvMapStyle.context, isGrabMapEnable(mPreferenceManager))
             val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 ?: getString(R.string.map_esri)
             val mapStyleName =
@@ -621,35 +634,121 @@ class ExploreFragment :
                     it.isSelected = false
                 }
             }
-            this.layoutManager = LinearLayoutManager(requireContext())
+            layoutNoDataFound.tvNoMatchingFound.text = getString(R.string.label_style_search_error_title)
+            layoutNoDataFound.tvMakeSureSpelledCorrect.text = getString(R.string.label_style_search_error_des)
+            setMapTileSelection(mapName)
+            rvMapStyle.layoutManager = LinearLayoutManager(requireContext())
             mMapStyleAdapter =
                 MapStyleAdapter(
                     mViewModel.mStyleList,
                     object : MapStyleAdapter.MapInterface {
-                        override fun mapClick(position: Int) {
-                            if (position != -1) {
-                                if (mViewModel.mStyleList[position].isSelected) {
-                                    return
-                                }
-                                mapStyleChange(position, 0, true)
-                            }
-                        }
-
                         override fun mapStyleClick(position: Int, innerPosition: Int) {
                             if (checkInternetConnection()) {
                                 if (position != -1 && innerPosition != -1) {
-                                    mViewModel.mStyleList[position].mapInnerData?.let {
-                                        if (it[innerPosition].isSelected) {
-                                            return
+                                    val selectedProvider =
+                                        mViewModel.mStyleList[position].styleNameDisplay
+                                    val selectedInnerData =
+                                        mViewModel.mStyleList[position].mapInnerData?.get(
+                                            innerPosition
+                                        )?.mapName
+                                    for (data in mViewModel.mStyleListForFilter) {
+                                        if (data.styleNameDisplay.equals(selectedProvider)) {
+                                            data.mapInnerData.let {
+                                                if (it != null) {
+                                                    for (innerData in it) {
+                                                        if (innerData.mapName.equals(
+                                                                selectedInnerData
+                                                            )
+                                                        ) {
+                                                            if (innerData.isSelected) return
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
-                                    mapStyleChange(position, innerPosition, false)
+                                    selectedProvider?.let {
+                                        selectedInnerData?.let { it1 ->
+                                            mapStyleChange(
+                                                false,
+                                                it,
+                                                it1
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 )
-            this.adapter = mMapStyleAdapter
+            rvMapStyle.adapter = mMapStyleAdapter
+
+            rvProvider.layoutManager = LinearLayoutManager(requireContext())
+            mProviderAdapter =
+                SortingAdapter(
+                    mViewModel.providerOptions,
+                    object : SortingAdapter.MapInterface {
+                        override fun mapClick(position: Int, isSelected: Boolean) {
+                            if (position != -1) {
+                                mViewModel.providerOptions[position].isSelected = isSelected
+                            }
+                        }
+                    }
+                )
+            rvProvider.adapter = mProviderAdapter
+
+            rvAttribute.layoutManager = LinearLayoutManager(requireContext())
+            mAttributeAdapter =
+                SortingAdapter(
+                    mViewModel.attributeOptions,
+                    object : SortingAdapter.MapInterface {
+                        override fun mapClick(position: Int, isSelected: Boolean) {
+                            if (position != -1) {
+                                mViewModel.attributeOptions[position].isSelected = isSelected
+                            }
+                        }
+                    }
+                )
+            rvAttribute.adapter = mAttributeAdapter
+
+            rvType.layoutManager = LinearLayoutManager(requireContext())
+            mTypeAdapter =
+                SortingAdapter(
+                    mViewModel.typeOptions,
+                    object : SortingAdapter.MapInterface {
+                        override fun mapClick(position: Int, isSelected: Boolean) {
+                            if (position != -1) {
+                                mViewModel.typeOptions[position].isSelected = isSelected
+                            }
+                        }
+                    }
+                )
+            rvType.adapter = mTypeAdapter
+        }
+    }
+
+    private fun BottomSheetMapStyleBinding.setMapTileSelection(
+        mapName: String
+    ) {
+        when (mapName) {
+            resources.getString(R.string.esri) -> {
+                cardEsri.strokeColor =
+                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+            }
+            resources.getString(R.string.here) -> {
+                cardHere.strokeColor =
+                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+            }
+            resources.getString(R.string.grab) -> {
+                cardGrabMap.strokeColor =
+                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+            }
         }
     }
 
@@ -1944,22 +2043,43 @@ class ExploreFragment :
                             MapStyleBottomSheetFragment(
                                 mViewModel,
                                 object : MapStyleAdapter.MapInterface {
-                                    override fun mapClick(position: Int) {
-                                        if (mViewModel.mStyleList[position].isSelected) {
-                                            return
-                                        }
-                                        mapStyleChange(position, 0, true)
-                                    }
-
                                     override fun mapStyleClick(position: Int, innerPosition: Int) {
                                         if (checkInternetConnection()) {
                                             if (position != -1 && innerPosition != -1) {
-                                                mViewModel.mStyleList[position].mapInnerData?.let {
-                                                    if (it[innerPosition].isSelected) {
-                                                        return
+                                                val selectedProvider =
+                                                    mViewModel.mStyleList[position].styleNameDisplay
+                                                val selectedInnerData =
+                                                    mViewModel.mStyleList[position].mapInnerData?.get(
+                                                        innerPosition
+                                                    )?.mapName
+                                                for (data in mViewModel.mStyleListForFilter) {
+                                                    if (data.styleNameDisplay.equals(
+                                                            selectedProvider
+                                                        )
+                                                    ) {
+                                                        data.mapInnerData.let {
+                                                            if (it != null) {
+                                                                for (innerData in it) {
+                                                                    if (innerData.mapName.equals(
+                                                                            selectedInnerData
+                                                                        )
+                                                                    ) {
+                                                                        if (innerData.isSelected) return
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                                mapStyleChange(position, innerPosition, false)
+                                                selectedProvider?.let { it2 ->
+                                                    selectedInnerData?.let { it3 ->
+                                                        mapStyleChange(
+                                                            false,
+                                                            it2,
+                                                            it3
+                                                        )
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -1974,7 +2094,8 @@ class ExploreFragment :
                             }
                         }
                     } else {
-                        mBottomSheetHelper.expandMapStyleSheet()
+                        mBottomSheetHelper.halfExpandMapStyleSheet()
+                        mBaseActivity?.bottomNavigationVisibility(false)
                     }
                     when {
                         mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
@@ -2483,10 +2604,136 @@ class ExploreFragment :
                 clearDirectionBottomSheet()
             }
 
-            bottomSheetMapStyle.ivMapStyleClose.setOnClickListener {
-                mBottomSheetHelper.hideMapStyleSheet()
-            }
+            bottomSheetMapStyle.apply {
+                ivMapStyleClose.setOnClickListener {
+                    mapStyleShowList()
+                    mBottomSheetHelper.hideMapStyleSheet()
+                }
 
+                etSearchMap.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+                    mapStyleShowList()
+                    if (!text.isNullOrEmpty()) {
+                        tilSearch.isEndIconVisible = true
+                        val filterList = mViewModel.filterAndSortItems(
+                            requireContext(),
+                            text.toString(),
+                            null,
+                            null,
+                            null
+                        )
+                        if (filterList.isNotEmpty()) {
+                            mViewModel.mStyleList.clear()
+                            mViewModel.mStyleList.addAll(filterList)
+                            activity?.runOnUiThread {
+                                mMapStyleAdapter?.notifyDataSetChanged()
+                            }
+                            rvMapStyle.show()
+                            layoutNoDataFound.root.hide()
+                        } else {
+                            layoutNoDataFound.root.show()
+                            rvMapStyle.hide()
+                        }
+                    }
+                }.launchIn(lifecycleScope)
+                val params = cardSearchFilter.layoutParams
+                tilSearch.setEndIconOnClickListener {
+                    setDefaultMapStyleList()
+                    etSearchMap.setText("")
+                    tilSearch.clearFocus()
+                    etSearchMap.clearFocus()
+                    params?.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                    cardSearchFilter.layoutParams = params
+                    tilSearch.hide()
+                    viewLine.show()
+                    scrollMapStyle.show()
+                    rvMapStyle.show()
+                    layoutNoDataFound.root.hide()
+                    activity?.hideSoftKeyboard(etSearchMap)
+                }
+                tilSearch.isEndIconVisible = false
+                ivSearch.setOnClickListener {
+                    viewLine.hide()
+                    tilSearch.show()
+                    params?.width = ViewGroup.LayoutParams.MATCH_PARENT
+                    cardSearchFilter.layoutParams = params
+                    etSearchMap.clearFocus()
+                    scrollMapStyle.hide()
+                }
+
+                tvClearSelection.setOnClickListener {
+                    mViewModel.providerOptions.forEachIndexed { index, _ ->
+                        mViewModel.providerOptions[index].isSelected = false
+                    }
+                    mViewModel.attributeOptions.forEachIndexed { index, _ ->
+                        mViewModel.attributeOptions[index].isSelected = false
+                    }
+                    mViewModel.typeOptions.forEachIndexed { index, _ ->
+                        mViewModel.typeOptions[index].isSelected = false
+                    }
+                    mTypeAdapter?.notifyDataSetChanged()
+                    mAttributeAdapter?.notifyDataSetChanged()
+                    mProviderAdapter?.notifyDataSetChanged()
+                    imgFilterSelected.hide()
+                    imgFilter.setColorFilter(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.color_img_tint
+                        )
+                    )
+                    setDefaultMapStyleList()
+                    mapStyleShowList()
+                }
+                btnApplyFilter.setOnClickListener {
+                    val providerNames = arrayListOf<String>()
+                    val attributeNames = arrayListOf<String>()
+                    val typeNames = arrayListOf<String>()
+                    mViewModel.providerOptions.filter { it.isSelected }
+                        .forEach { data -> providerNames.add(data.name) }
+                    mViewModel.attributeOptions.filter { it.isSelected }
+                        .forEach { data -> attributeNames.add(data.name) }
+                    mViewModel.typeOptions.filter { it.isSelected }
+                        .forEach { data -> typeNames.add(data.name) }
+                    val filterList = mViewModel.filterAndSortItems(
+                        requireContext(),
+                        null,
+                        providerNames.ifEmpty { null },
+                        attributeNames.ifEmpty { null },
+                        typeNames.ifEmpty { null }
+                    )
+                    if (providerNames.isNotEmpty() || attributeNames.isNotEmpty() || typeNames.isNotEmpty()) {
+                        imgFilterSelected.show()
+                        imgFilter.setColorFilter(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_primary_green
+                            )
+                        )
+                    } else {
+                        imgFilterSelected.hide()
+                        imgFilter.setColorFilter(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_img_tint
+                            )
+                        )
+                    }
+                    if (filterList.isNotEmpty()) {
+                        mViewModel.mStyleList.clear()
+                        mViewModel.mStyleList.addAll(filterList)
+                        activity?.runOnUiThread {
+                            mMapStyleAdapter?.notifyDataSetChanged()
+                        }
+                        mapStyleShowList()
+                    }
+                }
+                imgFilter.setOnClickListener {
+                    if (nsvFilter.isVisible) {
+                        mapStyleShowList()
+                    } else {
+                        mapStyleShowSorting()
+                    }
+                }
+            }
             bottomSheetDirectionSearch.ivDirectionCloseDirectionSearch.setOnClickListener {
                 lifecycleScope.launch {
                     activity?.hideKeyboard()
@@ -2568,6 +2815,37 @@ class ExploreFragment :
                 }
             }
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun BottomSheetMapStyleBinding.setDefaultMapStyleList() {
+        mViewModel.mStyleList.clear()
+        mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+        activity?.runOnUiThread {
+            etSearchMap.setText("")
+            mMapStyleAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun BottomSheetMapStyleBinding.mapStyleShowSorting() {
+        showViews(
+            nsvFilter,
+            viewDivider,
+            tvClearSelection,
+            btnApplyFilter
+        )
+        rvMapStyle.hide()
+        mBottomSheetHelper.expandMapStyleSheet()
+    }
+
+    private fun BottomSheetMapStyleBinding.mapStyleShowList() {
+        hideViews(
+            nsvFilter,
+            viewDivider,
+            tvClearSelection,
+            btnApplyFilter
+        )
+        rvMapStyle.show()
     }
 
     fun setAttributionDataAndExpandSheet() {
@@ -4431,31 +4709,27 @@ class ExploreFragment :
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun mapStyleChange(position: Int, innerPosition: Int, isMapClick: Boolean) {
-        val isRestartNeeded: Boolean
+    fun mapStyleChange(
+        isMapClick: Boolean,
+        selectedProvider: String,
+        selectedInnerData: String
+    ) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
-        var oldSelectedPosition = 0
-        when (mapName) {
-            getString(R.string.esri) -> {
-                oldSelectedPosition = 0
+        val isRestartNeeded =
+            if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                selectedProvider == getString(R.string.grab)
+            } else {
+                selectedProvider != getString(R.string.grab)
             }
-            getString(R.string.here) -> {
-                oldSelectedPosition = 1
-            }
-            getString(R.string.grab) -> {
-                oldSelectedPosition = 2
-            }
-        }
-        isRestartNeeded = if (oldSelectedPosition == 0 || oldSelectedPosition == 1) {
-            position == 2
-        } else {
-            position != 2
-        }
         if (isRestartNeeded) {
-            if (position == 2) {
+            if (selectedProvider == getString(R.string.grab)) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
                     override fun onOkClick(dialog: DialogInterface) {
-                        changeMapStyle(isMapClick, position, innerPosition)
+                        changeMapStyle(
+                            isMapClick,
+                            selectedProvider,
+                            selectedInnerData
+                        )
                         lifecycleScope.launch {
                             if (!isRunningTest) {
                                 delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
@@ -4473,7 +4747,11 @@ class ExploreFragment :
                     }
                 })
             } else {
-                changeMapStyle(isMapClick, position, innerPosition)
+                changeMapStyle(
+                    isMapClick,
+                    selectedProvider,
+                    selectedInnerData
+                )
                 lifecycleScope.launch {
                     if (!isRunningTest) {
                         delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
@@ -4482,23 +4760,29 @@ class ExploreFragment :
                 }
             }
         } else {
-            changeMapStyle(isMapClick, position, innerPosition)
+            changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun changeMapStyle(
         isMapClick: Boolean,
-        position: Int,
-        innerPosition: Int
+        selectedProvider: String,
+        selectedInnerData: String
     ) {
         if (isMapClick) {
             repeat(mViewModel.mStyleList.size) {
                 mViewModel.mStyleList[it].isSelected = false
             }
-            changeStyle(position, innerPosition)
-            mViewModel.mStyleList[position].isSelected =
-                !mViewModel.mStyleList[position].isSelected
+            repeat(mViewModel.mStyleListForFilter.size) {
+                mViewModel.mStyleListForFilter[it].isSelected = false
+            }
+            changeStyle(selectedProvider, selectedInnerData)
+            for (data in mViewModel.mStyleListForFilter) {
+                if (data.styleNameDisplay.equals(selectedProvider)) {
+                    data.isSelected = !data.isSelected
+                }
+            }
             mBaseActivity?.isTablet?.let {
                 if (it) {
                     mapStyleBottomSheetFragment.notifyAdapter()
@@ -4507,132 +4791,158 @@ class ExploreFragment :
                 }
             }
         } else {
-            changeStyle(position, innerPosition)
+            changeStyle(selectedProvider, selectedInnerData)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun changeStyle(position: Int, innerPosition: Int) {
+    private fun changeStyle(
+        selectedProvider: String,
+        selectedInnerData: String
+    ) {
         clearAllMapData()
+        mBinding.bottomSheetMapStyle.apply {
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mapStyleBottomSheetFragment.refreshMapTile(selectedProvider)
+                } else {
+                    setMapTileSelection(selectedProvider)
+                }
+            }
+        }
         mViewModel.mStyleList.forEach {
             it.mapInnerData?.forEach { innerData ->
                 innerData.isSelected = false
             }
         }
-        mViewModel.mStyleList[position].mapInnerData?.let {
-            it[innerPosition].isSelected = true
-            if (position != 2) {
-                when (it[innerPosition].mapName) {
-                    getString(R.string.map_light) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            ESRI_LIGHT,
-                            VECTOR_ESRI_TOPOGRAPHIC
-                        )
-                    }
-                    getString(R.string.map_streets) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.ESRI_STREET_MAP,
-                            MapStyles.VECTOR_ESRI_STREETS
-                        )
-                    }
-                    getString(R.string.map_navigation) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.ESRI_NAVIGATION,
-                            MapStyles.VECTOR_ESRI_NAVIGATION
-                        )
-                    }
-                    getString(R.string.map_dark_gray) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.ESRI_DARK_GRAY_CANVAS,
-                            MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
-                        )
-                    }
-                    getString(R.string.map_light_gray) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.ESRI_LIGHT_GRAY_CANVAS,
-                            MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
-                        )
-                    }
-                    getString(R.string.map_imagery) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.ESRI_IMAGERY,
-                            MapStyles.RASTER_ESRI_IMAGERY
-                        )
-                    }
-                    resources.getString(R.string.map_contrast) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.HERE_CONTRAST,
-                            MapStyles.VECTOR_HERE_CONTRAST
-                        )
-                    }
-                    resources.getString(R.string.map_explore) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.HERE_EXPLORE,
-                            MapStyles.VECTOR_HERE_EXPLORE
-                        )
-                    }
-                    resources.getString(R.string.map_explore_truck) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.HERE_EXPLORE_TRUCK,
-                            MapStyles.VECTOR_HERE_EXPLORE_TRUCK
-                        )
-                    }
-                    resources.getString(R.string.map_hybrid) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.HERE_HYBRID,
-                            MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
-                        )
-                    }
-                    resources.getString(R.string.map_raster) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.HERE_IMAGERY,
-                            MapStyles.RASTER_HERE_EXPLORE_SATELLITE
-                        )
-                    }
-                }
-            } else {
-                when (it[innerPosition].mapName) {
-                    resources.getString(R.string.map_grab_light) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.GRAB_LIGHT,
-                            MapStyles.GRAB_LIGHT
-                        )
-                    }
-                    resources.getString(R.string.map_grab_dark) -> {
-                        mMapHelper.updateStyle(
-                            mBinding.mapView,
-                            MapNames.GRAB_DARK,
-                            MapStyles.GRAB_DARK
-                        )
-                    }
-                }
-            }
-            it[innerPosition].mapName?.let { it1 ->
-                mPreferenceManager.setValue(
-                    KEY_MAP_STYLE_NAME,
-                    it1
-                )
-            }
-            mViewModel.mStyleList[position].styleNameDisplay?.let { it1 ->
-                mPreferenceManager.setValue(
-                    KEY_MAP_NAME,
-                    it1
-                )
+        mViewModel.mStyleListForFilter.forEach {
+            it.mapInnerData?.forEach { innerData ->
+                innerData.isSelected = false
             }
         }
-
+        for (data in mViewModel.mStyleListForFilter) {
+            if (data.styleNameDisplay.equals(selectedProvider)) {
+                data.mapInnerData.let {
+                    if (it != null) {
+                        for (innerData in it) {
+                            if (innerData.mapName.equals(selectedInnerData)) {
+                                innerData.isSelected = true
+                                if (data.styleNameDisplay != getString(R.string.grab)) {
+                                    when (innerData.mapName) {
+                                        getString(R.string.map_light) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                ESRI_LIGHT,
+                                                VECTOR_ESRI_TOPOGRAPHIC
+                                            )
+                                        }
+                                        getString(R.string.map_streets) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.ESRI_STREET_MAP,
+                                                MapStyles.VECTOR_ESRI_STREETS
+                                            )
+                                        }
+                                        getString(R.string.map_navigation) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.ESRI_NAVIGATION,
+                                                MapStyles.VECTOR_ESRI_NAVIGATION
+                                            )
+                                        }
+                                        getString(R.string.map_dark_gray) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.ESRI_DARK_GRAY_CANVAS,
+                                                MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
+                                            )
+                                        }
+                                        getString(R.string.map_light_gray) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.ESRI_LIGHT_GRAY_CANVAS,
+                                                MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
+                                            )
+                                        }
+                                        getString(R.string.map_imagery) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.ESRI_IMAGERY,
+                                                MapStyles.RASTER_ESRI_IMAGERY
+                                            )
+                                        }
+                                        resources.getString(R.string.map_contrast) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.HERE_CONTRAST,
+                                                MapStyles.VECTOR_HERE_CONTRAST
+                                            )
+                                        }
+                                        resources.getString(R.string.map_explore) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.HERE_EXPLORE,
+                                                MapStyles.VECTOR_HERE_EXPLORE
+                                            )
+                                        }
+                                        resources.getString(R.string.map_explore_truck) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.HERE_EXPLORE_TRUCK,
+                                                MapStyles.VECTOR_HERE_EXPLORE_TRUCK
+                                            )
+                                        }
+                                        resources.getString(R.string.map_hybrid) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.HERE_HYBRID,
+                                                MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
+                                            )
+                                        }
+                                        resources.getString(R.string.map_raster) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.HERE_IMAGERY,
+                                                MapStyles.RASTER_HERE_EXPLORE_SATELLITE
+                                            )
+                                        }
+                                    }
+                                } else {
+                                    when (innerData.mapName) {
+                                        resources.getString(R.string.map_grab_light) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.GRAB_LIGHT,
+                                                MapStyles.GRAB_LIGHT
+                                            )
+                                        }
+                                        resources.getString(R.string.map_grab_dark) -> {
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.GRAB_DARK,
+                                                MapStyles.GRAB_DARK
+                                            )
+                                        }
+                                    }
+                                }
+                                innerData.mapName?.let { it1 ->
+                                    mPreferenceManager.setValue(
+                                        KEY_MAP_STYLE_NAME,
+                                        it1
+                                    )
+                                }
+                                data.styleNameDisplay?.let { it1 ->
+                                    mPreferenceManager.setValue(
+                                        KEY_MAP_NAME,
+                                        it1
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         mBaseActivity?.isTablet?.let {
             if (it) {
                 mapStyleBottomSheetFragment.notifyAdapter()
