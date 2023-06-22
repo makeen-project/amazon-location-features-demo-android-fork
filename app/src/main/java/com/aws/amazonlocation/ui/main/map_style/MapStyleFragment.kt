@@ -474,6 +474,7 @@ class MapStyleFragment : BaseFragment() {
                 cardSearchFilter.layoutParams = params
                 etSearchMap.clearFocus()
                 scrollMapStyle.hide()
+                tilSearch.isEndIconVisible = true
             }
 
             tvClearSelection.setOnClickListener {

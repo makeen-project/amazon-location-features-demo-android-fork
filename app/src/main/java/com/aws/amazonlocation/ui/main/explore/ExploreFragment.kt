@@ -2658,6 +2658,7 @@ class ExploreFragment :
                     cardSearchFilter.layoutParams = params
                     etSearchMap.clearFocus()
                     scrollMapStyle.hide()
+                    tilSearch.isEndIconVisible = true
                 }
 
                 tvClearSelection.setOnClickListener {
