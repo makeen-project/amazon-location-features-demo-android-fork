@@ -64,7 +64,7 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
             MapStyleInnerData(
                 context.getString(R.string.map_light_gray),
                 context.getString(R.string.map_esri),
-                listOf(ATTRIBUTE_DARK),
+                listOf(ATTRIBUTE_LIGHT),
                 listOf(TYPE_VECTOR),
                 false,
                 R.drawable.light_gray
