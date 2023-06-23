@@ -15,14 +15,13 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
 import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
-import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_EQUAL_TO_FIVE
 import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_ZERO
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
@@ -38,19 +37,7 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class TrackingDeleteTrackingHistoryTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
@@ -78,7 +65,6 @@ class TrackingDeleteTrackingHistoryTest : BaseTest() {
         val clEnableTracking =
             mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
         if (clEnableTracking.visibility == View.VISIBLE) {
-
             val btnEnableTracking =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
             mActivityRule.activity.runOnUiThread {

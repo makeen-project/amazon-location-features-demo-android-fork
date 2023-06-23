@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentSender
+import android.content.res.Configuration
 import android.location.Location
 import android.net.ConnectivityManager
 import android.net.Network
@@ -15,7 +16,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
 import android.util.TypedValue
-import android.view.* // ktlint-disable no-wildcard-imports
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -52,6 +53,8 @@ import com.aws.amazonlocation.domain.`interface`.*
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
+import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
+import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
@@ -59,11 +62,12 @@ import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
 import com.aws.amazonlocation.utils.MapNames.ESRI_LIGHT
 import com.aws.amazonlocation.utils.MapStyles.VECTOR_ESRI_TOPOGRAPHIC
+import com.aws.amazonlocation.utils.Units.convertToLowerUnit
 import com.aws.amazonlocation.utils.Units.getDeviceId
-import com.aws.amazonlocation.utils.Units.getMetrics
+import com.aws.amazonlocation.utils.Units.getMetricsNew
 import com.aws.amazonlocation.utils.Units.getTime
 import com.aws.amazonlocation.utils.Units.isGPSEnabled
-import com.aws.amazonlocation.utils.Units.kiloMeterToMeter
+import com.aws.amazonlocation.utils.Units.isMetric
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -78,6 +82,7 @@ import com.mapbox.mapboxsdk.Mapbox
 import com.mapbox.mapboxsdk.camera.CameraPosition
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
+import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
@@ -98,19 +103,27 @@ class ExploreFragment :
     SignOutInterface,
     MapboxMap.OnMapClickListener,
     MapHelper.IsMapLoadedInterface,
-    MapboxMap.OnScaleListener {
+    MapboxMap.OnScaleListener,
+    MapStyleChangeListener {
 
+    private var isDataSearchForDestination: Boolean = false
+    private lateinit var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
     private var isCalculateTruckApiError: Boolean = false
+    private var isCalculateBicycleApiError: Boolean = false
+    private var isCalculateMotorcycleApiError: Boolean = false
     private var isLocationUpdatedNeeded: Boolean = false
     private var isZooming: Boolean = false
     private var mLastClickTime: Long = 0
+    private var mIsSwapClicked: Boolean = false
     private var mIsDirectionDataSet: Boolean = false
+    private var mIsDirectionDataSetNew: Boolean = false
     private var mIsDirectionSheetHalfExpanded: Boolean = false
     private var mIsLocationAlreadyEnabled: Boolean = false
     private var mIsCurrentLocationClicked: Boolean = false
     private var mIsTrackingLocationClicked: Boolean = false
+    private var isLiveLocationClick: Boolean = false
     private lateinit var mBinding: FragmentExploreBinding
     private var mMapboxMap: MapboxMap? = null
     private var mAdapter: SearchPlacesAdapter? = null
@@ -132,12 +145,43 @@ class ExploreFragment :
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
+    private val bounds = LatLngBounds.Builder()
+        .include(LatLng(latNorth, lonWest))
+        .include(LatLng(latSouth, lonEast))
+        .build()
+
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) {
         if (it.resultCode == Activity.RESULT_OK) {
             checkAndEnableLocation()
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.bottomSheetSearch.clSearchSheet.layoutParams.width = width
+        mBinding.bottomSheetSearch.clSearchSheet.requestLayout()
+        mBinding.bottomSheetDirection.clPersistentBottomSheetDirection.layoutParams.width = width
+        mBinding.bottomSheetDirection.clPersistentBottomSheetDirection.requestLayout()
+        mBinding.bottomSheetDirectionSearch.clDirectionSearchSheet.layoutParams.width = width
+        mBinding.bottomSheetDirectionSearch.clDirectionSearchSheet.requestLayout()
+        mBinding.bottomSheetNavigation.clNavigationParent.layoutParams.width = width
+        mBinding.bottomSheetNavigation.clNavigationParent.requestLayout()
+        mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.layoutParams.width = width
+        mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.requestLayout()
+        mBinding.bottomSheetTracking.clPersistentBottomSheet.layoutParams.width = width
+        mBinding.bottomSheetTracking.clPersistentBottomSheet.requestLayout()
+        mBinding.bottomSheetGeofenceList.clGeofenceListMain.layoutParams.width = width
+        mBinding.bottomSheetGeofenceList.clGeofenceListMain.requestLayout()
+        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.layoutParams.width = width
+        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.requestLayout()
+        mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
+        mBinding.bottomSheetAttribution.clMain.requestLayout()
+        val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
+        mBinding.cardNavigationTimeDialog.layoutParams.width = widthTimeDialog
+        mBinding.cardNavigationTimeDialog.requestLayout()
     }
 
     override fun onCreateView(
@@ -148,53 +192,54 @@ class ExploreFragment :
         // initialize MapLibre
         Mapbox.getInstance(requireContext())
         mBinding = FragmentExploreBinding.inflate(inflater, container, false)
-        KeyBoardUtils.attachKeyboardListeners(
-            mBinding.root,
-            object : KeyBoardUtils.KeyBoardInterface {
-                override fun showKeyBoard() {
-                    mBaseActivity?.mGeofenceUtils?.let {
-                        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                            mBottomSheetHelper.expandDirectionSearchSheet(this@ExploreFragment)
-                        } else if (it.geofenceBottomSheetVisibility()) {
-                            mBaseActivity?.mGeofenceUtils?.expandAddGeofenceBottomSheet()
-                        } else {
-                            if (mBottomSheetHelper.isSearchSheetOpen && !mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
-                                mBottomSheetHelper.expandSearchBottomSheet()
-                            } else if (mBinding.bottomSheetSearch.edtSearchPlaces.hasFocus() && mBottomSheetHelper.isSearchBottomSheetHalfExpand()) {
-                                mBottomSheetHelper.expandSearchBottomSheet()
-                            } else {
-                            }
-                        }
-                    }
-                }
+        return mBinding.root
+    }
 
-                override fun hideKeyBoard() {
-                    mBaseActivity?.mGeofenceUtils?.let {
-                        if (it.isAddGeofenceBottomSheetVisible()) {
-                            mBaseActivity?.mGeofenceUtils?.collapseAddGeofenceBottomSheet()
-                        } else if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                            return
-                        } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
-                            mBinding.bottomSheetSearch.edtSearchPlaces.clearFocus()
-                            if (mPlaceList.isNotEmpty()) {
-                                mBottomSheetHelper.halfExpandBottomSheet()
-                            } else {
-                                mBottomSheetHelper.collapseSearchBottomSheet()
-                            }
-                        } else {
-                            if (mBottomSheetHelper.isSearchSheetOpen) {
-                                mBottomSheetHelper.isSearchSheetOpen = false
-                                mBottomSheetHelper.halfExpandBottomSheet()
-                            } else if (mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
-                                mBottomSheetHelper.hideSearchBottomSheet(false)
-                            } else {
-                            }
-                        }
-                    }
+    fun showKeyBoard() {
+        mBaseActivity?.mGeofenceUtils?.let {
+            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+                mBottomSheetHelper.expandDirectionSearchSheet(this@ExploreFragment)
+            } else if (it.geofenceBottomSheetVisibility()) {
+                mBaseActivity?.mGeofenceUtils?.expandAddGeofenceBottomSheet()
+            } else {
+                if (mBottomSheetHelper.isSearchSheetOpen && !mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
+                    mBottomSheetHelper.expandSearchBottomSheet()
+                } else if (mBinding.bottomSheetSearch.edtSearchPlaces.hasFocus() && mBottomSheetHelper.isSearchBottomSheetHalfExpand()) {
+                    mBottomSheetHelper.expandSearchBottomSheet()
+                } else {
                 }
             }
-        )
-        return mBinding.root
+        }
+    }
+
+    fun hideKeyBoard() {
+        mBaseActivity?.mGeofenceUtils?.let {
+            if (it.isAddGeofenceBottomSheetVisible()) {
+                mBaseActivity?.mGeofenceUtils?.collapseAddGeofenceBottomSheet()
+            } else if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+                mBinding.apply {
+                    bottomSheetDirectionSearch.apply {
+                        edtSearchDest.clearFocus()
+                        edtSearchDirection.clearFocus()
+                    }
+                }
+            } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
+                mBinding.bottomSheetSearch.edtSearchPlaces.clearFocus()
+                if (mPlaceList.isNotEmpty()) {
+                    mBottomSheetHelper.halfExpandBottomSheet()
+                } else {
+                    mBottomSheetHelper.collapseSearchBottomSheet()
+                }
+            } else {
+                if (mBottomSheetHelper.isSearchSheetOpen) {
+                    mBottomSheetHelper.isSearchSheetOpen = false
+                    mBottomSheetHelper.halfExpandBottomSheet()
+                } else if (mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
+                    mBottomSheetHelper.hideSearchBottomSheet(false)
+                } else {
+                }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -214,7 +259,13 @@ class ExploreFragment :
         mBottomSheetHelper.setNavigationBottomSheet(mBinding.bottomSheetNavigation)
         mBottomSheetHelper.setNavigationCompleteBottomSheet(mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete)
         mBottomSheetHelper.setDirectionBottomSheet(mBinding.bottomSheetDirection.clPersistentBottomSheetDirection)
-        mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
+            } else {
+                mBinding.bottomSheetMapStyle.clMapStyleBottomSheet.hide()
+            }
+        }
         mBottomSheetHelper.setAttributeBottomSheet(mBinding.bottomSheetAttribution)
         mBottomSheetHelper.setDirectionSearchBottomSheet(
             mBinding.bottomSheetDirectionSearch,
@@ -530,7 +581,7 @@ class ExploreFragment :
 
         override fun getCheckPermission() {
             mIsTrackingLocationClicked = true
-            checkLocationPermission()
+            checkLocationPermission(false)
         }
 
         override fun getDeleteTrackingData() {
@@ -543,7 +594,7 @@ class ExploreFragment :
 
     private fun setNavigationAdapter() {
         mBinding.bottomSheetNavigation.apply {
-            mNavigationAdapter = NavigationAdapter(mNavigationList)
+            mNavigationAdapter = NavigationAdapter(mNavigationList, mPreferenceManager)
             rvNavigationList.layoutManager = LinearLayoutManager(requireContext())
             rvNavigationList.adapter = mNavigationAdapter
         }
@@ -552,7 +603,7 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun setMapStyleAdapter() {
         mBinding.bottomSheetMapStyle.rvMapStyle.apply {
-            mViewModel.setMapListData(context)
+            mViewModel.setMapListData(context, isGrabMapEnable(mPreferenceManager))
             val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 ?: getString(R.string.map_esri)
             val mapStyleName =
@@ -576,27 +627,24 @@ class ExploreFragment :
                     mViewModel.mStyleList,
                     object : MapStyleAdapter.MapInterface {
                         override fun mapClick(position: Int) {
-                            if (!mViewModel.mStyleList[position].isSelected) {
-                                repeat(mViewModel.mStyleList.size) {
-                                    mViewModel.mStyleList[it].isSelected = false
+                            if (position != -1) {
+                                if (mViewModel.mStyleList[position].isSelected) {
+                                    return
                                 }
-                            } else {
-                                return
+                                mapStyleChange(position, 0, true)
                             }
-                            mapStyleChange(position, 0)
-                            mViewModel.mStyleList[position].isSelected =
-                                !mViewModel.mStyleList[position].isSelected
-                            mMapStyleAdapter?.notifyDataSetChanged()
                         }
 
                         override fun mapStyleClick(position: Int, innerPosition: Int) {
                             if (checkInternetConnection()) {
-                                mViewModel.mStyleList[position].mapInnerData?.let {
-                                    if (it[innerPosition].isSelected) {
-                                        return
+                                if (position != -1 && innerPosition != -1) {
+                                    mViewModel.mStyleList[position].mapInnerData?.let {
+                                        if (it[innerPosition].isSelected) {
+                                            return
+                                        }
                                     }
+                                    mapStyleChange(position, innerPosition, false)
                                 }
-                                mapStyleChange(position, innerPosition)
                             }
                         }
                     }
@@ -711,10 +759,26 @@ class ExploreFragment :
                         rvNavigationList.show()
                         mBinding.bottomSheetNavigation.apply {
                             tvNavigationDistance.text = it.distance?.let { it1 ->
-                                kiloMeterToMeter(
-                                    it1
+                                convertToLowerUnit(
+                                    it1,
+                                    isMetric(
+                                        mPreferenceManager.getValue(
+                                            KEY_UNIT_SYSTEM,
+                                            ""
+                                        )
+                                    )
                                 )
-                            }?.let { it2 -> getMetrics(it2) }
+                            }?.let { it2 ->
+                                getMetricsNew(
+                                    it2,
+                                    isMetric(
+                                        mPreferenceManager.getValue(
+                                            KEY_UNIT_SYSTEM,
+                                            ""
+                                        )
+                                    )
+                                )
+                            }
                             tvNavigationTime.text = it.duration
                         }
                         if (it.navigationList.isNotEmpty()) {
@@ -969,6 +1033,14 @@ class ExploreFragment :
                                     mBinding.bottomSheetDirectionSearch.clTruckLoader.hide()
                                     mBinding.bottomSheetDirectionSearch.clTruck.show()
                                 }
+                                TRAVEL_MODE_BICYCLE -> {
+                                    mBinding.bottomSheetDirectionSearch.clBicycleLoader.hide()
+                                    mBinding.bottomSheetDirectionSearch.clBicycle.show()
+                                }
+                                TRAVEL_MODE_MOTORCYCLE -> {
+                                    mBinding.bottomSheetDirectionSearch.clMotorcycleLoader.hide()
+                                    mBinding.bottomSheetDirectionSearch.clMotorcycle.show()
+                                }
                             }
                             mBinding.bottomSheetDirectionSearch.clMapOptionRoute.show()
                         }
@@ -979,27 +1051,34 @@ class ExploreFragment :
                             mBinding.bottomSheetDirection.apply {
                                 mViewModel.mCarData?.legs?.let { legs ->
                                     if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                        legs[0].distance?.let { distance ->
-                                            tvDirectionDistance.text =
-                                                getMetrics(kiloMeterToMeter(distance))
+                                        legs.firstOrNull()?.let { firstLeg ->
+                                            firstLeg.distance?.let { distance ->
+                                                tvDirectionDistance.text = mPreferenceManager.getValue(
+                                                    KEY_UNIT_SYSTEM,
+                                                    ""
+                                                ).let { unitSystem ->
+                                                    val isMetric = isMetric(unitSystem)
+                                                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                                                }
+                                            }
+                                            groupDistance.show()
+                                            tvDirectionDot.show()
+                                            tvDirectionTime.show()
+                                            tvDirectionTime.text = getTime(firstLeg.durationSeconds)
                                         }
-                                        groupDistance.show()
-                                        tvDirectionDot.show()
-                                        tvDirectionTime.show()
-                                        tvDirectionTime.text = getTime(legs[0].durationSeconds)
                                     }
                                     mBinding.bottomSheetDirectionSearch.apply {
                                         if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                                             mIsDirectionDataSet = true
                                             edtSearchDest.setText(tvDirectionAddress.text)
                                             lifecycleScope.launch {
-                                                delay(600)
+                                                delay(CLICK_DEBOUNCE_ENABLE)
                                                 mIsDirectionDataSet = false
                                             }
                                         } else {
                                             if (mTravelMode == TravelMode.Car.value) {
                                                 tvDriveSelected.show()
-                                                hideViews(tvTruckSelected, tvWalkSelected)
+                                                hideViews(tvTruckSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected)
                                                 drawPolyLineOnMap(
                                                     legs,
                                                     isLineUpdate = false,
@@ -1016,9 +1095,16 @@ class ExploreFragment :
                                             cardDriveGo,
                                             clDrive
                                         )
-                                        tvDriveDistance.text =
-                                            getMetrics(kiloMeterToMeter(legs[0].distance))
-                                        tvDriveMinute.text = getTime(legs[0].durationSeconds)
+                                        legs.firstOrNull()?.let { firstLeg ->
+                                            tvDriveDistance.text = mPreferenceManager.getValue(
+                                                KEY_UNIT_SYSTEM,
+                                                ""
+                                            ).let { unitSystem ->
+                                                val isMetric = isMetric(unitSystem)
+                                                getMetricsNew(convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
+                                            }
+                                            tvDriveMinute.text = getTime(firstLeg.durationSeconds)
+                                        }
                                     }
                                 }
                             }
@@ -1032,12 +1118,17 @@ class ExploreFragment :
                                         cardWalkGo,
                                         clWalk
                                     )
-                                    tvWalkDistance.text =
-                                        getMetrics(kiloMeterToMeter(walkingData[0].distance))
+                                    tvWalkDistance.text = mPreferenceManager.getValue(
+                                        KEY_UNIT_SYSTEM,
+                                        ""
+                                    ).let { unitSystem ->
+                                        val isMetric = isMetric(unitSystem)
+                                        getMetricsNew(convertToLowerUnit(walkingData[0].distance, isMetric), isMetric)
+                                    }
                                     tvWalkMinute.text = getTime(walkingData[0].durationSeconds)
                                     if (mTravelMode == TravelMode.Walking.value) {
                                         tvWalkSelected.show()
-                                        hideViews(tvTruckSelected, tvDriveSelected)
+                                        hideViews(tvTruckSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
                                         drawPolyLineOnMap(
                                             walkingData,
                                             isLineUpdate = false,
@@ -1059,20 +1150,85 @@ class ExploreFragment :
                                         cardTruckGo,
                                         clTruck
                                     )
-                                    setGOButtonState(
-                                        edtSearchDirection.text.toString(),
-                                        cardDriveGo,
-                                        clDrive
-                                    )
 
-                                    tvTruckDistance.text =
-                                        getMetrics(kiloMeterToMeter(truckData[0].distance))
+                                    tvTruckDistance.text = mPreferenceManager.getValue(
+                                        KEY_UNIT_SYSTEM,
+                                        ""
+                                    ).let { unitSystem ->
+                                        val isMetric = isMetric(unitSystem)
+                                        getMetricsNew(convertToLowerUnit(truckData[0].distance, isMetric), isMetric)
+                                    }
                                     tvTruckMinute.text = getTime(truckData[0].durationSeconds)
                                     if (mTravelMode == TravelMode.Truck.value) {
                                         tvTruckSelected.show()
-                                        hideViews(tvWalkSelected, tvDriveSelected)
+                                        hideViews(tvWalkSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
                                         drawPolyLineOnMap(
                                             truckData,
+                                            isLineUpdate = false,
+                                            isWalk = false,
+                                            isLocationIcon = false,
+                                            sourceLatLng = it.sourceLatLng,
+                                            destinationLatLng = it.destinationLatLng
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        TRAVEL_MODE_BICYCLE -> {
+                            mViewModel.mBicycleData = it.calculateRouteResult
+                            mBinding.bottomSheetDirectionSearch.apply {
+                                mViewModel.mBicycleData?.legs?.let { bicycleData ->
+                                    setGOButtonState(
+                                        edtSearchDirection.text.toString(),
+                                        cardBicycleGo,
+                                        clBicycle
+                                    )
+                                    tvBicycleDistance.text = mPreferenceManager.getValue(
+                                        KEY_UNIT_SYSTEM,
+                                        ""
+                                    ).let { unitSystem ->
+                                        val isMetric = isMetric(unitSystem)
+                                        getMetricsNew(convertToLowerUnit(bicycleData[0].distance, isMetric), isMetric)
+                                    }
+                                    tvBicycleMinute.text = getTime(bicycleData[0].durationSeconds)
+                                    if (mTravelMode == TRAVEL_MODE_BICYCLE) {
+                                        tvBicycleSelected.show()
+                                        hideViews(tvWalkSelected, tvDriveSelected, tvTruckSelected, tvMotorcycleSelected)
+                                        drawPolyLineOnMap(
+                                            bicycleData,
+                                            isLineUpdate = false,
+                                            isWalk = false,
+                                            isLocationIcon = false,
+                                            sourceLatLng = it.sourceLatLng,
+                                            destinationLatLng = it.destinationLatLng
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        TRAVEL_MODE_MOTORCYCLE -> {
+                            mViewModel.mMotorcycleData = it.calculateRouteResult
+                            mBinding.bottomSheetDirectionSearch.apply {
+                                mViewModel.mMotorcycleData?.legs?.let { motorcycleData ->
+                                    setGOButtonState(
+                                        edtSearchDirection.text.toString(),
+                                        cardMotorcycleGo,
+                                        clMotorcycle
+                                    )
+
+                                    tvMotorcycleDistance.text = mPreferenceManager.getValue(
+                                        KEY_UNIT_SYSTEM,
+                                        ""
+                                    ).let { unitSystem ->
+                                        val isMetric = isMetric(unitSystem)
+                                        getMetricsNew(convertToLowerUnit(motorcycleData[0].distance, isMetric), isMetric)
+                                    }
+                                    tvMotorcycleMinute.text = getTime(motorcycleData[0].durationSeconds)
+                                    if (mTravelMode == TRAVEL_MODE_MOTORCYCLE) {
+                                        tvMotorcycleSelected.show()
+                                        hideViews(tvWalkSelected, tvDriveSelected, tvTruckSelected, tvBicycleSelected)
+                                        drawPolyLineOnMap(
+                                            motorcycleData,
                                             isLineUpdate = false,
                                             isWalk = false,
                                             isLocationIcon = false,
@@ -1090,7 +1246,7 @@ class ExploreFragment :
                             bottomSheetDirection.apply {
                                 groupDistanceLoad.hide()
                                 groupDistance.show()
-                                tvDirectionTime.invisible()
+                                tvDirectionTime.hide()
                                 tvDirectionDot.invisible()
                                 tvDirectionTime.text = ""
                                 tvDirectionDistance.text = ""
@@ -1137,6 +1293,30 @@ class ExploreFragment :
                                         mBinding.bottomSheetDirectionSearch.clTruckLoader.hide()
                                         mBinding.bottomSheetDirectionSearch.clTruck.show()
                                     }
+                                    TRAVEL_MODE_BICYCLE -> {
+                                        cardBicycleGo.setCardBackgroundColor(
+                                            ContextCompat.getColor(
+                                                requireContext(),
+                                                R.color.btn_go_disable
+                                            )
+                                        )
+                                        mViewModel.mBicycleData = null
+                                        isCalculateBicycleApiError = true
+                                        mBinding.bottomSheetDirectionSearch.clBicycleLoader.hide()
+                                        mBinding.bottomSheetDirectionSearch.clBicycle.show()
+                                    }
+                                    TRAVEL_MODE_MOTORCYCLE -> {
+                                        cardMotorcycleGo.setCardBackgroundColor(
+                                            ContextCompat.getColor(
+                                                requireContext(),
+                                                R.color.btn_go_disable
+                                            )
+                                        )
+                                        mViewModel.mMotorcycleData = null
+                                        isCalculateMotorcycleApiError = true
+                                        mBinding.bottomSheetDirectionSearch.clMotorcycleLoader.hide()
+                                        mBinding.bottomSheetDirectionSearch.clMotorcycle.show()
+                                    }
                                 }
                             }
                             mBinding.bottomSheetDirectionSearch.clMapOptionRoute.show()
@@ -1164,6 +1344,14 @@ class ExploreFragment :
                             isWalk = false
                             mViewModel.mTruckData = it.calculateRouteResult
                         }
+                        TRAVEL_MODE_BICYCLE -> {
+                            isWalk = false
+                            mViewModel.mBicycleData = it.calculateRouteResult
+                        }
+                        TRAVEL_MODE_MOTORCYCLE -> {
+                            isWalk = false
+                            mViewModel.mMotorcycleData = it.calculateRouteResult
+                        }
                     }
 
                     activity?.runOnUiThread {
@@ -1183,12 +1371,11 @@ class ExploreFragment :
                                         it1
                                     )
                                 }
+                            val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
                             tvNavigationDistance.text =
                                 it.calculateRouteResult?.legs?.get(0)?.distance?.let { it1 ->
-                                    kiloMeterToMeter(
-                                        it1
-                                    )
-                                }?.let { it2 -> getMetrics(it2) }
+                                    convertToLowerUnit(it1, isMetric)
+                                }?.let { it2 -> getMetricsNew(it2, isMetric) }
                         }
                     }
                     CoroutineScope(Dispatchers.IO).launch {
@@ -1216,7 +1403,7 @@ class ExploreFragment :
                             mBinding.bottomSheetDirectionSearch.apply {
                                 mViewModel.mCarData?.legs?.let { legs ->
                                     tvDriveSelected.show()
-                                    hideViews(tvTruckSelected, tvWalkSelected)
+                                    hideViews(tvTruckSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected)
                                     drawPolyLineOnMap(
                                         legs,
                                         isLineUpdate = false,
@@ -1231,7 +1418,7 @@ class ExploreFragment :
                             mBinding.bottomSheetDirectionSearch.apply {
                                 mViewModel.mWalkingData?.legs?.let { walkingData ->
                                     tvWalkSelected.show()
-                                    hideViews(tvTruckSelected, tvDriveSelected)
+                                    hideViews(tvTruckSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
                                     drawPolyLineOnMap(
                                         walkingData,
                                         isLineUpdate = false,
@@ -1246,7 +1433,7 @@ class ExploreFragment :
                             mBinding.bottomSheetDirectionSearch.apply {
                                 mViewModel.mTruckData?.legs?.let { truckData ->
                                     tvTruckSelected.show()
-                                    hideViews(tvWalkSelected, tvDriveSelected)
+                                    hideViews(tvWalkSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
                                     drawPolyLineOnMap(
                                         truckData,
                                         isLineUpdate = false,
@@ -1267,7 +1454,7 @@ class ExploreFragment :
                 }.onError {
                     mBinding.bottomSheetDirection.apply {
                         groupDistance.invisible()
-                        tvDirectionTime.invisible()
+                        tvDirectionTime.hide()
                     }
                 }
             }
@@ -1391,14 +1578,17 @@ class ExploreFragment :
                         return@onSuccess
                     }
                     it.searchPlaceIndexForPositionResult?.let { searchPlaceIndexForPositionResult ->
-                        val label = searchPlaceIndexForPositionResult.results[0].place.label
-                        if (label != null) {
-                            if (label.contains(",")) {
-                                val index = label.indexOf(",")
-                                val result: String = index.let { it1 -> label.substring(0, it1) }
-                                mBaseActivity?.mGeofenceUtils?.setSearchText(result)
-                            } else {
-                                mBaseActivity?.mGeofenceUtils?.setSearchText(label)
+                        if (!searchPlaceIndexForPositionResult.results.isNullOrEmpty()) {
+                            val label = searchPlaceIndexForPositionResult.results?.get(0)?.place?.label
+                            if (label != null) {
+                                if (label.contains(",")) {
+                                    val index = label.indexOf(",")
+                                    val result: String =
+                                        index.let { it1 -> label.substring(0, it1) }
+                                    mBaseActivity?.mGeofenceUtils?.setSearchText(result)
+                                } else {
+                                    mBaseActivity?.mGeofenceUtils?.setSearchText(label)
+                                }
                             }
                         }
                     }
@@ -1412,25 +1602,50 @@ class ExploreFragment :
     private fun checkAllApiCallFailed() {
         mBinding.apply {
             bottomSheetDirectionSearch.apply {
-                if (isCalculateDriveApiError && isCalculateWalkApiError && isCalculateTruckApiError) {
-                    cardMapOption.hide()
-                    layoutCardError.groupCardErrorNoSearchFound.show()
-                    layoutCardError.root.show()
-                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
-                    if (mapName == getString(R.string.map_esri)) {
-                        layoutCardError.tvCardError1.text = getString(R.string.distance_is_greater_than_400_km)
-                        layoutCardError.tvCardError2.text = getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
-                        layoutCardError.tvCardError2.show()
+                if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                    if (isCalculateDriveApiError && isCalculateWalkApiError && isCalculateBicycleApiError && isCalculateMotorcycleApiError) {
+                        showAllApiFailed()
                     } else {
-                        layoutCardError.tvCardError1.text = getString(R.string.no_route_found)
-                        layoutCardError.tvCardError2.hide()
+                        hideAllApiCallFailed()
                     }
                 } else {
-                    cardMapOption.show()
-                    layoutCardError.groupCardErrorNoSearchFound.hide()
-                    layoutCardError.root.hide()
+                    if (isCalculateDriveApiError && isCalculateWalkApiError && isCalculateTruckApiError) {
+                        showAllApiFailed()
+                    } else {
+                        hideAllApiCallFailed()
+                    }
                 }
             }
+        }
+    }
+
+    private fun BottomSheetDirectionSearchBinding.hideAllApiCallFailed() {
+        cardMapOption.show()
+        layoutCardError.groupCardErrorNoSearchFound.hide()
+        layoutCardError.root.hide()
+    }
+
+    private fun BottomSheetDirectionSearchBinding.showAllApiFailed() {
+        cardMapOption.hide()
+        layoutCardError.groupCardErrorNoSearchFound.show()
+        layoutCardError.root.show()
+        val mapName =
+            mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        if (mapName == getString(R.string.map_esri)) {
+            val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+            if (isMetric) {
+                layoutCardError.tvCardError1.text =
+                    getString(R.string.distance_is_greater_than_400_km)
+            } else {
+                layoutCardError.tvCardError1.text =
+                    getString(R.string.distance_is_greater_than_248_mi)
+            }
+            layoutCardError.tvCardError2.text =
+                getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
+            layoutCardError.tvCardError2.show()
+        } else {
+            layoutCardError.tvCardError1.text = getString(R.string.no_route_found)
+            layoutCardError.tvCardError2.hide()
         }
     }
 
@@ -1457,6 +1672,12 @@ class ExploreFragment :
                     cardTruckGo -> {
                         tvTruckGo.text = getString(R.string.btn_go)
                     }
+                    cardBicycleGo -> {
+                        tvBicycleGo.text = getString(R.string.btn_go)
+                    }
+                    cardMotorcycleGo -> {
+                        tvMotorcycleGo.text = getString(R.string.btn_go)
+                    }
                 }
             }
         } else {
@@ -1470,6 +1691,12 @@ class ExploreFragment :
                     }
                     cardTruckGo -> {
                         tvTruckGo.text = getString(R.string.label_preview)
+                    }
+                    cardBicycleGo -> {
+                        tvBicycleGo.text = getString(R.string.label_preview)
+                    }
+                    cardMotorcycleGo -> {
+                        tvMotorcycleGo.text = getString(R.string.label_preview)
                     }
                 }
             }
@@ -1488,7 +1715,13 @@ class ExploreFragment :
         lifecycleScope.launch(Dispatchers.Main) {
             mBinding.apply {
                 if (!mRouteFinish) cardNavigationTimeDialog.show() else cardNavigationTimeDialog.hide()
-                tvDistance.text = getMetrics(kiloMeterToMeter(distance))
+                tvDistance.text = mPreferenceManager.getValue(
+                    KEY_UNIT_SYSTEM,
+                    ""
+                ).let { unitSystem ->
+                    val isMetric = isMetric(unitSystem)
+                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                }
                 tvNavigationName.text = region
                 hideViews(cardDirection, cardMap, cardGeofenceMap)
             }
@@ -1500,21 +1733,13 @@ class ExploreFragment :
         searchPlaceIndexText: SearchApiEnum
     ) {
         val mText = mBinding.bottomSheetSearch.edtSearchPlaces.text.toString()
-        if (!it.text.isNullOrEmpty() && it.text == mText) {
-            mPlaceList.clear()
-            mPlaceList.addAll(it.data)
-            if (mPlaceList.isNotEmpty()) {
-                activity?.hideKeyboard()
-                mBottomSheetHelper.halfExpandBottomSheet()
+        if (validateLatLng(mText) != null) {
+            val mLatLng = validateLatLng(mText)
+            if (it.text == (mLatLng?.latitude.toString() + "," + mLatLng?.longitude.toString())) {
+                setPlaceData(it, searchPlaceIndexText)
             }
-            mBaseActivity?.bottomNavigationVisibility(false)
-            mMapHelper.addMultipleMarker(
-                requireActivity(),
-                MarkerEnum.NONE,
-                it.data,
-                mMarkerClickInterface
-            )
-            showNoPlaceFoundUI(searchPlaceIndexText)
+        } else if (!it.text.isNullOrEmpty() && it.text == mText) {
+            setPlaceData(it, searchPlaceIndexText)
         }
         mBinding.apply {
             if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -1530,11 +1755,31 @@ class ExploreFragment :
         }
     }
 
+    private fun setPlaceData(
+        it: SearchSuggestionResponse,
+        searchPlaceIndexText: SearchApiEnum
+    ) {
+        mPlaceList.clear()
+        mPlaceList.addAll(it.data)
+        if (mPlaceList.isNotEmpty()) {
+            activity?.hideKeyboard()
+            mBottomSheetHelper.halfExpandBottomSheet()
+        }
+        mBaseActivity?.bottomNavigationVisibility(false)
+        mMapHelper.addMultipleMarker(
+            requireActivity(),
+            MarkerEnum.NONE,
+            it.data,
+            mMarkerClickInterface
+        )
+        showNoPlaceFoundUI(searchPlaceIndexText)
+    }
+
     private fun addPlaceDirectionDataInList(
         it: SearchSuggestionResponse,
         searchPlaceIndexText: SearchApiEnum
     ) {
-        val mText: String = if (mBinding.bottomSheetDirectionSearch.edtSearchDirection.hasFocus()) {
+        val mText: String = if (!isDataSearchForDestination) {
             mBinding.bottomSheetDirectionSearch.edtSearchDirection.text.toString().trim()
         } else {
             mBinding.bottomSheetDirectionSearch.edtSearchDest.text.toString().trim()
@@ -1635,7 +1880,8 @@ class ExploreFragment :
     private fun searchPlaces(searchText: String) {
         clearSearchList()
         mViewModel.searchPlaceSuggestion(
-            searchText
+            searchText,
+            isGrabMapSelected(mPreferenceManager, requireContext())
         )
     }
 
@@ -1647,7 +1893,11 @@ class ExploreFragment :
     // check permission granted or not
     private fun checkPermission() {
         if (activity?.checkLocationPermission() == true) {
-            checkGpsLocationProvider(true, isCurrentLocationClicked = false)
+            checkGpsLocationProvider(
+                true,
+                isCurrentLocationClicked = false,
+                false
+            )
         } else {
             permissionReqLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
@@ -1657,7 +1907,11 @@ class ExploreFragment :
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             when {
                 it -> {
-                    checkGpsLocationProvider(false, isCurrentLocationClicked = false)
+                    checkGpsLocationProvider(
+                        false,
+                        isCurrentLocationClicked = false,
+                        false
+                    )
                 }
                 ActivityCompat.shouldShowRequestPermissionRationale(
                     requireActivity(),
@@ -1680,22 +1934,60 @@ class ExploreFragment :
             }
 
             cardNavigation.setOnClickListener {
-                checkLocationPermission()
+                checkLocationPermission(true)
             }
 
             cardMap.setOnClickListener {
-                mBottomSheetHelper.expandMapStyleSheet()
-                when {
-                    mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mTrackingUtils?.collapseTracking()
+                mBaseActivity?.isTablet?.let { it1 ->
+                    if (it1) {
+                        mapStyleBottomSheetFragment =
+                            MapStyleBottomSheetFragment(
+                                mViewModel,
+                                object : MapStyleAdapter.MapInterface {
+                                    override fun mapClick(position: Int) {
+                                        if (mViewModel.mStyleList[position].isSelected) {
+                                            return
+                                        }
+                                        mapStyleChange(position, 0, true)
+                                    }
+
+                                    override fun mapStyleClick(position: Int, innerPosition: Int) {
+                                        if (checkInternetConnection()) {
+                                            if (position != -1 && innerPosition != -1) {
+                                                mViewModel.mStyleList[position].mapInnerData?.let {
+                                                    if (it[innerPosition].isSelected) {
+                                                        return
+                                                    }
+                                                }
+                                                mapStyleChange(position, innerPosition, false)
+                                            }
+                                        }
+                                    }
+                                }
+                            )
+                        activity?.supportFragmentManager.let {
+                            if (it != null) {
+                                mapStyleBottomSheetFragment.show(
+                                    it,
+                                    MapStyleBottomSheetFragment::class.java.name
+                                )
+                            }
+                        }
+                    } else {
+                        mBottomSheetHelper.expandMapStyleSheet()
                     }
-                    mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
+                    when {
+                        mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
+                            mBaseActivity?.mTrackingUtils?.collapseTracking()
+                        }
+                        mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
+                            mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
+                        }
                     }
                 }
             }
 
-            bottomSheetNavigationComplete.cardNavigationCompleteClose.setOnClickListener {
+            bottomSheetNavigationComplete.ivNavigationCompleteClose.setOnClickListener {
                 if (checkInternetConnection()) {
                     hideArrivedBottomSheet()
                 }
@@ -1710,9 +2002,7 @@ class ExploreFragment :
 
             bottomSheetNavigation.cardNavigationLocation.setOnClickListener {
                 if (checkInternetConnection()) {
-                    mMapHelper.getLiveLocation()?.let { mLatLng ->
-                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
-                    }
+                    checkLocationPermission(true)
                 }
             }
 
@@ -1724,6 +2014,11 @@ class ExploreFragment :
                 }
             }
 
+            bottomSheetSearch.apply {
+                tvSearchCancel?.setOnClickListener {
+                    mBottomSheetHelper.collapseSearchBottomSheet()
+                }
+            }
             bottomSheetSearch.edtSearchPlaces.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                 updateSearchUI(text.isNullOrEmpty())
                 if (mViewModel.mIsPlaceSuggestion) {
@@ -1745,7 +2040,8 @@ class ExploreFragment :
                         mTravelMode = TravelMode.Car.value
                         mViewModel.mCarData?.let {
                             tvDriveSelected.show()
-                            hideViews(tvTruckSelected, tvWalkSelected)
+                            showViews(cardRoutingOption)
+                            hideViews(tvTruckSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.legs,
@@ -1762,7 +2058,12 @@ class ExploreFragment :
                         mTravelMode = TravelMode.Walking.value
                         mViewModel.mWalkingData?.let {
                             tvWalkSelected.show()
-                            hideViews(tvDriveSelected, tvTruckSelected)
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
+                            hideViews(tvDriveSelected, tvTruckSelected, tvBicycleSelected, tvMotorcycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.legs,
@@ -1779,7 +2080,52 @@ class ExploreFragment :
                         mTravelMode = TravelMode.Truck.value
                         mViewModel.mTruckData?.let {
                             tvTruckSelected.show()
-                            hideViews(tvDriveSelected, tvWalkSelected)
+                            showViews(cardRoutingOption)
+                            hideViews(tvDriveSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected)
+                            adjustMapBound()
+                            drawPolyLineOnMapCardClick(
+                                it.legs,
+                                isLineUpdate = false,
+                                isWalk = false,
+                                isLocationIcon = false
+                            )
+                        }
+                    }
+                }
+
+                clBicycle.setOnClickListener {
+                    if (checkInternetConnection()) {
+                        mTravelMode = TRAVEL_MODE_BICYCLE
+                        mViewModel.mBicycleData?.let {
+                            tvBicycleSelected.show()
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
+                            hideViews(tvDriveSelected, tvWalkSelected, tvMotorcycleSelected)
+                            adjustMapBound()
+                            drawPolyLineOnMapCardClick(
+                                it.legs,
+                                isLineUpdate = false,
+                                isWalk = false,
+                                isLocationIcon = false
+                            )
+                        }
+                    }
+                }
+
+                clMotorcycle.setOnClickListener {
+                    if (checkInternetConnection()) {
+                        mTravelMode = TRAVEL_MODE_MOTORCYCLE
+                        mViewModel.mMotorcycleData?.let {
+                            tvMotorcycleSelected.show()
+                            if (mIsRouteOptionsOpened) {
+                                mIsRouteOptionsOpened = false
+                                changeRouteListUI()
+                            }
+                            cardRoutingOption.hide()
+                            hideViews(tvDriveSelected, tvWalkSelected, tvBicycleSelected)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.legs,
@@ -1797,7 +2143,7 @@ class ExploreFragment :
                             mTravelMode = TravelMode.Car.value
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -1813,7 +2159,7 @@ class ExploreFragment :
                             mTravelMode = TravelMode.Walking.value
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -1829,7 +2175,39 @@ class ExploreFragment :
                             mTravelMode = TravelMode.Truck.value
                             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                                 mRedirectionType = RedirectionType.ROUTE_OPTION.name
-                                checkLocationPermission()
+                                checkLocationPermission(false)
+                            } else {
+                                checkRouteData()
+                            }
+                        } else {
+                            checkRouteValidation()
+                        }
+                    }
+                }
+
+                cardBicycleGo.setOnClickListener {
+                    if (checkInternetConnection()) {
+                        if (mViewModel.mBicycleData?.legs != null) {
+                            mTravelMode = TRAVEL_MODE_BICYCLE
+                            if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
+                                mRedirectionType = RedirectionType.ROUTE_OPTION.name
+                                checkLocationPermission(false)
+                            } else {
+                                checkRouteData()
+                            }
+                        } else {
+                            checkRouteValidation()
+                        }
+                    }
+                }
+
+                cardMotorcycleGo.setOnClickListener {
+                    if (checkInternetConnection()) {
+                        if (mViewModel.mMotorcycleData?.legs != null) {
+                            mTravelMode = TRAVEL_MODE_MOTORCYCLE
+                            if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
+                                mRedirectionType = RedirectionType.ROUTE_OPTION.name
+                                checkLocationPermission(false)
                             } else {
                                 checkRouteData()
                             }
@@ -1841,14 +2219,14 @@ class ExploreFragment :
 
                 ivSwapLocation.setOnClickListener {
                     if (checkInternetConnection()) {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) {
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < CLICK_DEBOUNCE_ENABLE) {
                             return@setOnClickListener
                         }
+                        mIsSwapClicked = true
                         mLastClickTime = SystemClock.elapsedRealtime()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
-                            mIsDirectionDataSet = true
                             edtSearchDirection.setText(edtSearchDest.text.toString().trim())
                             edtSearchDest.setText(resources.getString(R.string.label_my_location))
                             clMyLocation.root.hide()
@@ -1865,7 +2243,6 @@ class ExploreFragment :
                         } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
-                            mIsDirectionDataSet = true
                             edtSearchDest.setText(edtSearchDirection.text.toString().trim())
                             edtSearchDirection.setText(resources.getString(R.string.label_my_location))
                             clMyLocation.root.hide()
@@ -1882,7 +2259,6 @@ class ExploreFragment :
                         } else {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
-                            mIsDirectionDataSet = true
                             val searchDest = edtSearchDest.text.toString().trim()
                             edtSearchDest.setText(edtSearchDirection.text.toString().trim())
                             edtSearchDirection.setText(searchDest)
@@ -1897,15 +2273,11 @@ class ExploreFragment :
                                 showOriginToDestinationRoute()
                             }
                         }
-
-                        if (edtSearchDirection.hasFocus()) {
-                            edtSearchDest.requestFocus()
-                            edtSearchDest.setSelection(edtSearchDest.text.toString().length)
-                        } else if (edtSearchDest.hasFocus()) {
-                            edtSearchDirection.requestFocus()
-                            edtSearchDirection.setSelection(edtSearchDirection.text.toString().length)
-                        }
                         activity?.hideKeyboard()
+                        lifecycleScope.launch {
+                            delay(CLICK_DEBOUNCE)
+                            mIsSwapClicked = false
+                        }
                     }
                 }
                 switchAvoidTools.setOnCheckedChangeListener { _, isChecked ->
@@ -1941,41 +2313,48 @@ class ExploreFragment :
                         } else if (!edtSearchDirection.text.isNullOrEmpty() && !edtSearchDest.text.isNullOrEmpty()) showOriginToDestinationRoute()
                     }
                 }
-
+                edtSearchDest.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        isDataSearchForDestination = true
+                    }
+                }
+                edtSearchDirection.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        isDataSearchForDestination = false
+                    }
+                }
                 edtSearchDest.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
-                    if (!mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
-                        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                            cardRouteOptionHide()
-                            clearMapLineMarker()
-                            mViewModel.mSearchDirectionDestinationData = null
-                            searchPlaces(text.toString())
-                        }
+                    if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                        cardRouteOptionHide()
+                        clearMapLineMarker()
+                        mViewModel.mSearchDirectionDestinationData = null
+                        searchPlaces(text.toString())
                     }
                     checkMyLocationUI(text, edtSearchDirection)
                 }.launchIn(lifecycleScope)
 
                 edtSearchDirection.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
-                    if (!mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion) {
-                        if (!text.isNullOrEmpty() && text != getString(R.string.label_my_location) && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                            cardRouteOptionHide()
-                            clearMapLineMarker()
-                            mViewModel.mSearchDirectionOriginData = null
-                            searchPlaces(text.toString())
-                        }
+                    if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                        cardRouteOptionHide()
+                        clearMapLineMarker()
+                        mViewModel.mSearchDirectionOriginData = null
+                        searchPlaces(text.toString())
                     }
                     checkMyLocationUI(text, edtSearchDest)
-                    lifecycleScope.launch {
-                        delay(600)
-                        mIsDirectionDataSet = false
-                    }
                 }.launchIn(lifecycleScope)
 
                 clMyLocation.root.setOnClickListener {
                     if (checkInternetConnection()) {
                         mRedirectionType = RedirectionType.MY_LOCATION.name
-                        checkLocationPermission()
+                        checkLocationPermission(false)
                     }
                 }
                 cardRoutingOption.setOnClickListener {
@@ -1990,10 +2369,10 @@ class ExploreFragment :
                 bottomSheetDirectionSearch.ivAmazonInfoDirectionSearchSheet.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetDirection.ivAmazonInfoDirection.setOnClickListener {
+                bottomSheetDirection.ivAmazonInfoDirection?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetMapStyle.ivAmazonInfoMapStyle.setOnClickListener {
+                bottomSheetMapStyle.ivAmazonInfoMapStyle?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
                 bottomSheetNavigation.ivAmazonInfoNavigation.setOnClickListener {
@@ -2002,13 +2381,13 @@ class ExploreFragment :
                 bottomSheetNavigationComplete.ivAmazonInfoNavigationComplete.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetGeofenceList.ivAmazonInfoGeofenceList.setOnClickListener {
+                bottomSheetGeofenceList.ivAmazonInfoGeofenceList?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetAddGeofence.ivAmazonInfoAddGeofence.setOnClickListener {
+                bottomSheetAddGeofence.ivAmazonInfoAddGeofence?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetTracking.ivAmazonInfoTrackingSheet.setOnClickListener {
+                bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
                 mBinding.bottomSheetAttribution.apply {
@@ -2100,19 +2479,23 @@ class ExploreFragment :
                 }
             }
 
-            bottomSheetDirection.cardDirectionCloseDirection.setOnClickListener {
+            bottomSheetDirection.ivDirectionCloseDirection.setOnClickListener {
                 clearDirectionBottomSheet()
             }
 
-            bottomSheetMapStyle.cardMapStyleClose.setOnClickListener {
+            bottomSheetMapStyle.ivMapStyleClose.setOnClickListener {
                 mBottomSheetHelper.hideMapStyleSheet()
             }
 
-            bottomSheetDirectionSearch.cardDirectionCloseDirectionSearch.setOnClickListener {
-                mBinding.bottomSheetSearch.clSearchLoaderSearchSheet.root.hide()
-                mMapHelper.addLiveLocationMarker(false)
-                mBottomSheetHelper.hideDirectionSearchBottomSheet(this@ExploreFragment)
-                hideDirectionBottomSheet()
+            bottomSheetDirectionSearch.ivDirectionCloseDirectionSearch.setOnClickListener {
+                lifecycleScope.launch {
+                    activity?.hideKeyboard()
+                    delay(DELAY_300)
+                    mBinding.bottomSheetSearch.clSearchLoaderSearchSheet.root.hide()
+                    mMapHelper.addLiveLocationMarker(false)
+                    mBottomSheetHelper.hideDirectionSearchBottomSheet(this@ExploreFragment)
+                    hideDirectionBottomSheet()
+                }
             }
 
             mBinding.bottomSheetDirection.apply {
@@ -2120,10 +2503,14 @@ class ExploreFragment :
                     if (checkInternetConnection()) {
                         if (activity?.checkLocationPermission() == true) {
                             if (isGPSEnabled(requireContext())) {
-                                if (mViewModel.mCarData?.legs != null) {
-                                    routeOption()
-                                } else {
+                                if (mMapHelper.isGrabSelectedAndOutsideBound) {
                                     openDirectionWithError()
+                                } else {
+                                    if (mViewModel.mCarData?.legs != null) {
+                                        routeOption()
+                                    } else {
+                                        openDirectionWithError()
+                                    }
                                 }
                             } else {
                                 mViewModel.mCarData = null
@@ -2139,6 +2526,8 @@ class ExploreFragment :
                     if (tvDirectionError2.isVisible) {
                         if (tvDirectionError2.text.equals(getString(R.string.label_location_permission_denied))) {
                             activity?.locationPermissionDialog()
+                        } else if (tvDirectionError2.text.equals(getString(R.string.label_current_location_disabled))) {
+                            showError(getString(R.string.label_grab_limitation))
                         }
                     }
                 }
@@ -2158,7 +2547,8 @@ class ExploreFragment :
                             if (dataToSearch.isNotEmpty()) {
                                 mGeofenceViewModel.geofenceSearchPlaceSuggestion(
                                     dataToSearch,
-                                    mViewModel.mLatLng
+                                    mViewModel.mLatLng,
+                                    isGrabMapSelected(mPreferenceManager, requireContext())
                                 )
                             }
                         }
@@ -2180,7 +2570,7 @@ class ExploreFragment :
         }
     }
 
-    private fun setAttributionDataAndExpandSheet() {
+    fun setAttributionDataAndExpandSheet() {
         setAttributionData()
         mBottomSheetHelper.expandAttributeSheet()
     }
@@ -2201,16 +2591,19 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun openDirectionWithError() {
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         mBinding.bottomSheetDirectionSearch.apply {
             clearDirectionData()
-            switchAvoidTools.isChecked = false
-            switchAvoidFerries.isChecked = false
+            switchAvoidTools.isChecked = mIsAvoidTolls
+            switchAvoidFerries.isChecked = mIsAvoidFerries
             tvDriveGo.text = getString(R.string.btn_go)
-            edtSearchDest.setText(mBinding.bottomSheetDirection.tvDirectionAddress.text.trim())
-            edtSearchDirection.requestFocus()
             mIsDirectionDataSet = true
+            if (mViewModel.mCarData?.legs == null) {
+                edtSearchDest.setText(mBinding.bottomSheetDirection.tvDirectionAddress.text.trim())
+            }
             lifecycleScope.launch {
-                delay(600)
+                delay(CLICK_DEBOUNCE_ENABLE)
                 mIsDirectionDataSet = false
             }
             hideViews(
@@ -2327,14 +2720,25 @@ class ExploreFragment :
                             mBinding.bottomSheetDirection.ivInfo
                         )
                         if (mapName == getString(R.string.map_esri)) {
-                            if ((distance / 1000) < 400) {
+                            val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+                            val canEsriShowRoute = if (isMetric) {
+                                (distance / 1000) < 400
+                            } else {
+                                (distance / 5280) < 248.5
+                            }
+                            if (canEsriShowRoute) {
                                 mBinding.bottomSheetDirection.tvDirectionError.text =
                                     getString(R.string.error_route)
                             } else {
                                 mBinding.bottomSheetDirection.tvDirectionDistance.text =
-                                    getMetrics(distance)
-                                mBinding.bottomSheetDirection.tvDirectionError.text =
-                                    getString(R.string.error_switch_to_here)
+                                    getMetricsNew(distance, isMetric)
+                                if (isMetric) {
+                                    mBinding.bottomSheetDirection.tvDirectionError.text =
+                                        getString(R.string.error_switch_to_here)
+                                } else {
+                                    mBinding.bottomSheetDirection.tvDirectionError.text =
+                                        getString(R.string.error_switch_to_here_miles)
+                                }
                             }
                         } else {
                             mBinding.bottomSheetDirection.tvDirectionError.text =
@@ -2388,7 +2792,12 @@ class ExploreFragment :
                     if (distance < 400) {
                         showError(getString(R.string.no_route_found))
                     } else {
-                        showError(getString(R.string.error_distance_400))
+                        val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+                        if (isMetric) {
+                            showError(getString(R.string.error_distance_400))
+                        } else {
+                            showError(getString(R.string.error_distance_248_miles))
+                        }
                     }
                 } else {
                     showError(getString(R.string.no_route_found))
@@ -2427,6 +2836,8 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun FragmentExploreBinding.openDirectionBottomSheet() {
         notifyAdapters()
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         cardDirection.hide()
         bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root.hide()
         bottomSheetSearch.edtSearchPlaces.setText("")
@@ -2438,20 +2849,31 @@ class ExploreFragment :
             mIsDirectionDataSet = true
             edtSearchDest.setText("")
             lifecycleScope.launch {
-                delay(600)
+                delay(CLICK_DEBOUNCE_ENABLE)
                 mIsDirectionDataSet = false
             }
             hideViews(
                 cardListRoutesOption,
-                cardListRoutesOption,
                 cardRoutingOption,
                 cardMapOption
             )
-            clMyLocation.root.show()
+            if (mMapHelper.isGrabSelectedAndOutsideBound) {
+                clMyLocation.root.hide()
+            } else {
+                if (activity?.checkLocationPermission() == true) {
+                    if (isGPSEnabled(requireContext())) {
+                        edtSearchDirection.setText(getString(R.string.label_my_location))
+                        clMyLocation.root.hide()
+                    } else {
+                        clMyLocation.root.show()
+                    }
+                } else {
+                    clMyLocation.root.show()
+                }
+            }
             switchAvoidTools.isChecked = mIsAvoidTolls
             switchAvoidFerries.isChecked = mIsAvoidFerries
             mPlaceList.clear()
-            edtSearchDirection.requestFocus()
             mAdapterDirection?.notifyDataSetChanged()
             mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
         }
@@ -2461,7 +2883,10 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun routeOption() {
+        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         if (mViewModel.mCarData?.legs != null) {
+            mIsDirectionDataSetNew = true
             mViewModel.mCarData?.legs?.let { legs ->
                 adjustMapBound()
                 drawPolyLineOnMap(
@@ -2476,25 +2901,55 @@ class ExploreFragment :
                     switchAvoidTools.isChecked = mIsAvoidTolls
                     switchAvoidFerries.isChecked = mIsAvoidFerries
                     edtSearchDirection.setText(getString(R.string.label_my_location))
-                    mIsDirectionDataSet = true
-                    showViews(
-                        cardRoutingOption,
-                        cardMapOption,
-                        clTruckLoader,
-                        clWalkLoader,
-                        clDrive
-                    )
-                    hideViews(
-                        rvSearchPlacesSuggestionDirection,
-                        rvSearchPlacesDirection,
-                        clMyLocation.root,
-                        clSearchLoaderDirectionSearch.root,
-                        clDriveLoader
-                    )
+                    if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                        showViews(
+                            cardRoutingOption,
+                            cardMapOption,
+                            clDrive,
+                            clBicycleLoader,
+                            clMotorcycleLoader,
+                            clWalkLoader,
+                            viewDividerOptionBicycle,
+                            viewDividerOptionMotorcycle
+                        )
+                        hideViews(
+                            rvSearchPlacesSuggestionDirection,
+                            rvSearchPlacesDirection,
+                            clMyLocation.root,
+                            clSearchLoaderDirectionSearch.root,
+                            clDriveLoader,
+                            clTruckLoader,
+                            viewDividerOptionTruck
+                        )
+                        clTruck.hide()
+                        clWalk.invisible()
+                        clBicycle.invisible()
+                        clMotorcycle.invisible()
+                    } else {
+                        showViews(
+                            cardRoutingOption,
+                            cardMapOption,
+                            clTruckLoader,
+                            clWalkLoader,
+                            clDrive,
+                            viewDividerOptionTruck
+                        )
+                        hideViews(
+                            rvSearchPlacesSuggestionDirection,
+                            rvSearchPlacesDirection,
+                            clMyLocation.root,
+                            clSearchLoaderDirectionSearch.root,
+                            clDriveLoader,
+                            clBicycleLoader,
+                            clMotorcycleLoader,
+                            viewDividerOptionBicycle,
+                            viewDividerOptionMotorcycle
+                        )
+                        clTruck.invisible()
+                        clWalk.invisible()
+                    }
                     layoutCardError.groupCardErrorNoSearchFound.hide()
                     layoutCardError.root.hide()
-                    clTruck.invisible()
-                    clWalk.invisible()
                     mPlaceList.clear()
                     mAdapterDirection?.notifyDataSetChanged()
                     mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
@@ -2503,15 +2958,32 @@ class ExploreFragment :
                 val liveLocationLatLng = mMapHelper.getLiveLocation()
                 isCalculateWalkApiError = false
                 isCalculateTruckApiError = false
-                mViewModel.calculateDistance(
-                    latitude = liveLocationLatLng?.latitude,
-                    longitude = liveLocationLatLng?.longitude,
-                    latDestination = mViewModel.mSearchSuggestionData?.amazonLocationPlace?.coordinates?.latitude,
-                    lngDestination = mViewModel.mSearchSuggestionData?.amazonLocationPlace?.coordinates?.longitude,
-                    isAvoidFerries = mIsAvoidFerries,
-                    isAvoidTolls = mIsAvoidTolls,
-                    isWalkingAndTruckCall = true
-                )
+                isCalculateBicycleApiError = false
+                isCalculateMotorcycleApiError = false
+                if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                    mViewModel.calculateGrabDistance(
+                        latitude = liveLocationLatLng?.latitude,
+                        longitude = liveLocationLatLng?.longitude,
+                        latDestination = mViewModel.mSearchSuggestionData?.amazonLocationPlace?.coordinates?.latitude,
+                        lngDestination = mViewModel.mSearchSuggestionData?.amazonLocationPlace?.coordinates?.longitude,
+                        isAvoidFerries = mIsAvoidFerries,
+                        isAvoidTolls = mIsAvoidTolls
+                    )
+                } else {
+                    mViewModel.calculateDistance(
+                        latitude = liveLocationLatLng?.latitude,
+                        longitude = liveLocationLatLng?.longitude,
+                        latDestination = mViewModel.mSearchSuggestionData?.amazonLocationPlace?.coordinates?.latitude,
+                        lngDestination = mViewModel.mSearchSuggestionData?.amazonLocationPlace?.coordinates?.longitude,
+                        isAvoidFerries = mIsAvoidFerries,
+                        isAvoidTolls = mIsAvoidTolls,
+                        isWalkingAndTruckCall = true
+                    )
+                }
+            }
+            lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_ENABLE)
+                mIsDirectionDataSetNew = false
             }
         } else {
             showError(getString(R.string.no_route_found))
@@ -2523,9 +2995,15 @@ class ExploreFragment :
         mBottomSheetHelper.hideDirectionSheet()
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         mIsDirectionSheetHalfExpanded = true
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
+        }
     }
 
-    private fun checkLocationPermission() {
+    private fun checkLocationPermission(isCurrentLocationClicked: Boolean) {
         if (activity?.checkLocationPermission() != true) {
             if (mBaseActivity?.getLocationPermissionCount() == 2) {
                 mBaseActivity?.showLocationPermissionDialogBox()
@@ -2533,7 +3011,7 @@ class ExploreFragment :
                 checkPermission()
             }
         } else {
-            checkGpsLocationProvider(false, isCurrentLocationClicked = true)
+            checkGpsLocationProvider(false, isCurrentLocationClicked = true, isCurrentLocationClicked)
         }
     }
 
@@ -2543,6 +3021,8 @@ class ExploreFragment :
                 TravelMode.Car.value -> mViewModel.mCarData
                 TravelMode.Walking.value -> mViewModel.mWalkingData
                 TravelMode.Truck.value -> mViewModel.mTruckData
+                TRAVEL_MODE_BICYCLE -> mViewModel.mBicycleData
+                TRAVEL_MODE_MOTORCYCLE -> mViewModel.mMotorcycleData
                 else -> mViewModel.mCarData
             }
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
@@ -2588,14 +3068,13 @@ class ExploreFragment :
     private fun directionMyLocation() {
         mBinding.bottomSheetDirectionSearch.apply {
             mIsDirectionDataSet = true
-            if (edtSearchDirection.hasFocus()) {
+            if (!isDataSearchForDestination) {
                 edtSearchDirection.setText(getString(R.string.label_my_location))
                 edtSearchDirection.text?.length?.let { it1 -> edtSearchDirection.setSelection(it1) }
             } else {
                 edtSearchDest.setText(getString(R.string.label_my_location))
                 edtSearchDest.text?.length?.let { it1 -> edtSearchDest.setSelection(it1) }
             }
-            enableDirectionSearch()
             requireActivity().hideKeyboard()
             clMyLocation.root.hide()
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
@@ -2623,6 +3102,7 @@ class ExploreFragment :
                     hideViews(rvSearchPlacesDirection, rvSearchPlacesSuggestionDirection)
                 }
             }
+            enableDirectionSearch()
         }
     }
 
@@ -2639,7 +3119,15 @@ class ExploreFragment :
             mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
         } else {
             if (mBinding.bottomSheetDirectionSearch.cardMapOption.visibility == View.GONE) {
-                mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                if (!mBinding.cardNavigation.isEnabled) {
+                    mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
+                } else {
+                    if (mMapHelper.isGrabSelectedAndOutsideBound) {
+                        mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
+                    } else {
+                        mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                    }
+                }
             }
         }
     }
@@ -2714,6 +3202,12 @@ class ExploreFragment :
         mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
         showDirectionAndCurrentLocationIcon()
         adjustMapBound()
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardDirection.hide()
+                mBinding.cardNavigation.show()
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -2952,6 +3446,11 @@ class ExploreFragment :
         mViewModel.calculateNavigationLine(it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.bottomSheetNavigation.cardNavigationLocation.hide()
+            }
+        }
     }
 
     private fun BottomSheetDirectionSearchBinding.changeRouteListUI() {
@@ -3013,6 +3512,10 @@ class ExploreFragment :
         tvTruckDistance.text = ""
         tvWalkMinute.text = ""
         tvWalkDistance.text = ""
+        tvBicycleMinute.text = ""
+        tvBicycleDistance.text = ""
+        tvMotorcycleMinute.text = ""
+        tvMotorcycleDistance.text = ""
     }
 
     private fun clearMapLineMarker() {
@@ -3021,6 +3524,8 @@ class ExploreFragment :
     }
 
     fun hideDirectionBottomSheet() {
+        mIsDirectionDataSet = true
+        isDataSearchForDestination = false
         mBinding.bottomSheetDirectionSearch.edtSearchDirection.setText("")
         mBinding.bottomSheetDirectionSearch.edtSearchDest.setText("")
         clearDirectionBottomSheet()
@@ -3030,6 +3535,10 @@ class ExploreFragment :
             routeOptionClose()
         }
         activity?.hideKeyboard()
+        lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE_ENABLE)
+            mIsDirectionDataSet = false
+        }
     }
 
     fun showDirectionAndCurrentLocationIcon() {
@@ -3038,6 +3547,13 @@ class ExploreFragment :
                 it.cardDirection,
                 it.cardNavigation
             )
+        }
+    }
+
+    fun showCurrentLocationIcon() {
+        mBinding.let {
+            it.cardDirection.hide()
+            it.cardNavigation.show()
         }
     }
 
@@ -3059,7 +3575,10 @@ class ExploreFragment :
             mTravelMode = TravelMode.Car.value
             mBinding.bottomSheetDirectionSearch.apply {
                 tvDriveSelected.show()
-                hideViews(tvTruckSelected, tvWalkSelected, layoutCardError.root)
+                hideViews(tvTruckSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected, layoutCardError.root)
+            }
+            mBinding.bottomSheetDirection.apply {
+                tvDirectionError.invisible()
             }
             showViews(
                 mBinding.cardDirection,
@@ -3132,6 +3651,7 @@ class ExploreFragment :
             mAdapterDirection =
                 SearchPlacesAdapter(
                     mPlaceList,
+                    mPreferenceManager,
                     object : SearchPlacesAdapter.SearchPlaceInterface {
                         override fun placeClick(position: Int) {
                             if (checkInternetConnection()) {
@@ -3155,17 +3675,22 @@ class ExploreFragment :
             rvSearchPlacesSuggestionDirection.layoutManager = LinearLayoutManager(requireContext())
             mSearchPlacesDirectionSuggestionAdapter = SearchPlacesSuggestionAdapter(
                 mPlaceList,
+                mPreferenceManager,
                 object : SearchPlacesSuggestionAdapter.SearchPlaceSuggestionInterface {
                     override fun suggestedPlaceClick(position: Int) {
                         if (checkInternetConnection()) {
                             mViewModel.mIsPlaceSuggestion = false
                             mIsDirectionDataSet = true
-                            if (edtSearchDirection.hasFocus()) {
+                            if (!isDataSearchForDestination) {
                                 edtSearchDirection.setText(mPlaceList[position].text)
                                 edtSearchDirection.text?.length?.let { edtSearchDirection.setSelection(it) }
                             } else {
                                 edtSearchDest.setText(mPlaceList[position].text)
                                 edtSearchDest.text?.length?.let { edtSearchDest.setSelection(it) }
+                            }
+                            lifecycleScope.launch {
+                                delay(CLICK_DEBOUNCE_ENABLE)
+                                mIsDirectionDataSet = false
                             }
                             if (mPlaceList[position].placeId.isNullOrEmpty()) {
                                 mPlaceList[position].text?.let {
@@ -3186,10 +3711,11 @@ class ExploreFragment :
     }
 
     private fun BottomSheetDirectionSearchBinding.setPlaceData(position: Int) {
+        mIsDirectionDataSet = true
         activity?.hideKeyboard()
         changeRouteListUI()
         mPlaceList[position].let {
-            if (edtSearchDirection.hasFocus()) {
+            if (!isDataSearchForDestination) {
                 edtSearchDirection.setText(it.text)
                 mViewModel.mSearchDirectionOriginData = it
                 mViewModel.mSearchDirectionOriginData?.isDestination = false
@@ -3203,18 +3729,24 @@ class ExploreFragment :
             clMyLocation.root.hide()
             enableDirectionSearch()
             if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
-                showCurrentLocationDestinationRoute(it)
+                if (mViewModel.mSearchDirectionDestinationData != null) {
+                    showCurrentLocationDestinationRoute(it)
+                }
             } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
-                showCurrentLocationOriginRoute(it)
+                if (mViewModel.mSearchDirectionOriginData != null) {
+                    showCurrentLocationOriginRoute(it)
+                }
             } else if (!edtSearchDirection.text.isNullOrEmpty() && !edtSearchDest.text.isNullOrEmpty()) {
-                showOriginToDestinationRoute()
+                if (mViewModel.mSearchDirectionOriginData != null && mViewModel.mSearchDirectionDestinationData != null) {
+                    showOriginToDestinationRoute()
+                }
             }
         }
     }
 
     private fun enableDirectionSearch() {
         lifecycleScope.launch {
-            delay(600)
+            delay(CLICK_DEBOUNCE_ENABLE)
             mIsDirectionDataSet = false
             mViewModel.mIsPlaceSuggestion = true
         }
@@ -3232,15 +3764,26 @@ class ExploreFragment :
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false
         )
-        mViewModel.calculateDistance(
-            latitude = mViewModel.mSearchDirectionOriginData?.amazonLocationPlace?.coordinates?.latitude,
-            longitude = mViewModel.mSearchDirectionOriginData?.amazonLocationPlace?.coordinates?.longitude,
-            latDestination = mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.coordinates?.latitude,
-            lngDestination = mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.coordinates?.longitude,
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
-            isWalkingAndTruckCall = true
-        )
+        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+            mViewModel.calculateGrabDistance(
+                latitude = mViewModel.mSearchDirectionOriginData?.amazonLocationPlace?.coordinates?.latitude,
+                longitude = mViewModel.mSearchDirectionOriginData?.amazonLocationPlace?.coordinates?.longitude,
+                latDestination = mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.coordinates?.latitude,
+                lngDestination = mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.coordinates?.longitude,
+                isAvoidFerries = mIsAvoidFerries,
+                isAvoidTolls = mIsAvoidTolls
+            )
+        } else {
+            mViewModel.calculateDistance(
+                latitude = mViewModel.mSearchDirectionOriginData?.amazonLocationPlace?.coordinates?.latitude,
+                longitude = mViewModel.mSearchDirectionOriginData?.amazonLocationPlace?.coordinates?.longitude,
+                latDestination = mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.coordinates?.latitude,
+                lngDestination = mViewModel.mSearchDirectionDestinationData?.amazonLocationPlace?.coordinates?.longitude,
+                isAvoidFerries = mIsAvoidFerries,
+                isAvoidTolls = mIsAvoidTolls,
+                isWalkingAndTruckCall = true
+            )
+        }
         showDirectionSearchShimmer()
         mViewModel.mSearchDirectionOriginData?.let { it1 ->
             mMapHelper.addMarker(
@@ -3262,6 +3805,12 @@ class ExploreFragment :
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardDirection.hide()
+                    mBinding.cardNavigation.show()
+                }
+            }
         }
     }
 
@@ -3292,21 +3841,38 @@ class ExploreFragment :
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false
         )
-        mViewModel.calculateDistance(
-            latitude = liveLocationLatLng?.latitude,
-            longitude = liveLocationLatLng?.longitude,
-            latDestination = it.amazonLocationPlace?.coordinates?.latitude,
-            lngDestination = it.amazonLocationPlace?.coordinates?.longitude,
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
-            isWalkingAndTruckCall = true
-        )
+        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+            mViewModel.calculateGrabDistance(
+                latitude = liveLocationLatLng?.latitude,
+                longitude = liveLocationLatLng?.longitude,
+                latDestination = it.amazonLocationPlace?.coordinates?.latitude,
+                lngDestination = it.amazonLocationPlace?.coordinates?.longitude,
+                isAvoidFerries = mIsAvoidFerries,
+                isAvoidTolls = mIsAvoidTolls
+            )
+        } else {
+            mViewModel.calculateDistance(
+                latitude = liveLocationLatLng?.latitude,
+                longitude = liveLocationLatLng?.longitude,
+                latDestination = it.amazonLocationPlace?.coordinates?.latitude,
+                lngDestination = it.amazonLocationPlace?.coordinates?.longitude,
+                isAvoidFerries = mIsAvoidFerries,
+                isAvoidTolls = mIsAvoidTolls,
+                isWalkingAndTruckCall = true
+            )
+        }
 
         showDirectionSearchShimmer()
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
             mMapHelper.addMarker(requireActivity(), MarkerEnum.DIRECTION_ICON, it)
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.hide()
+                }
+            }
         }
     }
 
@@ -3325,15 +3891,26 @@ class ExploreFragment :
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false
         )
-        mViewModel.calculateDistance(
-            latitude = it.amazonLocationPlace?.coordinates?.latitude,
-            longitude = it.amazonLocationPlace?.coordinates?.longitude,
-            latDestination = liveLocationLatLng?.latitude,
-            lngDestination = liveLocationLatLng?.longitude,
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
-            isWalkingAndTruckCall = true
-        )
+        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+            mViewModel.calculateGrabDistance(
+                latitude = it.amazonLocationPlace?.coordinates?.latitude,
+                longitude = it.amazonLocationPlace?.coordinates?.longitude,
+                latDestination = liveLocationLatLng?.latitude,
+                lngDestination = liveLocationLatLng?.longitude,
+                isAvoidFerries = mIsAvoidFerries,
+                isAvoidTolls = mIsAvoidTolls
+            )
+        } else {
+            mViewModel.calculateDistance(
+                latitude = it.amazonLocationPlace?.coordinates?.latitude,
+                longitude = it.amazonLocationPlace?.coordinates?.longitude,
+                latDestination = liveLocationLatLng?.latitude,
+                lngDestination = liveLocationLatLng?.longitude,
+                isAvoidFerries = mIsAvoidFerries,
+                isAvoidTolls = mIsAvoidTolls,
+                isWalkingAndTruckCall = true
+            )
+        }
 
         showDirectionSearchShimmer()
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -3353,6 +3930,12 @@ class ExploreFragment :
             )
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.hide()
+                }
+            }
         }
     }
 
@@ -3360,9 +3943,21 @@ class ExploreFragment :
         mBinding.bottomSheetDirectionSearch.apply {
             clDriveLoader.show()
             clWalkLoader.show()
-            clTruckLoader.show()
-
-            clTruck.invisible()
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                clBicycleLoader.show()
+                clBicycle.invisible()
+                clMotorcycleLoader.show()
+                clMotorcycle.invisible()
+                clTruckLoader.hide()
+                clTruck.hide()
+                clTruck.hide()
+                viewDividerOptionTruck.hide()
+                viewDividerOptionBicycle.show()
+                viewDividerOptionMotorcycle.show()
+            } else {
+                clTruckLoader.show()
+                clTruck.invisible()
+            }
             clWalk.invisible()
             clDrive.invisible()
         }
@@ -3388,6 +3983,7 @@ class ExploreFragment :
             mAdapter =
                 SearchPlacesAdapter(
                     mPlaceList,
+                    mPreferenceManager,
                     object : SearchPlacesAdapter.SearchPlaceInterface {
                         override fun placeClick(position: Int) {
                             if (checkInternetConnection()) {
@@ -3409,6 +4005,7 @@ class ExploreFragment :
             rvSearchPlacesSuggestion.layoutManager = LinearLayoutManager(requireContext())
             mSearchPlacesSuggestionAdapter = SearchPlacesSuggestionAdapter(
                 mPlaceList,
+                mPreferenceManager,
                 object : SearchPlacesSuggestionAdapter.SearchPlaceSuggestionInterface {
                     override fun suggestedPlaceClick(position: Int) {
                         if (checkInternetConnection()) {
@@ -3447,20 +4044,30 @@ class ExploreFragment :
             mViewModel.mSearchDirectionDestinationData?.isDestination = true
             hideViews(mBinding.cardDirection, mBinding.cardNavigation)
             mBinding.bottomSheetDirection.apply {
-                tvDirectionTime.invisible()
+                tvDirectionTime.hide()
                 groupDistance.invisible()
-                hideViews(tvDirectionError, tvDirectionError2, ivInfo)
-                val liveLocationLatLng = mMapHelper.getLiveLocation()
-                isCalculateDriveApiError = false
-                mViewModel.calculateDistance(
-                    latitude = liveLocationLatLng?.latitude,
-                    longitude = liveLocationLatLng?.longitude,
-                    latDestination = data.amazonLocationPlace?.coordinates?.latitude,
-                    lngDestination = data.amazonLocationPlace?.coordinates?.longitude,
-                    isAvoidFerries = mIsAvoidFerries,
-                    isAvoidTolls = mIsAvoidTolls,
-                    isWalkingAndTruckCall = false
-                )
+                hideViews(tvDirectionError, ivInfo)
+                tvDirectionError2.hide()
+                if (!mMapHelper.isGrabSelectedAndOutsideBound) {
+                    val liveLocationLatLng = mMapHelper.getLiveLocation()
+                    isCalculateDriveApiError = false
+                    mViewModel.calculateDistance(
+                        latitude = liveLocationLatLng?.latitude,
+                        longitude = liveLocationLatLng?.longitude,
+                        latDestination = data.amazonLocationPlace?.coordinates?.latitude,
+                        lngDestination = data.amazonLocationPlace?.coordinates?.longitude,
+                        isAvoidFerries = mIsAvoidFerries,
+                        isAvoidTolls = mIsAvoidTolls,
+                        isWalkingAndTruckCall = false
+                    )
+                } else {
+                    mBinding.bottomSheetDirection.tvDirectionError2.text =
+                        getString(R.string.label_current_location_disabled)
+                    tvDirectionError2.show()
+                    ivInfo.show()
+                    cardLoaderSheet1.hide()
+                    cardLoaderSheet2.hide()
+                }
                 if (data.amazonLocationPlace?.label?.let { validateLatLng(it) } != null) {
                     tvDirectionAddress.text = data.amazonLocationPlace?.label
                     sheetDirectionTvDirectionStreet.hide()
@@ -3471,22 +4078,23 @@ class ExploreFragment :
                             val index = label.indexOf(",")
                             val result: String = index.let { label.substring(0, it) }
                             tvDirectionAddress.text = result
-                            if (!data.amazonLocationPlace?.region.isNullOrEmpty()) {
-                                sheetDirectionTvDirectionStreet.show()
-                                sheetDirectionTvDirectionStreet.text =
-                                    index.let { label.substring(index + 1, label.length).trim() }
-                            } else {
-                                sheetDirectionTvDirectionStreet.hide()
-                            }
+                            sheetDirectionTvDirectionStreet.show()
+                            sheetDirectionTvDirectionStreet.text =
+                                index.let { label.substring(index + 1, label.length).trim() }
                         } else {
                             tvDirectionAddress.text = label
                         }
                     }
                 }
                 data.distance?.let {
-                    if (it > 400) {
-                        tvDirectionDistance.text =
-                            getMetrics(it)
+                    val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+                    val showDistance = if (isMetric) {
+                        it > 400
+                    } else {
+                        it > 248.5
+                    }
+                    if (showDistance) {
+                        tvDirectionDistance.text = getMetricsNew(it, isMetric)
                     }
                 }
                 notifyAdapters()
@@ -3549,64 +4157,85 @@ class ExploreFragment :
         val mapStyleNameDisplay =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                 ?: getString(R.string.map_light)
+        val mapNameSelected = mBaseActivity?.getString(R.string.map_esri)
+            ?.let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
+            ?: mBaseActivity?.getString(R.string.map_esri)
         val mapName: String
         val mapStyleName: String
-        when (mapStyleNameDisplay) {
-            getString(R.string.map_light) -> {
-                mapName = ESRI_LIGHT
-                mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+        if (mapNameSelected == getString(R.string.grab)) {
+            when (mapStyleNameDisplay) {
+                resources.getString(R.string.map_grab_light) -> {
+                    mapName = MapNames.GRAB_LIGHT
+                    mapStyleName = MapStyles.GRAB_LIGHT
+                }
+                resources.getString(R.string.map_grab_dark) -> {
+                    mapName = MapNames.GRAB_DARK
+                    mapStyleName = MapStyles.GRAB_DARK
+                }
+                else -> {
+                    mapName = ESRI_LIGHT
+                    mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+                }
             }
-            getString(R.string.map_streets) -> {
-                mapName = MapNames.ESRI_STREET_MAP
-                mapStyleName = MapStyles.VECTOR_ESRI_STREETS
-            }
-            getString(R.string.map_navigation) -> {
-                mapName = MapNames.ESRI_NAVIGATION
-                mapStyleName = MapStyles.VECTOR_ESRI_NAVIGATION
-            }
-            getString(R.string.map_dark_gray) -> {
-                mapName = MapNames.ESRI_DARK_GRAY_CANVAS
-                mapStyleName = MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
-            }
-            getString(R.string.map_light_gray) -> {
-                mapName = MapNames.ESRI_LIGHT_GRAY_CANVAS
-                mapStyleName = MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
-            }
-            getString(R.string.map_imagery) -> {
-                mapName = MapNames.ESRI_IMAGERY
-                mapStyleName = MapStyles.RASTER_ESRI_IMAGERY
-            }
-            resources.getString(R.string.map_contrast) -> {
-                mapName = MapNames.HERE_CONTRAST
-                mapStyleName = MapStyles.VECTOR_HERE_CONTRAST
-            }
-            resources.getString(R.string.map_explore) -> {
-                mapName = MapNames.HERE_EXPLORE
-                mapStyleName = MapStyles.VECTOR_HERE_EXPLORE
-            }
-            resources.getString(R.string.map_explore_truck) -> {
-                mapName = MapNames.HERE_EXPLORE_TRUCK
-                mapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK
-            }
-            resources.getString(R.string.map_hybrid) -> {
-                mapName = MapNames.HERE_HYBRID
-                mapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
-            }
-            resources.getString(R.string.map_raster) -> {
-                mapName = MapNames.HERE_IMAGERY
-                mapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
-            }
-            else -> {
-                mapName = ESRI_LIGHT
-                mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+        } else {
+            when (mapStyleNameDisplay) {
+                getString(R.string.map_light) -> {
+                    mapName = ESRI_LIGHT
+                    mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+                }
+                getString(R.string.map_streets) -> {
+                    mapName = MapNames.ESRI_STREET_MAP
+                    mapStyleName = MapStyles.VECTOR_ESRI_STREETS
+                }
+                getString(R.string.map_navigation) -> {
+                    mapName = MapNames.ESRI_NAVIGATION
+                    mapStyleName = MapStyles.VECTOR_ESRI_NAVIGATION
+                }
+                getString(R.string.map_dark_gray) -> {
+                    mapName = MapNames.ESRI_DARK_GRAY_CANVAS
+                    mapStyleName = MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
+                }
+                getString(R.string.map_light_gray) -> {
+                    mapName = MapNames.ESRI_LIGHT_GRAY_CANVAS
+                    mapStyleName = MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
+                }
+                getString(R.string.map_imagery) -> {
+                    mapName = MapNames.ESRI_IMAGERY
+                    mapStyleName = MapStyles.RASTER_ESRI_IMAGERY
+                }
+                resources.getString(R.string.map_contrast) -> {
+                    mapName = MapNames.HERE_CONTRAST
+                    mapStyleName = MapStyles.VECTOR_HERE_CONTRAST
+                }
+                resources.getString(R.string.map_explore) -> {
+                    mapName = MapNames.HERE_EXPLORE
+                    mapStyleName = MapStyles.VECTOR_HERE_EXPLORE
+                }
+                resources.getString(R.string.map_explore_truck) -> {
+                    mapName = MapNames.HERE_EXPLORE_TRUCK
+                    mapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK
+                }
+                resources.getString(R.string.map_hybrid) -> {
+                    mapName = MapNames.HERE_HYBRID
+                    mapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
+                }
+                resources.getString(R.string.map_raster) -> {
+                    mapName = MapNames.HERE_IMAGERY
+                    mapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
+                }
+                else -> {
+                    mapName = ESRI_LIGHT
+                    mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
+                }
             }
         }
-        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this)
+        mMapHelper.initSymbolManager(mBinding.mapView, mapboxMap, mapName, mapStyleName, this, this, activity, mPreferenceManager)
         activity?.let {
             mBaseActivity?.mGeofenceUtils?.setMapBox(
                 it,
                 mapboxMap,
-                mMapHelper
+                mMapHelper,
+                mPreferenceManager
             )
             mBaseActivity?.mTrackingUtils?.setMapBox(
                 it,
@@ -3617,10 +4246,14 @@ class ExploreFragment :
         mapboxMap.uiSettings.isCompassEnabled = false
         this.mMapboxMap = mapboxMap
         mapboxMap.addOnCameraIdleListener {
-            mViewModel.mLatLng = LatLng(
-                mapboxMap.cameraPosition.target.latitude,
-                mapboxMap.cameraPosition.target.longitude
-            )
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                mMapboxMap?.limitViewToBounds(bounds)
+            } else {
+                mViewModel.mLatLng = LatLng(
+                    mapboxMap.cameraPosition.target.latitude,
+                    mapboxMap.cameraPosition.target.longitude
+                )
+            }
         }
     }
 
@@ -3628,7 +4261,8 @@ class ExploreFragment :
     @SuppressLint("VisibleForTests")
     private fun checkGpsLocationProvider(
         isLocationAlreadyEnabled: Boolean,
-        isCurrentLocationClicked: Boolean
+        isCurrentLocationClicked: Boolean,
+        isLiveLocationClick: Boolean
     ) {
         val locationRequest: LocationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -3639,6 +4273,7 @@ class ExploreFragment :
         builder.setAlwaysShow(true)
         this.mIsLocationAlreadyEnabled = isLocationAlreadyEnabled
         this.mIsCurrentLocationClicked = isCurrentLocationClicked
+        this.isLiveLocationClick = isLiveLocationClick
         result.addOnCompleteListener {
             try {
                 it.getResult(ApiException::class.java)
@@ -3670,17 +4305,17 @@ class ExploreFragment :
         } else {
             if (mIsCurrentLocationClicked) {
                 mBaseActivity?.resetLocationPermission()
-                mMapHelper.checkLocationComponentEnable()
+                mMapHelper.checkLocationComponentEnable(mBaseActivity, isLiveLocationClick)
             } else {
                 if (mIsLocationAlreadyEnabled) {
-                    mMapHelper.checkLocationComponentEnable()
+                    mMapHelper.checkLocationComponentEnable(mBaseActivity, false)
                 } else {
                     mBaseActivity?.resetLocationPermission()
                     mMapHelper.enableLocationComponent()
                     mMapHelper.setInitialLocation()
                 }
             }
-
+            isLiveLocationClick = false
             mRedirectionType?.let { type ->
                 when (type) {
                     RedirectionType.ROUTE_OPTION.name -> {
@@ -3697,11 +4332,20 @@ class ExploreFragment :
     }
 
     fun changeDirectionCardMargin(marginBottom: Int) {
-        showViews(mBinding.cardDirection, mBinding.cardNavigation)
-        val layoutParams: ViewGroup.MarginLayoutParams =
-            mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.setMargins(0, 0, resources.getDimension(R.dimen.dp_16).toInt(), marginBottom)
-        mBinding.cardDirection.requestLayout()
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                showViews(mBinding.cardDirection, mBinding.cardNavigation)
+                val layoutParams: ViewGroup.MarginLayoutParams =
+                    mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.setMargins(
+                    0,
+                    0,
+                    resources.getDimension(R.dimen.dp_16).toInt(),
+                    marginBottom
+                )
+                mBinding.cardDirection.requestLayout()
+            }
+        }
     }
 
     override fun onStart() {
@@ -3787,7 +4431,88 @@ class ExploreFragment :
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun mapStyleChange(position: Int, innerPosition: Int) {
+    fun mapStyleChange(position: Int, innerPosition: Int, isMapClick: Boolean) {
+        val isRestartNeeded: Boolean
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        var oldSelectedPosition = 0
+        when (mapName) {
+            getString(R.string.esri) -> {
+                oldSelectedPosition = 0
+            }
+            getString(R.string.here) -> {
+                oldSelectedPosition = 1
+            }
+            getString(R.string.grab) -> {
+                oldSelectedPosition = 2
+            }
+        }
+        isRestartNeeded = if (oldSelectedPosition == 0 || oldSelectedPosition == 1) {
+            position == 2
+        } else {
+            position != 2
+        }
+        if (isRestartNeeded) {
+            if (position == 2) {
+                activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface) {
+                        changeMapStyle(isMapClick, position, innerPosition)
+                        lifecycleScope.launch {
+                            if (!isRunningTest) {
+                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                activity?.restartApplication()
+                            }
+                        }
+                    }
+                    override fun onLearnMoreClick(dialog: DialogInterface) {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                            )
+                        )
+                    }
+                })
+            } else {
+                changeMapStyle(isMapClick, position, innerPosition)
+                lifecycleScope.launch {
+                    if (!isRunningTest) {
+                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                        activity?.restartApplication()
+                    }
+                }
+            }
+        } else {
+            changeMapStyle(isMapClick, position, innerPosition)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun changeMapStyle(
+        isMapClick: Boolean,
+        position: Int,
+        innerPosition: Int
+    ) {
+        if (isMapClick) {
+            repeat(mViewModel.mStyleList.size) {
+                mViewModel.mStyleList[it].isSelected = false
+            }
+            changeStyle(position, innerPosition)
+            mViewModel.mStyleList[position].isSelected =
+                !mViewModel.mStyleList[position].isSelected
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mapStyleBottomSheetFragment.notifyAdapter()
+                } else {
+                    mMapStyleAdapter?.notifyDataSetChanged()
+                }
+            }
+        } else {
+            changeStyle(position, innerPosition)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun changeStyle(position: Int, innerPosition: Int) {
         clearAllMapData()
         mViewModel.mStyleList.forEach {
             it.mapInnerData?.forEach { innerData ->
@@ -3796,90 +4521,103 @@ class ExploreFragment :
         }
         mViewModel.mStyleList[position].mapInnerData?.let {
             it[innerPosition].isSelected = true
-            when (it[innerPosition].mapName) {
-                getString(R.string.map_light) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        ESRI_LIGHT,
-                        VECTOR_ESRI_TOPOGRAPHIC
-                    )
+            if (position != 2) {
+                when (it[innerPosition].mapName) {
+                    getString(R.string.map_light) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            ESRI_LIGHT,
+                            VECTOR_ESRI_TOPOGRAPHIC
+                        )
+                    }
+                    getString(R.string.map_streets) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_STREET_MAP,
+                            MapStyles.VECTOR_ESRI_STREETS
+                        )
+                    }
+                    getString(R.string.map_navigation) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_NAVIGATION,
+                            MapStyles.VECTOR_ESRI_NAVIGATION
+                        )
+                    }
+                    getString(R.string.map_dark_gray) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_DARK_GRAY_CANVAS,
+                            MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
+                        )
+                    }
+                    getString(R.string.map_light_gray) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_LIGHT_GRAY_CANVAS,
+                            MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
+                        )
+                    }
+                    getString(R.string.map_imagery) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.ESRI_IMAGERY,
+                            MapStyles.RASTER_ESRI_IMAGERY
+                        )
+                    }
+                    resources.getString(R.string.map_contrast) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_CONTRAST,
+                            MapStyles.VECTOR_HERE_CONTRAST
+                        )
+                    }
+                    resources.getString(R.string.map_explore) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_EXPLORE,
+                            MapStyles.VECTOR_HERE_EXPLORE
+                        )
+                    }
+                    resources.getString(R.string.map_explore_truck) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_EXPLORE_TRUCK,
+                            MapStyles.VECTOR_HERE_EXPLORE_TRUCK
+                        )
+                    }
+                    resources.getString(R.string.map_hybrid) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_HYBRID,
+                            MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
+                        )
+                    }
+                    resources.getString(R.string.map_raster) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.HERE_IMAGERY,
+                            MapStyles.RASTER_HERE_EXPLORE_SATELLITE
+                        )
+                    }
                 }
-                getString(R.string.map_streets) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_STREET_MAP,
-                        MapStyles.VECTOR_ESRI_STREETS
-                    )
+            } else {
+                when (it[innerPosition].mapName) {
+                    resources.getString(R.string.map_grab_light) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.GRAB_LIGHT,
+                            MapStyles.GRAB_LIGHT
+                        )
+                    }
+                    resources.getString(R.string.map_grab_dark) -> {
+                        mMapHelper.updateStyle(
+                            mBinding.mapView,
+                            MapNames.GRAB_DARK,
+                            MapStyles.GRAB_DARK
+                        )
+                    }
                 }
-                getString(R.string.map_navigation) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_NAVIGATION,
-                        MapStyles.VECTOR_ESRI_NAVIGATION
-                    )
-                }
-                getString(R.string.map_dark_gray) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_DARK_GRAY_CANVAS,
-                        MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS
-                    )
-                }
-                getString(R.string.map_light_gray) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_LIGHT_GRAY_CANVAS,
-                        MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS
-                    )
-                }
-                getString(R.string.map_imagery) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.ESRI_IMAGERY,
-                        MapStyles.RASTER_ESRI_IMAGERY
-                    )
-                }
-                resources.getString(R.string.map_contrast) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_CONTRAST,
-                        MapStyles.VECTOR_HERE_CONTRAST
-                    )
-                }
-                resources.getString(R.string.map_explore) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_EXPLORE,
-                        MapStyles.VECTOR_HERE_EXPLORE
-                    )
-                }
-                resources.getString(R.string.map_explore_truck) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_EXPLORE_TRUCK,
-                        MapStyles.VECTOR_HERE_EXPLORE_TRUCK
-                    )
-                }
-                resources.getString(R.string.map_hybrid) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_HYBRID,
-                        MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
-                    )
-                }
-                resources.getString(R.string.map_raster) -> {
-                    mMapHelper.updateStyle(
-                        mBinding.mapView,
-                        MapNames.HERE_IMAGERY,
-                        MapStyles.RASTER_HERE_EXPLORE_SATELLITE
-                    )
-                }
-            }
-            mViewModel.mStyleList[position].styleNameDisplay?.let { it1 ->
-                mPreferenceManager.setValue(
-                    KEY_MAP_NAME,
-                    it1
-                )
             }
             it[innerPosition].mapName?.let { it1 ->
                 mPreferenceManager.setValue(
@@ -3887,8 +4625,31 @@ class ExploreFragment :
                     it1
                 )
             }
+            mViewModel.mStyleList[position].styleNameDisplay?.let { it1 ->
+                mPreferenceManager.setValue(
+                    KEY_MAP_NAME,
+                    it1
+                )
+            }
         }
-        mMapStyleAdapter?.notifyDataSetChanged()
+
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mapStyleBottomSheetFragment.notifyAdapter()
+            } else {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun setBounds(latLng: LatLng) {
+        // Set the map bounds
+        mMapboxMap?.limitViewToBounds(bounds)
+        mMapboxMap?.setMinZoomPreference(5.0)
+        lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE)
+            mMapHelper.navigationZoomCamera(latLng, false)
+        }
     }
 
     private fun clearAllMapData() {
@@ -3957,9 +4718,9 @@ class ExploreFragment :
             mMapboxMap?.easeCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().target(mLatLng)
-                        .build(),
+                        .build()
                 ),
-                Durations.CAMERA_DURATION_1000,
+                Durations.CAMERA_DURATION_1000
             )
         }
     }
@@ -3969,5 +4730,77 @@ class ExploreFragment :
         mMapHelper.getLiveLocation()?.let { mLatLng ->
             mMapHelper.navigationZoomCamera(mLatLng, false)
         }
+    }
+
+    override fun onMapStyleChanged(mapStyle: String) {
+        val logoResId = when (mapStyle) {
+            ESRI_LIGHT,
+            MapNames.ESRI_STREET_MAP,
+            MapNames.ESRI_NAVIGATION,
+            MapNames.ESRI_LIGHT_GRAY_CANVAS,
+            MapNames.HERE_CONTRAST,
+            MapNames.HERE_EXPLORE,
+            MapNames.HERE_EXPLORE_TRUCK,
+            MapNames.GRAB_LIGHT
+            -> R.drawable.ic_amazon_logo_on_light
+
+            MapNames.ESRI_DARK_GRAY_CANVAS,
+            MapNames.ESRI_IMAGERY,
+            MapNames.HERE_IMAGERY,
+            MapNames.HERE_HYBRID,
+            MapNames.GRAB_DARK
+            -> R.drawable.ic_amazon_logo_on_dark
+
+            else -> {
+                R.drawable.ic_amazon_logo_on_light
+            }
+        }
+        if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
+            lifecycleScope.launch {
+                delay(DELAY_500)
+                checkGrabMapInsideBounds()
+            }
+        }
+        if (activity is MainActivity) {
+            (activity as MainActivity).changeAmazonLogo(logoResId)
+        }
+        mBinding.bottomSheetSearch.imgAmazonLogoSearchSheet.setImageResource(logoResId)
+        mBinding.bottomSheetDirection.imgAmazonLogoDirection?.setImageResource(logoResId)
+        mBinding.bottomSheetDirectionSearch.imgAmazonLogoDirectionSearchSheet.setImageResource(
+            logoResId
+        )
+        mBinding.bottomSheetNavigation.imgAmazonLogoNavigation.setImageResource(logoResId)
+        mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(
+            logoResId
+        )
+        mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
+        mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
+        mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
+        mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle?.setImageResource(logoResId)
+    }
+
+    private fun checkGrabMapInsideBounds() {
+        val currentLocation = mMapHelper.getLiveLocation()
+        currentLocation?.let {
+            setBounds(it)
+        }
+    }
+
+    private fun MapboxMap.limitViewToBounds(bounds: LatLngBounds) {
+        val newBoundsHeight = bounds.latitudeSpan - projection.visibleRegion.latLngBounds.latitudeSpan
+        val newBoundsWidth = bounds.longitudeSpan - projection.visibleRegion.latLngBounds.longitudeSpan
+        val leftTopLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth
+        )
+        val rightBottomLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2 - newBoundsHeight,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2
+        )
+        val newBounds = LatLngBounds.Builder()
+            .include(leftTopLatLng)
+            .include(rightBottomLatLng)
+            .build()
+        setLatLngBoundsForCameraTarget(newBounds)
     }
 }

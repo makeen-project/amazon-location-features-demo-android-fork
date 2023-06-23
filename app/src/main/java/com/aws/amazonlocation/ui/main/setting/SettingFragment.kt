@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main.setting
 
 import android.content.DialogInterface
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,12 @@ import com.aws.amazonlocation.data.common.onSuccess
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.databinding.FragmentSettingBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
+import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
+import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
+import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -26,6 +32,7 @@ import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
+import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
@@ -41,9 +48,11 @@ import kotlinx.coroutines.launch
 // SPDX-License-Identifier: MIT-0
 class SettingFragment : BaseFragment(), SignOutInterface {
 
+    private lateinit var aWSCloudInformationFragment: AWSCloudInformationFragment
     private lateinit var mBinding: FragmentSettingBinding
     private val mSignInViewModel: SignInViewModel by viewModels()
     private var mAuthStatus: String? = null
+    private var isTablet = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,13 +63,36 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         return mBinding.root
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.clSettings?.layoutParams?.width = width
+        mBinding.clSettings?.requestLayout()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if ((activity is MainActivity)) {
+            isTablet = (activity as MainActivity).isTablet
+        }
         init()
+        getUnitSystem()
         getDataProvider()
         getMapStyle()
         initObserver()
         clickListener()
+        if (isTablet) {
+            addReplaceFragment(
+                R.id.frame_container,
+                UnitSystemFragment(),
+                addFragment = true,
+                addToBackStack = false
+            )
+            mBinding.apply {
+                clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+            }
+        }
     }
 
     private fun init() {
@@ -86,6 +118,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 clDisconnect.hide()
             }
         }
+    }
+
+    private fun getUnitSystem() {
+        val unitSystem =
+            mPreferenceManager.getValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
+        mBinding.tvUnitSystemName.text = unitSystem
     }
 
     private fun getDataProvider() {
@@ -128,17 +166,91 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     private fun clickListener() {
         mBinding.apply {
+            clUnitSystem.setOnClickListener {
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        UnitSystemFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.unit_system_fragment)
+                }
+            }
             clDataProvider.setOnClickListener {
-                findNavController().navigate(R.id.data_provider_fragment)
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        DataProviderFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivDataProvider.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.data_provider_fragment)
+                }
             }
             clMapStyle.setOnClickListener {
-                findNavController().navigate(R.id.map_style_fragment)
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        MapStyleFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clMapStyle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.map_style_fragment)
+                }
             }
             clRouteOption.setOnClickListener {
-                findNavController().navigate(R.id.route_option_fragment)
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        RouteOptionFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clRouteOption.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivRouteOption.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.route_option_fragment)
+                }
             }
             clAwsCloudformation.setOnClickListener {
-                findNavController().navigate(R.id.aws_cloud_information_fragment)
+                if (isTablet) {
+                    aWSCloudInformationFragment = AWSCloudInformationFragment()
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        aWSCloudInformationFragment,
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clAwsCloudformation.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivAwsCloudFormation.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.aws_cloud_information_fragment)
+                }
             }
             clDisconnect.setOnClickListener {
                 if (tvDisconnect.text.toString().trim() == getText(R.string.label_sign_out)) {
@@ -167,6 +279,55 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 }
             }
         }
+    }
+
+    fun hideKeyBoard() {
+        if (isTablet) {
+            aWSCloudInformationFragment.hideKeyBoard()
+        }
+    }
+
+    private fun FragmentSettingBinding.setDefaultSelection() {
+        clUnitSystem.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
+            )
+        )
+        ivUnitSystem.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+        clAwsCloudformation.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.white
+            )
+        )
+        ivAwsCloudFormation.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+        clRouteOption.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivRouteOption.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+        clMapStyle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
+        clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivDataProvider.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
     }
 
     override fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean) {

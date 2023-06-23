@@ -5,6 +5,8 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.location.Location
 import android.os.Looper
 import android.view.View
@@ -12,6 +14,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.maplibre.util.toJsonElement
@@ -25,11 +28,14 @@ import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
+import com.aws.amazonlocation.ui.base.BaseActivity
+import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_20
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1000
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1500
 import com.aws.amazonlocation.utils.Durations.DEFAULT_INTERVAL_IN_MILLISECONDS
+import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID
 import com.aws.amazonlocation.utils.MapCameraZoom.DEFAULT_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.NAVIGATION_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.TRACKING_CAMERA_ZOOM
@@ -50,6 +56,7 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode
 import com.mapbox.mapboxsdk.location.permissions.PermissionsManager
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.Style
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
@@ -66,6 +73,7 @@ import java.util.*
 // SPDX-License-Identifier: MIT-0
 class MapHelper(private val appContext: Context) {
 
+    var isGrabSelectedAndOutsideBound: Boolean = false
     private val mSourceId: String = "line-source"
     private val mDotSourceId: String = "dot-source"
     private val mDotDestinationSourceId: String = "dot-destination-source"
@@ -73,6 +81,7 @@ class MapHelper(private val appContext: Context) {
     private var mDotLayerId: String = "dot-layer"
     private var mDotDestinationLayerId: String = "dot-destination-layer"
     private val mDefaultLatLng = LatLng(49.281174, -123.116823)
+    val mDefaultLatLngGrab = LatLng(1.2840123, 103.8487542)
     var mSymbolManager: SymbolManager? = null
     private var mSymbolManagerWithClick: SymbolManager? = null
     private var mSymbolManagerTracker: SymbolManager? = null
@@ -85,8 +94,11 @@ class MapHelper(private val appContext: Context) {
     private var mTrackingInterface: UpdateTrackingInterface? = null
     private var mOriginSymbol: Symbol? = null
     private var mGeofenceSM: SymbolManager? = null
+    private var mGeofenceDragSM: SymbolManager? = null
     var mSymbolOptionList = ArrayList<Symbol>()
     private var mMapLibreView: MapLibreView? = null
+    private var mapStyleChangeListener: MapStyleChangeListener? = null
+    private var mPreferenceManager: PreferenceManager? = null
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -94,35 +106,50 @@ class MapHelper(private val appContext: Context) {
         mapStyle: String,
         style: String,
         isMapLoadedInterface: IsMapLoadedInterface,
+        mapStyleChangedListener: MapStyleChangeListener,
+        activity: FragmentActivity?,
+        mPreferenceManager: PreferenceManager
     ) {
+        this.mPreferenceManager = mPreferenceManager
         mapboxMap?.let {
             mMapLibreView = mapView
             this.mMapboxMap = it
             if (!it.locationComponent.isLocationComponentActivated) {
-                moveCameraToLocation(mDefaultLatLng)
+                if (isGrabMapSelected(mPreferenceManager, appContext)) {
+                    moveCameraToLocation(mDefaultLatLngGrab)
+                } else {
+                    moveCameraToLocation(mDefaultLatLng)
+                }
             }
             mapView.setStyle(MapStyle(mapStyle, style)) { style ->
                 updateZoomRange(style)
                 enableLocationComponent()
-                initLocationEngine(true)
+                if (activity?.checkLocationPermission() == true) {
+                    initLocationEngine(true)
+                }
                 mSymbolManager = SymbolManager(mapView, mapboxMap, style)
                 mSymbolManagerWithClick = SymbolManager(mapView, mapboxMap, style)
                 mSymbolManagerTracker = SymbolManager(mapView, mapboxMap, style)
                 mGeofenceSM = SymbolManager(mapView, mapboxMap, style)
+                mGeofenceDragSM = SymbolManager(mapView, mapboxMap, style)
                 mapboxMap.uiSettings.isAttributionEnabled = false
                 isMapLoadedInterface.mapLoadedSuccess()
+                mapStyleChangedListener.onMapStyleChanged(mapStyle)
+                mapStyleChangeListener = mapStyleChangedListener
             }
         }
     }
 
     fun updateStyle(mapView: MapLibreView, mapStyle: String, style: String) {
         mapView.setStyle(MapStyle(mapStyle, style)) {
+            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
             updateZoomRange(it)
         }
     }
 
     fun updateMapStyle(mapStyle: String, style: String) {
         mMapLibreView?.setStyle(MapStyle(mapStyle, style)) {
+            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
             updateZoomRange(it)
         }
     }
@@ -153,7 +180,7 @@ class MapHelper(private val appContext: Context) {
         mLocationTrackingEngine?.requestLocationUpdates(
             request,
             locationTrackingListener,
-            Looper.getMainLooper(),
+            Looper.getMainLooper()
         )
         mLocationTrackingEngine?.getLastLocation(locationTrackingListener)
     }
@@ -238,16 +265,16 @@ class MapHelper(private val appContext: Context) {
                             appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
                             appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
                             appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                            appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_130).toDouble()
                         ).target(
                             result?.lastLocation?.let {
                                 LatLng(
                                     it.latitude,
-                                    it.longitude,
+                                    it.longitude
                                 )
-                            } ?: mDefaultLatLng,
-                        ).build(),
-                    ),
+                            } ?: mDefaultLatLng
+                        ).build()
+                    )
                 )
                 try {
                     mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
@@ -265,7 +292,7 @@ class MapHelper(private val appContext: Context) {
         activity: Activity,
         markerType: MarkerEnum,
         currentPlace: SearchSuggestionData,
-        originPlace: SearchSuggestionData? = null,
+        originPlace: SearchSuggestionData? = null
     ) {
         mMapboxMap?.getStyle { style ->
             val list = ArrayList<LatLng>()
@@ -277,7 +304,7 @@ class MapHelper(private val appContext: Context) {
                     markerType,
                     currentPlace,
                     list,
-                    false,
+                    false
                 )
 
                 if (markerType == MarkerEnum.DIRECTION_ICON) {
@@ -286,8 +313,8 @@ class MapHelper(private val appContext: Context) {
                             list.add(
                                 LatLng(
                                     it.coordinates.latitude,
-                                    it.coordinates.longitude,
-                                ),
+                                    it.coordinates.longitude
+                                )
                             )
                         }
                     } else {
@@ -306,17 +333,17 @@ class MapHelper(private val appContext: Context) {
         longitude: Double,
         activity: Activity,
         markerType: MarkerEnum,
-        name: String,
+        name: String
     ) {
         val list = ArrayList<LatLng>()
         val latLng = LatLng(
             latitude,
-            longitude,
+            longitude
         )
         mMapboxMap?.getStyle { style ->
             style.addImage(
                 name,
-                ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_direction_marker)!!,
+                ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_direction_marker)!!
             )
             mSymbolManager?.textAllowOverlap = false
             mSymbolManager?.iconAllowOverlap = true
@@ -324,7 +351,7 @@ class MapHelper(private val appContext: Context) {
             val symbolOptions = SymbolOptions()
                 .withLatLng(latLng)
                 .withIconImage(
-                    name,
+                    name
                 )
                 .withIconAnchor(Property.ICON_ANCHOR_CENTER)
 
@@ -337,8 +364,8 @@ class MapHelper(private val appContext: Context) {
             list.add(
                 LatLng(
                     latitude,
-                    longitude,
-                ),
+                    longitude
+                )
             )
             adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
         }
@@ -348,7 +375,7 @@ class MapHelper(private val appContext: Context) {
         activity: Activity,
         markerType: MarkerEnum,
         currentPlace: SearchSuggestionData?,
-        isFromMapClick: Boolean,
+        isFromMapClick: Boolean
     ) {
         mMapboxMap?.getStyle { style ->
             val list = ArrayList<LatLng>()
@@ -366,15 +393,15 @@ class MapHelper(private val appContext: Context) {
         markerType: MarkerEnum,
         currentPlace: SearchSuggestionData,
         list: ArrayList<LatLng>,
-        isFromMapClick: Boolean,
+        isFromMapClick: Boolean
     ) {
         val latLng = LatLng(
             amazonLocationPlace.coordinates.latitude,
-            amazonLocationPlace.coordinates.longitude,
+            amazonLocationPlace.coordinates.longitude
         )
         style.addImage(
             amazonLocationPlace.label.toString(),
-            convertLayoutToBitmap(activity, markerType, currentPlace, isFromMapClick = isFromMapClick),
+            convertLayoutToBitmap(activity, markerType, currentPlace, isFromMapClick = isFromMapClick)
         )
         mSymbolManager?.textAllowOverlap = false
         mSymbolManager?.iconAllowOverlap = true
@@ -383,7 +410,7 @@ class MapHelper(private val appContext: Context) {
             .withLatLng(latLng)
             .withData(amazonLocationPlace.toJsonElement())
             .withIconImage(
-                amazonLocationPlace.label.toString(),
+                amazonLocationPlace.label.toString()
             )
             .withIconAnchor(Property.ICON_ANCHOR_LEFT)
 
@@ -396,8 +423,8 @@ class MapHelper(private val appContext: Context) {
         list.add(
             LatLng(
                 amazonLocationPlace.coordinates.latitude,
-                amazonLocationPlace.coordinates.longitude,
-            ),
+                amazonLocationPlace.coordinates.longitude
+            )
         )
     }
     fun setMarker(
@@ -405,17 +432,17 @@ class MapHelper(private val appContext: Context) {
         longitude: Double,
         activity: Activity,
         markerType: MarkerEnum,
-        name: String,
+        name: String
     ) {
         val list = ArrayList<LatLng>()
         val latLng = LatLng(
             latitude,
-            longitude,
+            longitude
         )
         mMapboxMap?.getStyle { style ->
             style.addImage(
                 name,
-                convertLayoutToBitmap(activity, markerType, null, name),
+                convertLayoutToBitmap(activity, markerType, null, name)
             )
             mSymbolManager?.textAllowOverlap = false
             mSymbolManager?.iconAllowOverlap = true
@@ -423,7 +450,7 @@ class MapHelper(private val appContext: Context) {
             val symbolOptions = SymbolOptions()
                 .withLatLng(latLng)
                 .withIconImage(
-                    name,
+                    name
                 )
                 .withIconAnchor(Property.ICON_ANCHOR_LEFT)
 
@@ -436,8 +463,8 @@ class MapHelper(private val appContext: Context) {
             list.add(
                 LatLng(
                     latitude,
-                    longitude,
-                ),
+                    longitude
+                )
             )
             adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
         }
@@ -457,39 +484,39 @@ class MapHelper(private val appContext: Context) {
                         accuracyColor(
                             ContextCompat.getColor(
                                 appContext,
-                                android.R.color.transparent,
-                            ),
+                                android.R.color.transparent
+                            )
                         )
                         foregroundTintColor(
                             ContextCompat.getColor(
                                 appContext,
-                                android.R.color.transparent,
-                            ),
+                                android.R.color.transparent
+                            )
                         )
 
                         backgroundDrawable(R.drawable.ic_navigation_icon)
                             .bearingTintColor(
                                 ContextCompat.getColor(
                                     appContext,
-                                    android.R.color.transparent,
-                                ),
+                                    android.R.color.transparent
+                                )
                             )
                     } else {
                         accuracyColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_bn_selected,
-                            ),
+                                R.color.color_bn_selected
+                            )
                         ).foregroundTintColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_bn_selected,
-                            ),
+                                R.color.color_bn_selected
+                            )
                         ).bearingTintColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_bn_selected,
-                            ),
+                                R.color.color_bn_selected
+                            )
                         ).bearingDrawable(R.drawable.ic_bearing)
                     }
                 }
@@ -504,7 +531,7 @@ class MapHelper(private val appContext: Context) {
 
     fun addLine(
         coordinates: List<Point>,
-        isWalk: Boolean,
+        isWalk: Boolean
     ) {
         mMapboxMap?.getStyle { style ->
             style.removeLayer(mLayerId)
@@ -531,18 +558,18 @@ class MapHelper(private val appContext: Context) {
                         PropertyFactory.lineColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_primary_green,
-                            ),
-                        ),
+                                R.color.color_primary_green
+                            )
+                        )
                     ),
-                    it,
+                    it
                 )
             }
         }
     }
 
     fun addStartDot(
-        coordinates: List<Point>,
+        coordinates: List<Point>
     ) {
         mMapboxMap?.getStyle { style ->
             if (style.getLayer(mDotLayerId) != null) {
@@ -566,11 +593,11 @@ class MapHelper(private val appContext: Context) {
                     PropertyFactory.lineColor(
                         ContextCompat.getColor(
                             appContext,
-                            R.color.color_hint_text,
-                        ),
-                    ),
+                            R.color.color_hint_text
+                        )
+                    )
                 ),
-                mLayerId,
+                mLayerId
             )
         }
     }
@@ -583,7 +610,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun addDotDestination(
-        coordinates: List<Point>,
+        coordinates: List<Point>
     ) {
         mMapboxMap?.getStyle { style ->
             if (style.getLayer(mDotDestinationLayerId) != null) {
@@ -607,11 +634,11 @@ class MapHelper(private val appContext: Context) {
                     PropertyFactory.lineColor(
                         ContextCompat.getColor(
                             appContext,
-                            R.color.color_hint_text,
-                        ),
-                    ),
+                            R.color.color_hint_text
+                        )
+                    )
                 ),
-                mLayerId,
+                mLayerId
             )
         }
     }
@@ -627,7 +654,7 @@ class MapHelper(private val appContext: Context) {
         coordinates: List<Point>,
         isWalk: Boolean,
         mLayerId: String,
-        mSourceId: String,
+        mSourceId: String
     ) {
         mMapboxMap?.getStyle { style ->
             style.removeLayer(mLayerId)
@@ -653,11 +680,11 @@ class MapHelper(private val appContext: Context) {
                         PropertyFactory.lineColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_primary_green,
-                            ),
-                        ),
+                                R.color.color_primary_green
+                            )
+                        )
                     ),
-                    it,
+                    it
                 )
             }
         }
@@ -702,7 +729,7 @@ class MapHelper(private val appContext: Context) {
         activity: Activity,
         markerType: MarkerEnum,
         placeList: ArrayList<SearchSuggestionData>,
-        mMarkerClickInterface: MarkerClickInterface,
+        mMarkerClickInterface: MarkerClickInterface
     ) {
         clearMarker()
         val list = ArrayList<LatLng>()
@@ -713,13 +740,13 @@ class MapHelper(private val appContext: Context) {
                         activity,
                         markerType,
                         searchPlace,
-                        mMarkerClickInterface,
+                        mMarkerClickInterface
                     )
                     list.add(
                         LatLng(
                             amazonPlace.coordinates.latitude,
-                            amazonPlace.coordinates.longitude,
-                        ),
+                            amazonPlace.coordinates.longitude
+                        )
                     )
                 }
             }
@@ -731,18 +758,18 @@ class MapHelper(private val appContext: Context) {
         activity: Activity,
         markerType: MarkerEnum,
         currentPlace: SearchSuggestionData,
-        mMarkerClickInterface: MarkerClickInterface,
+        mMarkerClickInterface: MarkerClickInterface
     ) {
         mMapboxMap?.getStyle { style ->
             currentPlace.amazonLocationPlace?.let { amazonLocationPlace ->
                 val latLng =
                     LatLng(
                         amazonLocationPlace.coordinates.latitude,
-                        amazonLocationPlace.coordinates.longitude,
+                        amazonLocationPlace.coordinates.longitude
                     )
                 style.addImage(
                     amazonLocationPlace.label.toString(),
-                    convertLayoutToBitmap(activity, markerType, currentPlace),
+                    convertLayoutToBitmap(activity, markerType, currentPlace)
                 )
                 mSymbolManagerWithClick?.textAllowOverlap = true
                 mSymbolManagerWithClick?.iconAllowOverlap = true
@@ -751,7 +778,7 @@ class MapHelper(private val appContext: Context) {
                     .withLatLng(latLng)
                     .withData(amazonLocationPlace.toJsonElement())
                     .withIconImage(
-                        amazonLocationPlace.label.toString(),
+                        amazonLocationPlace.label.toString()
                     )
                     .withIconAnchor(Property.ICON_ANCHOR_LEFT)
                 mSymbolManagerWithClick?.create(symbolOptions)
@@ -767,14 +794,14 @@ class MapHelper(private val appContext: Context) {
         trackerImageName: String,
         activity: Activity,
         markerType: MarkerEnum,
-        currentPlace: LatLng,
+        currentPlace: LatLng
     ) {
         mMapboxMap?.getStyle { style ->
             BitmapUtils.getBitmapFromDrawable(
                 ContextCompat.getDrawable(
                     activity,
-                    if (markerType.name == MarkerEnum.ORIGIN_ICON.name) R.drawable.ic_geofence_marker else R.drawable.ic_tracker,
-                ),
+                    if (markerType.name == MarkerEnum.ORIGIN_ICON.name) R.drawable.ic_geofence_marker_1 else R.drawable.ic_tracker
+                )
             )?.let {
                 style.addImage(trackerImageName, it)
             }
@@ -784,7 +811,7 @@ class MapHelper(private val appContext: Context) {
             val symbolOptions = SymbolOptions()
                 .withLatLng(currentPlace)
                 .withIconImage(
-                    trackerImageName,
+                    trackerImageName
                 )
                 .withIconAnchor(if (markerType.name == MarkerEnum.GEOFENCE_ICON.name) Property.ICON_ANCHOR_CENTER else Property.ICON_ANCHOR_CENTER)
             mSymbolManagerTracker?.create(symbolOptions)
@@ -792,17 +819,39 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun getLiveLocation(): LatLng? {
+        isGrabSelectedAndOutsideBound = false
         var mLatLng: LatLng? = null
         if (mMapboxMap?.locationComponent?.isLocationComponentActivated == true) {
             mMapboxMap?.locationComponent?.lastKnownLocation?.apply {
                 mLatLng = LatLng(
                     latitude,
-                    longitude,
+                    longitude
                 )
             }
         }
+        mPreferenceManager?.let { preferenceManager ->
+            if (isGrabMapSelected(preferenceManager, appContext)) {
+                if (mLatLng != null) {
+                    mLatLng?.let {
+                        if (!(it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)) {
+                            isGrabSelectedAndOutsideBound = true
+                            return mDefaultLatLngGrab
+                        }
+                    }
+                } else {
+                    isGrabSelectedAndOutsideBound = true
+                    return mDefaultLatLngGrab
+                }
+            }
+        }
         return if (mLatLng == null) {
-            mDefaultLatLng
+            mPreferenceManager?.let {
+                if (isGrabMapSelected(it, appContext)) {
+                    mDefaultLatLngGrab
+                } else {
+                    mDefaultLatLng
+                }
+            }
         } else {
             mLatLng
         }
@@ -830,9 +879,9 @@ class MapHelper(private val appContext: Context) {
                     padding,
                     appContext.resources.getDimension(R.dimen.dp_80).toInt(),
                     padding,
-                    appContext.resources.getDimension(R.dimen.dp_350).toInt(),
+                    appContext.resources.getDimension(R.dimen.dp_350).toInt()
                 ),
-                CAMERA_DURATION_1500,
+                CAMERA_DURATION_1500
             )
         } else {
             if (latLngList.isNotEmpty()) {
@@ -851,12 +900,12 @@ class MapHelper(private val appContext: Context) {
                             appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
                             appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
                             appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                            appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_130).toDouble()
                         ).target(
-                            latLng,
-                        ).build(),
+                            latLng
+                        ).build()
                     ),
-                    CAMERA_DURATION_1500,
+                    CAMERA_DURATION_1500
                 )
             }
         }
@@ -870,12 +919,12 @@ class MapHelper(private val appContext: Context) {
                     appContext.resources.getDimension(R.dimen.dp_210).toDouble(),
                     appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
                     appContext.resources.getDimension(R.dimen.dp_210).toDouble(),
-                    appContext.resources.getDimension(R.dimen.dp_350).toDouble(),
+                    appContext.resources.getDimension(R.dimen.dp_350).toDouble()
                 ).target(
-                    latLng,
-                ).build(),
+                    latLng
+                ).build()
             ),
-            CAMERA_DURATION_1500,
+            CAMERA_DURATION_1500
         )
     }
 
@@ -883,9 +932,9 @@ class MapHelper(private val appContext: Context) {
         mMapboxMap?.easeCamera(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition.Builder().zoom(NAVIGATION_CAMERA_ZOOM).target(LatLng(latLng))
-                    .bearing(bearing.toDouble()).build(),
+                    .bearing(bearing.toDouble()).build()
             ),
-            CAMERA_DURATION_1000,
+            CAMERA_DURATION_1000
         )
     }
 
@@ -894,9 +943,9 @@ class MapHelper(private val appContext: Context) {
             mMapboxMap?.easeCamera(
                 CameraUpdateFactory.newCameraPosition(
                     CameraPosition.Builder().zoom(NAVIGATION_CAMERA_ZOOM).target(latLng)
-                        .build(),
+                        .build()
                 ),
-                CAMERA_DURATION_1000,
+                CAMERA_DURATION_1000
             )
         }
     }
@@ -909,18 +958,18 @@ class MapHelper(private val appContext: Context) {
                     LocationComponentOptions.builder(appContext).accuracyColor(
                         ContextCompat.getColor(
                             appContext,
-                            R.color.color_bn_selected,
-                        ),
+                            R.color.color_bn_selected
+                        )
                     ).foregroundTintColor(
                         ContextCompat.getColor(
                             appContext,
-                            R.color.color_bn_selected,
-                        ),
+                            R.color.color_bn_selected
+                        )
                     ).bearingTintColor(
                         ContextCompat.getColor(
                             appContext,
-                            R.color.color_bn_selected,
-                        ),
+                            R.color.color_bn_selected
+                        )
                     ).bearingDrawable(R.drawable.ic_bearing)
                         .build()
 
@@ -941,11 +990,18 @@ class MapHelper(private val appContext: Context) {
     }
 
     // check map box location component enable or not for get live location
-    fun checkLocationComponentEnable() {
+    fun checkLocationComponentEnable(mBaseActivity: BaseActivity?, isLiveLocationClicked: Boolean) {
         mMapboxMap?.let {
             if (it.locationComponent.isLocationComponentActivated) {
                 getLiveLocation()
-                    ?.let { LatLng -> moveCameraToLocation(LatLng) }
+                    ?.let { LatLng ->
+                        if (isLiveLocationClicked) {
+                            if (LatLng.longitude == mDefaultLatLngGrab.longitude && LatLng.latitude == mDefaultLatLngGrab.latitude) {
+                                mBaseActivity?.showError(mBaseActivity.getString(R.string.your_location_not_supported_by_grab))
+                            }
+                        }
+                        moveCameraToLocation(LatLng)
+                    }
             } else {
                 enableLocationComponent()
             }
@@ -955,14 +1011,14 @@ class MapHelper(private val appContext: Context) {
     fun addGeofenceMarker(
         activity: Activity,
         data: ListGeofenceResponseEntry,
-        markerClick: MarkerClickInterface,
+        markerClick: MarkerClickInterface
     ) {
         mMapboxMap?.getStyle { style ->
             val location = data.geometry.circle.center
             convertGeofenceLayoutToBitmap(activity, data).let { bitmap ->
                 style.addImage(
                     data.geofenceId,
-                    bitmap,
+                    bitmap
                 )
             }
             mGeofenceSM?.textAllowOverlap = true
@@ -982,6 +1038,51 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
+    fun addGeofenceInvisibleDraggableMarker(activity: Activity?, latLng: LatLng, listener: OnSymbolDragListener) {
+        mGeofenceDragSM?.iconAllowOverlap = true
+        mGeofenceDragSM?.iconIgnorePlacement = true
+        mMapboxMap?.getStyle { style ->
+            activity?.let {
+                convertLayoutToGeofenceInvisibleDragBitmap(activity).let { bitmap ->
+                    style.addImage(
+                        CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID,
+                        bitmap,
+                    )
+                }
+            }
+
+            val symbolOptions = SymbolOptions()
+                .withLatLng(latLng)
+                .withIconImage(CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID)
+                .withIconAnchor(Property.ICON_ANCHOR_CENTER)
+                .withDraggable(true)
+
+            mGeofenceDragSM?.addDragListener(listener)
+
+            mGeofenceDragSM?.let {
+                it.create(symbolOptions)?.let { symbol ->
+                    mSymbolOptionList.add(symbol)
+                }
+            }
+        }
+    }
+
+    fun updateGeofenceInvisibleDraggableMarker(latLng: LatLng) {
+        mSymbolOptionList.firstOrNull { it.iconImage == CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID }?.let { symbol ->
+            symbol.latLng = latLng
+            mGeofenceDragSM?.update(symbol)
+        }
+    }
+
+    fun deleteGeofenceInvisibleDraggableMarker(listener: OnSymbolDragListener) {
+        mGeofenceDragSM?.removeDragListener(listener)
+        val temp = mSymbolOptionList.filter { it.isDraggable && it.iconImage == CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID }
+        temp.forEach {
+            mGeofenceDragSM?.delete(it)
+            mSymbolOptionList.remove(it)
+        }
+    }
+
     fun deleteGeofenceMarker(position: Int) {
         mGeofenceSM?.delete(mSymbolOptionList[position])
         mSymbolOptionList.removeAt(position)
@@ -997,7 +1098,7 @@ class MapHelper(private val appContext: Context) {
         markerEnum: MarkerEnum = MarkerEnum.NONE,
         data: SearchSuggestionData? = null,
         markerName: String? = null,
-        isFromMapClick: Boolean = false,
+        isFromMapClick: Boolean = false
     ): Bitmap {
         val viewGroup: ViewGroup? = null
         val view = context.layoutInflater.inflate(R.layout.layout_map_custom_marker, viewGroup)
@@ -1041,7 +1142,7 @@ class MapHelper(private val appContext: Context) {
                 } else {
                     (searchData.text?.split(",")?.toTypedArray()?.get(0) ?: data.text)?.let {
                         tvAddress.setText(
-                            it,
+                            it
                         )
                     }
                 }
@@ -1054,13 +1155,38 @@ class MapHelper(private val appContext: Context) {
         }
         llMain.measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         llMain.layout(0, 0, llMain.measuredWidth, llMain.measuredHeight)
         val bitmap = Bitmap.createBitmap(
             llMain.measuredWidth,
             llMain.measuredHeight,
-            Bitmap.Config.ARGB_8888,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        llMain.draw(canvas)
+        return bitmap
+    }
+
+    private fun convertLayoutToGeofenceInvisibleDragBitmap(
+        context: Activity,
+    ): Bitmap {
+        val viewGroup: ViewGroup? = null
+        val view = context.layoutInflater.inflate(R.layout.layout_geofence_draggable_marker, viewGroup)
+        val llMain: ConstraintLayout = view.findViewById(R.id.ll_geofence_draggable_marker)
+        val ivGeofenceDragMarker: AppCompatImageView = view.findViewById(R.id.iv_geofence_draggable_marker)
+
+        ivGeofenceDragMarker.setColorFilter(Color.TRANSPARENT, PorterDuff.Mode.SRC_IN)
+
+        llMain.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        llMain.layout(0, 0, llMain.measuredWidth, llMain.measuredHeight)
+        val bitmap = Bitmap.createBitmap(
+            llMain.measuredWidth,
+            llMain.measuredHeight,
+            Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
         llMain.draw(canvas)
@@ -1070,7 +1196,7 @@ class MapHelper(private val appContext: Context) {
     // convert layout to marker
     private fun convertGeofenceLayoutToBitmap(
         context: Activity,
-        data: ListGeofenceResponseEntry?,
+        data: ListGeofenceResponseEntry?
     ): Bitmap {
         val viewGroup: ViewGroup? = null
         val view = context.layoutInflater.inflate(R.layout.layout_geofence_marker, viewGroup)
@@ -1079,13 +1205,13 @@ class MapHelper(private val appContext: Context) {
         data?.geofenceId?.let { tvGeofenceName.setText(it) }
         clMain.measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         )
         clMain.layout(0, 0, clMain.measuredWidth, clMain.measuredHeight)
         val bitmap = Bitmap.createBitmap(
             clMain.measuredWidth,
             clMain.measuredHeight,
-            Bitmap.Config.ARGB_8888,
+            Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
         clMain.draw(canvas)
@@ -1097,23 +1223,23 @@ class MapHelper(private val appContext: Context) {
 
     private fun updateZoomRange(style: Style) {
         mMapboxMap?.getStyle {
-        val cameraPosition = mMapboxMap?.cameraPosition
-        val zoom = cameraPosition?.zoom
-        val minZoom = minZoomLevel(style)
-        val maxZoom = MapCameraZoom.MAX_ZOOM
-        if (zoom != null) {
-            if (zoom < minZoom) {
-                mMapboxMap?.cameraPosition = CameraPosition.Builder()
-                    .zoom(minZoom)
-                    .build()
-            } else if (zoom > maxZoom) {
-                mMapboxMap?.cameraPosition = CameraPosition.Builder()
-                    .zoom(maxZoom)
-                    .build()
+            val cameraPosition = mMapboxMap?.cameraPosition
+            val zoom = cameraPosition?.zoom
+            val minZoom = minZoomLevel(style)
+            val maxZoom = MapCameraZoom.MAX_ZOOM
+            if (zoom != null) {
+                if (zoom < minZoom) {
+                    mMapboxMap?.cameraPosition = CameraPosition.Builder()
+                        .zoom(minZoom)
+                        .build()
+                } else if (zoom > maxZoom) {
+                    mMapboxMap?.cameraPosition = CameraPosition.Builder()
+                        .zoom(maxZoom)
+                        .build()
+                }
             }
-        }
-        mMapboxMap?.setMinZoomPreference(minZoom)
-        mMapboxMap?.setMaxZoomPreference(maxZoom)
+            mMapboxMap?.setMinZoomPreference(minZoom)
+            mMapboxMap?.setMaxZoomPreference(maxZoom)
         }
     }
 

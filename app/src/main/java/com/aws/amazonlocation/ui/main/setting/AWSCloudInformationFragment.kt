@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.URLUtil
+import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,12 +24,15 @@ import com.aws.amazonlocation.databinding.FragmentAwsCloudInformationBinding
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.signin.CustomSpinnerAdapter
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
+import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
@@ -40,6 +44,7 @@ import com.aws.amazonlocation.utils.KEY_USER_POOL_CLIENT_ID
 import com.aws.amazonlocation.utils.KEY_USER_POOL_ID
 import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.SE_REGION_LIST
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
@@ -48,7 +53,9 @@ import com.aws.amazonlocation.utils.changeTermsAndConditionColor
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
+import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionMapList
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
@@ -73,6 +80,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
     private var mUserPoolId: String? = null
     private var mWebSocketUrl: String? = null
     private var regionData: String? = null
+    private var selectedRegion = regionMapList[regionMapList.keys.first()]
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -124,6 +132,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             }
         )
         changeTermsAndConditionColor(mBinding.tvTermsCondition)
+        setSpinnerData()
     }
 
     private fun initObserver() {
@@ -180,6 +189,38 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
         }
     }
 
+    private fun setSpinnerData() {
+        mBinding.apply {
+            val regionNameList = arrayListOf<String>()
+            for (data in regionMapList.keys) {
+                regionNameList.add(data)
+            }
+            val adapter = CustomSpinnerAdapter(requireContext(), regionNameList)
+            spinnerRegion.adapter = adapter
+
+            spinnerRegion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    adapter.setSelection(position)
+                    selectedRegion = regionMapList[parent.getItemAtPosition(position)]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do something when nothing is selected
+                }
+            }
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                spinnerRegion.setSelection(3)
+            } else {
+                spinnerRegion.setSelection(2)
+            }
+        }
+    }
+
     private fun FragmentAwsCloudInformationBinding.showAwsDisconnected() {
         hideViews(groupAwsCloud, btnConnect, btnLogout)
         showViews(btnDisconnect, btnSignIn)
@@ -231,7 +272,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
                 cloudFormationValidation()
             }
             btnConnect.setOnClickListener {
-                mIdentityPoolId = edtIdentityPoolId.text.toString().trim()
+                mIdentityPoolId = edtIdentityPoolId.text.toString().trim().lowercase()
                 mUserDomain = edtUserDomain.text.toString().trim()
                 mUserPoolClientId = edtUserPoolClientId.text.toString().trim()
                 mUserPoolId = edtUserPoolId.text.toString().trim()
@@ -341,12 +382,25 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
+            var webSocketUrlToSave = webSocketUrl
+            if (webSocketUrl.endsWith("/", true)) {
+                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
+            }
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrl
+                webSocketUrlToSave
             )
         }
         mPreferenceManager.setValue(KEY_TAB_ENUM, TabEnum.TAB_EXPLORE.name)
+        if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+            if (!SE_REGION_LIST.contains(regionData)) {
+                mPreferenceManager.setValue(
+                    KEY_MAP_STYLE_NAME,
+                    resources.getString(R.string.map_light)
+                )
+                mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+            }
+        }
         if (!isRunningTest) {
             lifecycleScope.launch {
                 delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
@@ -374,15 +428,23 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
 
     private var clickHere = object : CloudFormationInterface {
         override fun clickHere(url: String) {
+            val urlToPass = String.format(url, selectedRegion, selectedRegion)
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                    Uri.parse(urlToPass)
                 )
             )
         }
     }
 
+    fun hideKeyBoard() {
+        mBinding.edtIdentityPoolId.clearFocus()
+        mBinding.edtUserDomain.clearFocus()
+        mBinding.edtUserPoolId.clearFocus()
+        mBinding.edtWebSocketUrl.clearFocus()
+        mBinding.edtUserPoolClientId.clearFocus()
+    }
     override fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean) {
         mSignInViewModel.signOutWithAmazon(requireContext(), isDisconnectFromAWSRequired)
     }

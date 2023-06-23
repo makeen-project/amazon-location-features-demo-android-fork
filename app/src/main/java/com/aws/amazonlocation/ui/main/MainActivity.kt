@@ -1,12 +1,16 @@
 package com.aws.amazonlocation.ui.main
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.Window
+import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -36,9 +40,11 @@ import com.aws.amazonlocation.domain.`interface`.SignInConnectInterface
 import com.aws.amazonlocation.domain.`interface`.SignInRequiredInterface
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
+import com.aws.amazonlocation.ui.main.setting.AWSCloudInformationFragment
+import com.aws.amazonlocation.ui.main.setting.SettingFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -62,8 +68,23 @@ class MainActivity : BaseActivity() {
             checkMap()
         }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.bottomNavigationMain.layoutParams.width = width
+        mBinding.bottomNavigationMain.requestLayout()
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        )
+        isTablet = resources.getBoolean(R.bool.is_tablet)
+        if (!isTablet) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         makeTransparentStatusBar()
@@ -81,6 +102,10 @@ class MainActivity : BaseActivity() {
 
         isAppNotFirstOpened = mPreferenceManager.getValue(IS_APP_FIRST_TIME_OPENED, false)
 
+        if (!isAppNotFirstOpened) {
+            mPreferenceManager.setValue(KEY_AVOID_TOLLS, true)
+            mPreferenceManager.setValue(KEY_AVOID_FERRIES, true)
+        }
         val inflater = mNavHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.nav_graph)
         if (!isAppNotFirstOpened) {
@@ -88,7 +113,11 @@ class MainActivity : BaseActivity() {
             this.supportFragmentManager.let {
                 welcomeSheet.show(it, WelcomeBottomSheetFragment::javaClass.name)
             }
-            mBinding.bottomNavigationMain.hide()
+            if (isTablet) {
+                mBinding.bottomNavigationMain.invisible()
+            } else {
+                mBinding.bottomNavigationMain.hide()
+            }
         } else {
             graph.startDestination = R.id.explore_fragment
             mNavHostFragment.navController.graph = graph
@@ -124,6 +153,49 @@ class MainActivity : BaseActivity() {
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_geofence
                     }
+                }
+            }
+        }
+        initClick()
+        KeyBoardUtils.attachKeyboardListeners(
+            mBinding.root,
+            object : KeyBoardUtils.KeyBoardInterface {
+                override fun showKeyBoard() {
+                    val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                    if (fragment is ExploreFragment) {
+                        fragment.showKeyBoard()
+                    }
+                }
+
+                override fun hideKeyBoard() {
+                    val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                    if (fragment is ExploreFragment) {
+                        if (mGeofenceBottomSheetHelper.isCloudFormationBottomSheetVisible()) {
+                            mGeofenceBottomSheetHelper.cloudFormationBottomSheetHideKeyboard()
+                        } else {
+                            fragment.hideKeyBoard()
+                        }
+                    } else if (fragment is AWSCloudInformationFragment) {
+                        fragment.hideKeyBoard()
+                    } else if (fragment is SettingFragment) {
+                        fragment.hideKeyBoard()
+                    }
+                }
+            }
+        )
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        KeyBoardUtils.detachKeyboardListeners(mBinding.root)
+    }
+
+    private fun initClick() {
+        mBinding.apply {
+            ivAmazonInfo?.setOnClickListener {
+                val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                if (fragment is ExploreFragment) {
+                    fragment.setAttributionDataAndExpandSheet()
                 }
             }
         }
@@ -224,6 +296,7 @@ class MainActivity : BaseActivity() {
             when (item.itemId) {
                 R.id.menu_explore -> {
                     setExplorer()
+                    showAmazonLogo()
                 }
                 R.id.menu_tracking -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -271,6 +344,7 @@ class MainActivity : BaseActivity() {
                             mCloudFormationInterface
                         )
                     }
+                    showAmazonLogo()
                 }
                 R.id.menu_geofence -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -314,22 +388,39 @@ class MainActivity : BaseActivity() {
                             mCloudFormationInterface
                         )
                     }
+                    showAmazonLogo()
                 }
                 R.id.menu_settings -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
                     mNavController.navigate(R.id.setting_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    hideAmazonLogo()
                 }
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
                     mNavController.navigate(R.id.about_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    hideAmazonLogo()
                 }
             }
             true
         }
+    }
+
+    private fun hideAmazonLogo() {
+        mBinding.imgAmazonLogo?.hide()
+        mBinding.ivAmazonInfo?.hide()
+    }
+
+    private fun showAmazonLogo() {
+        mBinding.imgAmazonLogo?.show()
+        mBinding.ivAmazonInfo?.show()
+    }
+
+    fun changeAmazonLogo(logoResId: Int) {
+        mBinding.imgAmazonLogo?.setImageResource(logoResId)
     }
 
     fun setExplorer() {
@@ -340,13 +431,33 @@ class MainActivity : BaseActivity() {
             fragment.showDirectionAndCurrentLocationIcon()
         }
         mBottomSheetHelper.hideSearchBottomSheet(false)
-        mBottomSheetHelper.hideMapStyleSheet()
+        if (!isTablet) {
+            mBottomSheetHelper.hideMapStyleSheet()
+        }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
     }
 
     fun showBottomBar() {
         mBinding.bottomNavigationMain.show()
+    }
+
+    fun showNavigationIcon() {
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                fragment.showCurrentLocationIcon()
+            }
+        }
+    }
+
+    fun showDirectionAndCurrentLocationIcon() {
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                fragment.showDirectionAndCurrentLocationIcon()
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -363,7 +474,9 @@ class MainActivity : BaseActivity() {
     private fun showGeofence() {
         val fragment = mNavHostFragment.childFragmentManager.fragments[0]
         if (fragment is ExploreFragment) {
-            fragment.hideDirectionAndCurrentLocationIcon()
+            if (!isTablet) {
+                fragment.hideDirectionAndCurrentLocationIcon()
+            }
         }
         mBottomSheetHelper.hideSearchBottomSheet(true)
         lifecycleScope.launch {
@@ -381,7 +494,9 @@ class MainActivity : BaseActivity() {
             fragment.showDirectionAndCurrentLocationIcon()
         }
         mBottomSheetHelper.hideSearchBottomSheet(true)
-        mBottomSheetHelper.hideMapStyleSheet()
+        if (!isTablet) {
+            mBottomSheetHelper.hideMapStyleSheet()
+        }
         showTrackingBottomSheet()
     }
 
@@ -412,8 +527,12 @@ class MainActivity : BaseActivity() {
                 bottomNavigationMain.animate().translationY(0f).start()
                 bottomNavigationMain.show()
             } else {
-                bottomNavigationMain.animate().translationY(100f).start()
-                bottomNavigationMain.hide()
+                if (isTablet) {
+                    mBinding.bottomNavigationMain.invisible()
+                } else {
+                    bottomNavigationMain.animate().translationY(100f).start()
+                    bottomNavigationMain.hide()
+                }
             }
         }
     }
@@ -444,6 +563,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun moveToExploreScreen() {
+        showAmazonLogo()
         mBinding.bottomNavigationMain.menu.findItem(R.id.menu_explore).isChecked = true
     }
 
@@ -457,7 +577,7 @@ class MainActivity : BaseActivity() {
     override fun onBackPressed() {
         if (mNavController.currentDestination?.label == AWS_CLOUD_INFORMATION_FRAGMENT) {
             mNavController.popBackStack()
-        }else if (mNavController.currentDestination?.label == VERSION_FRAGMENT) {
+        } else if (mNavController.currentDestination?.label == VERSION_FRAGMENT) {
             mNavController.popBackStack()
         } else if (mNavController.currentDestination?.label == ABOUT_FRAGMENT) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -540,7 +660,7 @@ class MainActivity : BaseActivity() {
                     resultLauncher.launch(
                         Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse(BuildConfig.BASE_DOMAIN+BuildConfig.AWS_TERMS_URL)
+                            Uri.parse(BuildConfig.BASE_DOMAIN + BuildConfig.AWS_TERMS_URL)
                         )
                     )
                 }

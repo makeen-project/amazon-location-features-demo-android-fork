@@ -10,20 +10,17 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
-import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
-import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.DELAY_20000
+import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -39,28 +36,15 @@ import com.aws.amazonlocation.failTest
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class CheckRouteMapAdjustedTest : BaseTest() {
+class CheckRouteMapAdjustedTest : BaseTestMainActivity() {
 
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
@@ -75,6 +59,7 @@ class CheckRouteMapAdjustedTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
+            Thread.sleep(DELAY_5000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             val cardDirection =
                 mActivityRule.activity.findViewById<MaterialCardView>(R.id.card_direction)
@@ -86,19 +71,21 @@ class CheckRouteMapAdjustedTest : BaseTest() {
                     Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_direction")),
                     DELAY_5000,
                 )
+                Thread.sleep(DELAY_3000)
                 val edtSearchDirection =
                     mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
                 if (edtSearchDirection.visibility == View.VISIBLE) {
                     onView(withId(R.id.edt_search_direction)).perform(
-                        ViewActions.typeText(
+                        ViewActions.replaceText(
                             TEST_WORD_5,
                         ),
                     )
                     Thread.sleep(DELAY_2000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
+                    Thread.sleep(DELAY_3000)
                     val rvSearchPlacesSuggestionDirection =
                         mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion_direction)
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
@@ -112,11 +99,12 @@ class CheckRouteMapAdjustedTest : BaseTest() {
                         }
                     }
                     onView(withId(R.id.edt_search_dest)).perform(ViewActions.typeText(TEST_WORD_6))
-                    Thread.sleep(DELAY_2000)
+                    Thread.sleep(DELAY_3000)
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion_direction")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
+                    Thread.sleep(DELAY_3000)
                     rvSearchPlacesSuggestionDirection.adapter?.itemCount?.let {
                         if (it > 0) {
                             onView(withId(R.id.rv_search_places_suggestion_direction)).perform(
@@ -129,8 +117,9 @@ class CheckRouteMapAdjustedTest : BaseTest() {
                     }
                     uiDevice.wait(
                         Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/card_drive_go")),
-                        DELAY_15000,
+                        DELAY_20000,
                     )
+                    Thread.sleep(DELAY_5000)
                     if (beforeZoomLevel != null) {
                         mapbox?.cameraPosition?.zoom?.let {
                             Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel != it)

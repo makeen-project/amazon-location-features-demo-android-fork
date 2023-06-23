@@ -2,7 +2,9 @@ package com.aws.amazonlocation.ui.base
 
 import android.content.Context
 import android.widget.TextView
+import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.BottomSheetHelper
@@ -46,5 +48,23 @@ abstract class BaseFragment : Fragment() {
         val textView = snackBar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
         textView.maxLines = 10
         snackBar.show()
+    }
+
+    fun Fragment.addReplaceFragment(
+        @IdRes container: Int,
+        fragment: Fragment,
+        addFragment: Boolean,
+        addToBackStack: Boolean
+    ) {
+        val transaction = childFragmentManager.beginTransaction()
+        if (addFragment) {
+            transaction.add(container, fragment, fragment.javaClass.simpleName)
+        } else {
+            transaction.replace(container, fragment, fragment.javaClass.simpleName)
+        }
+        if (addToBackStack) {
+            transaction.addToBackStack(fragment.tag)
+        }
+        transaction.commit()
     }
 }

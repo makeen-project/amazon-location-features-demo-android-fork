@@ -47,6 +47,7 @@ import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
@@ -570,4 +571,33 @@ fun checkSessionValid(mPreferenceManager: PreferenceManager): Boolean {
         return cipSession.isValid
     }
     return true
+}
+
+fun isGrabMapEnable(mPreferenceManager: PreferenceManager): Boolean {
+    var isGrabMapEnable = false
+    val region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+    val mAuthStatus = mPreferenceManager.getValue(
+        KEY_CLOUD_FORMATION_STATUS,
+        AuthEnum.DEFAULT.name
+    )
+    when (mAuthStatus) {
+        AuthEnum.AWS_CONNECTED.name, AuthEnum.SIGNED_IN.name -> {
+            if (SE_REGION_LIST.contains(region)) {
+                isGrabMapEnable = true
+            }
+        }
+        else -> {
+            isGrabMapEnable = true
+        }
+    }
+    return isGrabMapEnable
+}
+
+fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): Boolean {
+    var isGrabMapEnable = false
+    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
+    if (mapName == context.getString(R.string.grab)) {
+        isGrabMapEnable = true
+    }
+    return isGrabMapEnable
 }

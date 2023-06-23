@@ -12,6 +12,7 @@ const val KEY_LOCATION_PERMISSION = "location_permission"
 const val SEARCH_MAX_RESULT = 15
 const val SEARCH_MAX_SUGGESTION_RESULT = 5
 const val KILOMETERS = "Kilometers"
+const val MILES = "Miles"
 const val KEY_POOL_ID = "POOL_ID"
 const val KEY_USER_POOL_ID = "KEY_USER_POOL_ID"
 const val KEY_USER_DOMAIN = "KEY_USER_DOMAIN"
@@ -22,12 +23,17 @@ const val KEY_RE_START_APP = "KEY_RE_START_APP"
 const val KEY_RE_START_APP_WITH_AWS_DISCONNECT = "key_restart_app_with_aws_disconnect"
 const val KEY_TAB_ENUM = "KEY_TAB_ENUM"
 const val KEY_CLOUD_FORMATION_STATUS = "KEY_CLOUD_FORMATION_STATUS"
+const val KEY_UNIT_SYSTEM = "KEY_UNIT_SYSTEM"
 const val HTTPS = "https://"
 const val KEY_URL = "KEY_URL"
 const val KEY_MAP_NAME = "key_map_name"
 const val KEY_MAP_STYLE_NAME = "key_map_style_name"
-const val CLICK_DEBOUNCE = 500L
+const val CLICK_DEBOUNCE = 1000L
+const val CLICK_DEBOUNCE_ENABLE = 1200L
 const val RESTART_DELAY = 800L
+const val DELAY_500 = 500L
+const val DELAY_300 = 300L
+const val DELAY_1000 = 1000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"
@@ -51,6 +57,34 @@ const val JSON_KEY_STYLE_HERE = "omv"
 const val JSON_KEY_STYLE_RASTER = "raster-tiles"
 const val JSON_KEY_STYLE_MINZOOM = "minzoom"
 const val JSON_KEY_STYLE_MAXZOOM = "maxzoom"
+const val TRAVEL_MODE_BICYCLE = "Bicycle"
+const val TRAVEL_MODE_MOTORCYCLE = "Motorcycle"
+
+const val HERE = "Here"
+const val DESCRIPTION_TAG_ESRI = "ESRI_"
+const val DESCRIPTION_TAG_HERE = "HERE_"
+
+val SE_REGION_LIST = arrayListOf("ap-southeast-1")
+
+const val latNorth = 31.952162238024968
+const val lonEast = 146.25
+const val latSouth = -21.943045533438166
+const val lonWest = 90.0
+
+val regionMapList: MutableMap<String, String> = mutableMapOf(
+    Pair("US East (Ohio) us-east-2", "us-east-2"),
+    Pair("US East (N. Virginia) us-east-1", "us-east-1"),
+    Pair("US West (Oregon) us-west-2", "us-west-2"),
+    Pair("Asia Pacific (Singapore) ap-southeast-1", "ap-southeast-1"),
+    Pair("Asia Pacific (Sydney) ap-southeast-2", "ap-southeast-2"),
+    Pair("Asia Pacific (Tokyo) ap-northeast-1", "ap-northeast-1"),
+    Pair("Canada (Central) ca-central-1", "ca-central-1"),
+    Pair("Europe (Frankfurt) eu-central-1", "eu-central-1"),
+    Pair("Europe (Ireland) eu-west-1", "eu-west-1"),
+    Pair("Europe (London) eu-west-2", "eu-west-2"),
+    Pair("Europe (Stockholm) eu-north-1", "eu-north-1"),
+    Pair("South America (São Paulo) sa-east-1", "sa-east-1")
+)
 
 /**
  *  * Validate Latitude and Longitude from string.
@@ -73,8 +107,10 @@ const val LOCATION_PLACES_PREFIX = "places."
 
 const val ESRI_PLACE_INDEX = LOCATION_AWS_PREFIX + LOCATION_PLACES_PREFIX + "Esri.PlaceIndex"
 const val HERE_PLACE_INDEX = LOCATION_AWS_PREFIX + LOCATION_PLACES_PREFIX + "HERE.PlaceIndex"
+const val GRAB_PLACE_INDEX = LOCATION_AWS_PREFIX + LOCATION_PLACES_PREFIX + "Grab.PlaceIndex"
 const val ESRI_ROUTE_CALCULATOR = LOCATION_AWS_PREFIX + LOCATION_ROUTES_PREFIX + "Esri.RouteCalculator"
 const val HERE_ROUTE_CALCULATOR = LOCATION_AWS_PREFIX + LOCATION_ROUTES_PREFIX + "HERE.RouteCalculator"
+const val GRAB_ROUTE_CALCULATOR = LOCATION_AWS_PREFIX + LOCATION_ROUTES_PREFIX + "Grab.RouteCalculator"
 
 object Credentials {
     const val CLOUD_FORMATION_REMOVE_URL = BuildConfig.CLOUD_FORMATION_URL
@@ -100,6 +136,7 @@ object Durations {
     const val CAMERA_DURATION_1000 = 1000
     const val CAMERA_BOTTOM_PADDING = 800
     const val CAMERA_TOP_RIGHT_LEFT_PADDING = 225
+    const val CAMERA_RIGHT_PADDING = 180
     const val DEFAULT_RADIUS = 80
     const val DELAY_FOR_GEOFENCE = 500L
 }
@@ -118,6 +155,16 @@ object GeofenceCons {
     const val TURF_CALCULATION_LINE_LAYER_ID = "TURF_CALCULATION_LINE_LAYER_ID"
     const val RADIUS_SEEKBAR_MAX = 10000
     const val RADIUS_SEEKBAR_DIFFERENCE = 1
+
+    const val CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID = "CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID"
+    const val CIRCLE_DRAGGABLE_VISIBLE_ICON_ID = "CIRCLE_DRAGGABLE_VISIBLE_ICON_ID"
+    const val CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID = "CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID"
+
+    const val CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID = "CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID"
+
+    const val CIRCLE_DRAGGABLE_BEARING = 90.0
+
+    const val GEOFENCE_MIN_RADIUS = 10
 }
 
 object TrackerCons {
@@ -136,6 +183,8 @@ object MapNames {
     const val HERE_EXPLORE_TRUCK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.ExploreTruck"
     const val HERE_HYBRID = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Hybrid"
     const val HERE_IMAGERY = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Imagery"
+    const val GRAB_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardLight"
+    const val GRAB_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardDark"
 }
 
 object MapStyles {
@@ -150,6 +199,8 @@ object MapStyles {
     const val VECTOR_HERE_EXPLORE_TRUCK = "VectorHereExploreTruck"
     const val HYBRID_HERE_EXPLORE_SATELLITE = "HybridHereExploreSatellite"
     const val RASTER_HERE_EXPLORE_SATELLITE = "RasterHereExploreSatellite"
+    const val GRAB_LIGHT = "VectorGrabStandardLight"
+    const val GRAB_DARK = "VectorGrabStandardDark"
 }
 
 object DateFormat {

@@ -17,7 +17,7 @@
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -102,6 +102,8 @@
                         android:imeOptions="actionSearch"
                         android:maxLength="200"
                         android:paddingHorizontal="@dimen/dp_16"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
                         android:singleLine="true"
                         android:textAlignment="viewStart"
                         app:layout_constraintBottom_toBottomOf="@id/iv_search_sheet"
@@ -154,7 +156,7 @@
                         android:id="@+id/iv_close"
                         android:layout_width="@dimen/dp_24"
                         android:layout_height="@dimen/dp_24"
-                        android:src="@drawable/ic_close"
+                        android:src="@drawable/ic_close_search"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

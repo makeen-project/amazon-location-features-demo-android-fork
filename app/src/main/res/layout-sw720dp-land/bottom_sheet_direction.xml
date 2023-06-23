@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_persistent_bottom_sheet_direction"
+    android:layout_width="@dimen/screen_size"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="true"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_navigation_main_sheet_direction_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_sheet_top_corner_curved_white_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingBottom="@dimen/dp_16"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/direction_sheet_gl_direction_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/dp_16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/sheet_direction_gl_direction_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/dp_16" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_direction_close_direction"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_14"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="@id/sheet_direction_gl_direction_end"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_direction_address"
+            style="@style/SP20BoldMediumBlackTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_27"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toStartOf="@+id/iv_direction_close_direction"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Mike’s Wings London" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sheet_direction_tv_direction_street"
+            style="@style/SP13HintRegularTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_2"
+            android:ellipsize="end"
+            android:lines="2"
+            android:maxLines="2"
+            app:layout_constraintEnd_toStartOf="@id/iv_direction_close_direction"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_direction_address"
+            tools:text="24 Heath Hill Road South,London,RG45" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_direction_distance"
+            style="@style/SP13BoldMediumBlackTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            tools:text="@string/_2_min"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/sheet_direction_tv_direction_street" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_loader_sheet_1"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_14"
+            android:layout_marginTop="@dimen/dp_8"
+            android:backgroundTint="@color/loader_color"
+            app:cardCornerRadius="@dimen/dp_5"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/sheet_direction_tv_direction_street" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/tv_direction_dot"
+            android:layout_width="@dimen/dp_3"
+            android:layout_height="@dimen/dp_3"
+            android:layout_marginHorizontal="@dimen/dp_10"
+            app:cardBackgroundColor="@color/color_hint_text"
+            app:cardCornerRadius="@dimen/dp_30"
+            app:layout_constraintBottom_toBottomOf="@id/tv_direction_distance"
+            app:layout_constraintEnd_toStartOf="@id/tv_direction_time"
+            app:layout_constraintStart_toEndOf="@id/tv_direction_distance"
+            app:layout_constraintTop_toTopOf="@id/tv_direction_distance" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_loader_sheet_2"
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_14"
+            android:layout_marginTop="@dimen/dp_8"
+            android:layout_marginStart="@dimen/dp_10"
+            android:backgroundTint="@color/loader_color"
+            app:cardCornerRadius="@dimen/dp_5"
+            app:layout_constraintStart_toEndOf="@+id/card_loader_sheet_1"
+            app:layout_constraintTop_toBottomOf="@id/sheet_direction_tv_direction_street"  />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_direction_time"
+            style="@style/SP13BoldMediumBlackTextStyle"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:drawableStart="@drawable/ic_direction_card"
+            android:drawablePadding="@dimen/dp_8"
+            app:layout_constraintEnd_toEndOf="@id/sheet_direction_gl_direction_end"
+            app:layout_constraintStart_toEndOf="@id/tv_direction_dot"
+            app:layout_constraintTop_toBottomOf="@id/sheet_direction_tv_direction_street"
+            tools:text="@string/_2_min" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_direction_error"
+            style="@style/SP13HintRegularTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:visibility="gone"
+            android:textAlignment="viewStart"
+            android:text="@string/error_switch_to_here"
+            android:textColor="@color/color_32ADE6"
+            app:layout_constraintEnd_toEndOf="@id/sheet_direction_gl_direction_end"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_direction_time" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_direction_error_2"
+            style="@style/SP13HintRegularTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_8"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:visibility="gone"
+            android:textAlignment="viewStart"
+            android:text="@string/label_location_permission_denied"
+            android:textColor="@color/color_32ADE6"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_direction_error" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_info"
+            android:layout_width="@dimen/sp_14"
+            android:layout_height="@dimen/sp_14"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/dp_8"
+            android:src="@drawable/ic_info"
+            app:layout_constraintBottom_toBottomOf="@id/tv_direction_error_2"
+            app:layout_constraintStart_toEndOf="@id/tv_direction_error_2"
+            app:layout_constraintTop_toTopOf="@id/tv_direction_error_2" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_direction"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginTop="@dimen/dp_24"
+            android:layout_marginBottom="@dimen/dp_12"
+            app:cardBackgroundColor="@color/color_primary_green"
+            app:cardUseCompatPadding="false"
+            app:cornerRadius="@dimen/dp_8"
+            app:layout_constraintEnd_toEndOf="@id/sheet_direction_gl_direction_end"
+            app:layout_constraintStart_toStartOf="@id/direction_sheet_gl_direction_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_direction_error_2">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_direction_sheet"
+                    android:layout_width="@dimen/dp_22"
+                    android:layout_height="@dimen/dp_22"
+                    android:layout_marginEnd="@dimen/dp_19"
+                    android:src="@drawable/ic_directions"
+                    android:tint="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tv_directions_direction"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_directions_direction"
+                    style="@style/SP16BoldWhiteTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/directions"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_direction_sheet"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="tv_direction_distance,tv_direction_dot,tv_direction_time" />
+
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_distance_load"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="card_loader_sheet_1,card_loader_sheet_2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

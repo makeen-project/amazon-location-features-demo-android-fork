@@ -1,5 +1,7 @@
 package com.aws.amazonlocation.ui.main
 
+import android.app.ActivityManager
+import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -27,32 +29,19 @@ import org.junit.*
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class SettingsFragmentChangeDataProviderTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java, true, false)
+class SettingsFragmentChangeDataProviderTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     private lateinit var preferenceManager: PreferenceManager
 
-    @Before
     @Throws(java.lang.Exception::class)
-    fun setUp() {
+    override fun before() {
         preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
         preferenceManager.removeValue(KEY_MAP_NAME)
         preferenceManager.removeValue(KEY_MAP_STYLE_NAME)
 
-        mActivityRule.launchActivity(null)
+        super.before()
     }
 
     @Test
@@ -67,7 +56,7 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
             goToDataProvider()
 
             onView(
-                allOf(withId(R.id.ll_here), isDisplayed())
+                allOf(withId(R.id.ll_here), isDisplayed()),
             ).perform(click())
 
             var selectedMapName = preferenceManager.getValue(KEY_MAP_NAME, esriMapName)
@@ -81,7 +70,7 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
             goToDataProvider()
 
             onView(
-                allOf(withId(R.id.ll_esri), isDisplayed())
+                allOf(withId(R.id.ll_esri), isDisplayed()),
             ).perform(click())
 
             selectedMapName = preferenceManager.getValue(KEY_MAP_NAME, esriMapName)
@@ -103,8 +92,8 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
             allOf(
                 withText(settingTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )
             .perform(click())
 
@@ -113,8 +102,8 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
         onView(
             allOf(
                 withId(R.id.cl_data_provider),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )
             .perform(click())
     }
@@ -126,8 +115,8 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
             allOf(
                 withText(exploreTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )
             .perform(click())
 
@@ -149,7 +138,7 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
         ThreadUtils.runOnUiThread {
             matchesWithRequested = mapbox?.style?.json?.let {
                 JSONObject(it).optJSONObject(
-                    JSON_KEY_SOURCES
+                    JSON_KEY_SOURCES,
                 )?.has(if (checkEsri) JSON_KEY_ESRI else JSON_KEY_HERE) == true
             } == true
             if (!matchesWithRequested) {
@@ -158,8 +147,18 @@ class SettingsFragmentChangeDataProviderTest : BaseTest() {
         }
     }
 
-    @After
-    fun tearDown() {
-        mActivityRule.finishActivity()
+    override fun after() {
+        super.after()
+        val targetContext = ApplicationProvider.getApplicationContext<Context>()
+        val packageName = targetContext.packageName
+        // Clear app from recent apps list
+        val am = targetContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        am.let {
+            it.appTasks.forEach { task ->
+                if (task.taskInfo.baseActivity?.packageName == packageName) {
+                    task.finishAndRemoveTask()
+                }
+            }
+        }
     }
 }

@@ -1,15 +1,21 @@
 package com.aws.amazonlocation.ui.main.more
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentAboutBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.about.VersionFragment
+import com.aws.amazonlocation.ui.main.attribution.AttributionFragment
+import com.aws.amazonlocation.ui.main.terms_condition.TermsAndConditionFragment
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.KEY_URL
 
@@ -19,6 +25,7 @@ import com.aws.amazonlocation.utils.KEY_URL
 class AboutFragment : BaseFragment() {
 
     private lateinit var mBinding: FragmentAboutBinding
+    private var isTablet = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,21 +36,101 @@ class AboutFragment : BaseFragment() {
         return mBinding.root
     }
 
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val width = resources.getDimensionPixelSize(R.dimen.screen_size)
+        mBinding.clAbout?.layoutParams?.width = width
+        mBinding.clAbout?.requestLayout()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if ((activity is MainActivity)) {
+            isTablet = (activity as MainActivity).isTablet
+        }
         clickListener()
+        if (isTablet) {
+            addReplaceFragment(
+                R.id.frame_container,
+                AttributionFragment(),
+                addFragment = true,
+                addToBackStack = false
+            )
+            mBinding.apply {
+                clAttribution.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_view
+                    )
+                )
+            }
+        }
     }
 
     private fun clickListener() {
         mBinding.apply {
             clAttribution.setOnClickListener {
-                findNavController().navigate(R.id.attribution_fragment)
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        AttributionFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clAttribution.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_view
+                            )
+                        )
+                    }
+                } else {
+                    findNavController().navigate(R.id.attribution_fragment)
+                }
             }
             clVersion.setOnClickListener {
-                findNavController().navigate(R.id.version_fragment)
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        VersionFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clVersion.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_view
+                            )
+                        )
+                    }
+                } else {
+                    findNavController().navigate(R.id.version_fragment)
+                }
             }
             clTermsConditions.setOnClickListener {
-                findNavController().navigate(R.id.terms_conditions_fragment)
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        TermsAndConditionFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clTermsConditions.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_view
+                            )
+                        )
+                    }
+                } else {
+                    findNavController().navigate(R.id.terms_conditions_fragment)
+                }
             }
             clHelp.setOnClickListener {
                 startActivity(
@@ -56,6 +143,24 @@ class AboutFragment : BaseFragment() {
                     )
                 )
             }
+        }
+    }
+
+    private fun setDefaultSelection() {
+        mBinding.apply {
+            clAttribution.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            clTermsConditions.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            clVersion.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         }
     }
 }

@@ -16,7 +16,7 @@
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,27 +51,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_map_style_close"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_map_style_close"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_14"
-            app:cardBackgroundColor="@color/number_bg_color"
-            app:cardCornerRadius="@dimen/dp_30"
-            app:cardElevation="@dimen/dp_0"
-            app:cardUseCompatPadding="false"
+            android:src="@drawable/ic_close"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:strokeColor="@android:color/transparent">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_close" />
-
-        </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_map_style"

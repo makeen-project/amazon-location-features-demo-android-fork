@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.MainActivity">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:defaultNavHost="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/nav_graph" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_main"
+        android:layout_width="@dimen/screen_size"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:background="@color/white"
+        app:itemIconTint="@drawable/bottom_navigation_icon_tint_selector"
+        app:itemTextColor="@drawable/bottom_navigation_icon_tint_selector"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu_bottom_navigation" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_amazon_logo"
+        android:layout_width="@dimen/dp_118"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginBottom="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_amazon_logo_on_light"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_navigation_main"
+        app:layout_constraintStart_toEndOf="@+id/bottom_navigation_main" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_amazon_info"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_4"
+        android:src="@drawable/ic_info"
+        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo"
+        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo"
+        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

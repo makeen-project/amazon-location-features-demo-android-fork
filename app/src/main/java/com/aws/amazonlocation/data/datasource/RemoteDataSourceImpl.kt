@@ -6,7 +6,6 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.HostedUIOptions
 import com.amazonaws.mobile.client.SignInUIOptions
-import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserStateDetails
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.amazonaws.services.geo.model.Step
@@ -28,6 +27,7 @@ import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningRemoteDataSourceImplTest
+import com.aws.amazonlocation.utils.validateLatLng
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
 import javax.inject.Inject
@@ -43,12 +43,22 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface
+        searchPlace: SearchPlaceInterface,
+        isGrabMapSelected: Boolean
     ) {
         if (mContext.isInternetAvailable()) {
             val mSearchSuggestionResponse =
-                mAWSLocationHelper.searchPlaceSuggestion(lat, lng, searchText)
-            if (mSearchSuggestionResponse.text == searchText) {
+                mAWSLocationHelper.searchPlaceSuggestion(lat, lng, searchText, isGrabMapSelected)
+            if (validateLatLng(searchText) != null) {
+                val mLatLng = validateLatLng(searchText)
+                if (mSearchSuggestionResponse.text == (mLatLng?.latitude.toString() + "," + mLatLng?.longitude.toString())) {
+                    searchPlace.getSearchPlaceSuggestionResponse(mSearchSuggestionResponse)
+                } else {
+                    if (!mSearchSuggestionResponse.error.isNullOrEmpty()) {
+                        searchPlace.error(mSearchSuggestionResponse)
+                    }
+                }
+            } else if (mSearchSuggestionResponse.text == searchText) {
                 searchPlace.getSearchPlaceSuggestionResponse(mSearchSuggestionResponse)
             } else {
                 if (!mSearchSuggestionResponse.error.isNullOrEmpty()) {
@@ -132,23 +142,10 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         signInInterface: SignInInterface
     ) {
         try {
-            val sop = SignOutOptions.builder()
-                .invalidateTokens(true)
-                .build()
-            AWSMobileClient.getInstance().signOut(
-                sop,
-                object : Callback<Void> {
-                    override fun onResult(result: Void?) {
-                        signInInterface.signOutSuccess(
-                            context.resources.getString(R.string.sign_out_successfully),
-                            isDisconnectFromAWSRequired,
-                        )
-                    }
-
-                    override fun onError(e: Exception) {
-                        signInInterface.signOutFailed(context.resources.getString(R.string.sign_out_failed))
-                    }
-                },
+            AWSMobileClient.getInstance().signOut()
+            signInInterface.signOutSuccess(
+                context.resources.getString(R.string.sign_out_successfully),
+                isDisconnectFromAWSRequired
             )
         } catch (e: Exception) {
             signInInterface.signOutFailed(context.resources.getString(R.string.sign_out_failed))
@@ -211,10 +208,16 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
             navigationData.startLng = step.startPosition[1]
             navigationData.endLat = step.endPosition[0]
             navigationData.endLng = step.endPosition[1]
-            navigationData.destinationAddress = indexResponse?.results?.get(0)?.place?.label
-            navigationData.region = indexResponse?.results?.get(0)?.place?.region
-            navigationData.subRegion = indexResponse?.results?.get(0)?.place?.subRegion
-            navigationData.country = indexResponse?.results?.get(0)?.place?.country
+            if (!indexResponse?.results.isNullOrEmpty()) {
+                navigationData.destinationAddress = indexResponse?.results?.get(0)?.place?.label
+                navigationData.region = indexResponse?.results?.get(0)?.place?.region
+                navigationData.subRegion = indexResponse?.results?.get(0)?.place?.subRegion
+                navigationData.country = indexResponse?.results?.get(0)?.place?.country
+                navigationData.isDataSuccess = true
+            } else {
+                navigationData.destinationAddress = "$lat, $lng"
+                navigationData.isDataSuccess = false
+            }
             searchPlace.getNavigationList(navigationData)
         } else {
             searchPlace.internetConnectionError(

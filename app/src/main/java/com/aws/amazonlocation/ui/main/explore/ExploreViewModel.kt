@@ -25,23 +25,25 @@ import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyles
+import com.aws.amazonlocation.utils.TRAVEL_MODE_BICYCLE
+import com.aws.amazonlocation.utils.TRAVEL_MODE_MOTORCYCLE
 import com.aws.amazonlocation.utils.Units
 import com.mapbox.mapboxsdk.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private var getLocationSearchUseCase: LocationSearchUseCase
+    private var getLocationSearchUseCase: LocationSearchUseCase,
 ) :
     ViewModel() {
 
@@ -55,10 +57,13 @@ class ExploreViewModel @Inject constructor(
     var mCarData: CalculateRouteResult? = null
     var mWalkingData: CalculateRouteResult? = null
     var mTruckData: CalculateRouteResult? = null
+    var mBicycleData: CalculateRouteResult? = null
+    var mMotorcycleData: CalculateRouteResult? = null
     var mNavigationResponse: NavigationResponse? = null
     private val mNavigationListModel = ArrayList<NavigationData>()
     private val listMapInnerData = arrayListOf<MapStyleInnerData>()
     var mStyleList = ArrayList<MapStyleData>()
+
     private val _searchForSuggestionsResultList =
         Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)
     val searchForSuggestionsResultList: Flow<HandleResult<SearchSuggestionResponse>> =
@@ -100,39 +105,41 @@ class ExploreViewModel @Inject constructor(
         _addressLineData.receiveAsFlow()
 
     fun searchPlaceSuggestion(
-        searchText: String
+        searchText: String,
+        isGrabMapSelected: Boolean
     ) {
         _searchForSuggestionsResultList.trySend(
-            HandleResult.Loading
+            HandleResult.Loading,
         )
         viewModelScope.launch(Dispatchers.IO) {
             getLocationSearchUseCase.searchPlaceSuggestionList(
                 mLatLng?.latitude,
                 mLatLng?.longitude,
                 searchText,
+                isGrabMapSelected,
                 object : SearchPlaceInterface {
                     override fun getSearchPlaceSuggestionResponse(suggestionResponse: SearchSuggestionResponse?) {
                         _searchForSuggestionsResultList.trySend(
                             HandleResult.Success(
-                                suggestionResponse!!
-                            )
+                                suggestionResponse!!,
+                            ),
                         )
                     }
 
                     override fun internetConnectionError(error: String) {
                         _searchForSuggestionsResultList.trySend(
                             HandleResult.Error(
-                                DataSourceException.Error(error)
-                            )
+                                DataSourceException.Error(error),
+                            ),
                         )
                     }
-                }
+                },
             )
         }
     }
 
     fun searchPlaceIndexForText(
-        searchText: String?
+        searchText: String?,
     ) {
         _searchLocationList.trySend(HandleResult.Loading)
         viewModelScope.launch(Dispatchers.IO) {
@@ -148,11 +155,11 @@ class ExploreViewModel @Inject constructor(
                     override fun error(searchResponse: SearchSuggestionResponse) {
                         searchResponse.error?.let {
                             DataSourceException.Error(
-                                it
+                                it,
                             )
                         }?.let {
                             HandleResult.Error(
-                                it
+                                it,
                             )
                         }?.let { _searchLocationList.trySend(it) }
                     }
@@ -161,12 +168,12 @@ class ExploreViewModel @Inject constructor(
                         _searchLocationList.trySend(
                             HandleResult.Error(
                                 DataSourceException.Error(
-                                    error
-                                )
-                            )
+                                    error,
+                                ),
+                            ),
                         )
                     }
-                }
+                },
             )
         }
     }
@@ -178,7 +185,7 @@ class ExploreViewModel @Inject constructor(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        isWalkingAndTruckCall: Boolean
+        isWalkingAndTruckCall: Boolean,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isWalkingAndTruckCall) {
@@ -190,7 +197,7 @@ class ExploreViewModel @Inject constructor(
                         lngDestination,
                         isAvoidFerries,
                         isAvoidTolls,
-                        TravelMode.Walking.value
+                        TravelMode.Walking.value,
                     )
                 }
                 two.await()
@@ -202,7 +209,7 @@ class ExploreViewModel @Inject constructor(
                         lngDestination,
                         isAvoidFerries,
                         isAvoidTolls,
-                        TravelMode.Truck.value
+                        TravelMode.Truck.value,
                     )
                 }
                 three.await()
@@ -215,11 +222,59 @@ class ExploreViewModel @Inject constructor(
                         lngDestination,
                         isAvoidFerries,
                         isAvoidTolls,
-                        TravelMode.Car.value
+                        TravelMode.Car.value,
                     )
                 }
                 one.await()
             }
+        }
+    }
+
+    fun calculateGrabDistance(
+        latitude: Double?,
+        longitude: Double?,
+        latDestination: Double?,
+        lngDestination: Double?,
+        isAvoidFerries: Boolean?,
+        isAvoidTolls: Boolean?
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val two = async {
+                calculateDistanceFromMode(
+                    latitude,
+                    longitude,
+                    latDestination,
+                    lngDestination,
+                    isAvoidFerries,
+                    isAvoidTolls,
+                    TravelMode.Walking.value
+                )
+            }
+            two.await()
+            val three = async {
+                calculateDistanceFromMode(
+                    latitude,
+                    longitude,
+                    latDestination,
+                    lngDestination,
+                    isAvoidFerries,
+                    isAvoidTolls,
+                    TRAVEL_MODE_BICYCLE
+                )
+            }
+            three.await()
+            val one = async {
+                calculateDistanceFromMode(
+                    latitude,
+                    longitude,
+                    latDestination,
+                    lngDestination,
+                    isAvoidFerries,
+                    isAvoidTolls,
+                    TRAVEL_MODE_MOTORCYCLE
+                )
+            }
+            one.await()
         }
     }
 
@@ -230,7 +285,7 @@ class ExploreViewModel @Inject constructor(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        travelMode: String?
+        travelMode: String?,
     ) {
         _calculateDistance.trySend(HandleResult.Loading)
         mDestinationLatLng = lngDestination?.let { latDestination?.let { it1 -> LatLng(it1, it) } }
@@ -259,12 +314,12 @@ class ExploreViewModel @Inject constructor(
                                     lngDestination?.let { it1 ->
                                         LatLng(
                                             it,
-                                            it1
+                                            it1,
                                         )
                                     }
-                                }
-                            )
-                        )
+                                },
+                            ),
+                        ),
                     )
                 }
 
@@ -276,12 +331,12 @@ class ExploreViewModel @Inject constructor(
                     _calculateDistance.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                exception
-                            )
-                        )
+                                exception,
+                            ),
+                        ),
                     )
                 }
-            }
+            },
         )
     }
 
@@ -292,7 +347,7 @@ class ExploreViewModel @Inject constructor(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        travelMode: String?
+        travelMode: String?,
     ) {
         _updateCalculateDistance.trySend(HandleResult.Loading)
         getLocationSearchUseCase.calculateRoute(
@@ -309,9 +364,9 @@ class ExploreViewModel @Inject constructor(
                         HandleResult.Success(
                             CalculateDistanceResponse(
                                 "$travelMode",
-                                success
-                            )
-                        )
+                                success,
+                            ),
+                        ),
                     )
                 }
 
@@ -323,12 +378,12 @@ class ExploreViewModel @Inject constructor(
                     _updateCalculateDistance.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                exception
-                            )
-                        )
+                                exception,
+                            ),
+                        ),
                     )
                 }
-            }
+            },
         )
     }
 
@@ -368,7 +423,7 @@ class ExploreViewModel @Inject constructor(
         latitude: Double?,
         longitude: Double?,
         step: Step,
-        isTimeDialog: Boolean = false
+        isTimeDialog: Boolean = false,
     ) {
         _navigationTimeDialogData.trySend(HandleResult.Loading)
         getLocationSearchUseCase.searchNavigationPlaceIndexForPosition(
@@ -380,8 +435,8 @@ class ExploreViewModel @Inject constructor(
                     if (isTimeDialog) {
                         _navigationTimeDialogData.trySend(
                             HandleResult.Success(
-                                navigationData
-                            )
+                                navigationData,
+                            ),
                         )
                     } else {
                         mNavigationListModel.add(navigationData)
@@ -392,17 +447,17 @@ class ExploreViewModel @Inject constructor(
                     _navigationTimeDialogData.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                error
-                            )
-                        )
+                                error,
+                            ),
+                        ),
                     )
                 }
-            }
+            },
         )
     }
     fun getAddressLineFromLatLng(
         longitude: Double?,
-        latitude: Double?
+        latitude: Double?,
     ) {
         _navigationTimeDialogData.trySend(HandleResult.Loading)
         getLocationSearchUseCase.searPlaceIndexForPosition(
@@ -412,75 +467,75 @@ class ExploreViewModel @Inject constructor(
                 override fun getAddressData(searchPlaceIndexForPositionResult: SearchPlaceIndexForPositionResult) {
                     _addressLineData.trySend(
                         HandleResult.Success(
-                            SearchResponse(searchPlaceIndexForPositionResult, latitude, longitude)
-                        )
+                            SearchResponse(searchPlaceIndexForPositionResult, latitude, longitude),
+                        ),
                     )
                 }
 
                 override fun error(error: String) {
                     _addressLineData.trySend(
                         HandleResult.Success(
-                            SearchResponse(null, latitude, longitude)
-                        )
+                            SearchResponse(null, latitude, longitude),
+                        ),
                     )
                 }
                 override fun internetConnectionError(error: String) {
                     _addressLineData.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                error
-                            )
-                        )
+                                error,
+                            ),
+                        ),
                     )
                 }
-            }
+            },
         )
     }
 
-    fun setMapListData(context: Context) {
+    fun setMapListData(context: Context, isGrabMapEnable: Boolean = false) {
         mStyleList.clear()
         listMapInnerData.clear()
         listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_light),
                 false,
-                R.drawable.light
-            )
+                R.drawable.light,
+            ),
         )
         listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_streets),
                 false,
-                R.drawable.streets
-            )
+                R.drawable.streets,
+            ),
         )
         listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_navigation),
                 false,
-                R.drawable.navigation
-            )
+                R.drawable.navigation,
+            ),
         )
         listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_dark_gray),
                 false,
-                R.drawable.dark_gray
-            )
+                R.drawable.dark_gray,
+            ),
         )
         listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_light_gray),
                 false,
-                R.drawable.light_gray
-            )
+                R.drawable.light_gray,
+            ),
         )
         listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_imagery),
                 false,
-                R.drawable.imagery
-            )
+                R.drawable.imagery,
+            ),
         )
         mStyleList.add(MapStyleData(context.getString(R.string.map_esri), true, listMapInnerData))
 
@@ -492,8 +547,8 @@ class ExploreViewModel @Inject constructor(
                 image = R.mipmap.ic_here_contrast,
                 isSelected = false,
                 mMapName = MapNames.HERE_CONTRAST,
-                mMapStyleName = MapStyles.VECTOR_HERE_CONTRAST
-            )
+                mMapStyleName = MapStyles.VECTOR_HERE_CONTRAST,
+            ),
         )
         hereList.add(
             MapStyleInnerData(
@@ -501,8 +556,8 @@ class ExploreViewModel @Inject constructor(
                 image = R.mipmap.ic_here_explore,
                 isSelected = false,
                 mMapName = MapNames.HERE_EXPLORE,
-                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE
-            )
+                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE,
+            ),
         )
 
         hereList.add(
@@ -511,8 +566,8 @@ class ExploreViewModel @Inject constructor(
                 image = R.mipmap.ic_here_explore_truck,
                 isSelected = false,
                 mMapName = MapNames.HERE_EXPLORE_TRUCK,
-                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK
-            )
+                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK,
+            ),
         )
 
         hereList.add(
@@ -521,8 +576,8 @@ class ExploreViewModel @Inject constructor(
                 image = R.mipmap.ic_here_imagery,
                 isSelected = false,
                 mMapName = MapNames.HERE_IMAGERY,
-                mMapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
-            )
+                mMapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE,
+            ),
         )
 
         hereList.add(
@@ -531,9 +586,39 @@ class ExploreViewModel @Inject constructor(
                 image = R.mipmap.ic_here_hybrid,
                 isSelected = false,
                 mMapName = MapNames.HERE_HYBRID,
-                mMapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
-            )
+                mMapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE,
+            ),
         )
         mStyleList.add(MapStyleData(context.resources.getString(R.string.here), false, hereList))
+
+        if (isGrabMapEnable) {
+            val grabList = ArrayList<MapStyleInnerData>()
+
+            grabList.add(
+                MapStyleInnerData(
+                    mapName = context.resources.getString(R.string.map_grab_light),
+                    image = R.drawable.grab_light,
+                    isSelected = false,
+                    mMapName = MapNames.GRAB_LIGHT,
+                    mMapStyleName = MapStyles.GRAB_LIGHT
+                )
+            )
+            grabList.add(
+                MapStyleInnerData(
+                    mapName = context.resources.getString(R.string.map_grab_dark),
+                    image = R.drawable.grab_dark,
+                    isSelected = false,
+                    mMapName = MapNames.GRAB_DARK,
+                    mMapStyleName = MapStyles.GRAB_DARK
+                )
+            )
+            mStyleList.add(
+                MapStyleData(
+                    context.resources.getString(R.string.grab),
+                    false,
+                    grabList
+                )
+            )
+        }
     }
 }

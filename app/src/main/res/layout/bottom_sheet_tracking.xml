@@ -8,6 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     app:behavior_hideable="false"
+    android:paddingTop="@dimen/dp_10"
     app:behavior_peekHeight="@dimen/dp_110"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -17,7 +18,7 @@
         android:layout_width="@dimen/dp_118"
         android:layout_height="@dimen/dp_18"
         android:layout_marginStart="@dimen/dp_8"
-        android:src="@drawable/ic_amazon_logo"
+        android:src="@drawable/ic_amazon_logo_on_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -312,7 +313,7 @@
         android:clickable="true"
         android:focusable="true"
         android:paddingBottom="@dimen/dp_24"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_tracking_sheet">
 
@@ -354,6 +355,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
             android:gravity="center"
+            android:fontFamily="@font/inter_semi_bold"
             android:text="@string/label_enable_tracking"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

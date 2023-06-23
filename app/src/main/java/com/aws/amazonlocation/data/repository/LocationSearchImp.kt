@@ -18,9 +18,10 @@ class LocationSearchImp(private val mRemoteDataSource: RemoteDataSourceImpl) :
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface
+        searchPlace: SearchPlaceInterface,
+        isGrabMapSelected: Boolean
     ) {
-        mRemoteDataSource.searchPlaceSuggestions(lat, lng, searchText, searchPlace)
+        mRemoteDataSource.searchPlaceSuggestions(lat, lng, searchText, searchPlace, isGrabMapSelected)
     }
 
     override fun searchPlaceIndexForText(

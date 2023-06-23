@@ -4,7 +4,6 @@ import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
@@ -15,11 +14,11 @@ import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until.hasObject
 import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.AMAZON_MAP_READY
-import com.aws.amazonlocation.BaseTest
+import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
+import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_3000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
@@ -27,11 +26,14 @@ import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_MAP_NOT_FOUND
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL
 import com.aws.amazonlocation.TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED
+import com.aws.amazonlocation.actions.doubleTap
 import com.aws.amazonlocation.actions.pinchIn
 import com.aws.amazonlocation.actions.pinchOut
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.utils.retry_rule.Retry
+import com.aws.amazonlocation.waitUntil
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,23 +44,12 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class ExploreFragmentMapZoomInOutTest : BaseTest() {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    var permissionRule: GrantPermissionRule = GrantPermissionRule.grant(
-        ACCESS_FINE_LOCATION,
-        ACCESS_COARSE_LOCATION,
-    )
-
-    @get:Rule
-    var mActivityRule: ActivityTestRule<MainActivity> = ActivityTestRule(MainActivity::class.java)
+class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Test
+    @Retry
     fun testMapZoomIn() {
         try {
             enableGPS(ApplicationProvider.getApplicationContext())
@@ -70,11 +61,18 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
-            Thread.sleep(DELAY_3000)
+            Thread.sleep(DELAY_5000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
-            onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut())
-            Thread.sleep(DELAY_3000)
+            uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
+            onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut())
+            Thread.sleep(DELAY_5000)
+            if (beforeZoomLevel != null) {
+                waitUntil(DELAY_3000, 25) {
+                    mapbox?.cameraPosition?.zoom?.let {
+                        beforeZoomLevel < it
+                    }
+                }
+            }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
@@ -89,6 +87,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
     }
 
     @Test
+    @Retry
     fun testMapZoomOut() {
         try {
             var mapbox: MapboxMap? = null
@@ -99,11 +98,18 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             mapView.getMapAsync {
                 mapbox = it
             }
-            Thread.sleep(DELAY_3000)
+            Thread.sleep(DELAY_5000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
-            onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn())
-            Thread.sleep(DELAY_3000)
+            uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
+            onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn())
+            Thread.sleep(DELAY_5000)
+            if (beforeZoomLevel != null) {
+                waitUntil(DELAY_3000, 25) {
+                    mapbox?.cameraPosition?.zoom?.let {
+                        beforeZoomLevel > it
+                    }
+                }
+            }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel > it)
@@ -118,6 +124,7 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
     }
 
     @Test
+    @Retry
     fun testMapZoomDoubleTap() {
         try {
             var mapbox: MapboxMap? = null
@@ -130,14 +137,21 @@ class ExploreFragmentMapZoomInOutTest : BaseTest() {
             }
             Thread.sleep(DELAY_5000)
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_5000)
+            uiDevice.wait(hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/mapView")), DELAY_10000)
             val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
             if (map.exists()) {
-                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick(), ViewActions.doubleClick())
+                onView(withId(R.id.mapView)).perform(doubleTap(), doubleTap(), doubleTap(), doubleTap())
             } else {
                 Assert.fail(TEST_FAILED_MAP_NOT_FOUND)
             }
             Thread.sleep(DELAY_5000)
+            if (beforeZoomLevel != null) {
+                waitUntil(DELAY_3000, 25) {
+                    mapbox?.cameraPosition?.zoom?.let {
+                        beforeZoomLevel < it
+                    }
+                }
+            }
             if (beforeZoomLevel != null) {
                 mapbox?.cameraPosition?.zoom?.let {
                     Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)

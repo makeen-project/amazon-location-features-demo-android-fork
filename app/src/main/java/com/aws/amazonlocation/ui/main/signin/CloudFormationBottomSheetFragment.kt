@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.webkit.URLUtil
+import android.widget.AdapterView
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.core.widget.doOnTextChanged
@@ -22,6 +23,8 @@ import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
+import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_TAB_ENUM
@@ -32,11 +35,14 @@ import com.aws.amazonlocation.utils.KEY_USER_POOL_ID
 import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.SE_REGION_LIST
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
 import com.aws.amazonlocation.utils.changeLearnMoreColor
 import com.aws.amazonlocation.utils.changeTermsAndConditionColor
+import com.aws.amazonlocation.utils.isGrabMapSelected
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionMapList
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.validateIdentityPoolId
 import com.aws.amazonlocation.utils.validateUserPoolClientId
@@ -46,9 +52,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -71,6 +77,7 @@ class CloudFormationBottomSheetFragment(
     private var mIdentityPoolId: String? = null
     private var mUserDomain: String? = null
     private var regionData: String? = null
+    private var selectedRegion = regionMapList[regionMapList.keys.first()]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,11 +95,11 @@ class CloudFormationBottomSheetFragment(
                 bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
-                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
                 behaviour.isDraggable = false
                 setupFullHeight(layout)
             }
         }
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         return dialog
     }
 
@@ -109,6 +116,14 @@ class CloudFormationBottomSheetFragment(
     ): View {
         mBinding = BottomSheetCloudFormationBinding.inflate(inflater, container, false)
         return mBinding.root
+    }
+
+    fun hideKeyBoard() {
+        mBinding.edtIdentityPoolId.clearFocus()
+        mBinding.edtUserDomain.clearFocus()
+        mBinding.edtUserPoolId.clearFocus()
+        mBinding.edtWebSocketUrl.clearFocus()
+        mBinding.edtUserPoolClientId.clearFocus()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -140,6 +155,39 @@ class CloudFormationBottomSheetFragment(
         )
         clickListener()
         cloudFormationValidation()
+        setSpinnerData()
+    }
+
+    private fun setSpinnerData() {
+        mBinding.apply {
+            val regionNameList = arrayListOf<String>()
+            for (data in regionMapList.keys) {
+                regionNameList.add(data)
+            }
+            val adapter = CustomSpinnerAdapter(requireContext(), regionNameList)
+            spinnerRegion.adapter = adapter
+
+            spinnerRegion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    adapter.setSelection(position)
+                    selectedRegion = regionMapList[parent.getItemAtPosition(position)]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do something when nothing is selected
+                }
+            }
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                spinnerRegion.setSelection(3)
+            } else {
+                spinnerRegion.setSelection(2)
+            }
+        }
     }
 
     private fun clickListener() {
@@ -160,14 +208,14 @@ class CloudFormationBottomSheetFragment(
                 cloudFormationValidation()
             }
 
-            cardSignInConnectedClose.setOnClickListener {
+            ivSignInConnectedClose.setOnClickListener {
                 mPreferenceManager.setValue(KEY_TAB_ENUM, "")
                 mPreferenceManager.setValue(KEY_CLOUD_FORMATION_STATUS, "")
                 mCloudFormationInterface.dialogDismiss(dialog)
             }
 
             btnConnect.setOnClickListener {
-                mIdentityPoolId = edtIdentityPoolId.text.toString().trim()
+                mIdentityPoolId = edtIdentityPoolId.text.toString().trim().lowercase()
                 mUserDomain = edtUserDomain.text.toString().trim()
                 mUserPoolClientId = edtUserPoolClientId.text.toString().trim()
                 mUserPoolId = edtUserPoolId.text.toString().trim()
@@ -199,6 +247,15 @@ class CloudFormationBottomSheetFragment(
 
     private fun storeDataAndRestartApp() {
         lifecycleScope.launch {
+            if (isGrabMapSelected(mPreferenceManager, requireContext())) {
+                if (!SE_REGION_LIST.contains(regionData)) {
+                    mPreferenceManager.setValue(
+                        KEY_MAP_STYLE_NAME,
+                        resources.getString(R.string.map_light)
+                    )
+                    mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+                }
+            }
             mPreferenceManager.setValue(
                 KEY_CLOUD_FORMATION_STATUS,
                 AuthEnum.AWS_CONNECTED.name
@@ -302,19 +359,24 @@ class CloudFormationBottomSheetFragment(
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
+            var webSocketUrlToSave = webSocketUrl
+            if (webSocketUrl.endsWith("/", true)) {
+                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
+            }
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrl
+                webSocketUrlToSave
             )
         }
     }
 
     private var clickHere = object : CloudFormationInterface {
         override fun clickHere(url: String) {
+            val urlToPass = String.format(url, selectedRegion, selectedRegion)
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                    Uri.parse(urlToPass)
                 )
             )
         }

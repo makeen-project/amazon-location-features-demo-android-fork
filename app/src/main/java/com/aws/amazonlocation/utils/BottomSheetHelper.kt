@@ -1,7 +1,9 @@
 package com.aws.amazonlocation.utils
 
+import android.content.Context
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetAttributionBinding
@@ -10,6 +12,7 @@ import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.databinding.BottomSheetNavigationBinding
 import com.aws.amazonlocation.databinding.BottomSheetSearchBinding
 import com.aws.amazonlocation.ui.base.BaseActivity
+import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -27,6 +30,7 @@ class BottomSheetHelper {
     private lateinit var mBottomSheetAttribution: BottomSheetBehavior<ConstraintLayout>
     private var exportFragment: ExploreFragment? = null
     var isSearchSheetOpen = false
+    var context: Context? = null
 
     // set search bottom sheet
     fun setSearchBottomSheet(
@@ -39,8 +43,13 @@ class BottomSheetHelper {
         mBottomSheetSearchPlaces =
             BottomSheetBehavior.from(view.clSearchSheet)
         mBottomSheetSearchPlaces.isFitToContents = false
-        mBottomSheetSearchPlaces.expandedOffset =
-            view.clSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+        context = view.clSearchSheet.context
+        if (!(activity as MainActivity).isTablet) {
+            mBottomSheetSearchPlaces.expandedOffset =
+                view.clSearchSheet.context.resources.getDimension(R.dimen.dp_10).toInt()
+        }
+        view.edtSearchPlaces.clearFocus()
+        activity.hideKeyboard()
 
         mBottomSheetSearchPlaces.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
@@ -49,16 +58,18 @@ class BottomSheetHelper {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             mBaseActivity?.bottomNavigationVisibility(true)
                             isSearchSheetOpen = false
-                            activity?.hideKeyboard()
+                            activity.hideKeyboard()
                             fragment.clearKeyboardFocus()
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
+                            view.tvSearchCancel?.hide()
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             view.imgAmazonLogoSearchSheet.alpha = 0f
                             view.ivAmazonInfoSearchSheet.alpha = 0f
                             isSearchSheetOpen = true
+                            view.tvSearchCancel?.show()
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
@@ -66,10 +77,14 @@ class BottomSheetHelper {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             view.imgAmazonLogoSearchSheet.alpha = 1f
                             view.ivAmazonInfoSearchSheet.alpha = 1f
+                            view.tvSearchCancel?.show()
                             isSearchSheetOpen = true
-                            activity?.hideKeyboard()
+                            activity.hideKeyboard()
+                            fragment.clearKeyboardFocus()
                         }
-                        BottomSheetBehavior.STATE_HIDDEN -> {}
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            view.tvSearchCancel?.hide()
+                        }
                         BottomSheetBehavior.STATE_SETTLING -> {}
                     }
                 }
@@ -91,6 +106,9 @@ class BottomSheetHelper {
         return mBottomSheetSearchPlaces.state == BottomSheetBehavior.STATE_HALF_EXPANDED
     }
     fun isMapStyleExpandedOrHalfExpand(): Boolean {
+        if (!::mBottomSheetMapStyle.isInitialized) {
+            return false
+        }
         return mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_HALF_EXPANDED || mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_EXPANDED
     }
 
@@ -122,25 +140,25 @@ class BottomSheetHelper {
         mBottomSheetMapStyle.state = BottomSheetBehavior.STATE_HIDDEN
         mBottomSheetMapStyle.isFitToContents = false
         mBottomSheetMapStyle.expandedOffset =
-            view.clMapStyleBottomSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
+            view.clMapStyleBottomSheet.context.resources.getDimension(R.dimen.dp_15).toInt()
 
         mBottomSheetMapStyle.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            view.imgAmazonLogoMapStyle.alpha = 1f
-                            view.ivAmazonInfoMapStyle.alpha = 1f
+                            view.imgAmazonLogoMapStyle?.alpha = 1f
+                            view.ivAmazonInfoMapStyle?.alpha = 1f
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
-                            view.imgAmazonLogoMapStyle.alpha = 0f
-                            view.ivAmazonInfoMapStyle.alpha = 0f
+                            view.imgAmazonLogoMapStyle?.alpha = 0f
+                            view.ivAmazonInfoMapStyle?.alpha = 0f
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                            view.imgAmazonLogoMapStyle.alpha = 1f
-                            view.ivAmazonInfoMapStyle.alpha = 1f
+                            view.imgAmazonLogoMapStyle?.alpha = 1f
+                            view.ivAmazonInfoMapStyle?.alpha = 1f
                             if (isMapStyleExpandedOrHalfExpand() && isDirectionSearchSheetVisible()) {
                                 collapseDirectionSearch()
                             }
@@ -185,17 +203,19 @@ class BottomSheetHelper {
         mBottomSheetDirectionsSearch.isHideable = true
         mBottomSheetDirectionsSearch.state = BottomSheetBehavior.STATE_HIDDEN
         mBottomSheetDirectionsSearch.isFitToContents = false
-        mBottomSheetDirectionsSearch.expandedOffset =
-            view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_50).toInt()
-
+        mBaseActivity?.isTablet?.let {
+            if (!it) {
+                mBottomSheetDirectionsSearch.expandedOffset =
+                    view.clDirectionSearchSheet.context.resources.getDimension(R.dimen.dp_15).toInt()
+            }
+        }
         mBottomSheetDirectionsSearch.addBottomSheetCallback(object :
                 BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             mBaseActivity?.bottomNavigationVisibility(true)
-                            view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
-                            view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
+                            setBottomSheetDirectionSearchData(view, mBaseActivity)
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             mBaseActivity?.bottomNavigationVisibility(false)
@@ -208,8 +228,7 @@ class BottomSheetHelper {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             exploreFragment.changeDirectionCardMargin(175.px)
                             mBottomSheetDirectionsSearch.isHideable = false
-                            view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
-                            view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
+                            setBottomSheetDirectionSearchData(view, mBaseActivity)
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                         }
@@ -221,6 +240,19 @@ class BottomSheetHelper {
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             })
+    }
+
+    private fun setBottomSheetDirectionSearchData(
+        view: BottomSheetDirectionSearchBinding,
+        mBaseActivity: BaseActivity?
+    ) {
+        view.imgAmazonLogoDirectionSearchSheet.alpha = 1f
+        view.ivAmazonInfoDirectionSearchSheet.alpha = 1f
+        mBaseActivity?.hideKeyboard()
+        if (!view.rvSearchPlacesDirection.isVisible && !view.rvSearchPlacesSuggestionDirection.isVisible) {
+            view.edtSearchDirection.clearFocus()
+            view.edtSearchDest.clearFocus()
+        }
     }
 
     fun setNavigationBottomSheet(view: BottomSheetNavigationBinding) {
@@ -368,7 +400,20 @@ class BottomSheetHelper {
         if (!isHide) {
             exportFragment?.setUserProfile()
             mBottomSheetSearchPlaces.isHideable = false
-            mBottomSheetSearchPlaces.peekHeight = 98.px
+            if (context != null) {
+                context?.let {
+                    val isTablet = it.resources.getBoolean(R.bool.is_tablet)
+                    if (isTablet) {
+                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
+                    } else {
+                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_98)
+                    }
+                }
+            } else {
+                context?.let {
+                    mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_98)
+                }
+            }
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
             mBottomSheetSearchPlaces.isHideable = true

@@ -5,6 +5,7 @@ import com.amazonaws.services.geo.model.PlaceGeometry
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.mapbox.mapboxsdk.geometry.LatLng
+import java.util.Locale
 
 const val DELAY_1000 = 1000L
 const val TIMEOUT_5000 = 5000L
@@ -45,6 +46,7 @@ const val LAT_LNG_INVALID_STRING = "$INVALID_LAT, $INVALID_LNG"
 
 const val ESRI = "Esri"
 const val HERE = "HERE"
+const val GRAB = "GrabMaps"
 
 const val SIGN_IN_SUCCESS = "Sign in Successfully"
 const val SIGN_OUT_SUCCESS = "Sign out successfully"
@@ -92,9 +94,9 @@ const val TEST_FAILED_CALCULATE_DISTANCE_DATA = "Calculate distance data not mat
 const val TEST_FAILED_TRACKING_HISTORY_DATA = "Tracking history data not match"
 const val TEST_FAILED_MAP_STYLE_INNER_DATA = "Map style inner data not match"
 const val TEST_FAILED_MAP_STYLE_DATA = "Map style data not match"
-const val TEST_FAILED_RECEIVED_ERROR = "Received error"
-const val TEST_FAILED_INTERNET_ERROR = "Internet connection error"
-const val TEST_FAILED_RESPONSE_ERROR = "Response is null"
+const val TEST_FAILED_GRAB_MAP_NOT_ENABLE = "Grab map not enable"
+const val TEST_FAILED_GRAB_MAP_NOT_SELECTED = "Grab map not selected"
+
 const val NO_DATA_FOUND = "No data found"
 const val TEST_DATA = "Mumbai"
 const val TEST_DATA_1 = "en"
@@ -180,13 +182,20 @@ const val PREF_MANAGER_VALUE_BOOL = true
 
 const val DELAY_5000 = 5000L
 
-const val UNIT_METRICS_INPUT_1 = 1000.0
-const val UNIT_METRICS_INPUT_2 = 1001.0
-const val UNIT_METRICS_OUTPUT_1 = "1000 m"
-const val UNIT_METRICS_OUTPUT_2 = "1 km"
+const val UNIT_METRICS_M_INPUT_1 = 1000.0
+const val UNIT_METRICS_M_INPUT_2 = 1001.0
+const val UNIT_METRICS_M_OUTPUT_1 = "1000 m"
+const val UNIT_METRICS_M_OUTPUT_2 = "1 km"
+const val UNIT_METRICS_I_INPUT_1 = 5280.0
+const val UNIT_METRICS_I_INPUT_2 = 5281.0
+const val UNIT_METRICS_I_OUTPUT_1 = "5280 ft"
+const val UNIT_METRICS_I_OUTPUT_2 = "1 mi"
 
 const val UNIT_KM_TO_M_INPUT = 1.0
 const val UNIT_KM_TO_M_OUTPUT = 1000.0
+
+const val UNIT_MI_TO_FT_INPUT = 1.0
+const val UNIT_MI_TO_FT_OUTPUT = 5280.0
 
 const val UNIT_TIME_SEC_1 = 50.0
 const val UNIT_TIME_SEC_2 = 120.0
@@ -339,3 +348,10 @@ const val UNIT_AMPLIFY_JSON_CONFIG = "{\n" +
     "        }\n" +
     "    }\n" +
     "}"
+
+val LOCALE_IN = Locale("en", "IN")
+val LOCALE_US = Locale.US
+val METRIC = "Metric"
+val IMPERIAL = "Imperial"
+val AUTOMATIC = "Automatic"
+val SE_REGION = "ap-southeast-1"

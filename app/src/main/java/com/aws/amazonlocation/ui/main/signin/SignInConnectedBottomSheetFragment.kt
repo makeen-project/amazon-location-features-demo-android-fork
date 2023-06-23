@@ -41,10 +41,10 @@ class SignInConnectedBottomSheetFragment(private var mSignInConnectInterface: Si
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
                 behaviour.isDraggable = false
-                behaviour.state = BottomSheetBehavior.STATE_EXPANDED
                 setupFullHeight(layout)
             }
         }
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         return dialog
     }
 
@@ -89,7 +89,7 @@ class SignInConnectedBottomSheetFragment(private var mSignInConnectInterface: Si
                 mSignInConnectInterface.continueToExplore(dialog)
             }
 
-            cardSignInConnectedClose.setOnClickListener {
+            ivSignInConnectedClose.setOnClickListener {
                 mSignInConnectInterface.continueToExplore(dialog)
             }
         }

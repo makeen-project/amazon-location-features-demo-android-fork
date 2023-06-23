@@ -2,6 +2,7 @@ package com.aws.amazonlocation.ui.main.geofence
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.DialogInterface
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -9,6 +10,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.services.geo.AmazonLocationClient
@@ -21,6 +23,7 @@ import com.aws.amazonlocation.databinding.BottomSheetGeofenceListBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
+import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
@@ -31,12 +34,15 @@ import com.aws.amazonlocation.utils.geofence_helper.GeofenceHelper
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
+import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import java.text.DecimalFormat
 import java.util.regex.Pattern
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -65,16 +71,20 @@ class GeofenceUtils {
     private var mMapHelper: MapHelper? = null
     private var mIsBtnEnable = false
     private var connectivityObserver: ConnectivityObserveInterface? = null
+    private var isTablet = false
+    private var preferenceManager: PreferenceManager? = null
 
     fun setMapBox(
         activity: Activity,
         mapboxMap: MapboxMap,
-        mMapHelper: MapHelper
+        mMapHelper: MapHelper,
+        prefrenceManager: PreferenceManager
     ) {
         mClient = AmazonLocationClient(AWSMobileClient.getInstance())
         this.mMapHelper = mMapHelper
         this.mMapboxMap = mapboxMap
         this.mActivity = activity
+        this.preferenceManager = prefrenceManager
     }
 
     fun isGeofenceListExpandedOrHalfExpand(): Boolean {
@@ -101,9 +111,16 @@ class GeofenceUtils {
                     mBindingAddGeofence?.tvSeekbarRadius,
                     mBindingAddGeofence?.seekbarGeofenceRadius,
                     mMapboxMap,
-                    mMapLatLngListener
+                    mMapLatLngListener,
+                    preferenceManager
                 )
             mGeofenceHelper?.initMapBoxStyle()
+            mActivity?.let {
+                if ((it is MainActivity)) {
+                    isTablet = it.isTablet
+                    mGeofenceHelper?.isTablet = it.isTablet
+                }
+            }
         }
     }
 
@@ -136,11 +153,15 @@ class GeofenceUtils {
             setGeofenceSearchSuggestionAdapter()
             setGeofenceSearchPlaceAdapter()
             cardGeofenceLiveLocation.setOnClickListener {
-                mMapHelper?.checkLocationComponentEnable()
+                mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
             }
 
-            cardAddGeofenceClose.setOnClickListener {
-                closeAddGeofence()
+            ivAddGeofenceClose.setOnClickListener {
+                mFragmentActivity?.lifecycleScope?.launch {
+                    mActivity?.hideKeyboard()
+                    delay(DELAY_300)
+                    closeAddGeofence()
+                }
             }
 
             btnAddGeofenceSave.setOnClickListener {
@@ -196,22 +217,32 @@ class GeofenceUtils {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
-                                showViews(cardGeofenceLiveLocation, imgAmazonLogoAddGeofence)
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence.alpha = 1f
-                                ivAmazonInfoAddGeofence.alpha = 1f
+                                if (!isTablet) {
+                                    imgAmazonLogoAddGeofence?.let {
+                                        showViews(
+                                            cardGeofenceLiveLocation,
+                                            it
+                                        )
+                                    }
+                                    cardGeofenceLiveLocation.show()
+                                } else {
+                                    (mActivity as MainActivity).showNavigationIcon()
+                                }
+                                setDataAddGeofence()
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
                                 cardGeofenceLiveLocation.alpha = 0f
-                                imgAmazonLogoAddGeofence.alpha = 0f
-                                ivAmazonInfoAddGeofence.alpha = 0f
+                                imgAmazonLogoAddGeofence?.alpha = 0f
+                                ivAmazonInfoAddGeofence?.alpha = 0f
+                                cardGeofenceLiveLocation.hide()
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                cardGeofenceLiveLocation.alpha = 1f
-                                imgAmazonLogoAddGeofence.alpha = 1f
-                                ivAmazonInfoAddGeofence.alpha = 1f
+                                setDataAddGeofence()
+                                if (!isTablet) {
+                                    cardGeofenceLiveLocation.show()
+                                }
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}
@@ -222,6 +253,15 @@ class GeofenceUtils {
                     }
                 })
         }
+    }
+
+    private fun BottomSheetAddGeofenceBinding.setDataAddGeofence() {
+        cardGeofenceLiveLocation.alpha = 1f
+        imgAmazonLogoAddGeofence?.alpha = 1f
+        ivAmazonInfoAddGeofence?.alpha = 1f
+        mActivity?.hideKeyboard()
+        edtAddGeofenceSearch.clearFocus()
+        edtEnterGeofenceName.clearFocus()
     }
 
     private fun closeAddGeofence() {
@@ -302,6 +342,11 @@ class GeofenceUtils {
             mBottomSheetGeofenceListBehavior?.isHideable = true
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetGeofenceListBehavior?.isFitToContents = false
+            if (isTablet) {
+                mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.6f
+            } else {
+                mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
+            }
             btnAddGeofence.setOnClickListener {
                 mGeofenceInterface?.hideShowBottomNavigationBar(
                     true,
@@ -336,18 +381,18 @@ class GeofenceUtils {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
                             BottomSheetBehavior.STATE_COLLAPSED -> {
-                                imgAmazonLogoGeofenceList.alpha = 1f
-                                ivAmazonInfoGeofenceList.alpha = 1f
+                                imgAmazonLogoGeofenceList?.alpha = 1f
+                                ivAmazonInfoGeofenceList?.alpha = 1f
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
-                                imgAmazonLogoGeofenceList.alpha = 0f
-                                ivAmazonInfoGeofenceList.alpha = 0f
+                                imgAmazonLogoGeofenceList?.alpha = 0f
+                                ivAmazonInfoGeofenceList?.alpha = 0f
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                imgAmazonLogoGeofenceList.alpha = 1f
-                                ivAmazonInfoGeofenceList.alpha = 1f
+                                imgAmazonLogoGeofenceList?.alpha = 1f
+                                ivAmazonInfoGeofenceList?.alpha = 1f
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}
@@ -431,6 +476,9 @@ class GeofenceUtils {
             mBindingAddGeofence?.edtEnterGeofenceName?.clearFocus()
             mActivity?.geofenceDeleteDialog(position, data, deleteGeofence)
         }
+        if (isTablet) {
+            mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
+        }
     }
 
     private val deleteGeofence = object : GeofenceDeleteInterface {
@@ -444,6 +492,9 @@ class GeofenceUtils {
     }
 
     fun showGeofenceListBottomSheet(context: Activity) {
+        if (isTablet) {
+            (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
+        }
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -505,6 +556,9 @@ class GeofenceUtils {
         mBottomSheetAddGeofenceBehavior?.isHideable = false
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
+        if (isTablet) {
+            mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
+        }
     }
 
     fun expandAddGeofenceBottomSheet() {
@@ -560,10 +614,32 @@ class GeofenceUtils {
             removeGeofenceMarker()
             mBindingAddGeofence?.edtAddGeofenceSearch?.setText(getLatLngStr(latLng))
         }
+
+        override fun addInvisibleDraggableMarker(latLng: LatLng, listener: OnSymbolDragListener) {
+            mMapHelper?.addGeofenceInvisibleDraggableMarker(mActivity, latLng, listener)
+        }
+
+        override fun deleteInvisibleDraggableMarker(listener: OnSymbolDragListener) {
+            mMapHelper?.deleteGeofenceInvisibleDraggableMarker(listener)
+        }
+
+        override fun updateInvisibleDraggableMarker(latLng: LatLng) {
+            mMapHelper?.updateGeofenceInvisibleDraggableMarker(latLng)
+        }
     }
 
     fun setSearchText(placeName: String) {
         mBindingAddGeofence?.edtAddGeofenceSearch?.setText(placeName)
+    }
+
+    fun disableLiveLocationMarker(context: Context) {
+        mBindingAddGeofence?.cardGeofenceLiveLocation?.isEnabled = false
+        mBindingAddGeofence?.cardGeofenceLiveLocation?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.btn_go_disable))
+    }
+
+    fun enableLiveLocationMarker(context: Context) {
+        mBindingAddGeofence?.cardGeofenceLiveLocation?.isEnabled = true
+        mBindingAddGeofence?.cardGeofenceLiveLocation?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
     }
 
     fun getLatLngStr(latLng: LatLng): String {
@@ -634,6 +710,7 @@ class GeofenceUtils {
             LinearLayoutManager(mActivity)
         mGeofenceSearchSuggestionAdapter = SearchPlacesSuggestionAdapter(
             mPlaceList,
+            preferenceManager,
             object : SearchPlacesSuggestionAdapter.SearchPlaceSuggestionInterface {
                 override fun suggestedPlaceClick(position: Int) {
                     if (checkInternetConnection()) {
@@ -705,6 +782,7 @@ class GeofenceUtils {
             rvGeofenceSearchPlaces.layoutManager = LinearLayoutManager(mActivity)
             mSearchPlacesAdapter = SearchPlacesAdapter(
                 mPlaceList,
+                preferenceManager,
                 object : SearchPlacesAdapter.SearchPlaceInterface {
                     override fun placeClick(position: Int) {
                         if (checkInternetConnection()) {
@@ -775,7 +853,7 @@ class GeofenceUtils {
         mangeAddGeofenceUI(context = context)
         mGeofenceList.removeAt(position)
         if (mGeofenceList.isEmpty()) {
-            mMapHelper?.checkLocationComponentEnable()
+            mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), false)
             mMapHelper?.mSymbolOptionList?.clear()
             mMapHelper?.deleteAllGeofenceMarker()
             checkGeofenceList(true)
@@ -796,9 +874,28 @@ class GeofenceUtils {
         if (!isListEmpty) {
             mBindingGeofenceList?.clEmptyGeofenceList?.hide()
             mBindingGeofenceList?.clGeofenceList?.show()
+            mBindingGeofenceList?.clEmptyGeofenceList?.let {
+                if (isTablet) {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_140)
+                } else {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_104)
+                }
+            }
         } else {
             mBindingGeofenceList?.clEmptyGeofenceList?.show()
             mBindingGeofenceList?.clGeofenceList?.hide()
+            mBindingGeofenceList?.clEmptyGeofenceList?.let {
+                if (isTablet) {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_410)
+                    mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    mBottomSheetGeofenceListBehavior?.peekHeight =
+                        it.context.resources.getDimensionPixelSize(R.dimen.dp_104)
+                }
+            }
         }
     }
 

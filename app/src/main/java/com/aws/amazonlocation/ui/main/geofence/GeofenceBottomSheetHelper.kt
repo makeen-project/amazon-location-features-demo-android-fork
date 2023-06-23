@@ -13,7 +13,7 @@ import com.aws.amazonlocation.ui.main.signin.SignInRequiredBottomSheetFragment
 
 // SPDX-License-Identifier: MIT-0
 class GeofenceBottomSheetHelper(private var mActivity: FragmentActivity) {
-
+    private var mCloudFormationBottomSheetFragment: CloudFormationBottomSheetFragment? = null
     fun signInRequiredBottomSheet(mSignInRequiredInterface: SignInRequiredInterface) {
         val mSignInRequiredBottomSheetFragment =
             SignInRequiredBottomSheetFragment(mSignInRequiredInterface)
@@ -24,14 +24,27 @@ class GeofenceBottomSheetHelper(private var mActivity: FragmentActivity) {
         tabEnum: TabEnum,
         mCloudFormationInterface: CloudFormationInterface
     ) {
-        val mCloudFormationBottomSheetFragment =
+        mCloudFormationBottomSheetFragment =
             CloudFormationBottomSheetFragment(tabEnum, mCloudFormationInterface)
-        mActivity.supportFragmentManager.let {
-            mCloudFormationBottomSheetFragment.show(
-                it,
-                CloudFormationBottomSheetFragment::class.java.name
-            )
+        mCloudFormationBottomSheetFragment?.let { cloudFormationBottomSheet ->
+            mActivity.supportFragmentManager.let {
+                cloudFormationBottomSheet.show(
+                    it,
+                    CloudFormationBottomSheetFragment::class.java.name
+                )
+            }
         }
+    }
+
+    fun isCloudFormationBottomSheetVisible(): Boolean {
+        mCloudFormationBottomSheetFragment?.let { cloudFormationBottomSheet ->
+            return cloudFormationBottomSheet.isVisible
+        }
+        return false
+    }
+
+    fun cloudFormationBottomSheetHideKeyboard() {
+        mCloudFormationBottomSheetFragment?.hideKeyBoard()
     }
 
     fun signInConnectedBottomSheet(mSignInConnectInterface: SignInConnectInterface) {
