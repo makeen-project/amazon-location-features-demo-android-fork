@@ -50,9 +50,9 @@ DEFAULT_SE_REGION=xx-xxxx-x
 
 ```
 IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
-USER_DOMAIN=https://XXXXXXXXXXXX.XXXX.XX-XXXX-X.amazoncognito.com
-USER_POOL_CLIENT_ID=XXXXXXXXXXXXXXXXXXXXXXXXXX
-USER_POOL_ID=XX-XXXX-X_XXXXXXXXX
+USER_DOMAIN=https://xxxxxxxxxxxx.xxxx.xx-xxxx-x.amazoncognito.com
+USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+USER_POOL_ID=xx-xxxx-x_xxxxxxxxx
 WEB_SOCKET_URL=xx....x-xxx.iot.xx-xxxx-x.amazonaws.com
 USER_LOGIN_NAME=<aws username>
 USER_LOGIN_PASSWORD=<aws password>
