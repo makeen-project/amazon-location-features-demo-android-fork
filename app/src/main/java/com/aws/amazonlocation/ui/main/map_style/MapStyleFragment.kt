@@ -19,11 +19,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.databinding.FragmentMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SortingAdapter
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
+import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
@@ -64,6 +66,8 @@ class MapStyleFragment : BaseFragment() {
     private var mProviderAdapter: SortingAdapter? = null
     private var mAttributeAdapter: SortingAdapter? = null
     private var mTypeAdapter: SortingAdapter? = null
+    private var isFilterApplied: Boolean = false
+    private var isNoDataFoundVisible: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -424,95 +428,76 @@ class MapStyleFragment : BaseFragment() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
+    private fun notifySortingAdapter() {
+        mTypeAdapter?.notifyDataSetChanged()
+        mAttributeAdapter?.notifyDataSetChanged()
+        mProviderAdapter?.notifyDataSetChanged()
+    }
+
+    private fun FragmentMapStyleBinding.openSearch(params: ViewGroup.LayoutParams?) {
+        viewLine.hide()
+        tilSearch.show()
+        params?.width = ViewGroup.LayoutParams.MATCH_PARENT
+        cardSearchFilter.layoutParams = params
+        etSearchMap.clearFocus()
+        groupFilterButton.hide()
+        scrollMapStyle.isFillViewport = true
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     private fun clickListener() {
         mBinding.ivMapStyleBack.setOnClickListener {
             findNavController().popBackStack()
         }
         mBinding.apply {
-            etSearchMap.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+            etSearchMap.textChanges().debounce(DELAY_300).onEach { text ->
                 mapStyleShowList()
-                if (!text.isNullOrEmpty()) {
-                    tilSearch.isEndIconVisible = true
-                    val filterList = mViewModel.filterAndSortItems(
-                        requireContext(),
-                        text.toString(),
-                        null,
-                        null,
-                        null
-                    )
-                    if (filterList.isNotEmpty()) {
-                        mViewModel.mStyleList.clear()
-                        mViewModel.mStyleList.addAll(filterList)
-                        activity?.runOnUiThread {
-                            mMapStyleAdapter?.notifyDataSetChanged()
-                        }
-                        rvMapStyle.show()
-                        layoutNoDataFound.root.hide()
-                    } else {
-                        layoutNoDataFound.root.show()
-                        rvMapStyle.hide()
+                tilSearch.isEndIconVisible = !text.isNullOrEmpty()
+                val providerNames = arrayListOf<String>()
+                val attributeNames = arrayListOf<String>()
+                val typeNames = arrayListOf<String>()
+                mViewModel.providerOptions.filter { it.isSelected }
+                    .forEach { data -> providerNames.add(data.name) }
+                mViewModel.attributeOptions.filter { it.isSelected }
+                    .forEach { data -> attributeNames.add(data.name) }
+                mViewModel.typeOptions.filter { it.isSelected }
+                    .forEach { data -> typeNames.add(data.name) }
+                val filterList = mViewModel.filterAndSortItems(
+                    requireContext(),
+                    text.toString().ifEmpty { null },
+                    providerNames.ifEmpty { null },
+                    attributeNames.ifEmpty { null },
+                    typeNames.ifEmpty { null }
+                )
+                if (filterList.isNotEmpty()) {
+                    mViewModel.mStyleList.clear()
+                    mViewModel.mStyleList.addAll(filterList)
+                    activity?.runOnUiThread {
+                        mMapStyleAdapter?.notifyDataSetChanged()
                     }
+                    rvMapStyle.show()
+                    layoutNoDataFound.root.hide()
+                    isNoDataFoundVisible = false
+                } else {
+                    mViewModel.mStyleList.clear()
+                    activity?.runOnUiThread {
+                        mMapStyleAdapter?.notifyDataSetChanged()
+                    }
+                    isNoDataFoundVisible = true
+                    layoutNoDataFound.root.show()
+                    rvMapStyle.hide()
                 }
             }.launchIn(lifecycleScope)
             val params = cardSearchFilter.layoutParams
             tilSearch.setEndIconOnClickListener {
+                isNoDataFoundVisible = false
+                mapStyleShowList()
                 setDefaultMapStyleList()
                 etSearchMap.setText("")
                 tilSearch.clearFocus()
                 etSearchMap.clearFocus()
-                params?.width = ViewGroup.LayoutParams.WRAP_CONTENT
-                cardSearchFilter.layoutParams = params
-                tilSearch.hide()
-                viewLine.show()
-                rvMapStyle.show()
-                layoutNoDataFound.root.hide()
-                if (!isGrabMapEnable(mPreferenceManager)) {
-                    cardGrabMap.hide()
-                    cardEsri.show()
-                    cardHere.show()
-                } else {
-                    groupFilterButton.show()
-                }
-                scrollMapStyle.isFillViewport = false
+                tilSearch.isEndIconVisible = false
                 activity?.hideSoftKeyboard(etSearchMap)
-            }
-            tilSearch.isEndIconVisible = false
-            ivSearch.setOnClickListener {
-                viewLine.hide()
-                tilSearch.show()
-                params?.width = ViewGroup.LayoutParams.MATCH_PARENT
-                cardSearchFilter.layoutParams = params
-                etSearchMap.clearFocus()
-                groupFilterButton.hide()
-                scrollMapStyle.isFillViewport = true
-                tilSearch.isEndIconVisible = true
-            }
-
-            tvClearSelection.setOnClickListener {
-                mViewModel.providerOptions.forEachIndexed { index, _ ->
-                    mViewModel.providerOptions[index].isSelected = false
-                }
-                mViewModel.attributeOptions.forEachIndexed { index, _ ->
-                    mViewModel.attributeOptions[index].isSelected = false
-                }
-                mViewModel.typeOptions.forEachIndexed { index, _ ->
-                    mViewModel.typeOptions[index].isSelected = false
-                }
-                mTypeAdapter?.notifyDataSetChanged()
-                mAttributeAdapter?.notifyDataSetChanged()
-                mProviderAdapter?.notifyDataSetChanged()
-                imgFilterSelected.hide()
-                imgFilter.setColorFilter(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.color_img_tint
-                    )
-                )
-                mViewModel.mStyleList.clear()
-                mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
-                mMapStyleAdapter?.notifyDataSetChanged()
-            }
-            btnApplyFilter.setOnClickListener {
                 val providerNames = arrayListOf<String>()
                 val attributeNames = arrayListOf<String>()
                 val typeNames = arrayListOf<String>()
@@ -529,6 +514,70 @@ class MapStyleFragment : BaseFragment() {
                     attributeNames.ifEmpty { null },
                     typeNames.ifEmpty { null }
                 )
+                if (filterList.isNotEmpty()) {
+                    mViewModel.mStyleList.clear()
+                    mViewModel.mStyleList.addAll(filterList)
+                    activity?.runOnUiThread {
+                        mMapStyleAdapter?.notifyDataSetChanged()
+                    }
+                    mapStyleShowList()
+                    layoutNoDataFound.root.hide()
+                    isNoDataFoundVisible = false
+                } else {
+                    isNoDataFoundVisible = true
+                    mViewModel.mStyleList.clear()
+                    activity?.runOnUiThread {
+                        mMapStyleAdapter?.notifyDataSetChanged()
+                    }
+                    mapStyleShowList()
+                    layoutNoDataFound.root.show()
+                    rvMapStyle.hide()
+                }
+            }
+            tilSearch.isEndIconVisible = false
+            ivSearch.setOnClickListener {
+                openSearch(params)
+            }
+
+            tvClearSelection.setOnClickListener {
+                mViewModel.providerOptions.forEachIndexed { index, _ ->
+                    mViewModel.providerOptions[index].isSelected = false
+                    mViewModel.providerOptions[index].isApplyFilter = false
+                }
+                mViewModel.attributeOptions.forEachIndexed { index, _ ->
+                    mViewModel.attributeOptions[index].isSelected = false
+                    mViewModel.attributeOptions[index].isApplyFilter = false
+                }
+                mViewModel.typeOptions.forEachIndexed { index, _ ->
+                    mViewModel.typeOptions[index].isSelected = false
+                    mViewModel.typeOptions[index].isApplyFilter = false
+                }
+                notifySortingAdapter()
+                imgFilterSelected.hide()
+                isNoDataFoundVisible = false
+                isFilterApplied = false
+                layoutNoDataFound.root.hide()
+                mViewModel.mStyleList.clear()
+                mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+            btnApplyFilter.setOnClickListener {
+                val providerNames = arrayListOf<String>()
+                val attributeNames = arrayListOf<String>()
+                val typeNames = arrayListOf<String>()
+                mViewModel.providerOptions.filter { it.isSelected }
+                    .forEach { data -> providerNames.add(data.name) }
+                mViewModel.attributeOptions.filter { it.isSelected }
+                    .forEach { data -> attributeNames.add(data.name) }
+                mViewModel.typeOptions.filter { it.isSelected }
+                    .forEach { data -> typeNames.add(data.name) }
+                val filterList = mViewModel.filterAndSortItems(
+                    requireContext(),
+                    etSearchMap.text.toString().trim().ifEmpty { null },
+                    providerNames.ifEmpty { null },
+                    attributeNames.ifEmpty { null },
+                    typeNames.ifEmpty { null }
+                )
                 if (providerNames.isNotEmpty() || attributeNames.isNotEmpty() || typeNames.isNotEmpty()) {
                     imgFilterSelected.show()
                     imgFilter.setColorFilter(
@@ -537,7 +586,33 @@ class MapStyleFragment : BaseFragment() {
                             R.color.color_primary_green
                         )
                     )
+                    isFilterApplied = true
+                    if (providerNames.isNotEmpty()) {
+                        providerNames.forEach { name ->
+                            mViewModel.providerOptions.filter { it.name == name }
+                                .forEach { data -> data.isApplyFilter = true }
+                        }
+                    }
+                    if (attributeNames.isNotEmpty()) {
+                        attributeNames.forEach { name ->
+                            mViewModel.attributeOptions.filter { it.name == name }
+                                .forEach { data -> data.isApplyFilter = true }
+                        }
+                    }
+                    if (typeNames.isNotEmpty()) {
+                        typeNames.forEach { name ->
+                            mViewModel.typeOptions.filter { it.name == name }
+                                .forEach { data -> data.isApplyFilter = true }
+                        }
+                    }
+                    mViewModel.providerOptions.filter { !it.isSelected }
+                        .forEach { data -> data.isApplyFilter = false }
+                    mViewModel.attributeOptions.filter { !it.isSelected }
+                        .forEach { data -> data.isApplyFilter = false }
+                    mViewModel.typeOptions.filter { !it.isSelected }
+                        .forEach { data -> data.isApplyFilter = false }
                 } else {
+                    isFilterApplied = false
                     imgFilterSelected.hide()
                     imgFilter.setColorFilter(
                         ContextCompat.getColor(
@@ -553,13 +628,74 @@ class MapStyleFragment : BaseFragment() {
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
                     mapStyleShowList()
+                    isNoDataFoundVisible = false
+                } else {
+                    isNoDataFoundVisible = true
+                    mViewModel.mStyleList.clear()
+                    activity?.runOnUiThread {
+                        mMapStyleAdapter?.notifyDataSetChanged()
+                    }
+                    mapStyleShowList()
+                    layoutNoDataFound.root.show()
+                    rvMapStyle.hide()
                 }
             }
             imgFilter.setOnClickListener {
                 if (nsvFilter.isVisible) {
+                    mViewModel.providerOptions.forEach {
+                        if (it.isSelected) {
+                            if (!it.isApplyFilter) {
+                                it.isSelected = false
+                            }
+                        } else {
+                            if (it.isApplyFilter) {
+                                it.isSelected = true
+                            }
+                        }
+                    }
+                    mViewModel.attributeOptions.forEach {
+                        if (it.isSelected) {
+                            if (!it.isApplyFilter) {
+                                it.isSelected = false
+                            }
+                        } else {
+                            if (it.isApplyFilter) {
+                                it.isSelected = true
+                            }
+                        }
+                    }
+                    mViewModel.typeOptions.forEach {
+                        if (it.isSelected) {
+                            if (!it.isApplyFilter) {
+                                it.isSelected = false
+                            }
+                        } else {
+                            if (it.isApplyFilter) {
+                                it.isSelected = true
+                            }
+                        }
+                    }
+                    notifySortingAdapter()
                     mapStyleShowList()
+                    if (isNoDataFoundVisible) {
+                        layoutNoDataFound.root.show()
+                    }
+                    collapseSearchMap(params)
                 } else {
+                    activity?.hideSoftKeyboard(etSearchMap)
                     mapStyleShowSorting()
+                    openSearch(params)
+                    imgFilter.setColorFilter(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.color_primary_green
+                        )
+                    )
+                }
+            }
+            clMapStyleMain.setOnClickListener {
+                if (etSearchMap.text.isNullOrEmpty() && tilSearch.isVisible && !nsvFilter.isVisible) {
+                    collapseSearchMap(params)
                 }
             }
             cardEsri.setOnClickListener {
@@ -592,6 +728,31 @@ class MapStyleFragment : BaseFragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun FragmentMapStyleBinding.collapseSearchMap(params: ViewGroup.LayoutParams?) {
+        if (!isFilterApplied) {
+            imgFilter.setColorFilter(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_img_tint
+                )
+            )
+        }
+        activity?.runOnUiThread {
+            scrollMapStyle.isFillViewport = false
+            params?.width = ViewGroup.LayoutParams.WRAP_CONTENT
+            cardSearchFilter.layoutParams = params
+        }
+        tilSearch.hide()
+        viewLine.show()
+        if (!isGrabMapEnable(mPreferenceManager)) {
+            cardGrabMap.hide()
+            cardEsri.show()
+            cardHere.show()
+        } else {
+            groupFilterButton.show()
         }
     }
 

@@ -8,6 +8,7 @@
     android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_search_map_style"
         android:layout_width="@dimen/sign_in_required_width"
         android:layout_height="@dimen/map_style_height"
         android:background="@drawable/bottom_sheet_top_all_corner_curved_white_bg"
@@ -127,7 +128,7 @@
                                 android:lines="1"
                                 android:maxLines="1"
                                 android:inputType="text"
-                                android:imeOptions="actionSearch"
+                                android:imeOptions="actionDone"
                                 android:paddingVertical="@dimen/dp_0"
                                 android:paddingStart="@dimen/dp_4"
                                 android:paddingEnd="@dimen/dp_4"
@@ -141,7 +142,7 @@
                             android:id="@+id/view_line"
                             android:layout_width="@dimen/dp_1"
                             android:layout_height="@dimen/dp_0"
-                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_marginEnd="@dimen/dp_5"
                             android:background="@color/color_view"
                             app:layout_constraintBottom_toBottomOf="@+id/iv_search"
                             app:layout_constraintEnd_toStartOf="@+id/img_filter"
@@ -150,9 +151,10 @@
 
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/img_filter"
-                            android:layout_width="@dimen/dp_20"
-                            android:layout_height="@dimen/dp_20"
-                            android:layout_marginEnd="@dimen/sp_10"
+                            android:layout_width="@dimen/dp_30"
+                            android:layout_height="@dimen/dp_30"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:padding="@dimen/dp_5"
                             android:src="@drawable/ic_filter_map_style"
                             app:layout_constraintBottom_toBottomOf="@+id/iv_search"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -162,10 +164,11 @@
                             android:id="@+id/img_filter_selected"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/sp_10"
+                            android:layout_marginEnd="@dimen/dp_5"
+                            android:layout_marginTop="@dimen/dp_5"
                             android:src="@drawable/selected_sorting"
                             android:visibility="gone"
-                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/img_filter"
                             app:layout_constraintTop_toTopOf="@+id/img_filter" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

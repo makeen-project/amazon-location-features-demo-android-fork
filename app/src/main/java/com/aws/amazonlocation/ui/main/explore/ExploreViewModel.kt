@@ -575,7 +575,7 @@ class ExploreViewModel @Inject constructor(
             MapStyleInnerData(
                 context.resources.getString(R.string.map_explore_truck),
                 context.resources.getString(R.string.here),
-                listOf(ATTRIBUTE_TRUCK),
+                listOf(ATTRIBUTE_LIGHT, ATTRIBUTE_TRUCK),
                 listOf(TYPE_VECTOR),
                 image = R.mipmap.ic_here_explore_truck,
                 isSelected = false,
