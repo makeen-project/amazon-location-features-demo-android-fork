@@ -123,6 +123,9 @@ class MapStyleBottomSheetFragment(
                 }
                 layoutNoDataFound.tvNoMatchingFound.text = getString(R.string.label_style_search_error_title)
                 layoutNoDataFound.tvMakeSureSpelledCorrect.text = getString(R.string.label_style_search_error_des)
+                if (!isGrabMapEnable(mPreferenceManager)) {
+                    cardGrabMap.hide()
+                }
                 setMapTileSelection(mapName)
                 this.layoutManager = LinearLayoutManager(requireContext())
                 mMapStyleAdapter =
@@ -219,9 +222,16 @@ class MapStyleBottomSheetFragment(
                 cardSearchFilter.layoutParams = params
                 tilSearch.hide()
                 viewLine.show()
-                scrollMapStyle.show()
                 rvMapStyle.show()
                 layoutNoDataFound.root.hide()
+                if (!isGrabMapEnable(mPreferenceManager)) {
+                    cardGrabMap.hide()
+                    cardEsri.show()
+                    cardHere.show()
+                } else {
+                    groupFilterButton.show()
+                }
+                scrollMapStyle.isFillViewport = false
                 activity?.hideSoftKeyboard(etSearchMap)
             }
             tilSearch.isEndIconVisible = false
@@ -231,7 +241,8 @@ class MapStyleBottomSheetFragment(
                 params?.width = ViewGroup.LayoutParams.MATCH_PARENT
                 cardSearchFilter.layoutParams = params
                 etSearchMap.clearFocus()
-                scrollMapStyle.hide()
+                groupFilterButton.hide()
+                scrollMapStyle.isFillViewport = true
                 tilSearch.isEndIconVisible = true
             }
 
@@ -255,8 +266,9 @@ class MapStyleBottomSheetFragment(
                         R.color.color_img_tint
                     )
                 )
-                setDefaultMapStyleList()
-                mapStyleShowList()
+                mViewModel.mStyleList.clear()
+                mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                mMapStyleAdapter?.notifyDataSetChanged()
             }
             btnApplyFilter.setOnClickListener {
                 val providerNames = arrayListOf<String>()
@@ -306,6 +318,24 @@ class MapStyleBottomSheetFragment(
                     mapStyleShowList()
                 } else {
                     mapStyleShowSorting()
+                }
+            }
+            cardEsri.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.esri)) {
+                    mapInterface.mapStyleClick(0, 0)
+                }
+            }
+            cardHere.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.here)) {
+                    mapInterface.mapStyleClick(1, 0)
+                }
+            }
+            cardGrabMap.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.grab)) {
+                    mapInterface.mapStyleClick(2, 0)
                 }
             }
         }

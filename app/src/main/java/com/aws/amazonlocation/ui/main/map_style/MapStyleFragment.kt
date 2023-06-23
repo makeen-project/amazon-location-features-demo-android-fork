@@ -119,6 +119,9 @@ class MapStyleFragment : BaseFragment() {
             }
             layoutNoDataFound.tvNoMatchingFound.text = getString(R.string.label_style_search_error_title)
             layoutNoDataFound.tvMakeSureSpelledCorrect.text = getString(R.string.label_style_search_error_des)
+            if (!isGrabMapEnable(mPreferenceManager)) {
+                cardGrabMap.hide()
+            }
             setMapTileSelection(mapName)
             rvMapStyle.layoutManager = LinearLayoutManager(requireContext())
             mMapStyleAdapter =
@@ -402,20 +405,20 @@ class MapStyleFragment : BaseFragment() {
             resources.getString(R.string.esri) -> {
                 cardEsri.strokeColor =
                     ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
+                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
             }
             resources.getString(R.string.here) -> {
                 cardHere.strokeColor =
                     ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
+                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
             }
             resources.getString(R.string.grab) -> {
                 cardGrabMap.strokeColor =
                     ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
+                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
             }
         }
     }
@@ -463,7 +466,14 @@ class MapStyleFragment : BaseFragment() {
                 viewLine.show()
                 rvMapStyle.show()
                 layoutNoDataFound.root.hide()
-                scrollMapStyle.show()
+                if (!isGrabMapEnable(mPreferenceManager)) {
+                    cardGrabMap.hide()
+                    cardEsri.show()
+                    cardHere.show()
+                } else {
+                    groupFilterButton.show()
+                }
+                scrollMapStyle.isFillViewport = false
                 activity?.hideSoftKeyboard(etSearchMap)
             }
             tilSearch.isEndIconVisible = false
@@ -473,7 +483,8 @@ class MapStyleFragment : BaseFragment() {
                 params?.width = ViewGroup.LayoutParams.MATCH_PARENT
                 cardSearchFilter.layoutParams = params
                 etSearchMap.clearFocus()
-                scrollMapStyle.hide()
+                groupFilterButton.hide()
+                scrollMapStyle.isFillViewport = true
                 tilSearch.isEndIconVisible = true
             }
 
@@ -497,8 +508,9 @@ class MapStyleFragment : BaseFragment() {
                         R.color.color_img_tint
                     )
                 )
-                setDefaultMapStyleList()
-                mapStyleShowList()
+                mViewModel.mStyleList.clear()
+                mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                mMapStyleAdapter?.notifyDataSetChanged()
             }
             btnApplyFilter.setOnClickListener {
                 val providerNames = arrayListOf<String>()
@@ -548,6 +560,36 @@ class MapStyleFragment : BaseFragment() {
                     mapStyleShowList()
                 } else {
                     mapStyleShowSorting()
+                }
+            }
+            cardEsri.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.esri)) {
+                    mapStyleChange(
+                        false,
+                        getString(R.string.esri),
+                        getString(R.string.map_light)
+                    )
+                }
+            }
+            cardHere.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.here)) {
+                    mapStyleChange(
+                        false,
+                        getString(R.string.here),
+                        getString(R.string.map_explore)
+                    )
+                }
+            }
+            cardGrabMap.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.grab)) {
+                    mapStyleChange(
+                        false,
+                        getString(R.string.grab),
+                        getString(R.string.map_grab_light)
+                    )
                 }
             }
         }

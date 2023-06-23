@@ -87,14 +87,13 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import java.util.*
-import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
-
+import java.util.*
+import kotlin.math.roundToInt
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -274,7 +273,7 @@ class ExploreFragment :
         mBottomSheetHelper.setDirectionBottomSheet(mBinding.bottomSheetDirection.clPersistentBottomSheetDirection)
         mBaseActivity?.isTablet?.let {
             if (!it) {
-                mBottomSheetHelper.setMapStyleBottomSheet(mBinding.bottomSheetMapStyle)
+                mBottomSheetHelper.setMapStyleBottomSheet(activity, mBinding.bottomSheetMapStyle)
             } else {
                 mBinding.bottomSheetMapStyle.clMapStyleBottomSheet.hide()
             }
@@ -724,6 +723,9 @@ class ExploreFragment :
                     }
                 )
             rvType.adapter = mTypeAdapter
+            if (!isGrabMapEnable(mPreferenceManager)) {
+                cardGrabMap.hide()
+            }
         }
     }
 
@@ -2094,6 +2096,9 @@ class ExploreFragment :
                             }
                         }
                     } else {
+                        if (!isGrabMapEnable(mPreferenceManager)) {
+                            mBinding.bottomSheetMapStyle.cardGrabMap.hide()
+                        }
                         mBottomSheetHelper.halfExpandMapStyleSheet()
                         mBaseActivity?.bottomNavigationVisibility(false)
                     }
@@ -2645,9 +2650,16 @@ class ExploreFragment :
                     cardSearchFilter.layoutParams = params
                     tilSearch.hide()
                     viewLine.show()
-                    scrollMapStyle.show()
                     rvMapStyle.show()
                     layoutNoDataFound.root.hide()
+                    if (!isGrabMapEnable(mPreferenceManager)) {
+                        cardGrabMap.hide()
+                        cardEsri.show()
+                        cardHere.show()
+                    } else {
+                        groupFilterButton.show()
+                    }
+                    scrollMapStyle.isFillViewport = false
                     activity?.hideSoftKeyboard(etSearchMap)
                 }
                 tilSearch.isEndIconVisible = false
@@ -2657,7 +2669,8 @@ class ExploreFragment :
                     params?.width = ViewGroup.LayoutParams.MATCH_PARENT
                     cardSearchFilter.layoutParams = params
                     etSearchMap.clearFocus()
-                    scrollMapStyle.hide()
+                    groupFilterButton.hide()
+                    scrollMapStyle.isFillViewport = true
                     tilSearch.isEndIconVisible = true
                 }
 
@@ -2681,8 +2694,9 @@ class ExploreFragment :
                             R.color.color_img_tint
                         )
                     )
-                    setDefaultMapStyleList()
-                    mapStyleShowList()
+                    mViewModel.mStyleList.clear()
+                    mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                    mMapStyleAdapter?.notifyDataSetChanged()
                 }
                 btnApplyFilter.setOnClickListener {
                     val providerNames = arrayListOf<String>()
@@ -2732,6 +2746,36 @@ class ExploreFragment :
                         mapStyleShowList()
                     } else {
                         mapStyleShowSorting()
+                    }
+                }
+                cardEsri.setOnClickListener {
+                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                    if (mapName != getString(R.string.esri)) {
+                        mapStyleChange(
+                            false,
+                            getString(R.string.esri),
+                            getString(R.string.map_light)
+                        )
+                    }
+                }
+                cardHere.setOnClickListener {
+                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                    if (mapName != getString(R.string.here)) {
+                        mapStyleChange(
+                            false,
+                            getString(R.string.here),
+                            getString(R.string.map_explore)
+                        )
+                    }
+                }
+                cardGrabMap.setOnClickListener {
+                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                    if (mapName != getString(R.string.grab)) {
+                        mapStyleChange(
+                            false,
+                            getString(R.string.grab),
+                            getString(R.string.map_grab_light)
+                        )
                     }
                 }
             }
@@ -3867,8 +3911,10 @@ class ExploreFragment :
             )
             clearMapLineMarker()
             clearSearchList()
-            mBaseActivity?.bottomNavigationVisibility(true)
-            mBottomSheetHelper.hideSearchBottomSheet(false)
+            if (!mBottomSheetHelper.isMapStyleVisible()) {
+                mBaseActivity?.bottomNavigationVisibility(true)
+                mBottomSheetHelper.hideSearchBottomSheet(false)
+            }
             mBottomSheetHelper.hideDirectionSheet()
             mViewModel.mSearchSuggestionData = null
             mMapHelper.getLiveLocation()?.let { it1 ->
