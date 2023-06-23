@@ -1,0 +1,12 @@
+DEFAULT_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+DEFAULT_REGION=xx-xxxx-x
+DEFAULT_SE_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+DEFAULT_SE_REGION=xx-xxxx-x
+# Here are some optional values for running tests
+IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+USER_DOMAIN=https://xxxxxxxxxxxx.xxxx.xx-xxxx-x.amazoncognito.com
+USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+USER_POOL_ID=xx-xxxx-x_xxxxxxxxx
+WEB_SOCKET_URL=xx....x-xxx.iot.xx-xxxx-x.amazonaws.com
+USER_LOGIN_NAME=<aws username>
+USER_LOGIN_PASSWORD=<aws password>
