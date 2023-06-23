@@ -15,7 +15,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class MapStyleVMSetEsriMapListData : BaseTest() {
+class MapStyleVMSetEsriAndHereListData : BaseTest() {
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -31,8 +31,8 @@ class MapStyleVMSetEsriMapListData : BaseTest() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun setEsriMapListDataSuccess() = runTest {
-        mMapStyleViewModel.setEsriMapListData(context)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, mMapStyleViewModel.esriList.size == 6)
+    fun setEsriAndHereSuccess() = runTest {
+        mMapStyleViewModel.setMapListData(context, false)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, mMapStyleViewModel.mStyleList.size == 2)
     }
 }

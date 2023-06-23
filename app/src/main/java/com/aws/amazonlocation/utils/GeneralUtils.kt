@@ -53,6 +53,7 @@ import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.mapboxsdk.geometry.LatLng
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -219,6 +220,10 @@ fun Activity.hideKeyboard() {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun Activity.hideSoftKeyboard(input: TextInputEditText) {
+    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(input.windowToken, 0)
+}
 fun checkLatLngValid(latitude: Double?, longitude: Double?): Boolean {
     return latitude?.toInt() in -90 until 90 && longitude?.toInt() in -180 until 180
 }

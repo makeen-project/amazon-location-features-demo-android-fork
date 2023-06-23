@@ -105,11 +105,19 @@ class BottomSheetHelper {
     fun isSearchBottomSheetHalfExpand(): Boolean {
         return mBottomSheetSearchPlaces.state == BottomSheetBehavior.STATE_HALF_EXPANDED
     }
+
     fun isMapStyleExpandedOrHalfExpand(): Boolean {
         if (!::mBottomSheetMapStyle.isInitialized) {
             return false
         }
         return mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_HALF_EXPANDED || mBottomSheetMapStyle.state == BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    fun isMapStyleVisible(): Boolean {
+        if (!::mBottomSheetMapStyle.isInitialized) {
+            return false
+        }
+        return mBottomSheetMapStyle.state != BottomSheetBehavior.STATE_HIDDEN
     }
 
     fun isDirectionSearchExpandedOrHalfExpand(): Boolean {
@@ -133,7 +141,7 @@ class BottomSheetHelper {
     }
 
     // set map style bottom sheet
-    fun setMapStyleBottomSheet(view: BottomSheetMapStyleBinding) {
+    fun setMapStyleBottomSheet(activity: FragmentActivity?, view: BottomSheetMapStyleBinding) {
         mBottomSheetMapStyle =
             BottomSheetBehavior.from(view.clMapStyleBottomSheet)
         mBottomSheetMapStyle.isHideable = true
@@ -162,6 +170,7 @@ class BottomSheetHelper {
                             if (isMapStyleExpandedOrHalfExpand() && isDirectionSearchSheetVisible()) {
                                 collapseDirectionSearch()
                             }
+                            activity?.hideKeyboard()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
                             if (exportFragment?.mBaseActivity?.mTrackingUtils?.isTrackingSheetCollapsed() != null) {
@@ -354,6 +363,11 @@ class BottomSheetHelper {
     }
 
     fun expandMapStyleSheet() {
+        mBottomSheetMapStyle.state = BottomSheetBehavior.STATE_EXPANDED
+        hideSearchBottomSheet(true)
+    }
+
+    fun halfExpandMapStyleSheet() {
         mBottomSheetMapStyle.halfExpandedRatio = 0.5f
         mBottomSheetMapStyle.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         hideSearchBottomSheet(true)

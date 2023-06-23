@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.explore
+package com.aws.amazonlocation.ui.main.map_style
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,17 +6,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.data.response.MapStyleData
 import com.aws.amazonlocation.databinding.ItemMapStyleBinding
+import com.aws.amazonlocation.ui.main.explore.MapStyleInnerAdapter
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-class MapStyleAdapter(
+class SettingMapStyleAdapter(
+    var columnCount: Int,
     private val mMapStyleData: ArrayList<MapStyleData>,
     var mapInterface: MapInterface
 ) :
-    RecyclerView.Adapter<MapStyleAdapter.SearchPlaceVH>() {
+    RecyclerView.Adapter<SettingMapStyleAdapter.SearchPlaceVH>() {
 
     inner class SearchPlaceVH(private val binding: ItemMapStyleBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -30,7 +32,7 @@ class MapStyleAdapter(
                 }
                 data.mapInnerData?.let {
                     rvMapName.apply {
-                        this.layoutManager = GridLayoutManager(this.context, 3)
+                        this.layoutManager = GridLayoutManager(this.context, columnCount)
                         val mMapStyleAdapter = MapStyleInnerAdapter(
                             it,
                             object : MapStyleInnerAdapter.MapInterface {

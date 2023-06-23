@@ -23,10 +23,17 @@ import com.aws.amazonlocation.domain.`interface`.NavigationDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
+import com.aws.amazonlocation.utils.ATTRIBUTE_3D
+import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
+import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
+import com.aws.amazonlocation.utils.ATTRIBUTE_SATELLITE
+import com.aws.amazonlocation.utils.ATTRIBUTE_TRUCK
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyles
 import com.aws.amazonlocation.utils.TRAVEL_MODE_BICYCLE
 import com.aws.amazonlocation.utils.TRAVEL_MODE_MOTORCYCLE
+import com.aws.amazonlocation.utils.TYPE_RASTER
+import com.aws.amazonlocation.utils.TYPE_VECTOR
 import com.aws.amazonlocation.utils.Units
 import com.mapbox.mapboxsdk.geometry.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +50,7 @@ import javax.inject.Inject
 // SPDX-License-Identifier: MIT-0
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private var getLocationSearchUseCase: LocationSearchUseCase,
+    private var getLocationSearchUseCase: LocationSearchUseCase
 ) :
     ViewModel() {
 
@@ -61,8 +68,11 @@ class ExploreViewModel @Inject constructor(
     var mMotorcycleData: CalculateRouteResult? = null
     var mNavigationResponse: NavigationResponse? = null
     private val mNavigationListModel = ArrayList<NavigationData>()
-    private val listMapInnerData = arrayListOf<MapStyleInnerData>()
     var mStyleList = ArrayList<MapStyleData>()
+    var mStyleListForFilter = ArrayList<MapStyleData>()
+    var providerOptions = ArrayList<FilterOption>()
+    var attributeOptions = ArrayList<FilterOption>()
+    var typeOptions = ArrayList<FilterOption>()
 
     private val _searchForSuggestionsResultList =
         Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)
@@ -109,7 +119,7 @@ class ExploreViewModel @Inject constructor(
         isGrabMapSelected: Boolean
     ) {
         _searchForSuggestionsResultList.trySend(
-            HandleResult.Loading,
+            HandleResult.Loading
         )
         viewModelScope.launch(Dispatchers.IO) {
             getLocationSearchUseCase.searchPlaceSuggestionList(
@@ -121,25 +131,25 @@ class ExploreViewModel @Inject constructor(
                     override fun getSearchPlaceSuggestionResponse(suggestionResponse: SearchSuggestionResponse?) {
                         _searchForSuggestionsResultList.trySend(
                             HandleResult.Success(
-                                suggestionResponse!!,
-                            ),
+                                suggestionResponse!!
+                            )
                         )
                     }
 
                     override fun internetConnectionError(error: String) {
                         _searchForSuggestionsResultList.trySend(
                             HandleResult.Error(
-                                DataSourceException.Error(error),
-                            ),
+                                DataSourceException.Error(error)
+                            )
                         )
                     }
-                },
+                }
             )
         }
     }
 
     fun searchPlaceIndexForText(
-        searchText: String?,
+        searchText: String?
     ) {
         _searchLocationList.trySend(HandleResult.Loading)
         viewModelScope.launch(Dispatchers.IO) {
@@ -155,11 +165,11 @@ class ExploreViewModel @Inject constructor(
                     override fun error(searchResponse: SearchSuggestionResponse) {
                         searchResponse.error?.let {
                             DataSourceException.Error(
-                                it,
+                                it
                             )
                         }?.let {
                             HandleResult.Error(
-                                it,
+                                it
                             )
                         }?.let { _searchLocationList.trySend(it) }
                     }
@@ -168,12 +178,12 @@ class ExploreViewModel @Inject constructor(
                         _searchLocationList.trySend(
                             HandleResult.Error(
                                 DataSourceException.Error(
-                                    error,
-                                ),
-                            ),
+                                    error
+                                )
+                            )
                         )
                     }
-                },
+                }
             )
         }
     }
@@ -185,7 +195,7 @@ class ExploreViewModel @Inject constructor(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        isWalkingAndTruckCall: Boolean,
+        isWalkingAndTruckCall: Boolean
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             if (isWalkingAndTruckCall) {
@@ -197,7 +207,7 @@ class ExploreViewModel @Inject constructor(
                         lngDestination,
                         isAvoidFerries,
                         isAvoidTolls,
-                        TravelMode.Walking.value,
+                        TravelMode.Walking.value
                     )
                 }
                 two.await()
@@ -209,7 +219,7 @@ class ExploreViewModel @Inject constructor(
                         lngDestination,
                         isAvoidFerries,
                         isAvoidTolls,
-                        TravelMode.Truck.value,
+                        TravelMode.Truck.value
                     )
                 }
                 three.await()
@@ -222,7 +232,7 @@ class ExploreViewModel @Inject constructor(
                         lngDestination,
                         isAvoidFerries,
                         isAvoidTolls,
-                        TravelMode.Car.value,
+                        TravelMode.Car.value
                     )
                 }
                 one.await()
@@ -285,7 +295,7 @@ class ExploreViewModel @Inject constructor(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        travelMode: String?,
+        travelMode: String?
     ) {
         _calculateDistance.trySend(HandleResult.Loading)
         mDestinationLatLng = lngDestination?.let { latDestination?.let { it1 -> LatLng(it1, it) } }
@@ -314,12 +324,12 @@ class ExploreViewModel @Inject constructor(
                                     lngDestination?.let { it1 ->
                                         LatLng(
                                             it,
-                                            it1,
+                                            it1
                                         )
                                     }
-                                },
-                            ),
-                        ),
+                                }
+                            )
+                        )
                     )
                 }
 
@@ -331,12 +341,12 @@ class ExploreViewModel @Inject constructor(
                     _calculateDistance.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                exception,
-                            ),
-                        ),
+                                exception
+                            )
+                        )
                     )
                 }
-            },
+            }
         )
     }
 
@@ -347,7 +357,7 @@ class ExploreViewModel @Inject constructor(
         lngDestination: Double?,
         isAvoidFerries: Boolean?,
         isAvoidTolls: Boolean?,
-        travelMode: String?,
+        travelMode: String?
     ) {
         _updateCalculateDistance.trySend(HandleResult.Loading)
         getLocationSearchUseCase.calculateRoute(
@@ -364,9 +374,9 @@ class ExploreViewModel @Inject constructor(
                         HandleResult.Success(
                             CalculateDistanceResponse(
                                 "$travelMode",
-                                success,
-                            ),
-                        ),
+                                success
+                            )
+                        )
                     )
                 }
 
@@ -378,12 +388,12 @@ class ExploreViewModel @Inject constructor(
                     _updateCalculateDistance.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                exception,
-                            ),
-                        ),
+                                exception
+                            )
+                        )
                     )
                 }
-            },
+            }
         )
     }
 
@@ -423,7 +433,7 @@ class ExploreViewModel @Inject constructor(
         latitude: Double?,
         longitude: Double?,
         step: Step,
-        isTimeDialog: Boolean = false,
+        isTimeDialog: Boolean = false
     ) {
         _navigationTimeDialogData.trySend(HandleResult.Loading)
         getLocationSearchUseCase.searchNavigationPlaceIndexForPosition(
@@ -435,8 +445,8 @@ class ExploreViewModel @Inject constructor(
                     if (isTimeDialog) {
                         _navigationTimeDialogData.trySend(
                             HandleResult.Success(
-                                navigationData,
-                            ),
+                                navigationData
+                            )
                         )
                     } else {
                         mNavigationListModel.add(navigationData)
@@ -447,17 +457,17 @@ class ExploreViewModel @Inject constructor(
                     _navigationTimeDialogData.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                error,
-                            ),
-                        ),
+                                error
+                            )
+                        )
                     )
                 }
-            },
+            }
         )
     }
     fun getAddressLineFromLatLng(
         longitude: Double?,
-        latitude: Double?,
+        latitude: Double?
     ) {
         _navigationTimeDialogData.trySend(HandleResult.Loading)
         getLocationSearchUseCase.searPlaceIndexForPosition(
@@ -467,158 +477,224 @@ class ExploreViewModel @Inject constructor(
                 override fun getAddressData(searchPlaceIndexForPositionResult: SearchPlaceIndexForPositionResult) {
                     _addressLineData.trySend(
                         HandleResult.Success(
-                            SearchResponse(searchPlaceIndexForPositionResult, latitude, longitude),
-                        ),
+                            SearchResponse(searchPlaceIndexForPositionResult, latitude, longitude)
+                        )
                     )
                 }
 
                 override fun error(error: String) {
                     _addressLineData.trySend(
                         HandleResult.Success(
-                            SearchResponse(null, latitude, longitude),
-                        ),
+                            SearchResponse(null, latitude, longitude)
+                        )
                     )
                 }
                 override fun internetConnectionError(error: String) {
                     _addressLineData.trySend(
                         HandleResult.Error(
                             DataSourceException.Error(
-                                error,
-                            ),
-                        ),
+                                error
+                            )
+                        )
                     )
                 }
-            },
+            }
         )
     }
 
     fun setMapListData(context: Context, isGrabMapEnable: Boolean = false) {
-        mStyleList.clear()
-        listMapInnerData.clear()
-        listMapInnerData.add(
+        val items = arrayListOf(
             MapStyleInnerData(
                 context.getString(R.string.map_light),
+                context.getString(R.string.map_esri),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
                 false,
-                R.drawable.light,
+                R.drawable.light
             ),
-        )
-        listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_streets),
+                context.getString(R.string.map_esri),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
                 false,
-                R.drawable.streets,
+                R.drawable.streets
             ),
-        )
-        listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_navigation),
+                context.getString(R.string.map_esri),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
                 false,
-                R.drawable.navigation,
+                R.drawable.navigation
             ),
-        )
-        listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_dark_gray),
+                context.getString(R.string.map_esri),
+                listOf(ATTRIBUTE_DARK),
+                listOf(TYPE_VECTOR),
                 false,
-                R.drawable.dark_gray,
+                R.drawable.dark_gray
             ),
-        )
-        listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_light_gray),
+                context.getString(R.string.map_esri),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
                 false,
-                R.drawable.light_gray,
+                R.drawable.light_gray
             ),
-        )
-        listMapInnerData.add(
             MapStyleInnerData(
                 context.getString(R.string.map_imagery),
+                context.getString(R.string.map_esri),
+                listOf(ATTRIBUTE_SATELLITE),
+                listOf(TYPE_RASTER),
                 false,
-                R.drawable.imagery,
+                R.drawable.imagery
             ),
-        )
-        mStyleList.add(MapStyleData(context.getString(R.string.map_esri), true, listMapInnerData))
-
-        val hereList = ArrayList<MapStyleInnerData>()
-
-        hereList.add(
             MapStyleInnerData(
-                mapName = context.resources.getString(R.string.map_contrast),
-                image = R.mipmap.ic_here_contrast,
-                isSelected = false,
-                mMapName = MapNames.HERE_CONTRAST,
-                mMapStyleName = MapStyles.VECTOR_HERE_CONTRAST,
-            ),
-        )
-        hereList.add(
-            MapStyleInnerData(
-                mapName = context.resources.getString(R.string.map_explore),
+                context.resources.getString(R.string.map_explore),
+                context.resources.getString(R.string.here),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
                 image = R.mipmap.ic_here_explore,
                 isSelected = false,
                 mMapName = MapNames.HERE_EXPLORE,
-                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE,
+                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE
             ),
-        )
-
-        hereList.add(
             MapStyleInnerData(
-                mapName = context.resources.getString(R.string.map_explore_truck),
+                context.resources.getString(R.string.map_contrast),
+                context.resources.getString(R.string.here),
+                listOf(ATTRIBUTE_DARK, ATTRIBUTE_3D),
+                listOf(TYPE_VECTOR),
+                image = R.mipmap.ic_here_contrast,
+                isSelected = false,
+                mMapName = MapNames.HERE_CONTRAST,
+                mMapStyleName = MapStyles.VECTOR_HERE_CONTRAST
+            ),
+            MapStyleInnerData(
+                context.resources.getString(R.string.map_explore_truck),
+                context.resources.getString(R.string.here),
+                listOf(ATTRIBUTE_LIGHT, ATTRIBUTE_TRUCK),
+                listOf(TYPE_VECTOR),
                 image = R.mipmap.ic_here_explore_truck,
                 isSelected = false,
                 mMapName = MapNames.HERE_EXPLORE_TRUCK,
-                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK,
+                mMapStyleName = MapStyles.VECTOR_HERE_EXPLORE_TRUCK
             ),
-        )
-
-        hereList.add(
             MapStyleInnerData(
-                mapName = context.resources.getString(R.string.map_raster),
-                image = R.mipmap.ic_here_imagery,
-                isSelected = false,
-                mMapName = MapNames.HERE_IMAGERY,
-                mMapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE,
-            ),
-        )
-
-        hereList.add(
-            MapStyleInnerData(
-                mapName = context.resources.getString(R.string.map_hybrid),
+                context.resources.getString(R.string.map_hybrid),
+                context.resources.getString(R.string.here),
+                listOf(ATTRIBUTE_SATELLITE),
+                listOf(TYPE_VECTOR, TYPE_RASTER),
                 image = R.mipmap.ic_here_hybrid,
                 isSelected = false,
                 mMapName = MapNames.HERE_HYBRID,
-                mMapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE,
+                mMapStyleName = MapStyles.HYBRID_HERE_EXPLORE_SATELLITE
             ),
+            MapStyleInnerData(
+                context.resources.getString(R.string.map_raster),
+                context.resources.getString(R.string.here),
+                listOf(ATTRIBUTE_SATELLITE),
+                listOf(TYPE_RASTER),
+                image = R.mipmap.ic_here_imagery,
+                isSelected = false,
+                mMapName = MapNames.HERE_IMAGERY,
+                mMapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
+            )
         )
-        mStyleList.add(MapStyleData(context.resources.getString(R.string.here), false, hereList))
-
         if (isGrabMapEnable) {
-            val grabList = ArrayList<MapStyleInnerData>()
-
-            grabList.add(
+            items.add(
                 MapStyleInnerData(
-                    mapName = context.resources.getString(R.string.map_grab_light),
+                    context.resources.getString(R.string.map_grab_light),
+                    context.resources.getString(R.string.grab),
+                    listOf(ATTRIBUTE_LIGHT),
+                    listOf(TYPE_VECTOR),
                     image = R.drawable.grab_light,
                     isSelected = false,
                     mMapName = MapNames.GRAB_LIGHT,
                     mMapStyleName = MapStyles.GRAB_LIGHT
                 )
             )
-            grabList.add(
+            items.add(
                 MapStyleInnerData(
-                    mapName = context.resources.getString(R.string.map_grab_dark),
+                    context.resources.getString(R.string.map_grab_dark),
+                    context.resources.getString(R.string.grab),
+                    listOf(ATTRIBUTE_DARK),
+                    listOf(TYPE_VECTOR),
                     image = R.drawable.grab_dark,
                     isSelected = false,
                     mMapName = MapNames.GRAB_DARK,
                     mMapStyleName = MapStyles.GRAB_DARK
                 )
             )
-            mStyleList.add(
-                MapStyleData(
-                    context.resources.getString(R.string.grab),
-                    false,
-                    grabList
-                )
-            )
         }
+        mStyleList.clear()
+
+        mStyleList = items.groupBy { it.provider }
+            .map { (providerName, providerItems) ->
+                MapStyleData(
+                    styleNameDisplay = providerName,
+                    isSelected = false, // Set isSelected as per your requirement
+                    mapInnerData = providerItems
+                )
+            } as ArrayList<MapStyleData>
+
+        mStyleListForFilter.clear()
+        mStyleListForFilter.addAll(mStyleList)
+        providerOptions = items.map { it.provider }
+            .distinct()
+            .map { FilterOption(it) } as ArrayList<FilterOption>
+
+        attributeOptions = items.flatMap { it.attributes }
+            .distinct()
+            .map { FilterOption(it) } as ArrayList<FilterOption>
+
+        typeOptions = items.flatMap { it.types }
+            .distinct()
+            .map { FilterOption(it) } as ArrayList<FilterOption>
+    }
+
+    fun filterAndSortItems(
+        context: Context,
+        searchQuery: String? = null,
+        providerNames: List<String>? = null,
+        attributes: List<String>? = null,
+        types: List<String>? = null
+    ): List<MapStyleData> {
+        val providerOrder = listOf(
+            context.resources.getString(R.string.map_esri),
+            context.resources.getString(R.string.here),
+            context.resources.getString(R.string.grab)
+        )
+
+        // Convert the providers to a sequence for more efficient processing
+        return mStyleListForFilter.asSequence()
+            .filter { providerNames?.contains(it.styleNameDisplay) ?: true }
+            .mapNotNull { provider ->
+                val filteredItems = provider.mapInnerData?.asSequence()?.filter { item ->
+                    val matchesSearchQuery = searchQuery?.let { sq ->
+                        item.mapName?.contains(sq, ignoreCase = true)
+                    } ?: true
+
+                    val hasRequiredAttributes = attributes?.let { attrs ->
+                        item.attributes.intersect(attrs).isNotEmpty()
+                    } ?: true
+
+                    val hasRequiredTypes = types?.let { ts ->
+                        item.types.intersect(ts).isNotEmpty()
+                    } ?: true
+
+                    matchesSearchQuery && hasRequiredAttributes && hasRequiredTypes
+                }?.toList()
+
+                if (filteredItems?.isEmpty() == true) {
+                    null
+                } else {
+                    provider.copy(mapInnerData = filteredItems)
+                }
+            }
+            .sortedBy { providerOrder.indexOf(it.styleNameDisplay) }
+            .toList() // Convert the result back to a list
     }
 }

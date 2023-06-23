@@ -48,6 +48,9 @@ const val ESRI = "Esri"
 const val HERE = "HERE"
 const val GRAB = "GrabMaps"
 
+const val LIGHT = "Light"
+const val VECTOR = "Vector"
+
 const val SIGN_IN_SUCCESS = "Sign in Successfully"
 const val SIGN_OUT_SUCCESS = "Sign out successfully"
 const val NO_BROWSERS_INSTALLED = "No browsers installed."

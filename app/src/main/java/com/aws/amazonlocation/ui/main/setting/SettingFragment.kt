@@ -283,7 +283,11 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     fun hideKeyBoard() {
         if (isTablet) {
-            aWSCloudInformationFragment.hideKeyBoard()
+            if (this::aWSCloudInformationFragment.isInitialized) {
+                if (aWSCloudInformationFragment.isVisible) {
+                    aWSCloudInformationFragment.hideKeyBoard()
+                }
+            }
         }
     }
 
