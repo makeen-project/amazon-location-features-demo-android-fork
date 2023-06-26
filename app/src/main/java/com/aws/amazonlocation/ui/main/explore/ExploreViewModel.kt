@@ -674,7 +674,20 @@ class ExploreViewModel @Inject constructor(
             .mapNotNull { provider ->
                 val filteredItems = provider.mapInnerData?.asSequence()?.filter { item ->
                     val matchesSearchQuery = searchQuery?.let { sq ->
-                        item.mapName?.contains(sq, ignoreCase = true)
+                        var attributeDataContains = false
+                        var typeDataContains = false
+                        item.attributes.forEach {
+                            if (!attributeDataContains) {
+                                attributeDataContains = it.contains(sq, ignoreCase = true)
+                            }
+                        }
+                        item.types.forEach {
+                            if (!typeDataContains) {
+                                typeDataContains = it.contains(sq, ignoreCase = true)
+                            }
+                        }
+                        item.mapName?.contains(sq, ignoreCase = true) == true ||
+                            item.provider.contains(sq, ignoreCase = true) || attributeDataContains || typeDataContains
                     } ?: true
 
                     val hasRequiredAttributes = attributes?.let { attrs ->

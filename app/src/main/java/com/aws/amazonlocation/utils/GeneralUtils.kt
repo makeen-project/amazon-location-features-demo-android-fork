@@ -55,14 +55,14 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.mapboxsdk.geometry.LatLng
+import java.util.Locale
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
-import java.util.Locale
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -605,4 +605,23 @@ fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): 
         isGrabMapEnable = true
     }
     return isGrabMapEnable
+}
+
+fun checkGeofenceInsideGrab(
+    mLatLng: LatLng,
+    mPreferenceManager: PreferenceManager?,
+    context: Context?
+): Boolean {
+    context?.let {
+        mPreferenceManager?.let { preferenceManager ->
+            if (isGrabMapSelected(preferenceManager, it)) {
+                mLatLng.let {
+                    return (it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)
+                }
+            } else {
+                return true
+            }
+        }
+    }
+    return true
 }

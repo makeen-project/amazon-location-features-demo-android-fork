@@ -52,7 +52,7 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
         val mapStyleNameDisplay =
             preferenceManager.getValue(
                 KEY_MAP_STYLE_NAME,
-                getActivity().getString(R.string.map_light),
+                getActivity().getString(R.string.map_light)
             )
                 ?: getActivity().getString(R.string.map_light)
         val mapName: String
@@ -130,8 +130,8 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
             waitForView(withId(R.id.rv_map_style))?.perform(
                 actionOnItemAtPosition<ViewHolder>(
                     1,
-                    click(),
-                ),
+                    click()
+                )
             )
             checkLoadedTheme(mapbox)
             waitForView(allOf(withContentDescription(STYLE_TAG_HERE_1), isDisplayed()))?.perform(click())

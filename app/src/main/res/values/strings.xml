@@ -236,6 +236,6 @@
     <string name="label_type">Type</string>
     <string name="label_apply_filters">Apply filters</string>
     <string name="label_clear_selection">Clear selection</string>
-    <string name="label_style_search_error_title">No matching styles found</string>
-    <string name="label_style_search_error_des">Make sure your search is \nspelled correctly and try again</string>
+    <string name="label_style_search_error_title">No Mapping styles</string>
+    <string name="label_style_search_error_des">Make sure your selection \nspelled correctly and try again</string>
 </resources>

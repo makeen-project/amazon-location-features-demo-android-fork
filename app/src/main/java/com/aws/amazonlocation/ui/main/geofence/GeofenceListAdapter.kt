@@ -1,33 +1,80 @@
 package com.aws.amazonlocation.ui.main.geofence
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
+import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.ItemGeofenceListBinding
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.checkGeofenceInsideGrab
+import com.aws.amazonlocation.utils.geofence_helper.GeofenceHelper
+import com.mapbox.mapboxsdk.geometry.LatLng
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
 class GeofenceListAdapter(
+    private var mPreferenceManager: PreferenceManager?,
+    private var context: Context?,
     private var mGeofenceList: ArrayList<ListGeofenceResponseEntry>,
     private var mGeofenceDeleteInterface: GeofenceDeleteInterface
-) :
-    RecyclerView.Adapter<GeofenceListAdapter.GeofenceVH>() {
+) : RecyclerView.Adapter<GeofenceListAdapter.GeofenceVH>() {
+    private var mGeofenceHelper: GeofenceHelper? = null
 
-    class GeofenceVH(private var binding: ItemGeofenceListBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class GeofenceVH(private var binding: ItemGeofenceListBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(
             data: ListGeofenceResponseEntry,
             mGeofenceDeleteInterface: GeofenceDeleteInterface
         ) {
             binding.apply {
+                mGeofenceHelper?.let {
+                    if (checkGeofenceInsideGrab(
+                            LatLng(
+                                    data.geometry.circle.center[1],
+                                    data.geometry.circle.center[0]
+                                ),
+                            mPreferenceManager,
+                            context
+                        )
+                    ) {
+                        clMainGeofence.setBackgroundColor(
+                            ContextCompat.getColor(
+                                clMainGeofence.context,
+                                R.color.search_bs_bg_color
+                            )
+                        )
+                    } else {
+                        clMainGeofence.setBackgroundColor(
+                            ContextCompat.getColor(
+                                clMainGeofence.context,
+                                R.color.number_bg_color
+                            )
+                        )
+                    }
+                }
                 tvGeofenceAddressType.text = data.geofenceId
                 tvGeofenceMessage.text = data.status
                 ivDeleteGeofence.setOnClickListener {
                     mGeofenceDeleteInterface.deleteGeofence(adapterPosition, data)
                 }
                 root.setOnClickListener {
-                    mGeofenceDeleteInterface.editGeofence(adapterPosition, data)
+                    mGeofenceHelper?.let {
+                        if (checkGeofenceInsideGrab(
+                                LatLng(
+                                        data.geometry.circle.center[1],
+                                        data.geometry.circle.center[0]
+                                    ),
+                                mPreferenceManager,
+                                context
+                            )
+                        ) {
+                            mGeofenceDeleteInterface.editGeofence(adapterPosition, data)
+                        }
+                    }
                 }
             }
         }
@@ -49,6 +96,10 @@ class GeofenceListAdapter(
 
     override fun getItemCount(): Int {
         return mGeofenceList.size
+    }
+
+    fun setGeofenceHelper(geofenceHelper: GeofenceHelper?) {
+        mGeofenceHelper = geofenceHelper
     }
 
     interface GeofenceDeleteInterface {

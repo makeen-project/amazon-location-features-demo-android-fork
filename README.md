@@ -29,8 +29,8 @@ Create *`custom.properties`* file inside the project root folder and add the det
 |--------------------------------------|-----------------------------------------------------------------------|
 | DEFAULT_IDENTITY_POOL_ID             | IdentityPoolId                                                        |
 | DEFAULT_REGION                       | Take region from IdentityPoolId (Character before ':')                |
-| DEFAULT_SE_IDENTITY_POOL_ID          | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
-| DEFAULT_SE_REGION                    | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
+| DEFAULT_GRAB_IDENTITY_POOL_ID        | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
+| DEFAULT_GRAB_REGION                  | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
 | IDENTITY_POOL_ID                     | IdentityPoolId                                                        |
 | USER_DOMAIN                          | UserDomain                                                            |
 | USER_POOL_CLIENT_ID                  | UserPoolClientId                                                      |
@@ -42,8 +42,8 @@ Create *`custom.properties`* file inside the project root folder and add the det
 ```
 DEFAULT_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_REGION=xx-xxxx-x
-DEFAULT_SE_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
-DEFAULT_SE_REGION=xx-xxxx-x
+DEFAULT_GRAB_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+DEFAULT_GRAB_REGION=xx-xxxx-x
 ```
 
 #### optional values to add after above if you want to run tests locally. (This can be a different stack only for testing)

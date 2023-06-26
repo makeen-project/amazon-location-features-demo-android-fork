@@ -63,7 +63,7 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
         Thread.sleep(DELAY_2000)
         val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
-        if(map.exists()) {
+        if (map.exists()) {
             onView(withId(R.id.mapView)).perform(swipeLeft())
         }
         Thread.sleep(DELAY_1000)
