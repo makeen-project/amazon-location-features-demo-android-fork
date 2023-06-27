@@ -51,8 +51,8 @@ class AmplifyHelper(
         var defaultRegion = BuildConfig.DEFAULT_REGION
         if (mapName == mContext.getString(R.string.grab)
         ) {
-            defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
-            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+            defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
+            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
         }
 
         try {

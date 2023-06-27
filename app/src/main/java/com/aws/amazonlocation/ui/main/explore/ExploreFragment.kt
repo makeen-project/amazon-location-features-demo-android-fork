@@ -3926,6 +3926,7 @@ class ExploreFragment :
 
     private fun fetchAddressFromLatLng(it: CalculateRouteResult) {
         mRouteFinish = false
+        activity?.hideKeyboard()
         mViewModel.calculateNavigationLine(it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)

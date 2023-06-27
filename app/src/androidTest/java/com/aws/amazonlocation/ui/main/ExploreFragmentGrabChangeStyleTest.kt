@@ -23,7 +23,6 @@ import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
-import java.util.concurrent.CountDownLatch
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -32,7 +31,6 @@ class ExploreFragmentGrabChangeStyleTest : BaseTestMainActivity() {
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     private lateinit var preferenceManager: PreferenceManager
-    private val latch = CountDownLatch(1)
 
     @Throws(java.lang.Exception::class)
     override fun before() {

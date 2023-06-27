@@ -431,11 +431,10 @@ class GeofenceHelper(
 
     private fun upDateSeekbarText(radius: Int) {
         val isMetric = Units.isMetric(mPrefrenceManager?.getValue(KEY_UNIT_SYSTEM, ""))
-        var seekbarText = ""
-        if (isMetric) {
-            seekbarText = Units.getMetricsNew(radius.toDouble(), true)
+        val seekbarText: String = if (isMetric) {
+            Units.getMetrics(radius.toDouble(), true)
         } else {
-            seekbarText = Units.getMetricsNew(Units.meterToFeet(radius.toDouble()), false)
+            Units.getMetrics(Units.meterToFeet(radius.toDouble()), false)
         }
         mTvSeekBar?.text = seekbarText
     }

@@ -35,13 +35,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.text.DecimalFormat
 import java.util.regex.Pattern
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -418,6 +418,8 @@ class GeofenceUtils {
     private fun setGeofenceAdapter() {
         mBindingGeofenceList?.let {
             mGeofenceListAdapter = GeofenceListAdapter(
+                preferenceManager,
+                mActivity?.applicationContext,
                 mGeofenceList,
                 object : GeofenceListAdapter.GeofenceDeleteInterface {
                     override fun deleteGeofence(position: Int, data: ListGeofenceResponseEntry) {
@@ -430,6 +432,13 @@ class GeofenceUtils {
                         if (checkInternetConnection()) {
                             editGeofenceBottomSheet(position, data)
                         }
+                    }
+
+                    override fun disableGeofenceClick() {
+                        showErrorMessage(
+                            mActivity?.resources?.getString(R.string.label_geofence_disable_error)
+                                .toString()
+                        )
                     }
                 }
             )
@@ -669,29 +678,33 @@ class GeofenceUtils {
             checkGeofenceList(false)
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEach { data ->
-                mActivity?.let {
-                    mMapHelper?.addGeofenceMarker(
-                        it,
-                        data,
-                        object : MarkerClickInterface {
-                            override fun markerClick(placeData: String) {
-                                mGeofenceList.forEachIndexed { index, data ->
-                                    if (data.geofenceId == placeData) {
-                                        if (checkInternetConnection()) {
-                                            editGeofenceBottomSheet(index, data)
+                mGeofenceHelper?.let {
+                    if (checkGeofenceInsideGrab(LatLng(data.geometry.circle.center[1], data.geometry.circle.center[0]), preferenceManager, mActivity?.applicationContext)) {
+                        mActivity?.let { activity ->
+                            mMapHelper?.addGeofenceMarker(
+                                activity,
+                                data,
+                                object : MarkerClickInterface {
+                                    override fun markerClick(placeData: String) {
+                                        mGeofenceList.forEachIndexed { index, data ->
+                                            if (data.geofenceId == placeData) {
+                                                if (checkInternetConnection()) {
+                                                    editGeofenceBottomSheet(index, data)
+                                                }
+                                            }
                                         }
                                     }
                                 }
-                            }
+                            )
                         }
-                    )
+                        mLatLngList.add(
+                            LatLng(
+                                data.geometry.circle.center[1],
+                                data.geometry.circle.center[0]
+                            )
+                        )
+                    }
                 }
-                mLatLngList.add(
-                    LatLng(
-                        data.geometry.circle.center[1],
-                        data.geometry.circle.center[0]
-                    )
-                )
             }
             mActivity?.resources?.getDimension(R.dimen.dp_100)?.toInt()?.let {
                 mMapHelper?.adjustMapBounds(
@@ -699,6 +712,7 @@ class GeofenceUtils {
                     it
                 )
             }
+            mGeofenceListAdapter?.setGeofenceHelper(mGeofenceHelper)
             mGeofenceListAdapter?.notifyDataSetChanged()
         } else {
             checkGeofenceList(true)
