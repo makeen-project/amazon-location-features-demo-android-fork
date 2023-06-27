@@ -27,6 +27,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_geofence_icon_disable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/dp_24"
+        android:src="@drawable/ic_geofence_disable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_geofence_address_type"
         style="@style/SP16RegularWhiteTextStyle"

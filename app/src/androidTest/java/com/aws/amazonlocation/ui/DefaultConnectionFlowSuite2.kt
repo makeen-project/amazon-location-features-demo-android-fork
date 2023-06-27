@@ -7,6 +7,7 @@ import com.aws.amazonlocation.ui.main.CheckRouteOptionsTest
 import com.aws.amazonlocation.ui.main.CheckRouteUserEnterMyLocationTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentChangeStyleTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentGrabChangeStyleTest
+import com.aws.amazonlocation.ui.main.ExploreFragmentMapStyleSearchFilterTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentSearchResultTest
 import com.aws.amazonlocation.ui.main.ExploreFragmentSearchTotalResultTest
 import com.aws.amazonlocation.ui.main.RouteOptionShowingTest
@@ -17,10 +18,9 @@ import com.aws.amazonlocation.ui.main.SearchPlaceDisplayedOnMapTest
 import com.aws.amazonlocation.ui.main.SearchResultComparisonTest
 import com.aws.amazonlocation.ui.main.SettingRouteOptionAvailableTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentChangeDataProviderTest
-import com.aws.amazonlocation.ui.main.SettingsFragmentChangeStyleTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentContentTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentDefaultRouteTest
-import com.aws.amazonlocation.ui.main.SettingsFragmentGrabChangeStyleTest
+import com.aws.amazonlocation.ui.main.SettingsMapStyleSearchFilterTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -41,11 +41,11 @@ import org.junit.runners.Suite
     RouteReverseBetweenFormToTest::class,
     SettingRouteOptionAvailableTest::class,
     SettingsFragmentChangeDataProviderTest::class,
-    SettingsFragmentChangeStyleTest::class,
     SettingsFragmentContentTest::class,
     SettingsFragmentDefaultRouteTest::class,
-    SettingsFragmentGrabChangeStyleTest::class,
     ExploreFragmentGrabChangeStyleTest::class,
-    ExploreFragmentChangeStyleTest::class
+    ExploreFragmentChangeStyleTest::class,
+    ExploreFragmentMapStyleSearchFilterTest::class,
+    SettingsMapStyleSearchFilterTest::class
 )
 class DefaultConnectionFlowSuite2

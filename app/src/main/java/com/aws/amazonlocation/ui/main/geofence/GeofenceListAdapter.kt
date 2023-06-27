@@ -11,6 +11,9 @@ import com.aws.amazonlocation.databinding.ItemGeofenceListBinding
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.checkGeofenceInsideGrab
 import com.aws.amazonlocation.utils.geofence_helper.GeofenceHelper
+import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.invisible
+import com.aws.amazonlocation.utils.show
 import com.mapbox.mapboxsdk.geometry.LatLng
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -41,25 +44,31 @@ class GeofenceListAdapter(
                             context
                         )
                     ) {
-                        clMainGeofence.setBackgroundColor(
-                            ContextCompat.getColor(
-                                clMainGeofence.context,
-                                R.color.search_bs_bg_color
-                            )
-                        )
+                        clMainGeofence.alpha = 1.0F
+                        ivGeofenceIcon.show()
+                        ivGeofenceIconDisable.hide()
                     } else {
-                        clMainGeofence.setBackgroundColor(
-                            ContextCompat.getColor(
-                                clMainGeofence.context,
-                                R.color.number_bg_color
-                            )
-                        )
+                        clMainGeofence.alpha = 0.3F
+                        ivGeofenceIconDisable.show()
+                        ivGeofenceIcon.invisible()
                     }
                 }
                 tvGeofenceAddressType.text = data.geofenceId
                 tvGeofenceMessage.text = data.status
                 ivDeleteGeofence.setOnClickListener {
-                    mGeofenceDeleteInterface.deleteGeofence(adapterPosition, data)
+                    mGeofenceHelper?.let {
+                        if (checkGeofenceInsideGrab(
+                                LatLng(
+                                    data.geometry.circle.center[1],
+                                    data.geometry.circle.center[0]
+                                ),
+                                mPreferenceManager,
+                                context
+                            )
+                        ) {
+                            mGeofenceDeleteInterface.deleteGeofence(adapterPosition, data)
+                        }
+                    }
                 }
                 root.setOnClickListener {
                     mGeofenceHelper?.let {
