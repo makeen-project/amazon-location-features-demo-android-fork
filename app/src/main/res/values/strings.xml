@@ -238,4 +238,5 @@
     <string name="label_clear_selection">Clear selection</string>
     <string name="label_style_search_error_title">No Mapping styles</string>
     <string name="label_style_search_error_des">Make sure your selection \nspelled correctly and try again</string>
+    <string name="label_geofence_disable_error">Selected geofence is not available in the Grab map provider. Please switch to another map provider to view and manage selected geofence.</string>
 </resources>

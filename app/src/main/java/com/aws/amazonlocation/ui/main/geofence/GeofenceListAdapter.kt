@@ -3,10 +3,8 @@ package com.aws.amazonlocation.ui.main.geofence
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
-import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.ItemGeofenceListBinding
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.checkGeofenceInsideGrab
@@ -59,14 +57,16 @@ class GeofenceListAdapter(
                     mGeofenceHelper?.let {
                         if (checkGeofenceInsideGrab(
                                 LatLng(
-                                    data.geometry.circle.center[1],
-                                    data.geometry.circle.center[0]
-                                ),
+                                        data.geometry.circle.center[1],
+                                        data.geometry.circle.center[0]
+                                    ),
                                 mPreferenceManager,
                                 context
                             )
                         ) {
                             mGeofenceDeleteInterface.deleteGeofence(adapterPosition, data)
+                        } else {
+                            mGeofenceDeleteInterface.disableGeofenceClick()
                         }
                     }
                 }
@@ -82,6 +82,8 @@ class GeofenceListAdapter(
                             )
                         ) {
                             mGeofenceDeleteInterface.editGeofence(adapterPosition, data)
+                        } else {
+                            mGeofenceDeleteInterface.disableGeofenceClick()
                         }
                     }
                 }
@@ -114,5 +116,6 @@ class GeofenceListAdapter(
     interface GeofenceDeleteInterface {
         fun deleteGeofence(position: Int, data: ListGeofenceResponseEntry)
         fun editGeofence(position: Int, data: ListGeofenceResponseEntry)
+        fun disableGeofenceClick()
     }
 }

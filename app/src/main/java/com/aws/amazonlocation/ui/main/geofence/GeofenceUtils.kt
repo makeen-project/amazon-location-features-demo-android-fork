@@ -35,13 +35,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import java.text.DecimalFormat
 import java.util.regex.Pattern
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -432,6 +432,13 @@ class GeofenceUtils {
                         if (checkInternetConnection()) {
                             editGeofenceBottomSheet(position, data)
                         }
+                    }
+
+                    override fun disableGeofenceClick() {
+                        showErrorMessage(
+                            mActivity?.resources?.getString(R.string.label_geofence_disable_error)
+                                .toString()
+                        )
                     }
                 }
             )
