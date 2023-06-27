@@ -268,4 +268,18 @@
     <string name="label_entered">Entered</string>
     <string name="label_exited">Exited</string>
     <string name="label_geofence">geofence</string>
+    <string name="label_language">Language</string>
+    <string name="label_deutsch">Deutsch</string>
+    <string name="label_espa_ol">Español</string>
+    <string name="label_english">English</string>
+    <string name="label_fran_ais">Français</string>
+    <string name="label_italiano">Italiano</string>
+    <string name="label_portugu_s_brasileiro">Português Brasileiro</string>
+    <string name="label_simplified_chinese">Simplified Chinese</string>
+    <string name="label_traditional_chinese">Traditional Chinese</string>
+    <string name="label_japanese">日本語</string>
+    <string name="label_korean">한국어</string>
+    <string name="label_arabic">العربية</string>
+    <string name="label_hebrew">עברית</string>
+    <string name="label_hindi">हिन्दी</string>
 </resources>

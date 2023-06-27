@@ -20,6 +20,7 @@ import com.aws.amazonlocation.databinding.FragmentSettingBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
+import com.aws.amazonlocation.ui.main.language.LanguageFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
@@ -252,6 +253,23 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     findNavController().navigate(R.id.aws_cloud_information_fragment)
                 }
             }
+            clLanguage.setOnClickListener {
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        LanguageFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clLanguage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivLanguage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.language_fragment)
+                }
+            }
             clDisconnect.setOnClickListener {
                 if (tvDisconnect.text.toString().trim() == getText(R.string.label_sign_out)) {
                     requireContext().signOutDialog(this@SettingFragment)
@@ -325,6 +343,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         )
         clMapStyle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
+        clLanguage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivLanguage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
         clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         ivDataProvider.setColorFilter(
             ContextCompat.getColor(
