@@ -44,6 +44,7 @@
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_20"
             android:gravity="center"
+            android:textDirection="locale"
             android:text="@string/label_tracking_history"
             android:textColor="@color/color_medium_black"
             android:textSize="@dimen/sp_20"
@@ -59,6 +60,7 @@
             android:gravity="center"
             android:text="@string/label_not_tracking_your_activity"
             android:textColor="@color/color_hint_text"
+            android:textDirection="locale"
             android:textSize="@dimen/sp_13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_tracking_history" />
@@ -80,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:textDirection="locale"
                 android:text="@string/label_start_tracking"
                 android:textColor="@color/white" />
 
@@ -183,6 +186,7 @@
                             android:layout_marginHorizontal="@dimen/dp_16"
                             android:layout_marginTop="@dimen/dp_36"
                             android:gravity="center"
+                            android:textDirection="locale"
                             android:text="@string/amazon_location_can_t_reach_the_internet"
                             android:textColor="@color/color_medium_black"
                             android:textSize="@dimen/sp_16"
@@ -199,6 +203,7 @@
                             android:layout_marginTop="@dimen/dp_8"
                             android:layout_marginBottom="@dimen/dp_35"
                             android:gravity="center"
+                            android:textDirection="locale"
                             android:text="@string/label_check_your_internet_connection_and_try_again"
                             android:textColor="@color/color_hint_text"
                             android:textSize="@dimen/sp_13"
@@ -246,6 +251,7 @@
                 android:text="@string/label_tracking_data_storage"
                 android:textColor="@color/color_medium_black"
                 android:textSize="@dimen/sp_16"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_database" />
@@ -261,6 +267,7 @@
                 android:text="@string/tv_tracking_data_storage_1"
                 android:textColor="@color/color_hint_text"
                 android:textSize="@dimen/sp_13"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_tracking_data_storage" />
@@ -276,6 +283,7 @@
                 android:textColor="@color/color_red"
                 android:textSize="@dimen/sp_13"
                 android:visibility="gone"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_tracking_data_storage_1" />
@@ -336,6 +344,7 @@
             android:layout_marginTop="@dimen/dp_16"
             android:fontFamily="@font/inter_semi_bold"
             android:gravity="center"
+            android:textDirection="locale"
             android:text="@string/label_enable_tracking"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -349,6 +358,7 @@
             android:layout_marginHorizontal="@dimen/dp_24"
             android:layout_marginTop="@dimen/dp_16"
             android:gravity="center"
+            android:textDirection="locale"
             android:text="@string/label_enable_tracking_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -373,6 +383,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/label_enable_tracking"
+                android:textDirection="locale"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
