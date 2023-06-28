@@ -2,19 +2,34 @@ package com.aws.amazonlocation.ui.main.language // ktlint-disable package-name
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.AppCompatRadioButton
+import androidx.core.os.LocaleListCompat
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentLanguageBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_BR_PT
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_CH_CN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_CH_TW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ENGLISH
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_FRENCH
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_GERMAN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HINDI
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ITALIAN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_JAPANESE
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_KOREAN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_SPANISH
+import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.isGrabMapEnable
-import java.util.Locale
-import kotlinx.serialization.json.Json.Default.configuration
+import com.aws.amazonlocation.utils.isRunningTest
 
 class LanguageFragment : BaseFragment() {
 
@@ -37,12 +52,17 @@ class LanguageFragment : BaseFragment() {
     }
 
     private fun init() {
+        val languageCode = getLanguageCode()
+        val isRtl = languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW
+        setSelectedLanguage(languageCode, isRtl)
         mBinding.apply {
             rgLanguage.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.rb_german -> {}
                     R.id.rb_spanish -> {}
-                    R.id.rb_english -> {}
+                    R.id.rb_english -> {
+                        changeAppLanguage(LANGUAGE_CODE_ENGLISH)
+                    }
                     R.id.rb_french -> {}
                     R.id.rb_italian -> {}
                     R.id.rb_brazilian_portuguese -> {}
@@ -51,26 +71,99 @@ class LanguageFragment : BaseFragment() {
                     R.id.rb_japanese -> {}
                     R.id.rb_korean -> {}
                     R.id.rb_arabic -> {
-                        changeAppLanguage(requireContext(), "ar")
-                        restart(requireContext())
+                        changeAppLanguage(LANGUAGE_CODE_ARABIC)
                     }
                     R.id.rb_hebrew -> {}
-                    R.id.rb_hindi -> {}
+                    R.id.rb_hindi -> {
+                        changeAppLanguage(LANGUAGE_CODE_HINDI)
+                    }
+                }
+                if (!isRunningTest) {
+                    restart(requireContext())
+                }
+            }
+            ivLanguage?.setOnClickListener {
+                findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun setSelectedLanguage(languageCode: String?, isRtl: Boolean) {
+        mBinding.apply {
+            when (languageCode) {
+                LANGUAGE_CODE_GERMAN -> {
+                    setRadioButtonIcon(rbGerman, isRtl)
+                }
+                LANGUAGE_CODE_SPANISH -> {
+                    setRadioButtonIcon(rbSpanish, isRtl)
+                }
+                LANGUAGE_CODE_ENGLISH -> {
+                    setRadioButtonIcon(rbEnglish, isRtl)
+                }
+                LANGUAGE_CODE_FRENCH -> {
+                    setRadioButtonIcon(rbFrench, isRtl)
+                }
+                LANGUAGE_CODE_ITALIAN -> {
+                    setRadioButtonIcon(rbItalian, isRtl)
+                }
+                LANGUAGE_CODE_BR_PT -> {
+                    setRadioButtonIcon(rbBrazilianPortuguese, isRtl)
+                }
+                LANGUAGE_CODE_CH_CN -> {
+                    setRadioButtonIcon(rbSimplifiedChinese, isRtl)
+                }
+                LANGUAGE_CODE_CH_TW -> {
+                    setRadioButtonIcon(rbTraditionalChinese, isRtl)
+                }
+                LANGUAGE_CODE_JAPANESE -> {
+                    setRadioButtonIcon(rbJapanese, isRtl)
+                }
+                LANGUAGE_CODE_KOREAN -> {
+                    setRadioButtonIcon(rbKorean, isRtl)
+                }
+                LANGUAGE_CODE_ARABIC -> {
+                    setRadioButtonIcon(rbArabic, isRtl)
+                }
+                LANGUAGE_CODE_HEBREW -> {
+                    setRadioButtonIcon(rbHebrew, isRtl)
+                }
+                LANGUAGE_CODE_HINDI -> {
+                    setRadioButtonIcon(rbHindi, isRtl)
+                }
+                else -> {
+                    setRadioButtonIcon(rbEnglish, isRtl)
                 }
             }
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun changeAppLanguage(context: Context, languageCode: String) {
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
+    private fun setRadioButtonIcon(
+        rb: AppCompatRadioButton,
+        isRtl: Boolean
+    ) {
+        rb.isChecked = true
+        if (isRtl) {
+            rb.setCompoundDrawablesWithIntrinsicBounds(
+                R.drawable.icon_checkmark,
+                0,
+                0,
+                0
+            )
+        } else {
+            rb.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.icon_checkmark,
+                0
+            )
+        }
+    }
 
-        val config: Configuration = context.resources.configuration
-        config.setLocale(locale)
-        config.setLayoutDirection(locale)
-        context.createConfigurationContext(config)
-        context.resources.updateConfiguration(config, context.resources.displayMetrics)
+    private fun changeAppLanguage(languageCode: String) {
+        if (!isRunningTest) {
+            val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
+            AppCompatDelegate.setApplicationLocales(appLocale)
+        }
     }
 
     private fun restart(context: Context) {

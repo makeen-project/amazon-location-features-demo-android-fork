@@ -3,6 +3,7 @@ package com.aws.amazonlocation.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
@@ -27,6 +28,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -605,6 +607,22 @@ fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): 
         isGrabMapEnable = true
     }
     return isGrabMapEnable
+}
+
+fun setLocale(languageCode: String, context: Context) {
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+    val config: Configuration = context.resources.configuration
+    config.setLocale(locale)
+    config.setLayoutDirection(locale)
+}
+
+fun getLanguageCode(): String? {
+    val appLanguage = AppCompatDelegate.getApplicationLocales()
+    val languageCode = appLanguage.toLanguageTags().ifEmpty {
+        Locale.getDefault().language
+    }
+    return languageCode
 }
 
 fun checkGeofenceInsideGrab(

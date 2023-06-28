@@ -47,7 +47,7 @@ import com.aws.amazonlocation.ui.main.setting.SettingFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
-import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -190,6 +190,11 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
+        lifecycleScope.launch {
+            delay(DELAY_LANGUAGE_3000)
+            val languageCode = getLanguageCode()
+            languageCode?.let { setLocale(it, applicationContext) }
+        }
     }
 
     override fun onDestroy() {
