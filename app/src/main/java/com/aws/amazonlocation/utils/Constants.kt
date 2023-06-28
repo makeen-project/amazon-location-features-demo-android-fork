@@ -34,6 +34,7 @@ const val RESTART_DELAY = 800L
 const val DELAY_500 = 500L
 const val DELAY_300 = 300L
 const val DELAY_1000 = 1000L
+const val DELAY_LANGUAGE_3000 = 3000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"
@@ -70,6 +71,20 @@ const val latNorth = 31.952162238024968
 const val lonEast = 146.25
 const val latSouth = -21.943045533438166
 const val lonWest = 90.0
+
+const val LANGUAGE_CODE_GERMAN = "de"
+const val LANGUAGE_CODE_SPANISH = "es"
+const val LANGUAGE_CODE_ENGLISH = "en"
+const val LANGUAGE_CODE_FRENCH = "fr"
+const val LANGUAGE_CODE_ITALIAN = "it"
+const val LANGUAGE_CODE_BR_PT = "pt-BR"
+const val LANGUAGE_CODE_CH_CN = "zh-CN"
+const val LANGUAGE_CODE_CH_TW = "zh-TW"
+const val LANGUAGE_CODE_JAPANESE = "ja"
+const val LANGUAGE_CODE_KOREAN = "ko"
+const val LANGUAGE_CODE_ARABIC = "ar"
+const val LANGUAGE_CODE_HEBREW = "iw"
+const val LANGUAGE_CODE_HINDI = "hi"
 
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),

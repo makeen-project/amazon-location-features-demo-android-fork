@@ -17,13 +17,13 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_get_location"
         style="@style/SP16HintRegularTextStyle"
-        android:layout_width="@dimen/dp_0"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_16"
         android:text="@string/label_my_location"
+        android:gravity="start"
         android:textDirection="locale"
         android:textColor="@color/color_medium_black"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_get_location"
         app:layout_constraintTop_toTopOf="parent" />
 

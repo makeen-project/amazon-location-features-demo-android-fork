@@ -4418,7 +4418,7 @@ class ExploreFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mBinding.mapView.onSaveInstanceState(outState)
+        if (this::mBinding.isInitialized) { mBinding.mapView.onSaveInstanceState(outState) }
     }
 
     override fun onLowMemory() {
@@ -4429,7 +4429,7 @@ class ExploreFragment :
     override fun onDestroy() {
         super.onDestroy()
         gpsActivityResult.unregister()
-        mBinding.mapView.onDestroy()
+        if (this::mBinding.isInitialized) { mBinding.mapView.onDestroy() }
     }
 
     @SuppressLint("NotifyDataSetChanged")

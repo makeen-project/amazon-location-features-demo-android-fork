@@ -34,9 +34,23 @@ import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_BR_PT
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_CH_CN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_CH_TW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ENGLISH
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_FRENCH
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_GERMAN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HINDI
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ITALIAN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_JAPANESE
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_KOREAN
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_SPANISH
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
+import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
@@ -118,9 +132,58 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             } else {
                 clDisconnect.hide()
             }
+            setSelectedLanguage(getLanguageCode())
         }
     }
 
+    private fun setSelectedLanguage(languageCode: String?) {
+        mBinding.apply {
+            when (languageCode) {
+                LANGUAGE_CODE_GERMAN -> {
+                    tvLanguageName.text = getString(R.string.label_deutsch)
+                }
+                LANGUAGE_CODE_SPANISH -> {
+                    tvLanguageName.text = getString(R.string.label_espa_ol)
+                }
+                LANGUAGE_CODE_ENGLISH -> {
+                    tvLanguageName.text = getString(R.string.label_english)
+                }
+                LANGUAGE_CODE_FRENCH -> {
+                    tvLanguageName.text = getString(R.string.label_fran_ais)
+                }
+                LANGUAGE_CODE_ITALIAN -> {
+                    tvLanguageName.text = getString(R.string.label_italiano)
+                }
+                LANGUAGE_CODE_BR_PT -> {
+                    tvLanguageName.text = getString(R.string.label_portugu_s_brasileiro)
+                }
+                LANGUAGE_CODE_CH_CN -> {
+                    tvLanguageName.text = getString(R.string.label_simplified_chinese)
+                }
+                LANGUAGE_CODE_CH_TW -> {
+                    tvLanguageName.text = getString(R.string.label_traditional_chinese)
+                }
+                LANGUAGE_CODE_JAPANESE -> {
+                    tvLanguageName.text = getString(R.string.label_japanese)
+                }
+                LANGUAGE_CODE_KOREAN -> {
+                    tvLanguageName.text = getString(R.string.label_korean)
+                }
+                LANGUAGE_CODE_ARABIC -> {
+                    tvLanguageName.text = getString(R.string.label_arabic)
+                }
+                LANGUAGE_CODE_HEBREW -> {
+                    tvLanguageName.text = getString(R.string.label_hebrew)
+                }
+                LANGUAGE_CODE_HINDI -> {
+                    tvLanguageName.text = getString(R.string.label_hindi)
+                }
+                else -> {
+                    tvLanguageName.text = getString(R.string.label_english)
+                }
+            }
+        }
+    }
     private fun getUnitSystem() {
         val unitSystem =
             mPreferenceManager.getValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
