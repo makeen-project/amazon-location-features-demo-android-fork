@@ -314,10 +314,12 @@ class MainActivity : BaseActivity() {
                     )
                     when (mAuthStatus) {
                         AuthEnum.DEFAULT.name -> {
-                            mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                                TabEnum.TAB_TRACKING,
-                                mCloudFormationInterface
-                            )
+                            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+                                mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
+                            }
+                            if (mTrackingUtils?.isTrackingSheetHidden() == true) {
+                                showTracking()
+                            }
                         }
                         AuthEnum.AWS_CONNECTED.name -> {
                             if (reStartApp) {
@@ -342,10 +344,14 @@ class MainActivity : BaseActivity() {
                                 }
                             }
                         }
-                        else -> mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                            TabEnum.TAB_TRACKING,
-                            mCloudFormationInterface
-                        )
+                        else -> {
+                            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+                                mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
+                            }
+                            if (mTrackingUtils?.isTrackingSheetHidden() == true) {
+                                showTracking()
+                            }
+                        }
                     }
                     showAmazonLogo()
                 }
@@ -359,10 +365,7 @@ class MainActivity : BaseActivity() {
                     if (!mAuthStatus.isNullOrEmpty()) {
                         when (mAuthStatus) {
                             AuthEnum.DEFAULT.name -> {
-                                mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                                    TabEnum.TAB_GEOFENCE,
-                                    mCloudFormationInterface
-                                )
+                                mGeofenceUtils?.showGeofenceBeforeLogin()
                             }
                             AuthEnum.AWS_CONNECTED.name -> {
                                 if (reStartApp) {
@@ -380,16 +383,10 @@ class MainActivity : BaseActivity() {
                             AuthEnum.SIGNED_IN.name -> {
                                 showGeofence()
                             }
-                            else -> mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                                TabEnum.TAB_GEOFENCE,
-                                mCloudFormationInterface
-                            )
+                            else -> mGeofenceUtils?.showGeofenceBeforeLogin()
                         }
                     } else {
-                        mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                            TabEnum.TAB_GEOFENCE,
-                            mCloudFormationInterface
-                        )
+                        mGeofenceUtils?.showGeofenceBeforeLogin()
                     }
                     showAmazonLogo()
                 }
@@ -410,6 +407,20 @@ class MainActivity : BaseActivity() {
             }
             true
         }
+    }
+
+    fun showGeofenceCloudFormation() {
+        mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
+            TabEnum.TAB_GEOFENCE,
+            mCloudFormationInterface
+        )
+    }
+
+    fun openCloudFormation() {
+        mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
+            TabEnum.TAB_TRACKING,
+            mCloudFormationInterface
+        )
     }
 
     private fun hideAmazonLogo() {

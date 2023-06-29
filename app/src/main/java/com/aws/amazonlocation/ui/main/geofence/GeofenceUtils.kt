@@ -35,14 +35,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
-import java.text.DecimalFormat
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -348,10 +348,7 @@ class GeofenceUtils {
                 mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
             }
             btnAddGeofence.setOnClickListener {
-                mGeofenceInterface?.hideShowBottomNavigationBar(
-                    true,
-                    GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
-                )
+                (mActivity as MainActivity).showGeofenceCloudFormation()
             }
 
             clAddGeofence.setOnClickListener {
@@ -497,6 +494,23 @@ class GeofenceUtils {
             dialog: DialogInterface
         ) {
             mGeofenceInterface?.deleteGeofence(position, data)
+        }
+    }
+
+    fun showGeofenceBeforeLogin() {
+        mBindingGeofenceList?.clNoInternetConnectionGeofenceList?.hide()
+        mBindingGeofenceList?.rvGeofence?.hide()
+        mBindingGeofenceList?.clEmptyGeofenceList?.show()
+        mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.isDraggable = false
+        mBindingGeofenceList?.clGeofenceList?.context?.let {
+            if ((mActivity as MainActivity).isTablet) {
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_460)
+                mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+            } else {
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
+                mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
         }
     }
 

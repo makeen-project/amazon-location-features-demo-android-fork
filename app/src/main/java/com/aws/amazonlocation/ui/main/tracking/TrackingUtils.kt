@@ -116,10 +116,10 @@ class TrackingUtils(
                 mBottomSheetTrackingBehavior?.isDraggable = false
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_460)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_390)
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                 }
@@ -175,7 +175,7 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isFitToContents = false
             mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
             btnEnableTracking.setOnClickListener {
-                mTrackingInterface?.getCheckPermission()
+                (activity as MainActivity).openCloudFormation()
             }
 
             tvDeleteTrackingData.setOnClickListener {

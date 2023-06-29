@@ -77,6 +77,8 @@
     <dimen name="dp_390">390dp</dimen>
     <dimen name="dp_410">410dp</dimen>
     <dimen name="dp_430">430dp</dimen>
+    <dimen name="dp_460">460dp</dimen>
+    <dimen name="dp_470">470dp</dimen>
     <!--SP -->
     <dimen name="sp_10">10sp</dimen>
     <dimen name="sp_11">11sp</dimen>
