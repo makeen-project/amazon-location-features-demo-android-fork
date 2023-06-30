@@ -244,4 +244,6 @@
     <string name="label_try_trackers_amp_geofences_simulation"><![CDATA[Try Trackers & Geofences simulation]]></string>
     <string name="label_requires_connection_to_aws_cloudformation">Requires connection to AWS CloudFormation</string>
     <string name="label_enable_live_geofences">Enable Live Geofences</string>
+    <string name="label_trackers_amp_geofences_simulation"><![CDATA[Trackers & Geofences simulation]]></string>
+    <string name="label_explore_the_power_of_trackers_amp_geofences"><![CDATA[Explore the power of Trackers & Geofences]]></string>
 </resources>

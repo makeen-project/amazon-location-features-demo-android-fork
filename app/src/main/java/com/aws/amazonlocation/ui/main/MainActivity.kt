@@ -14,6 +14,7 @@ import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -314,11 +315,9 @@ class MainActivity : BaseActivity() {
                     )
                     when (mAuthStatus) {
                         AuthEnum.DEFAULT.name -> {
-                            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
-                            }
+                            hideSearchSheet(fragment)
                             if (mTrackingUtils?.isTrackingSheetHidden() == true) {
-                                showTracking()
+                                mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
                             }
                         }
                         AuthEnum.AWS_CONNECTED.name -> {
@@ -335,9 +334,7 @@ class MainActivity : BaseActivity() {
                             }
                         }
                         AuthEnum.SIGNED_IN.name -> {
-                            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
-                            }
+                            hideSearchSheet(fragment)
                             if (mTrackingUtils?.isTrackingSheetHidden() == true) {
                                 if (checkMap()) {
                                     showTracking()
@@ -345,11 +342,9 @@ class MainActivity : BaseActivity() {
                             }
                         }
                         else -> {
-                            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
-                            }
+                            hideSearchSheet(fragment)
                             if (mTrackingUtils?.isTrackingSheetHidden() == true) {
-                                showTracking()
+                                mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
                             }
                         }
                     }
@@ -365,7 +360,7 @@ class MainActivity : BaseActivity() {
                     if (!mAuthStatus.isNullOrEmpty()) {
                         when (mAuthStatus) {
                             AuthEnum.DEFAULT.name -> {
-                                mGeofenceUtils?.showGeofenceBeforeLogin()
+                                hideSearchAndShowGeofence()
                             }
                             AuthEnum.AWS_CONNECTED.name -> {
                                 if (reStartApp) {
@@ -383,10 +378,12 @@ class MainActivity : BaseActivity() {
                             AuthEnum.SIGNED_IN.name -> {
                                 showGeofence()
                             }
-                            else -> mGeofenceUtils?.showGeofenceBeforeLogin()
+                            else -> {
+                                hideSearchAndShowGeofence()
+                            }
                         }
                     } else {
-                        mGeofenceUtils?.showGeofenceBeforeLogin()
+                        hideSearchAndShowGeofence()
                     }
                     showAmazonLogo()
                 }
@@ -406,6 +403,18 @@ class MainActivity : BaseActivity() {
                 }
             }
             true
+        }
+    }
+
+    private fun hideSearchAndShowGeofence() {
+        mBottomSheetHelper.hideSearchBottomSheet(true)
+        mGeofenceUtils?.showGeofenceBeforeLogin()
+    }
+
+    private fun hideSearchSheet(fragment: Fragment?) {
+        mBottomSheetHelper.hideSearchBottomSheet(true)
+        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+            mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
         }
     }
 

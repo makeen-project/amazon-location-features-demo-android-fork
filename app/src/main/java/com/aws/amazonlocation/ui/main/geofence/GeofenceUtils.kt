@@ -348,7 +348,14 @@ class GeofenceUtils {
                 mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
             }
             btnAddGeofence.setOnClickListener {
-                (mActivity as MainActivity).showGeofenceCloudFormation()
+                if (tvEnableGeofence?.text.toString() == mActivity?.getString(R.string.add_geofence)) {
+                    mGeofenceInterface?.hideShowBottomNavigationBar(
+                        true,
+                        GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
+                    )
+                } else {
+                    (mActivity as MainActivity).showGeofenceCloudFormation()
+                }
             }
 
             clAddGeofence.setOnClickListener {
@@ -518,6 +525,7 @@ class GeofenceUtils {
         if (isTablet) {
             (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
         }
+        mBindingGeofenceList?.tvEnableGeofence?.text = mActivity?.getString(R.string.add_geofence)
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -544,6 +552,7 @@ class GeofenceUtils {
         enableAddGeofenceButton(false)
         mIsBtnEnable = false
         mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
