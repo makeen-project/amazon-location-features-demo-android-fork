@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_persistent_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingTop="@dimen/dp_10"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="@dimen/dp_110"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_amazon_logo_tracking_sheet"
+        android:layout_width="@dimen/dp_118"
+        android:layout_height="@dimen/dp_18"
+        android:layout_marginStart="@dimen/dp_8"
+        android:src="@drawable/ic_amazon_logo_on_light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_amazon_info_tracking_sheet"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_4"
+        android:src="@drawable/ic_info"
+        app:layout_constraintBottom_toBottomOf="@+id/img_amazon_logo_tracking_sheet"
+        app:layout_constraintStart_toEndOf="@+id/img_amazon_logo_tracking_sheet"
+        app:layout_constraintTop_toTopOf="@+id/img_amazon_logo_tracking_sheet" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_tracking"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dp_8"
+        android:background="@drawable/bottom_sheet_top_corner_curved_geofence"
+        android:paddingBottom="@dimen/dp_3"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_tracking_sheet">
+
+        <View
+            android:id="@+id/view_tracking"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_5"
+            android:layout_gravity="bottom|center"
+            android:layout_marginTop="@dimen/dp_7"
+            android:background="@drawable/bottom_sheet_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tracking_history"
+            style="@style/SP14BoldBlackTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:gravity="center"
+            android:text="@string/label_trackers_simulation"
+            android:textColor="@color/color_medium_black"
+            android:textSize="@dimen/sp_20"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_tracking" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_tracking_your_activity"
+            style="@style/LogoutMessageStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_16"
+            android:gravity="center"
+            android:text="@string/label_not_tracking_your_activity"
+            android:textColor="@color/color_hint_text"
+            android:textSize="@dimen/sp_13"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tracking_history" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_start_tracking"
+            android:layout_width="@dimen/dp_120"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_16"
+            app:cardBackgroundColor="@color/color_primary_green"
+            app:cardCornerRadius="@dimen/dp_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_tracking">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_stop_tracking"
+                style="@style/SP14BoldBlackTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/label_start_tracking"
+                android:textColor="@color/white" />
+
+            <ProgressBar
+                android:id="@+id/view_loader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/dp_8"
+                android:progressBackgroundTint="@color/white"
+                android:progressTint="@color/white"
+                android:visibility="gone" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_start_tracking">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_route_notification"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/dp_8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_route_notifications"
+                        android:layout_width="@dimen/dp_0"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_route_notifications"
+                            android:layout_width="@dimen/dp_20"
+                            android:layout_height="@dimen/dp_20"
+                            android:layout_marginStart="@dimen/dp_16"
+                            android:src="@drawable/ic_map"
+                            android:tint="@color/color_img_tint"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_back_arrow_route_notifications"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_16"
+                            android:src="@drawable/ic_down_arrow"
+                            android:tint="@color/color_img_tint"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_route_notifications_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tv_route_notifications" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_route_notifications"
+                            style="@style/SP14BoldBlackTextStyle"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_16"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:text="Routes notifications"
+                            android:textColor="@color/color_medium_black"
+                            android:textSize="@dimen/sp_13"
+                            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_route_notifications"
+                            app:layout_constraintStart_toEndOf="@id/iv_route_notifications"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_route_notifications_name"
+                            style="@style/SP16HintRegularTextStyle"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_16"
+                            android:textSize="@dimen/sp_13"
+                            android:text="3 routes active"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_route_notifications"
+                            app:layout_constraintStart_toEndOf="@id/iv_route_notifications"
+                            app:layout_constraintTop_toBottomOf="@id/tv_route_notifications" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_10"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_route_notifications" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_change_route"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/dp_8"
+                android:layout_marginBottom="@dimen/dp_1"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/card_route_notification">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_change_route"
+                        android:layout_width="@dimen/dp_0"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_back_arrow_change_route"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_16"
+                            android:src="@drawable/ic_down_arrow"
+                            android:tint="@color/color_img_tint"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_change_route_name"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="@id/tv_change_route" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_change_route"
+                            style="@style/SP14BoldBlackTextStyle"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_24"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:text="Routes notifications"
+                            android:textColor="@color/color_medium_black"
+                            android:textSize="@dimen/sp_13"
+                            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_change_route"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_change_route_name"
+                            style="@style/SP16HintRegularTextStyle"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_24"
+                            android:textSize="@dimen/sp_13"
+                            android:text="3 routes active"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_change_route"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_change_route" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_tracking"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="@dimen/dp_10"
+                        android:paddingBottom="@dimen/dp_10"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cl_route_notifications" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
