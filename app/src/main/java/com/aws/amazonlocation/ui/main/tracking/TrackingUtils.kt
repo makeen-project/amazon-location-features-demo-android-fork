@@ -30,6 +30,8 @@ import com.aws.amazonlocation.databinding.BottomSheetTrackingBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.TrackingInterface
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
+import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -176,6 +178,12 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
             btnEnableTracking.setOnClickListener {
                 (activity as MainActivity).openCloudFormation()
+            }
+            btnTryTracker.setOnClickListener {
+                val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+                (activity as MainActivity).supportFragmentManager.let {
+                    simulationBottomSheetFragment.show(it, WelcomeBottomSheetFragment::javaClass.name)
+                }
             }
 
             tvDeleteTrackingData.setOnClickListener {

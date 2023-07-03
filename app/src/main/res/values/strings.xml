@@ -246,4 +246,14 @@
     <string name="label_enable_live_geofences">Enable Live Geofences</string>
     <string name="label_trackers_amp_geofences_simulation"><![CDATA[Trackers & Geofences simulation]]></string>
     <string name="label_explore_the_power_of_trackers_amp_geofences"><![CDATA[Explore the power of Trackers & Geofences]]></string>
+    <string name="label_simulation">Simulation</string>
+    <string name="label_trackers_and_geofences">Trackers and Geofences</string>
+    <string name="label_des">Enter the tracking simulation to view the path across Vancouver streets that crosses geofences</string>
+    <string name="label_trackers_simulation">Trackers</string>
+    <string name="label_visualize_your_location_history_on_the_map">Visualize your location history on the map</string>
+    <string name="label_geofences_simulation">Geofences</string>
+    <string name="label_define_virtual_boundaries_around_a_specific_area_to_detect_entry_and_exit_events">Define virtual boundaries around a specific area to detect entry and exit events</string>
+    <string name="label_notifications">Notifications</string>
+    <string name="label_get_geofence_messages_when_you_enter_and_leave_locations">Get geofence messages when you enter and leave locations</string>
+    <string name="label_start_simulation">Start simulation</string>
 </resources>
