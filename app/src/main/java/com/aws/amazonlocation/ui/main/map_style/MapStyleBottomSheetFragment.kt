@@ -16,7 +16,6 @@ import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.ui.main.explore.ExploreViewModel
 import com.aws.amazonlocation.ui.main.explore.MapStyleAdapter
 import com.aws.amazonlocation.ui.main.explore.SortingAdapter
-import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -192,41 +191,7 @@ class MapStyleBottomSheetFragment(
 
             etSearchMap.textChanges().debounce(DELAY_300).onEach { text ->
                 mapStyleShowList()
-                tilSearch.isEndIconVisible = !text.isNullOrEmpty()
-                val providerNames = arrayListOf<String>()
-                val attributeNames = arrayListOf<String>()
-                val typeNames = arrayListOf<String>()
-                mViewModel.providerOptions.filter { it.isSelected }
-                    .forEach { data -> providerNames.add(data.name) }
-                mViewModel.attributeOptions.filter { it.isSelected }
-                    .forEach { data -> attributeNames.add(data.name) }
-                mViewModel.typeOptions.filter { it.isSelected }
-                    .forEach { data -> typeNames.add(data.name) }
-                val filterList = mViewModel.filterAndSortItems(
-                    requireContext(),
-                    text.toString().ifEmpty { null },
-                    providerNames.ifEmpty { null },
-                    attributeNames.ifEmpty { null },
-                    typeNames.ifEmpty { null }
-                )
-                if (filterList.isNotEmpty()) {
-                    mViewModel.mStyleList.clear()
-                    mViewModel.mStyleList.addAll(filterList)
-                    activity?.runOnUiThread {
-                        mMapStyleAdapter?.notifyDataSetChanged()
-                    }
-                    rvMapStyle.show()
-                    layoutNoDataFound.root.hide()
-                    isNoDataFoundVisible = false
-                } else {
-                    mViewModel.mStyleList.clear()
-                    activity?.runOnUiThread {
-                        mMapStyleAdapter?.notifyDataSetChanged()
-                    }
-                    isNoDataFoundVisible = true
-                    layoutNoDataFound.root.show()
-                    rvMapStyle.hide()
-                }
+                searchText(text)
             }.launchIn(lifecycleScope)
             val params = cardSearchFilter.layoutParams
             tilSearch.setEndIconOnClickListener {
@@ -262,6 +227,7 @@ class MapStyleBottomSheetFragment(
                     }
                     mapStyleShowList()
                     layoutNoDataFound.root.hide()
+                    tvClearFilter.hide()
                     isNoDataFoundVisible = false
                 } else {
                     isNoDataFoundVisible = true
@@ -270,8 +236,7 @@ class MapStyleBottomSheetFragment(
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
                     mapStyleShowList()
-                    layoutNoDataFound.root.show()
-                    rvMapStyle.hide()
+                    showNoDataFoundFilter()
                 }
             }
             tilSearch.isEndIconVisible = false
@@ -279,24 +244,20 @@ class MapStyleBottomSheetFragment(
                 openSearch(params)
             }
 
+            tvClearFilter.setOnClickListener {
+                clearSortingSelection()
+                notifySortingAdapter()
+                setFilterNotSelected()
+                searchText(etSearchMap.text.toString().trim())
+            }
             tvClearSelection.setOnClickListener {
-                mViewModel.providerOptions.forEachIndexed { index, _ ->
-                    mViewModel.providerOptions[index].isSelected = false
-                    mViewModel.providerOptions[index].isApplyFilter = false
-                }
-                mViewModel.attributeOptions.forEachIndexed { index, _ ->
-                    mViewModel.attributeOptions[index].isSelected = false
-                    mViewModel.attributeOptions[index].isApplyFilter = false
-                }
-                mViewModel.typeOptions.forEachIndexed { index, _ ->
-                    mViewModel.typeOptions[index].isSelected = false
-                    mViewModel.typeOptions[index].isApplyFilter = false
-                }
+                clearSortingSelection()
                 notifySortingAdapter()
                 imgFilterSelected.hide()
                 isNoDataFoundVisible = false
                 isFilterApplied = false
                 layoutNoDataFound.root.hide()
+                tvClearFilter.hide()
                 mViewModel.mStyleList.clear()
                 mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
                 mMapStyleAdapter?.notifyDataSetChanged()
@@ -352,14 +313,7 @@ class MapStyleBottomSheetFragment(
                     mViewModel.typeOptions.filter { !it.isSelected }
                         .forEach { data -> data.isApplyFilter = false }
                 } else {
-                    isFilterApplied = false
-                    imgFilterSelected.hide()
-                    imgFilter.setColorFilter(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.color_img_tint
-                        )
-                    )
+                    setFilterNotSelected()
                 }
                 if (filterList.isNotEmpty()) {
                     mViewModel.mStyleList.clear()
@@ -376,8 +330,7 @@ class MapStyleBottomSheetFragment(
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
                     mapStyleShowList()
-                    layoutNoDataFound.root.show()
-                    rvMapStyle.hide()
+                    showNoDataFoundFilter()
                 }
             }
             imgFilter.setOnClickListener {
@@ -419,6 +372,11 @@ class MapStyleBottomSheetFragment(
                     mapStyleShowList()
                     if (isNoDataFoundVisible) {
                         layoutNoDataFound.root.show()
+                        if (isFilterApplied) {
+                            tvClearFilter.show()
+                        } else {
+                            tvClearFilter.hide()
+                        }
                     }
                     collapseSearchMap(params)
                 } else {
@@ -465,6 +423,80 @@ class MapStyleBottomSheetFragment(
         mTypeAdapter?.notifyDataSetChanged()
         mAttributeAdapter?.notifyDataSetChanged()
         mProviderAdapter?.notifyDataSetChanged()
+    }
+
+    private fun BottomSheetMapStyleBinding.showNoDataFoundFilter() {
+        layoutNoDataFound.root.show()
+        if (isFilterApplied) {
+            tvClearFilter.show()
+        } else {
+            tvClearFilter.hide()
+        }
+        rvMapStyle.hide()
+    }
+
+    private fun BottomSheetMapStyleBinding.searchText(text: CharSequence?) {
+        tilSearch.isEndIconVisible = !text.isNullOrEmpty()
+        val providerNames = arrayListOf<String>()
+        val attributeNames = arrayListOf<String>()
+        val typeNames = arrayListOf<String>()
+        mViewModel.providerOptions.filter { it.isSelected }
+            .forEach { data -> providerNames.add(data.name) }
+        mViewModel.attributeOptions.filter { it.isSelected }
+            .forEach { data -> attributeNames.add(data.name) }
+        mViewModel.typeOptions.filter { it.isSelected }
+            .forEach { data -> typeNames.add(data.name) }
+        val filterList = mViewModel.filterAndSortItems(
+            requireContext(),
+            text.toString().ifEmpty { null },
+            providerNames.ifEmpty { null },
+            attributeNames.ifEmpty { null },
+            typeNames.ifEmpty { null }
+        )
+        if (filterList.isNotEmpty()) {
+            mViewModel.mStyleList.clear()
+            mViewModel.mStyleList.addAll(filterList)
+            activity?.runOnUiThread {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+            rvMapStyle.show()
+            layoutNoDataFound.root.hide()
+            tvClearFilter.hide()
+            isNoDataFoundVisible = false
+        } else {
+            mViewModel.mStyleList.clear()
+            activity?.runOnUiThread {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+            isNoDataFoundVisible = true
+            showNoDataFoundFilter()
+        }
+    }
+
+    private fun BottomSheetMapStyleBinding.setFilterNotSelected() {
+        isFilterApplied = false
+        imgFilterSelected.hide()
+        imgFilter.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+    }
+
+    private fun clearSortingSelection() {
+        mViewModel.providerOptions.forEachIndexed { index, _ ->
+            mViewModel.providerOptions[index].isSelected = false
+            mViewModel.providerOptions[index].isApplyFilter = false
+        }
+        mViewModel.attributeOptions.forEachIndexed { index, _ ->
+            mViewModel.attributeOptions[index].isSelected = false
+            mViewModel.attributeOptions[index].isApplyFilter = false
+        }
+        mViewModel.typeOptions.forEachIndexed { index, _ ->
+            mViewModel.typeOptions[index].isSelected = false
+            mViewModel.typeOptions[index].isApplyFilter = false
+        }
     }
 
     private fun BottomSheetMapStyleBinding.openSearch(params: ViewGroup.LayoutParams?) {
@@ -519,6 +551,8 @@ class MapStyleBottomSheetFragment(
             tvClearSelection,
             btnApplyFilter
         )
+        layoutNoDataFound.root.hide()
+        tvClearFilter.hide()
         rvMapStyle.hide()
     }
 

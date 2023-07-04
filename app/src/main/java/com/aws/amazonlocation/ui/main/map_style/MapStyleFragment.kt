@@ -19,12 +19,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.databinding.FragmentMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SortingAdapter
-import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -41,12 +39,12 @@ import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.textChanges
-import kotlin.math.ceil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.ceil
 
 class MapStyleFragment : BaseFragment() {
 
@@ -389,6 +387,8 @@ class MapStyleFragment : BaseFragment() {
             tvClearSelection,
             btnApplyFilter
         )
+        layoutNoDataFound.root.hide()
+        tvClearFilter.hide()
         rvMapStyle.hide()
     }
 
@@ -452,41 +452,7 @@ class MapStyleFragment : BaseFragment() {
         mBinding.apply {
             etSearchMap.textChanges().debounce(DELAY_300).onEach { text ->
                 mapStyleShowList()
-                tilSearch.isEndIconVisible = !text.isNullOrEmpty()
-                val providerNames = arrayListOf<String>()
-                val attributeNames = arrayListOf<String>()
-                val typeNames = arrayListOf<String>()
-                mViewModel.providerOptions.filter { it.isSelected }
-                    .forEach { data -> providerNames.add(data.name) }
-                mViewModel.attributeOptions.filter { it.isSelected }
-                    .forEach { data -> attributeNames.add(data.name) }
-                mViewModel.typeOptions.filter { it.isSelected }
-                    .forEach { data -> typeNames.add(data.name) }
-                val filterList = mViewModel.filterAndSortItems(
-                    requireContext(),
-                    text.toString().ifEmpty { null },
-                    providerNames.ifEmpty { null },
-                    attributeNames.ifEmpty { null },
-                    typeNames.ifEmpty { null }
-                )
-                if (filterList.isNotEmpty()) {
-                    mViewModel.mStyleList.clear()
-                    mViewModel.mStyleList.addAll(filterList)
-                    activity?.runOnUiThread {
-                        mMapStyleAdapter?.notifyDataSetChanged()
-                    }
-                    rvMapStyle.show()
-                    layoutNoDataFound.root.hide()
-                    isNoDataFoundVisible = false
-                } else {
-                    mViewModel.mStyleList.clear()
-                    activity?.runOnUiThread {
-                        mMapStyleAdapter?.notifyDataSetChanged()
-                    }
-                    isNoDataFoundVisible = true
-                    layoutNoDataFound.root.show()
-                    rvMapStyle.hide()
-                }
+                searchText(text)
             }.launchIn(lifecycleScope)
             val params = cardSearchFilter.layoutParams
             tilSearch.setEndIconOnClickListener {
@@ -522,6 +488,7 @@ class MapStyleFragment : BaseFragment() {
                     }
                     mapStyleShowList()
                     layoutNoDataFound.root.hide()
+                    tvClearFilter.hide()
                     isNoDataFoundVisible = false
                 } else {
                     isNoDataFoundVisible = true
@@ -530,8 +497,7 @@ class MapStyleFragment : BaseFragment() {
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
                     mapStyleShowList()
-                    layoutNoDataFound.root.show()
-                    rvMapStyle.hide()
+                    showNoDataFoundFilter()
                 }
             }
             tilSearch.isEndIconVisible = false
@@ -539,24 +505,20 @@ class MapStyleFragment : BaseFragment() {
                 openSearch(params)
             }
 
+            tvClearFilter.setOnClickListener {
+                clearSortingSelection()
+                notifySortingAdapter()
+                setFilterNotSelected()
+                searchText(etSearchMap.text.toString().trim())
+            }
             tvClearSelection.setOnClickListener {
-                mViewModel.providerOptions.forEachIndexed { index, _ ->
-                    mViewModel.providerOptions[index].isSelected = false
-                    mViewModel.providerOptions[index].isApplyFilter = false
-                }
-                mViewModel.attributeOptions.forEachIndexed { index, _ ->
-                    mViewModel.attributeOptions[index].isSelected = false
-                    mViewModel.attributeOptions[index].isApplyFilter = false
-                }
-                mViewModel.typeOptions.forEachIndexed { index, _ ->
-                    mViewModel.typeOptions[index].isSelected = false
-                    mViewModel.typeOptions[index].isApplyFilter = false
-                }
+                clearSortingSelection()
                 notifySortingAdapter()
                 imgFilterSelected.hide()
                 isNoDataFoundVisible = false
                 isFilterApplied = false
                 layoutNoDataFound.root.hide()
+                tvClearFilter.hide()
                 mViewModel.mStyleList.clear()
                 mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
                 mMapStyleAdapter?.notifyDataSetChanged()
@@ -612,14 +574,7 @@ class MapStyleFragment : BaseFragment() {
                     mViewModel.typeOptions.filter { !it.isSelected }
                         .forEach { data -> data.isApplyFilter = false }
                 } else {
-                    isFilterApplied = false
-                    imgFilterSelected.hide()
-                    imgFilter.setColorFilter(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.color_img_tint
-                        )
-                    )
+                    setFilterNotSelected()
                 }
                 if (filterList.isNotEmpty()) {
                     mViewModel.mStyleList.clear()
@@ -636,8 +591,7 @@ class MapStyleFragment : BaseFragment() {
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
                     mapStyleShowList()
-                    layoutNoDataFound.root.show()
-                    rvMapStyle.hide()
+                    showNoDataFoundFilter()
                 }
             }
             imgFilter.setOnClickListener {
@@ -679,6 +633,11 @@ class MapStyleFragment : BaseFragment() {
                     mapStyleShowList()
                     if (isNoDataFoundVisible) {
                         layoutNoDataFound.root.show()
+                        if (isFilterApplied) {
+                            tvClearFilter.show()
+                        } else {
+                            tvClearFilter.hide()
+                        }
                     }
                     collapseSearchMap(params)
                 } else {
@@ -728,6 +687,80 @@ class MapStyleFragment : BaseFragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun FragmentMapStyleBinding.showNoDataFoundFilter() {
+        layoutNoDataFound.root.show()
+        if (isFilterApplied) {
+            tvClearFilter.show()
+        } else {
+            tvClearFilter.hide()
+        }
+        rvMapStyle.hide()
+    }
+
+    private fun FragmentMapStyleBinding.searchText(text: CharSequence?) {
+        tilSearch.isEndIconVisible = !text.isNullOrEmpty()
+        val providerNames = arrayListOf<String>()
+        val attributeNames = arrayListOf<String>()
+        val typeNames = arrayListOf<String>()
+        mViewModel.providerOptions.filter { it.isSelected }
+            .forEach { data -> providerNames.add(data.name) }
+        mViewModel.attributeOptions.filter { it.isSelected }
+            .forEach { data -> attributeNames.add(data.name) }
+        mViewModel.typeOptions.filter { it.isSelected }
+            .forEach { data -> typeNames.add(data.name) }
+        val filterList = mViewModel.filterAndSortItems(
+            requireContext(),
+            text.toString().ifEmpty { null },
+            providerNames.ifEmpty { null },
+            attributeNames.ifEmpty { null },
+            typeNames.ifEmpty { null }
+        )
+        if (filterList.isNotEmpty()) {
+            mViewModel.mStyleList.clear()
+            mViewModel.mStyleList.addAll(filterList)
+            activity?.runOnUiThread {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+            rvMapStyle.show()
+            layoutNoDataFound.root.hide()
+            tvClearFilter.hide()
+            isNoDataFoundVisible = false
+        } else {
+            mViewModel.mStyleList.clear()
+            activity?.runOnUiThread {
+                mMapStyleAdapter?.notifyDataSetChanged()
+            }
+            isNoDataFoundVisible = true
+            showNoDataFoundFilter()
+        }
+    }
+
+    private fun FragmentMapStyleBinding.setFilterNotSelected() {
+        isFilterApplied = false
+        imgFilterSelected.hide()
+        imgFilter.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_img_tint
+            )
+        )
+    }
+
+    private fun clearSortingSelection() {
+        mViewModel.providerOptions.forEachIndexed { index, _ ->
+            mViewModel.providerOptions[index].isSelected = false
+            mViewModel.providerOptions[index].isApplyFilter = false
+        }
+        mViewModel.attributeOptions.forEachIndexed { index, _ ->
+            mViewModel.attributeOptions[index].isSelected = false
+            mViewModel.attributeOptions[index].isApplyFilter = false
+        }
+        mViewModel.typeOptions.forEachIndexed { index, _ ->
+            mViewModel.typeOptions[index].isSelected = false
+            mViewModel.typeOptions[index].isApplyFilter = false
         }
     }
 

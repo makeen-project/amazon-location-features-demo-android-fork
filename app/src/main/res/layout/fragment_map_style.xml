@@ -264,6 +264,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scroll_map_style" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_clear_filter"
+        style="@style/SP16BoldMediumBlackTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_24"
+        android:text="@string/label_clear_filters"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:textColor="@color/color_primary_green"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_no_data_found" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_map_style"
         android:layout_width="match_parent"
