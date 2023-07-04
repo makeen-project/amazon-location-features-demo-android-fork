@@ -112,20 +112,20 @@
     <string name="edit_geofence">Edit Geofence</string>
     <string name="label_map_style">Map Style</string>
     <string name="label_map_style_description"><![CDATA[Changing data provider also affects Places & Routes API]]></string>
-    <string name="map_light">Light</string>
-    <string name="map_streets">Streets</string>
-    <string name="map_navigation">Navigation</string>
-    <string name="map_dark_gray">Dark Gray</string>
-    <string name="map_light_gray">Light Gray</string>
-    <string name="map_imagery">Imagery</string>
-    <string name="map_esri">Esri</string>
-    <string name="map_contrast">Contrast</string>
-    <string name="map_explore">Explore</string>
-    <string name="map_explore_truck">Explore Truck</string>
-    <string name="map_hybrid">Hybrid</string>
-    <string name="map_raster">Imagery</string>
-    <string name="map_grab_light">Light</string>
-    <string name="map_grab_dark">Dark</string>
+    <string name="map_light" translatable="false">Light</string>
+    <string name="map_streets" translatable="false">Streets</string>
+    <string name="map_navigation" translatable="false">Navigation</string>
+    <string name="map_dark_gray" translatable="false">Dark Gray</string>
+    <string name="map_light_gray" translatable="false">Light Gray</string>
+    <string name="map_imagery" translatable="false">Imagery</string>
+    <string name="map_esri" translatable="false">Esri</string>
+    <string name="map_contrast" translatable="false">Contrast</string>
+    <string name="map_explore" translatable="false">Explore</string>
+    <string name="map_explore_truck" translatable="false">Explore Truck</string>
+    <string name="map_hybrid" translatable="false">Hybrid</string>
+    <string name="map_raster" translatable="false">Imagery</string>
+    <string name="map_grab_light" translatable="false">Light</string>
+    <string name="map_grab_dark" translatable="false">Dark</string>
     <string name="label_enter_identity_pool_id">Please enter proper identity pool id</string>
     <string name="label_enter_domain">Entered user domain is wrong</string>
     <string name="label_enter_user_pool_client_id">Entered user pool client id is wrong</string>
@@ -134,9 +134,9 @@
     <string name="data_provider">Data provider</string>
     <string name="map_style">Map style</string>
     <string name="aws_cloudformation">Connect your AWS Account</string>
-    <string name="esri">Esri</string>
-    <string name="here">HERE</string>
-    <string name="grab">GrabMaps</string>
+    <string name="esri" translatable="false">Esri</string>
+    <string name="here" translatable="false">HERE</string>
+    <string name="grab" translatable="false">GrabMaps</string>
     <string name="label_connected">You are connected</string>
     <string name="label_connected_description">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="label_how_to_remove">How to remove:</string>
@@ -232,17 +232,17 @@
     <string name="label_ft">ft</string>
     <string name="label_mi">mi</string>
     <string name="label_language">Language</string>
-    <string name="label_deutsch">Deutsch</string>
-    <string name="label_espa_ol">Español</string>
-    <string name="label_english">English</string>
-    <string name="label_fran_ais">Français</string>
-    <string name="label_italiano">Italiano</string>
-    <string name="label_portugu_s_brasileiro">Português Brasileiro</string>
-    <string name="label_simplified_chinese">Simplified Chinese</string>
-    <string name="label_traditional_chinese">Traditional Chinese</string>
-    <string name="label_japanese">日本語</string>
-    <string name="label_korean">한국어</string>
-    <string name="label_arabic">العربية</string>
-    <string name="label_hebrew">עברית</string>
-    <string name="label_hindi">हिन्दी</string>
+    <string name="label_deutsch" translatable="false">Deutsch</string>
+    <string name="label_espa_ol" translatable="false">Español</string>
+    <string name="label_english" translatable="false">English</string>
+    <string name="label_fran_ais" translatable="false">Français</string>
+    <string name="label_italiano" translatable="false">Italiano</string>
+    <string name="label_portugu_s_brasileiro" translatable="false">Português Brasileiro</string>
+    <string name="label_simplified_chinese" translatable="false">Simplified Chinese</string>
+    <string name="label_traditional_chinese" translatable="false">Traditional Chinese</string>
+    <string name="label_japanese" translatable="false">日本語</string>
+    <string name="label_korean" translatable="false">한국어</string>
+    <string name="label_arabic" translatable="false">العربية</string>
+    <string name="label_hebrew" translatable="false">עברית</string>
+    <string name="label_hindi" translatable="false">हिन्दी</string>
 </resources>

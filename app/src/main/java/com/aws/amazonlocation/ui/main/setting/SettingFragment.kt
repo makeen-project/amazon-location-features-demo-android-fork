@@ -42,6 +42,7 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_ENGLISH
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_FRENCH
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_GERMAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HINDI
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ITALIAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_JAPANESE
@@ -172,7 +173,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 LANGUAGE_CODE_ARABIC -> {
                     tvLanguageName.text = getString(R.string.label_arabic)
                 }
-                LANGUAGE_CODE_HEBREW -> {
+                LANGUAGE_CODE_HEBREW, LANGUAGE_CODE_HEBREW_1 -> {
                     tvLanguageName.text = getString(R.string.label_hebrew)
                 }
                 LANGUAGE_CODE_HINDI -> {

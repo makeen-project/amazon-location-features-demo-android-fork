@@ -22,6 +22,7 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_ENGLISH
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_FRENCH
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_GERMAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HINDI
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ITALIAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_JAPANESE
@@ -53,30 +54,24 @@ class LanguageFragment : BaseFragment() {
 
     private fun init() {
         val languageCode = getLanguageCode()
-        val isRtl = languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW
+        val isRtl = languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
         setSelectedLanguage(languageCode, isRtl)
         mBinding.apply {
             rgLanguage.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
-                    R.id.rb_german -> {}
-                    R.id.rb_spanish -> {}
-                    R.id.rb_english -> {
-                        changeAppLanguage(LANGUAGE_CODE_ENGLISH)
-                    }
-                    R.id.rb_french -> {}
-                    R.id.rb_italian -> {}
-                    R.id.rb_brazilian_portuguese -> {}
-                    R.id.rb_simplified_chinese -> {}
-                    R.id.rb_traditional_chinese -> {}
-                    R.id.rb_japanese -> {}
-                    R.id.rb_korean -> {}
-                    R.id.rb_arabic -> {
-                        changeAppLanguage(LANGUAGE_CODE_ARABIC)
-                    }
-                    R.id.rb_hebrew -> {}
-                    R.id.rb_hindi -> {
-                        changeAppLanguage(LANGUAGE_CODE_HINDI)
-                    }
+                    R.id.rb_german -> { changeAppLanguage(LANGUAGE_CODE_GERMAN) }
+                    R.id.rb_spanish -> { changeAppLanguage(LANGUAGE_CODE_SPANISH) }
+                    R.id.rb_english -> { changeAppLanguage(LANGUAGE_CODE_ENGLISH) }
+                    R.id.rb_french -> { changeAppLanguage(LANGUAGE_CODE_FRENCH) }
+                    R.id.rb_italian -> { changeAppLanguage(LANGUAGE_CODE_ITALIAN) }
+                    R.id.rb_brazilian_portuguese -> { changeAppLanguage(LANGUAGE_CODE_BR_PT) }
+                    R.id.rb_simplified_chinese -> { changeAppLanguage(LANGUAGE_CODE_CH_CN) }
+                    R.id.rb_traditional_chinese -> { changeAppLanguage(LANGUAGE_CODE_CH_TW) }
+                    R.id.rb_japanese -> { changeAppLanguage(LANGUAGE_CODE_JAPANESE) }
+                    R.id.rb_korean -> { changeAppLanguage(LANGUAGE_CODE_KOREAN) }
+                    R.id.rb_arabic -> { changeAppLanguage(LANGUAGE_CODE_ARABIC) }
+                    R.id.rb_hebrew -> { changeAppLanguage(LANGUAGE_CODE_HEBREW) }
+                    R.id.rb_hindi -> { changeAppLanguage(LANGUAGE_CODE_HINDI) }
                 }
                 if (!isRunningTest) {
                     restart(requireContext())
@@ -124,7 +119,7 @@ class LanguageFragment : BaseFragment() {
                 LANGUAGE_CODE_ARABIC -> {
                     setRadioButtonIcon(rbArabic, isRtl)
                 }
-                LANGUAGE_CODE_HEBREW -> {
+                LANGUAGE_CODE_HEBREW, LANGUAGE_CODE_HEBREW_1 -> {
                     setRadioButtonIcon(rbHebrew, isRtl)
                 }
                 LANGUAGE_CODE_HINDI -> {

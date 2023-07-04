@@ -1,21 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">موقع أمازون</string>
-    <!-- bottom navigation -->
     <string name="menu_explore">يستكشف</string>
     <string name="menu_tracking">المقتفون</string>
     <string name="menu_geofence">الأسوار الجغرافية</string>
     <string name="menu_setting">إعدادات</string>
     <string name="menu_more">عن</string>
-
-    <!--Sign in screen -->
     <string name="sign_in">تسجيل الدخول</string>
     <string name="email_or_phone_number">البريد الإلكتروني أو رقم الهاتف</string>
     <string name="password">كلمة المرور</string>
     <string name="amazon_password">كلمة مرور أمازون</string>
     <string name="forgot_password">هل نسيت كلمة السر؟</string>
     <string name="show_password">عرض كلمة المرور</string>
-    <string name="privacy_policy">بالمتابعة ، فإنك توافق على شروط استخدام أمازون وإشعار الخصوصية.</string>
+    <string name="privacy_policy">من خلال المتابعة ، فإنك توافق على شروط استخدام Amazon وإشعار الخصوصية.</string>
     <string name="condition_of_use">شروط الاستخدام</string>
     <string name="privacy_notice">إشعار الخصوصية</string>
     <string name="login_success">تسجيل الدخول بنجاح</string>
@@ -23,8 +19,8 @@
     <string name="sign_out_failed">فشل تسجيل الخروج ، يرجى المحاولة مرة أخرى …</string>
     <string name="sign_in_to_access_tracking">سجّل الدخول للوصول إلى ميزات التتبع والسياج الجغرافي أو تابع استكشاف الخريطة</string>
     <string name="sign_in_required">تسجيل الدخول مطلوب</string>
-    <string name="maybe_later">Maybe later</string>
-    <string name="you_are_connected">ربما في وقت لاحق</string>
+    <string name="maybe_later">ربما في وقت لاحق</string>
+    <string name="you_are_connected">انت متصل</string>
     <string name="continue_to_explore">تابع إلى الاستكشاف</string>
     <string name="aws_cloudformation_required">ربط حساب AWS</string>
     <string name="geofencing_and_tracking_features">قم بتوصيل حساب AWS الخاص بك لتمكين Geofences and Trackers. سيضمن ذلك تخزين بيانات التتبع والسياج الجغرافي في حسابك فقط. بعد تسجيل الدخول ، سيتم تشغيل جميع ميزات التطبيق التجريبي باستخدام الموارد التي تنشرها في حساب AWS الخاص بك. قم بتسجيل الخروج إذا كنت ترغب في الاستمرار في تشغيل التطبيق التجريبي باستخدام الموارد في حساب تطبيق AWS التجريبي.</string>
@@ -32,18 +28,20 @@
     <string name="how_to_connect">كيفية الاتصال بـ</string>
     <string name="how_to_connect_1_1">انقر هنا لتشغيل نموذج CloudFormation لإنشاء الموارد المطلوبة بشكل آمن.</string>
     <string name="how_to_connect_1_2">سيتم إنشاء جميع الموارد المطلوبة بشكل آمن.</string>
-    <string name="how_to_connect_1_3">يمكنك حذف هذه الموارد من خلال خيار حذف المكدس أو "إدارة الموارد" في القائمة الموجودة على اليسار.</string>
+    <string name="how_to_connect_1_3">يمكنك حذف هذه الموارد من خلال خيار حذف المكدس أو صفحات "إدارة الموارد" في القائمة الموجودة على اليسار.</string>
     <string name="how_to_connect_2_1">قم بتوصيل التطبيق التجريبي بموارد AWS التي تم إنشاؤها مؤخرًا عن طريق النسخ في حقول الإدخال.</string>
     <string name="how_to_connect_2_2">من قسم الإخراج CloudFormation الخاص بك ، انسخ القيم المسماة المقابلة كما هو موضح في نموذج القسم الأيمن (IdentityPoolId وما إلى ذلك). يتعلم أكثر.</string>
-    <string name="learn_more"><b>يتعلم أكثر</b></string>
+    <string name="learn_more">
+      <b>يتعلم أكثر</b>
+   </string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">تسجيل الدخول باستخدام بيانات اعتماد المستخدم التي تم إنشاؤها.</string>
-    <string name="how_to_connect_3_2">الآن يجب أن تكون قادرًا على استخدام ميزات التتبع والسياج الجغرافي باستخدام البيانات المخزنة في حسابك.</string>
+    <string name="how_to_connect_3_2">الآن يجب أن تكون قادرًا على استخدام ميزات التتبع والسياجات الجغرافية باستخدام البيانات المخزنة في حسابك.</string>
     <string name="three">3</string>
-    <string name="identityPoolId">IdentityPoolld</string>
-    <string name="user_pool_client_id">UserPoolClientid</string>
-    <string name="user_pool_ld">UserPoolld</string>
+    <string name="identityPoolId">الهوية</string>
+    <string name="user_pool_client_id">أوسيربولكلينتيد</string>
+    <string name="user_pool_ld">أوسيربولد</string>
     <string name="by_connecting_i_agree_to_amazon">من خلال الاتصال ، أوافق على الشروط والأحكام الخاصة بموقع Amazon</string>
     <string name="terms_condition">البنود و الظروف</string>
     <string name="help">يساعد</string>
@@ -53,19 +51,13 @@
     <string name="enter_identity_pool_id">أدخل IdentityPoolId</string>
     <string name="enter_user_pool_client_id">أدخل UserPoolClientId</string>
     <string name="enter_user_pool_id">أدخل UserPoolId</string>
-
-    <!--Basic user location permission-->
     <string name="location_permission_is_required">مطلوب إذن الموقع</string>
     <string name="ok">نعم</string>
     <string name="permission">إذن</string>
-
-    <!--Setting screen Sign in & sign out buttons-->
     <string name="logout">تسجيل خروج</string>
     <string name="are_you_sure_you_want_to_sign_out">هل تريد بالتأكيد تسجيل الخروج؟ \ n لا تتوفر معلومات السياج والتعقب بدون تسجيل الدخول</string>
     <string name="cancel">يلغي</string>
     <string name="disconnect_aws">قطع الاتصال بـ AWS</string>
-
-    <!--explore screen -->
     <string name="directions">الاتجاهات</string>
     <string name="search">يبحث</string>
     <string name="no_matching_places_found">لم يتم العثور على أماكن مطابقة</string>
@@ -74,27 +66,21 @@
     <string name="text_switch_avoid_tools">تجنب الرسوم</string>
     <string name="text_switch_avoid_highways">تجنب الطرق السريعة</string>
     <string name="text_switch_avoid_ferries">تجنب العبارات</string>
-
-    <!-- Dummy text-->
     <string name="_2_min">2 دقيقة</string>
-
-    <!-- Routing text-->
     <string name="label_search_destination">وجهة البحث</string>
     <string name="label_my_location">موقعي</string>
     <string name="label_directions">الاتجاهات</string>
     <string name="label_route_options">خيارات الطريق</string>
     <string name="label_default_route_options">خيارات المسار الافتراضية</string>
-    <string name="label_selected">• Selected</string>
-    <string name="btn_go">Go</string>
+    <string name="label_selected">• المحدد</string>
+    <string name="btn_go">يذهب</string>
     <string name="label_walk">يمشي</string>
     <string name="label_drive">يقود</string>
     <string name="label_truck">شاحنة</string>
     <string name="label_bicycle">دراجة</string>
-    <string name="label_motorcycle">Motorcycle</string>
+    <string name="label_motorcycle">دراجة نارية</string>
     <string name="label_search_starting_point">البحث عن نقطة البداية</string>
     <string name="exit">مخرج</string>
-
-    <!-- Geofencing text-->
     <string name="log_out">تسجيل خروج</string>
     <string name="add_geo_fence_1">أضف سياجًا جغرافيًا ليتم إعلامك عند دخول جهازك إليه أو الخروج منه</string>
     <string name="add_geofence">أضف Geofence</string>
@@ -103,8 +89,8 @@
     <string name="name">اسم</string>
     <string name="type_geofence_name">اكتب اسم السياج الجغرافي</string>
     <string name="save">يحفظ</string>
-    <string name="cloudformation_template_resources">موارد قالب CloudFormation</string>
-    <string name="cloud_formation_1">تجمع هوية Cognito ، وتجمع مستخدمي Cognito ، ودور IAM ، وموارد موقع Amazon ، والخرائط ، والأماكن ، والطرق ، والسياج الجغرافي ، والتتبع</string>
+    <string name="cloudformation_template_resources">CloudFormation \ n موارد القوالب</string>
+    <string name="cloud_formation_1">تجمع هوية Cognito ، وتجمع مستخدمي Cognito ، ودور IAM ، وموارد موقع Amazon ، والخرائط ، والأماكن ، والمسارات ، والسياج الجغرافي ، والتتبع</string>
     <string name="geofence_name_exists">اسم السياج الجغرافي موجود بالفعل</string>
     <string name="please_enter_geofence_name">الرجاء إدخال اسم السياج الجغرافي</string>
     <string name="invalid_name">تحتوي فقط على أحرف (A – Z ، a – z ، 0–9) ، واصلات (-) ، نقاط (.) ، وشرطات سفلية (_)</string>
@@ -112,32 +98,15 @@
     <string name="delete">يمسح</string>
     <string name="edit_geofence">تحرير السياج الجغرافي</string>
     <string name="label_map_style">نمط الخريطة</string>
-    <string name="label_map_style_description"><![CDATA[أثر تغيير مزود البيانات أيضًا على واجهة برمجة تطبيقات الأماكن والمسارات]]></string>
-    <string name="map_light">ضوء</string>
-    <string name="map_streets">الشوارع</string>
-    <string name="map_navigation">ملاحة</string>
-    <string name="map_dark_gray">الرمادي الداكن</string>
-    <string name="map_light_gray">رمادي فاتح</string>
-    <string name="map_imagery">مصور</string>
-    <string name="map_esri">Esri</string>
-    <string name="map_contrast">مقابلة</string>
-    <string name="map_explore">يستكشف</string>
-    <string name="map_explore_truck">استكشف الشاحنة</string>
-    <string name="map_hybrid">هجين</string>
-    <string name="map_raster">مصور</string>
-    <string name="map_grab_light">ضوء</string>
-    <string name="map_grab_dark">مظلم</string>
+    <string name="label_map_style_description">يؤثر تغيير مزود البيانات أيضًا على واجهة برمجة تطبيقات الأماكن والمسارات</string>
     <string name="label_enter_identity_pool_id">الرجاء إدخال معرف تجمع الهوية الصحيح</string>
     <string name="label_enter_domain">مجال المستخدم الذي تم إدخاله خاطئ</string>
     <string name="label_enter_user_pool_client_id">معرف عميل تجمع المستخدم الذي تم إدخاله غير صحيح</string>
     <string name="label_enter_user_pool_id">معرف تجمع المستخدم الذي تم إدخاله غير صحيح</string>
-    <string name="label_enter_web_socket_url">تم إدخال عنوان URL لمقبس الويب غير صحيح</string>
+    <string name="label_enter_web_socket_url">تم إدخال عنوان url لمقبس الويب غير صحيح</string>
     <string name="data_provider">مزود البيانات</string>
     <string name="map_style">نمط الخريطة</string>
     <string name="aws_cloudformation">قم بتوصيل حساب AWS الخاص بك</string>
-    <string name="esri">Esri</string>
-    <string name="here">HERE</string>
-    <string name="grab">GrabMaps</string>
     <string name="label_connected">انت متصل</string>
     <string name="label_connected_description">قم بتوصيل حساب AWS الخاص بك لتمكين Geofences and Trackers. سيضمن ذلك تخزين بيانات التتبع والسياج الجغرافي في حسابك فقط. بعد تسجيل الدخول ، سيتم تشغيل جميع ميزات التطبيق التجريبي باستخدام الموارد التي تنشرها في حساب AWS الخاص بك. قم بتسجيل الخروج إذا كنت ترغب في الاستمرار في تشغيل التطبيق التجريبي باستخدام الموارد في حساب تطبيق AWS التجريبي.</string>
     <string name="label_how_to_remove">كيفية إزالة:</string>
@@ -181,7 +150,7 @@
     <string name="error_switch_to_here_miles">المسافة أكبر من 248.5 ميل ، لا يمكن الحساب عبر Esri ، يرجى التبديل إلى مزود HERE</string>
     <string name="error_distance_400">في DataSource Esri ، يجب أن تكون جميع الإحداثيات في نطاق 400 كم.</string>
     <string name="error_distance_248_miles">في DataSource Esri ، يجب أن تكون جميع الإحداثيات في نطاق 248.5 ميلاً.</string>
-    <string name="connect_to_aws_account">Connect AWS Account</string>
+    <string name="connect_to_aws_account">ربط حساب AWS</string>
     <string name="label_preview">معاينة</string>
     <string name="label_location_permission_denied">تم رفض إذن الموقع</string>
     <string name="label_give_permission">إعطاء إذن</string>
@@ -190,12 +159,12 @@
     <string name="label_disconnect">قطع الاتصال</string>
     <string name="label_esri_here">Esri، HERE، Garmin، FAO، NOAA، USGS، © OpenStreetMap المساهمون ، ومجتمع مستخدمي نظم المعلومات الجغرافية</string>
     <string name="btn_learn_more">يتعلم أكثر</string>
-    <string name="label_welcome_amazon">مرحبًا بك في \n عرض موقع أمازون</string>
+    <string name="label_welcome_amazon">مرحبًا بك في \ n عرض موقع أمازون</string>
     <string name="label_continue">يكمل</string>
     <string name="label_right_aws">حقوق النشر © لعام 2023 لشركة Amazon Web Services، Inc. أو الشركات التابعة لها. كل الحقوق محفوظة.</string>
-    <string name="label_terms_desc">عن طريق تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه ، فإنك توافق على شروط وأحكام التطبيق. شروط الاستخدام.</string>
-    <string name="label_terms_desc_terms_page">عن طريق تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه ، فإنك توافق على شروط وأحكام التطبيق. شروط الاستخدام.</string>
-    <string name="text_terms_desc_coloured_1">شروط وأمبير. شروط</string>
+    <string name="label_terms_desc">عن طريق تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه ، فإنك توافق على شروط وأحكام استخدام التطبيق.</string>
+    <string name="label_terms_desc_terms_page">عن طريق تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه ، فإنك توافق على شروط وأحكام استخدام التطبيق.</string>
+    <string name="text_terms_desc_coloured_1">البنود و الظروف</string>
     <string name="text_terms_desc_coloured_2">سياسة الاستخدام المقبول لدى AWS</string>
     <string name="text_terms_desc_coloured_3">إشعار خصوصية AWS</string>
     <string name="label_legal_and_privacy">الشؤون القانونية والخصوصية</string>
@@ -203,8 +172,8 @@
     <string name="label_sign_out">خروج</string>
     <string name="distance_is_greater_than_400_km">المسافة أكبر من 400 كم</string>
     <string name="distance_is_greater_than_248_mi">المسافة أكبر من 248.5 ميل</string>
-    <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">لا يمكن الحساب عبر Esri ، يرجى التبديل إلى مزود HERE.</string>
-    <string name="label_here_attribution_text">© 2022 HERE</string>
+    <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">لا يمكن الحساب عبر Esri ، يرجى التبديل إلى مزود \ nHERE.</string>
+    <string name="label_here_attribution_text">© 2022 هنا</string>
     <string name="label_partner_attribution">إسناد الشريك</string>
     <string name="label_software_attribution">إسناد البرنامج</string>
     <string name="label_click_learn_more_for_software_attribution">انقر فوق معرفة المزيد لإحالة البرنامج</string>
@@ -218,7 +187,7 @@
     <string name="subtitle_imperial">مايلز ، جنيه</string>
     <string name="automatic">تلقائي</string>
     <string name="label_restart_app_title">تمكين Grab</string>
-    <string name="label_restart_app_description">يوفر Grab الخرائط والطرق والبحث عن الأماكن في ماليزيا والفلبين وتايلاند وسنغافورة وفيتنام وإندونيسيا وميانمار وكمبوديا. \n\ n بينما تتوفر مسارات السيارات والدراجات النارية عبر البلدان المذكورة أعلاه ، فإن مسارات الدراجات والمشي مدعومة فقط في المدن الرئيسية مثل سنغافورة وجاكرتا ومانيلا ووادي كلانج وبانكوك ومدينة هوشي منه وهانوي. </string>
+    <string name="label_restart_app_description">يوفر Grab الخرائط والطرق والبحث عن الأماكن في ماليزيا والفلبين وتايلاند وسنغافورة وفيتنام وإندونيسيا وميانمار وكمبوديا. \ n \ n بينما تتوفر مسارات السيارات والدراجات النارية عبر البلدان المذكورة أعلاه ، فإن مسارات الدراجات والمشي مدعومة فقط في المدن الرئيسية مثل سنغافورة وجاكرتا ومانيلا ووادي كلانج وبانكوك ومدينة هوشي منه وهانوي.</string>
     <string name="enable_grab">تمكين Grab</string>
     <string name="your_location_not_supported_by_grab">موقعك الحالي خارج البلدان التي يدعمها Grab. يدعم Grab حاليًا ماليزيا والفلبين وتايلاند وسنغافورة وفيتنام وإندونيسيا وميانمار وكمبوديا.</string>
     <string name="label_current_location_disabled">الموقع الحالي معطل</string>
@@ -231,5 +200,6 @@
     <string name="label_m">م</string>
     <string name="label_km">كم</string>
     <string name="label_ft">قدم</string>
-    <string name="label_mi">ميل</string>
+    <string name="label_mi">أنا</string>
+    <string name="label_language">لغة</string>
 </resources>
