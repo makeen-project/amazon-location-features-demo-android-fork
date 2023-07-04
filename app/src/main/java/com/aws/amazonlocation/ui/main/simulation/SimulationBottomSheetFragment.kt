@@ -82,6 +82,7 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
     private fun clickListener() {
         mBinding.apply {
             btnStartSimulation.setOnClickListener {
+                (activity as MainActivity).showSimulationSheet()
                 dialog.dismiss()
             }
             tvMaybeLater.setOnClickListener {

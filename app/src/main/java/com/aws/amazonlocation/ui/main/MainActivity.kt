@@ -465,6 +465,16 @@ class MainActivity : BaseActivity() {
         mBinding.bottomNavigationMain.show()
     }
 
+    fun showSimulationSheet() {
+        mBinding.bottomNavigationMain.hide()
+        if (!isTablet) {
+            mBottomSheetHelper.hideMapStyleSheet()
+        }
+        mGeofenceUtils?.hideAllGeofenceBottomSheet()
+        mTrackingUtils?.hideTrackingBottomSheet()
+        mSimulationUtils?.showSimulationBottomSheet()
+    }
+
     fun showNavigationIcon() {
         if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]

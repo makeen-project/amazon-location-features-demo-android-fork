@@ -298,6 +298,12 @@ class ExploreFragment :
             mBinding.bottomSheetTracking,
             mTrackingInterface
         )
+
+        mBaseActivity?.mSimulationUtils?.initSimulationView(
+            activity,
+            mBinding.bottomSheetTrackSimulation,
+            mTrackingInterface
+        )
         setUserProfile()
         if ((activity as MainActivity).isAppNotFirstOpened()) {
             checkPermission()
@@ -4758,6 +4764,11 @@ class ExploreFragment :
                 mPreferenceManager
             )
             mBaseActivity?.mTrackingUtils?.setMapBox(
+                it,
+                mapboxMap,
+                mMapHelper
+            )
+            mBaseActivity?.mSimulationUtils?.setMapBox(
                 it,
                 mapboxMap,
                 mMapHelper

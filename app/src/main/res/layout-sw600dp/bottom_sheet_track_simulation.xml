@@ -2,15 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl_persistent_bottom_sheet"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
     android:focusable="true"
+    android:layout_width="@dimen/screen_size"
     android:paddingTop="@dimen/dp_10"
     app:behavior_hideable="false"
-    app:behavior_peekHeight="@dimen/dp_250"
+    app:behavior_peekHeight="@dimen/dp_110"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/img_amazon_logo_tracking_sheet"
@@ -73,13 +72,15 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tracking_your_activity"
             style="@style/LogoutMessageStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
-            android:gravity="center"
+            android:gravity="start"
             android:text="@string/label_not_tracking_your_activity"
             android:textColor="@color/color_hint_text"
+            android:lines="2"
             android:textSize="@dimen/sp_13"
+            app:layout_constraintEnd_toStartOf="@+id/card_start_tracking"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_tracking_history" />
 
@@ -97,7 +98,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_stop_tracking"
                 style="@style/SP14BoldBlackTextStyle"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/dp_110"
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@string/label_start_tracking"

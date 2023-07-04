@@ -224,6 +224,10 @@
         layout="@layout/bottom_sheet_tracking" />
 
     <include
+        android:id="@+id/bottom_sheet_track_simulation"
+        layout="@layout/bottom_sheet_track_simulation" />
+
+    <include
         android:id="@+id/bottom_sheet_map_style"
         layout="@layout/bottom_sheet_map_style" />
 
