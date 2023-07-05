@@ -31,6 +31,7 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_SPANISH
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.restartApplication
 
 class LanguageFragment : BaseFragment() {
 
@@ -74,7 +75,7 @@ class LanguageFragment : BaseFragment() {
                     R.id.rb_hindi -> { changeAppLanguage(LANGUAGE_CODE_HINDI) }
                 }
                 if (!isRunningTest) {
-                    restart(requireContext())
+                    activity?.restartApplication()
                 }
             }
             ivLanguage?.setOnClickListener {
@@ -159,12 +160,6 @@ class LanguageFragment : BaseFragment() {
             val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
             AppCompatDelegate.setApplicationLocales(appLocale)
         }
-    }
-
-    private fun restart(context: Context) {
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        context.startActivity(intent)
     }
 
     private fun backPress() {
