@@ -256,4 +256,6 @@
     <string name="label_notifications">Notifications</string>
     <string name="label_get_geofence_messages_when_you_enter_and_leave_locations">Get geofence messages when you enter and leave locations</string>
     <string name="label_start_simulation">Start simulation</string>
+    <string name="label_tracking_and_geofence_simulation">Tracking and Geofence simulation</string>
+    <string name="change">Change</string>
 </resources>

@@ -148,6 +148,7 @@ class MainActivity : BaseActivity() {
                         }
                     }
                     TabEnum.TAB_TRACKING.name -> {
+                        mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_tracking
                     }
@@ -470,6 +471,7 @@ class MainActivity : BaseActivity() {
         if (!isTablet) {
             mBottomSheetHelper.hideMapStyleSheet()
         }
+        showSimulationTop()
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
         mSimulationUtils?.showSimulationBottomSheet()
@@ -489,6 +491,15 @@ class MainActivity : BaseActivity() {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {
                 fragment.showDirectionAndCurrentLocationIcon()
+            }
+        }
+    }
+
+    fun showSimulationTop() {
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                fragment.showSimulationTop()
             }
         }
     }

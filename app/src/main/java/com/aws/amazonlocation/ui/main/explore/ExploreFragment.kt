@@ -17,6 +17,8 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.TypedValue
 import android.view.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -87,13 +89,13 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import java.util.*
-import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
+import java.util.*
+import kotlin.math.roundToInt
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -3091,6 +3093,21 @@ class ExploreFragment :
             btnApplyFilter
         )
         rvMapStyle.show()
+    }
+
+    fun showSimulationTop() {
+        mBinding.apply {
+            cardSimulationPopup.show()
+            // Create the blink animation
+            val blinkAnimation: Animation = AlphaAnimation(0.0f, 1.0f).apply {
+                duration = 500 // Set the duration of the blink (500 milliseconds)
+                repeatMode = Animation.REVERSE
+                repeatCount = Animation.INFINITE
+            }
+
+            // Apply the blink animation to the ImageView
+            ivOvalExternal.startAnimation(blinkAnimation)
+        }
     }
 
     fun setAttributionDataAndExpandSheet() {
