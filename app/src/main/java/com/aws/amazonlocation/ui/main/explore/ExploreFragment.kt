@@ -2123,6 +2123,10 @@ class ExploreFragment :
                 }
             }
 
+            cardExit.setOnClickListener {
+                cardSimulationPopup.hide()
+                (activity as MainActivity).hideSimulationSheet()
+            }
             bottomSheetNavigationComplete.ivNavigationCompleteClose.setOnClickListener {
                 if (checkInternetConnection()) {
                     hideArrivedBottomSheet()

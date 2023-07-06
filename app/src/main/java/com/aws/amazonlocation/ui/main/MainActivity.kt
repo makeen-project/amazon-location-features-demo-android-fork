@@ -466,6 +466,14 @@ class MainActivity : BaseActivity() {
         mBinding.bottomNavigationMain.show()
     }
 
+    fun hideSimulationSheet() {
+        showBottomBar()
+        mSimulationUtils?.hideTrackingBottomSheet()
+        mBottomSheetHelper.hideSearchBottomSheet(false)
+        mBinding.bottomNavigationMain.selectedItemId =
+            R.id.menu_explore
+    }
+
     fun showSimulationSheet() {
         mBinding.bottomNavigationMain.hide()
         if (!isTablet) {
