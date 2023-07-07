@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,12 +38,12 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.text.DecimalFormat
 import java.util.regex.Pattern
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -471,6 +472,7 @@ class GeofenceUtils {
         mBindingAddGeofence?.btnDeleteGeofence?.show()
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
+        checkRtl()
         mBindingAddGeofence?.btnDeleteGeofence?.setOnClickListener {
             mBindingAddGeofence?.edtAddGeofenceSearch?.clearFocus()
             mBindingAddGeofence?.edtEnterGeofenceName?.clearFocus()
@@ -492,8 +494,19 @@ class GeofenceUtils {
     }
 
     fun showGeofenceListBottomSheet(context: Activity) {
-        if (isTablet) {
+        if ((mActivity as MainActivity).isTablet) {
             (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBindingGeofenceList?.clGeofenceListMain?.let {
+                    ViewCompat.setLayoutDirection(
+                        it,
+                        ViewCompat.LAYOUT_DIRECTION_RTL
+                    )
+                }
+            }
         }
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
@@ -556,8 +569,23 @@ class GeofenceUtils {
         mBottomSheetAddGeofenceBehavior?.isHideable = false
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
-        if (isTablet) {
+        checkRtl()
+    }
+
+    private fun checkRtl() {
+        if ((mActivity as MainActivity).isTablet) {
             mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBindingAddGeofence?.clPersistentBottomSheetAddGeofence?.let {
+                    ViewCompat.setLayoutDirection(
+                        it,
+                        ViewCompat.LAYOUT_DIRECTION_RTL
+                    )
+                }
+            }
         }
     }
 

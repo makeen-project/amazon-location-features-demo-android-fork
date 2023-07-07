@@ -87,8 +87,6 @@
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:text="@string/menu_geofence"
-            android:textDirection="locale"
-            android:textAlignment="viewStart"
             app:layout_constraintBottom_toBottomOf="@id/card_add_geofence"
             app:layout_constraintEnd_toStartOf="@id/card_add_geofence"
             app:layout_constraintStart_toStartOf="parent"

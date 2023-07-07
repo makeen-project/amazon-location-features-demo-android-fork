@@ -98,7 +98,7 @@
     <string name="delete">Excluir</string>
     <string name="edit_geofence">Editar cerca geográfica</string>
     <string name="label_map_style">Estilo do Mapa</string>
-    <string name="label_map_style_description">Alterar o provedor de dados também afeta a API Places &amp; Routes</string>
+    <string name="label_map_style_description">Alterar o provedor de dados também afeta a API Lugares &amp; Rotas</string>
     <string name="label_enter_identity_pool_id">Insira o id do grupo de identidade adequado</string>
     <string name="label_enter_domain">O domínio do usuário inserido está errado</string>
     <string name="label_enter_user_pool_client_id">O ID do cliente do grupo de usuários inserido está incorreto</string>

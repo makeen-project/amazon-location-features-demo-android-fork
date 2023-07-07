@@ -98,7 +98,7 @@
     <string name="delete">消去</string>
     <string name="edit_geofence">ジオフェンスの編集</string>
     <string name="label_map_style">マップスタイル</string>
-    <string name="label_map_style_description">データプロバイダーの変更は、Places &amp; Routes API にも影響します</string>
+    <string name="label_map_style_description">データプロバイダーの変更は、場所 &amp; ルート API にも影響します</string>
     <string name="label_enter_identity_pool_id">適切な ID プール ID を入力してください</string>
     <string name="label_enter_domain">入力したユーザードメインが間違っています</string>
     <string name="label_enter_user_pool_client_id">入力されたユーザープールのクライアントIDが間違っています</string>

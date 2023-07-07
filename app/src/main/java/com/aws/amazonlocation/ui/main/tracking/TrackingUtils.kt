@@ -7,6 +7,7 @@ import android.text.format.DateUtils
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -175,7 +176,14 @@ class TrackingUtils(
             btnEnableTracking.setOnClickListener {
                 mTrackingInterface?.getCheckPermission()
             }
-
+            if ((activity as MainActivity).isTablet) {
+                val languageCode = getLanguageCode()
+                val isRtl =
+                    languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+                if (isRtl) {
+                    ViewCompat.setLayoutDirection(clPersistentBottomSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                }
+            }
             tvDeleteTrackingData.setOnClickListener {
                 mActivity?.deleteTrackingDataDialog(object : DeleteTrackingDataInterface {
                     override fun deleteData(dialog: DialogInterface) {

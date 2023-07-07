@@ -13,6 +13,7 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -87,6 +88,7 @@ class MainActivity : BaseActivity() {
         }
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        checkRtl()
         makeTransparentStatusBar()
         reStartApp = mPreferenceManager.getBooleanValue(KEY_RE_START_APP, false)
         val mTab = mPreferenceManager.getValue(KEY_TAB_ENUM, "")
@@ -187,6 +189,44 @@ class MainActivity : BaseActivity() {
             delay(DELAY_LANGUAGE_3000)
             val languageCode = getLanguageCode()
             languageCode?.let { setLocale(it, applicationContext) }
+        }
+    }
+
+    private fun checkRtl() {
+        if (isTablet) {
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBinding.apply {
+                    val constraintSet = ConstraintSet()
+                    constraintSet.clone(clMain)
+
+                    constraintSet.clear(R.id.bottom_navigation_main, ConstraintSet.START)
+                    constraintSet.clear(R.id.img_amazon_logo, ConstraintSet.START)
+                    constraintSet.clear(R.id.iv_amazon_info, ConstraintSet.START)
+                    constraintSet.connect(
+                        R.id.bottom_navigation_main,
+                        ConstraintSet.END,
+                        ConstraintSet.PARENT_ID,
+                        ConstraintSet.END
+                    )
+                    constraintSet.connect(
+                        R.id.img_amazon_logo,
+                        ConstraintSet.END,
+                        R.id.bottom_navigation_main,
+                        ConstraintSet.START
+                    )
+                    constraintSet.connect(
+                        R.id.iv_amazon_info,
+                        ConstraintSet.END,
+                        R.id.img_amazon_logo,
+                        ConstraintSet.START
+                    )
+
+                    constraintSet.applyTo(clMain)
+                }
+            }
         }
     }
 
