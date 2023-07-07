@@ -1,5 +1,9 @@
 package com.aws.amazonlocation.utils
 
+import android.animation.ObjectAnimator
+import android.animation.TypeEvaluator
+import android.animation.ValueAnimator
+import android.animation.ValueAnimator.AnimatorUpdateListener
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -63,10 +67,12 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import org.json.JSONObject
 import java.util.*
+import org.json.JSONObject
+
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -99,6 +105,9 @@ class MapHelper(private val appContext: Context) {
     private var mMapLibreView: MapLibreView? = null
     private var mapStyleChangeListener: MapStyleChangeListener? = null
     private var mPreferenceManager: PreferenceManager? = null
+    private var geoJsonSource: GeoJsonSource? = null
+    private var animator: ValueAnimator? = null
+    private var currentPosition: LatLng? = null
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -818,6 +827,67 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
+    fun addMarkerSimulation(
+        trackerImageName: String,
+        activity: Activity,
+        markerType: MarkerEnum,
+        currentPlace: LatLng
+    ) {
+        currentPosition = currentPlace
+        mMapboxMap?.getStyle { style ->
+            BitmapUtils.getBitmapFromDrawable(
+                ContextCompat.getDrawable(
+                    activity,
+                    if (markerType.name == MarkerEnum.ORIGIN_ICON.name) R.drawable.ic_geofence_marker_1 else R.drawable.ic_tracker
+                )
+            )?.let {
+                style.addImage(trackerImageName, it)
+            }
+
+            geoJsonSource = GeoJsonSource(
+                "source-id",
+                Feature.fromGeometry(
+                    Point.fromLngLat(
+                        currentPlace.longitude,
+                        currentPlace.latitude
+                    )
+                )
+            )
+            style.addSource(geoJsonSource!!)
+            style.addLayer(
+                SymbolLayer("layer-id", "source-id")
+                    .withProperties(
+                        PropertyFactory.iconImage(trackerImageName),
+                        PropertyFactory.iconIgnorePlacement(true),
+                        PropertyFactory.iconAllowOverlap(true)
+                    )
+            )
+//            mSymbolManagerTracker?.textAllowOverlap = true
+//            mSymbolManagerTracker?.iconAllowOverlap = true
+//            mSymbolManagerTracker?.iconIgnorePlacement = false
+//            val symbolOptions = SymbolOptions()
+//                .withLatLng(currentPlace)
+//                .withIconImage(
+//                    trackerImageName
+//                )
+//                .withIconAnchor(if (markerType.name == MarkerEnum.GEOFENCE_ICON.name) Property.ICON_ANCHOR_CENTER else Property.ICON_ANCHOR_CENTER)
+//            mSymbolManagerTracker?.create(symbolOptions)
+        }
+    }
+
+    fun startAnimation(point: LatLng) {
+        if (animator != null && animator!!.isStarted) {
+            currentPosition = animator!!.animatedValue as LatLng
+            animator!!.cancel()
+        }
+
+        animator = ObjectAnimator
+            .ofObject(latLngEvaluator, currentPosition, point)
+            .setDuration(2000)
+        animator?.addUpdateListener(animatorUpdateListener)
+        animator?.start()
+        currentPosition = point
+    }
     fun getLiveLocation(): LatLng? {
         isGrabSelectedAndOutsideBound = false
         var mLatLng: LatLng? = null
@@ -1046,7 +1116,7 @@ class MapHelper(private val appContext: Context) {
                 convertLayoutToGeofenceInvisibleDragBitmap(activity).let { bitmap ->
                     style.addImage(
                         CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID,
-                        bitmap,
+                        bitmap
                     )
                 }
             }
@@ -1169,7 +1239,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     private fun convertLayoutToGeofenceInvisibleDragBitmap(
-        context: Activity,
+        context: Activity
     ): Bitmap {
         val viewGroup: ViewGroup? = null
         val view = context.layoutInflater.inflate(R.layout.layout_geofence_draggable_marker, viewGroup)
@@ -1262,6 +1332,32 @@ class MapHelper(private val appContext: Context) {
             }
         } catch (e: Exception) {
             MapboxConstants.MINIMUM_ZOOM.toDouble()
+        }
+    }
+
+    private val animatorUpdateListener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSource?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluator: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
         }
     }
 }

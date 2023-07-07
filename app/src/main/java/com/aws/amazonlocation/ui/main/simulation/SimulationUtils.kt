@@ -19,6 +19,7 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos
 import com.amazonaws.services.geo.AmazonLocationClient
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.*
+import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.response.TrackingHistoryData
 import com.aws.amazonlocation.databinding.BottomSheetTrackSimulationBinding
 import com.aws.amazonlocation.domain.*
@@ -43,9 +44,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -72,7 +73,6 @@ class SimulationUtils(
     private val notificationData = arrayListOf<NotificationData>()
     private val mCircleUnit: String = TurfConstants.UNIT_METERS
     private var mIsDefaultGeofence = false
-
     fun setMapBox(
         activity: Activity,
         mapboxMap: MapboxMap,
@@ -104,20 +104,7 @@ class SimulationUtils(
     private fun initData() {
         mFragmentActivity?.applicationContext?.let {
             val geometries = GeoJsonReader.readGeoJsonFile(it, "bus1_line.geojson")
-            val stopsGeometries = GeoJsonReader.readGeoJsonFile(it, "bus1_stops.geojson")
-            val mLatLngList = java.util.ArrayList<LatLng>()
-            stopsGeometries.forEachIndexed { index, geometry ->
-                if (geometry is Point) {
-                    setDefaultIconWithGeofence(index)
-                    val latLng = LatLng(geometry.latitude(), geometry.longitude())
-                    mLatLngList.add(latLng)
-                    drawGeofence(
-                        Point.fromLngLat(latLng.longitude, latLng.latitude),
-                        100,
-                        index.toString()
-                    )
-                }
-            }
+            val mLatLngList = ArrayList<LatLng>()
             mMapHelper?.adjustMapBounds(
                 mLatLngList,
                 mActivity?.resources?.getDimension(R.dimen.dp_130)?.toInt()!!
@@ -126,10 +113,21 @@ class SimulationUtils(
             }
             val coordinates = arrayListOf<Point>()
             (activity as MainActivity).lifecycleScope.launch {
-                geometries.forEachIndexed { _, geometry ->
+                mActivity?.let { activity1 ->
+                    mMapHelper?.addMarkerSimulation(
+                        "tracker1",
+                        activity1,
+                        MarkerEnum.TRACKER_ICON,
+                        LatLng(
+                            (geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                            (geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                        )
+                    )
+                }
+                geometries.forEachIndexed { indexMain, geometry ->
                     if (geometry is MultiLineString) {
-                        geometry.coordinates().forEachIndexed { _, points ->
-                            points.forEachIndexed { _, point ->
+                        geometry.coordinates().forEachIndexed { indexCoordinates, points ->
+                            points.forEachIndexed { indexPoint, point ->
                                 val latLng =
                                     Point.fromLngLat(
                                         point.longitude(),
@@ -137,8 +135,19 @@ class SimulationUtils(
                                     )
                                 coordinates.add(latLng)
                                 delay(DELAY_1000)
+                                mMapHelper?.startAnimation(
+                                    LatLng(
+                                        point.latitude(),
+                                        point.longitude()
+                                    )
+                                )
                                 if (coordinates.size > 2) {
-                                    mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1")
+                                    mMapHelper?.addTrackerLine(
+                                        coordinates,
+                                        true,
+                                        "layerId1",
+                                        "sourceId1"
+                                    )
                                 }
                             }
                         }
@@ -238,7 +247,7 @@ class SimulationUtils(
             )
 
             // Adjust camera bounds to include entire circle
-            val latLngList: MutableList<LatLng> = java.util.ArrayList(pointList.size)
+            val latLngList: MutableList<LatLng> = ArrayList(pointList.size)
             for (singlePoint in pointList) {
                 latLngList.add(LatLng(singlePoint.latitude(), singlePoint.longitude()))
             }
