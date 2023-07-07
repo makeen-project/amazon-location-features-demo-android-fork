@@ -98,7 +98,7 @@
     <string name="delete">Löschen</string>
     <string name="edit_geofence">Geofence bearbeiten</string>
     <string name="label_map_style">Kartenstil</string>
-    <string name="label_map_style_description">Der Wechsel des Datenanbieters wirkt sich auch auf die Places &amp; Routes API aus</string>
+    <string name="label_map_style_description">Der Wechsel des Datenanbieters wirkt sich auch auf die Setzt &amp; Routen API aus</string>
     <string name="label_enter_identity_pool_id">Bitte geben Sie die richtige Identitätspool-ID ein</string>
     <string name="label_enter_domain">Die eingegebene Benutzerdomäne ist falsch</string>
     <string name="label_enter_user_pool_client_id">Die eingegebene Benutzerpool-Client-ID ist falsch</string>

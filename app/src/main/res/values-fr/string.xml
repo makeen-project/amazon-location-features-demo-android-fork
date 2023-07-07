@@ -98,7 +98,7 @@
     <string name="delete">Supprimer</string>
     <string name="edit_geofence">Modifier la clôture géographique</string>
     <string name="label_map_style">Style de carte</string>
-    <string name="label_map_style_description">"Le changement de fournisseur de données affecte également l'API Places &amp; Routes"</string>
+    <string name="label_map_style_description">"Le changement de fournisseur de données affecte également l'API Lieux &amp; Itinéraires"</string>
     <string name="label_enter_identity_pool_id">"Veuillez saisir l'ID de groupe d'identités approprié"</string>
     <string name="label_enter_domain">Le domaine utilisateur saisi est incorrect</string>
     <string name="label_enter_user_pool_client_id">"L'ID client du groupe d'utilisateurs saisi est incorrect"</string>

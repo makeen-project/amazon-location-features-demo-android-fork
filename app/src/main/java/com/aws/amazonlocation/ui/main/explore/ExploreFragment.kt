@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -209,6 +210,25 @@ class ExploreFragment :
         return mBinding.root
     }
 
+    private fun checkRtl() {
+        if ((activity as MainActivity).isTablet) {
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBinding.apply {
+                    ViewCompat.setLayoutDirection(clMainExplorer, ViewCompat.LAYOUT_DIRECTION_LTR)
+                    ViewCompat.setLayoutDirection(bottomSheetSearch.clSearchSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetDirection.clPersistentBottomSheetDirection, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetDirectionSearch.clDirectionSearchSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetNavigation.clNavigationParent, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetMapStyle.clMapStyleBottomSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetAttribution.clMain, ViewCompat.LAYOUT_DIRECTION_RTL)
+                }
+            }
+        }
+    }
     fun showKeyBoard() {
         mBaseActivity?.mGeofenceUtils?.let {
             if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -267,6 +287,7 @@ class ExploreFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setMap(savedInstanceState)
+        checkRtl()
         mBottomSheetHelper.setSearchBottomSheet(
             activity,
             mBinding.bottomSheetSearch,

@@ -98,7 +98,7 @@
     <string name="delete">Eliminare</string>
     <string name="edit_geofence">Modifica georecinto</string>
     <string name="label_map_style">Stile mappa</string>
-    <string name="label_map_style_description">La modifica del fornitore di dati influisce anche sull\'API Places &amp; Routes</string>
+    <string name="label_map_style_description">La modifica del fornitore di dati influisce anche sull\'API Luoghi &amp; Itinerari</string>
     <string name="label_enter_identity_pool_id">Inserisci l\'ID del pool di identità corretto</string>
     <string name="label_enter_domain">Il dominio dell\'utente inserito è errato</string>
     <string name="label_enter_user_pool_client_id">L\'ID client del pool di utenti inserito è errato</string>

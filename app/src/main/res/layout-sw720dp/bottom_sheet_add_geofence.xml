@@ -73,7 +73,6 @@
             android:text="@string/add_geofence"
             android:gravity="start"
             android:textDirection="locale"
-            android:textAlignment="viewStart"
             app:layout_constraintBottom_toBottomOf="@id/iv_add_geofence_close"
             app:layout_constraintEnd_toStartOf="@id/iv_add_geofence_close"
             app:layout_constraintStart_toStartOf="parent"
@@ -120,7 +119,6 @@
                     android:textDirection="locale"
                     android:paddingHorizontal="@dimen/dp_16"
                     android:singleLine="true"
-                    android:textAlignment="viewStart"
                     android:textColorHint="@color/color_hint_text"
                     app:layout_constraintBottom_toBottomOf="@id/iv_search_sheet_add_geofence"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -228,7 +226,6 @@
                 android:maxLength="100"
                 android:paddingHorizontal="@dimen/dp_16"
                 android:singleLine="true"
-                android:textAlignment="viewStart"
                 android:textColorHint="@color/color_hint_text" />
 
         </com.google.android.material.card.MaterialCardView>

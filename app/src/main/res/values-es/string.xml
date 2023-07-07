@@ -98,7 +98,7 @@
     <string name="delete">Borrar</string>
     <string name="edit_geofence">Editar geovalla</string>
     <string name="label_map_style">Estilo de mapa</string>
-    <string name="label_map_style_description">El cambio de proveedor de datos también afecta a la API de Places &amp; Routes</string>
+    <string name="label_map_style_description">El cambio de proveedor de datos también afecta a la API de Lugares &amp; Rutas</string>
     <string name="label_enter_identity_pool_id">Ingrese la identificación del grupo de identidad adecuada</string>
     <string name="label_enter_domain">El dominio de usuario ingresado es incorrecto</string>
     <string name="label_enter_user_pool_client_id">El ID de cliente del grupo de usuarios ingresado es incorrecto</string>
