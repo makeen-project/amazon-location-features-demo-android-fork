@@ -59,6 +59,7 @@ import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
 import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
+import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.*
@@ -146,6 +147,7 @@ class ExploreFragment :
     private val mSignInViewModel: SignInViewModel by viewModels()
     private val mGeofenceViewModel: GeofenceViewModel by viewModels()
     private val mTrackingViewModel: TrackingViewModel by viewModels()
+    private val mSimulationViewModel: SimulationViewModel by viewModels()
     private var mIsAvoidTolls: Boolean = false
     private var mIsAvoidFerries: Boolean = false
     private var mIsRouteOptionsOpened = false
@@ -190,6 +192,8 @@ class ExploreFragment :
         val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
         mBinding.cardNavigationTimeDialog.layoutParams.width = widthTimeDialog
         mBinding.cardNavigationTimeDialog.requestLayout()
+        mBinding.cardSimulationPopup.layoutParams.width = widthTimeDialog
+        mBinding.cardSimulationPopup.requestLayout()
     }
 
     override fun onCreateView(
@@ -304,7 +308,7 @@ class ExploreFragment :
         mBaseActivity?.mSimulationUtils?.initSimulationView(
             activity,
             mBinding.bottomSheetTrackSimulation,
-            mTrackingInterface
+            mSimulationInterface
         )
         setUserProfile()
         if ((activity as MainActivity).isAppNotFirstOpened()) {
@@ -373,6 +377,18 @@ class ExploreFragment :
                 }.onSuccess {
                     lifecycleScope.launch(Dispatchers.Main) {
                         mBaseActivity?.mTrackingUtils?.manageGeofenceListUI(it)
+                    }
+                }.onError {
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            mSimulationViewModel.mGetGeofenceList.collect { handleResult ->
+                handleResult.onLoading {
+                }.onSuccess {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        mBaseActivity?.mSimulationUtils?.manageGeofenceListUI(it)
                     }
                 }.onError {
                 }
@@ -553,6 +569,26 @@ class ExploreFragment :
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
         }
     }
+
+    private val mSimulationInterface = object : SimulationInterface {
+        override fun getGeofenceList(collectionName: String) {
+            mSimulationViewModel.getGeofenceList(collectionName)
+        }
+        override fun evaluateGeofence(latLng: LatLng) {
+            latLng.let {
+                val positionData = arrayListOf<Double>()
+                positionData.add(it.longitude)
+                positionData.add(it.latitude)
+                mSimulationViewModel.evaluateGeofence(
+                    GeofenceCons.GEOFENCE_COLLECTION,
+                    positionData,
+                    getDeviceId(requireContext()),
+                    Date()
+                )
+            }
+        }
+    }
+
     private val mTrackingInterface = object : TrackingInterface {
 
         override fun updateBatch(latLng: LatLng) {

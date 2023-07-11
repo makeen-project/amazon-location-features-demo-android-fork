@@ -830,7 +830,6 @@ class MapHelper(private val appContext: Context) {
     fun addMarkerSimulation(
         trackerImageName: String,
         activity: Activity,
-        markerType: MarkerEnum,
         currentPlace: LatLng
     ) {
         currentPosition = currentPlace
@@ -838,7 +837,7 @@ class MapHelper(private val appContext: Context) {
             BitmapUtils.getBitmapFromDrawable(
                 ContextCompat.getDrawable(
                     activity,
-                    if (markerType.name == MarkerEnum.ORIGIN_ICON.name) R.drawable.ic_geofence_marker_1 else R.drawable.ic_tracker
+                    R.drawable.ic_simulation_my_location
                 )
             )?.let {
                 style.addImage(trackerImageName, it)
@@ -883,7 +882,7 @@ class MapHelper(private val appContext: Context) {
 
         animator = ObjectAnimator
             .ofObject(latLngEvaluator, currentPosition, point)
-            .setDuration(2000)
+            .setDuration(DELAY_1000)
         animator?.addUpdateListener(animatorUpdateListener)
         animator?.start()
         currentPosition = point

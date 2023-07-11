@@ -3,6 +3,7 @@ package com.aws.amazonlocation.ui.main.simulation
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,22 +18,20 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttClientStatusCallback
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos
 import com.amazonaws.services.geo.AmazonLocationClient
+import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.*
-import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.response.TrackingHistoryData
 import com.aws.amazonlocation.databinding.BottomSheetTrackSimulationBinding
 import com.aws.amazonlocation.domain.*
-import com.aws.amazonlocation.domain.`interface`.TrackingInterface
+import com.aws.amazonlocation.domain.`interface`.SimulationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.gson.Gson
 import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.MultiLineString
 import com.mapbox.geojson.Point
@@ -44,9 +43,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import java.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -57,13 +56,14 @@ class SimulationUtils(
     val activity: Activity?,
     val mAWSLocationHelper: AWSLocationHelper
 ) {
+    private var isExitClicked: Boolean = false
     private var mqttManager: AWSIotMqttManager? = null
     private var adapter: SimulationTrackingListAdapter? = null
     private var adapterSimulation: SimulationNotificationAdapter? = null
     private var mBottomSheetTrackingBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var mBindingTracking: BottomSheetTrackSimulationBinding? = null
     private var mFragmentActivity: FragmentActivity? = null
-    private var mTrackingInterface: TrackingInterface? = null
+    private var simulationInterface: SimulationInterface? = null
     private var mMapHelper: MapHelper? = null
     private var mMapboxMap: MapboxMap? = null
     private var mClient: AmazonLocationClient? = null
@@ -73,6 +73,8 @@ class SimulationUtils(
     private val notificationData = arrayListOf<NotificationData>()
     private val mCircleUnit: String = TurfConstants.UNIT_METERS
     private var mIsDefaultGeofence = false
+    private var mGeofenceList = ArrayList<ListGeofenceResponseEntry>()
+
     fun setMapBox(
         activity: Activity,
         mapboxMap: MapboxMap,
@@ -98,50 +100,49 @@ class SimulationUtils(
                 mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
-        initData()
+        simulationInterface?.getGeofenceList(GeofenceCons.GEOFENCE_COLLECTION)
     }
 
     private fun initData() {
         mFragmentActivity?.applicationContext?.let {
             val geometries = GeoJsonReader.readGeoJsonFile(it, "bus1_line.geojson")
             val mLatLngList = ArrayList<LatLng>()
-            mMapHelper?.adjustMapBounds(
-                mLatLngList,
-                mActivity?.resources?.getDimension(R.dimen.dp_130)?.toInt()!!
-            )
-            runOnUiThread {
-            }
             val coordinates = arrayListOf<Point>()
             (activity as MainActivity).lifecycleScope.launch {
                 mActivity?.let { activity1 ->
                     mMapHelper?.addMarkerSimulation(
                         "tracker1",
                         activity1,
-                        MarkerEnum.TRACKER_ICON,
                         LatLng(
                             (geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
                             (geometries[0] as MultiLineString).coordinates()[0][0].longitude()
                         )
                     )
                 }
-                geometries.forEachIndexed { indexMain, geometry ->
+                geometries.forEachIndexed { _, geometry ->
                     if (geometry is MultiLineString) {
-                        geometry.coordinates().forEachIndexed { indexCoordinates, points ->
-                            points.forEachIndexed { indexPoint, point ->
-                                val latLng =
+                        geometry.coordinates().forEachIndexed { _, points ->
+                            points.forEachIndexed { _, point ->
+                                if (isExitClicked) {
+                                    return@launch
+                                }
+                                val latLng = LatLng(
+                                    point.latitude(),
+                                    point.longitude()
+                                )
+                                simulationInterface?.evaluateGeofence(latLng)
+                                mMapHelper?.startAnimation(
+                                    latLng
+                                )
+                                delay(DELAY_1000)
+                                val latLngPoint =
                                     Point.fromLngLat(
                                         point.longitude(),
                                         point.latitude()
                                     )
-                                coordinates.add(latLng)
-                                delay(DELAY_1000)
-                                mMapHelper?.startAnimation(
-                                    LatLng(
-                                        point.latitude(),
-                                        point.longitude()
-                                    )
-                                )
-                                if (coordinates.size > 2) {
+                                coordinates.add(latLngPoint)
+                                mLatLngList.add(latLng)
+                                if (coordinates.size > 1) {
                                     mMapHelper?.addTrackerLine(
                                         coordinates,
                                         true,
@@ -149,6 +150,10 @@ class SimulationUtils(
                                         "sourceId1"
                                     )
                                 }
+                                mMapHelper?.adjustMapBounds(
+                                    mLatLngList,
+                                    mActivity?.resources?.getDimension(R.dimen.dp_110)?.toInt()!!
+                                )
                             }
                         }
                     }
@@ -160,9 +165,9 @@ class SimulationUtils(
     fun initSimulationView(
         fragmentActivity: FragmentActivity?,
         bottomSheetTrackSimulationBinding: BottomSheetTrackSimulationBinding,
-        mGeofenceInterface: TrackingInterface
+        simulationInterface1: SimulationInterface
     ) {
-        this.mTrackingInterface = mGeofenceInterface
+        this.simulationInterface = simulationInterface1
         this.mFragmentActivity = fragmentActivity
         this.mBindingTracking = bottomSheetTrackSimulationBinding
         initSimulationBottomSheet()
@@ -351,20 +356,6 @@ class SimulationUtils(
     private fun initClick() {
         mBindingTracking?.apply {
             cardStartTracking.setOnClickListener {
-                val mIdentityPoolId = mPreferenceManager?.getValue(
-                    KEY_POOL_ID,
-                    ""
-                )
-                val regionData = mPreferenceManager?.getValue(
-                    KEY_USER_REGION,
-                    ""
-                )
-                if (!validateIdentityPoolId(mIdentityPoolId, regionData)) {
-                    mActivity?.getString(R.string.reconnect_with_aws_account)
-                        ?.let { it1 -> (activity as MainActivity).showError(it1) }
-                    (activity as MainActivity).restartAppWithClearData()
-                    return@setOnClickListener
-                }
                 if (mIsLocationUpdateEnable) {
                     mActivity?.getColor(R.color.color_primary_green)
                         ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
@@ -379,12 +370,13 @@ class SimulationUtils(
                             )
                         )
                     }
-                    mTrackingInterface?.removeUpdateBatch()
                     stopMqttManager()
                 } else {
                     viewLoader.show()
                     tvStopTracking.hide()
                     cardStartTracking.isEnabled = false
+                    mIsLocationUpdateEnable = true
+                    Log.e("TAG", "initClick: startMqttManager")
                     startMqttManager()
                 }
             }
@@ -456,14 +448,6 @@ class SimulationUtils(
                         }
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost -> {
                             throwable?.printStackTrace()
-                            if (mIsLocationUpdateEnable) {
-                                startTracking()
-                            }
-                            mBindingTracking?.apply {
-                                viewLoader.hide()
-                                tvStopTracking.show()
-                                cardStartTracking.isEnabled = true
-                            }
                         }
                         else -> {
                             mBindingTracking?.apply {
@@ -496,7 +480,7 @@ class SimulationUtils(
                     )
                 )
             }
-
+            initData()
             viewLoader.hide()
             tvStopTracking.show()
             cardStartTracking.isEnabled = true
@@ -552,20 +536,31 @@ class SimulationUtils(
         mBindingTracking?.rvRouteNotifications?.adapter = adapterSimulation
         mBindingTracking?.rvRouteNotifications?.layoutManager = notificationLayoutManager
 
-        val type = object : TypeToken<ArrayList<TrackingHistoryData>>() {}.type
-        trackingHistoryData = Gson().fromJson(SIMULATION_DUMMY_DATA, type)
-        val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
-        adapter = SimulationTrackingListAdapter(trackingHistoryData)
-        mBindingTracking?.rvTracking?.adapter = adapter
-        mBindingTracking?.rvTracking?.layoutManager = layoutManager
+//        val type = object : TypeToken<ArrayList<TrackingHistoryData>>() {}.type
+//        trackingHistoryData = Gson().fromJson(SIMULATION_DUMMY_DATA, type)
+//        val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
+//        adapter = SimulationTrackingListAdapter(trackingHistoryData)
+//        mBindingTracking?.rvTracking?.adapter = adapter
+//        mBindingTracking?.rvTracking?.layoutManager = layoutManager
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun hideTrackingBottomSheet() {
+    fun hideSimulationBottomSheet() {
         mBottomSheetTrackingBehavior.let {
+            isExitClicked = true
+            (activity as MainActivity).lifecycleScope.launch {
+                delay(DELAY_1000)
+                mMapHelper?.clearMarker()
+                mMapHelper?.removeLine()
+                mMapHelper?.removeSource("sourceId1")
+                mMapHelper?.removeSource("source-id")
+                mMapHelper?.removeLayer("layerId1")
+                mMapHelper?.removeLayer("layer-id")
+            }
             it?.isHideable = true
             it?.state = BottomSheetBehavior.STATE_HIDDEN
             it?.isFitToContents = false
+            stopMqttManager()
 //            mMapHelper?.clearMarker()
 //            mMapHelper?.removeLine()
 //            trackingHistoryData.clear()
@@ -582,6 +577,35 @@ class SimulationUtils(
 //                mIsLocationUpdateEnable = !mIsLocationUpdateEnable
 //            }
 //            stopMqttManager()
+        }
+    }
+
+    fun manageGeofenceListUI(list: ArrayList<ListGeofenceResponseEntry>) {
+        mGeofenceList.clear()
+        mGeofenceList.addAll(list)
+        if (mGeofenceList.isNotEmpty()) {
+            val mLatLngList = ArrayList<LatLng>()
+            mGeofenceList.forEachIndexed { index, data ->
+                val latLng = LatLng(data.geometry.circle.center[1], data.geometry.circle.center[0])
+                if (checkGeofenceInsideGrab(
+                        latLng,
+                        mPreferenceManager,
+                        mActivity?.applicationContext
+                    )
+                ) {
+                    setDefaultIconWithGeofence(index)
+                    mLatLngList.add(latLng)
+                    drawGeofence(
+                        Point.fromLngLat(latLng.longitude, latLng.latitude),
+                        data.geometry.circle.radius.toInt(),
+                        index.toString()
+                    )
+                }
+            }
+            mMapHelper?.adjustMapBounds(
+                mLatLngList,
+                mActivity?.resources?.getDimension(R.dimen.dp_130)?.toInt()!!
+            )
         }
     }
 }

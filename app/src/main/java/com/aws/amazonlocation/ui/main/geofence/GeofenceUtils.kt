@@ -27,6 +27,8 @@ import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
+import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
+import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Durations.DEFAULT_RADIUS
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
@@ -348,7 +350,7 @@ class GeofenceUtils {
                 mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
             }
             btnAddGeofence.setOnClickListener {
-                if (tvEnableGeofence?.text.toString() == mActivity?.getString(R.string.add_geofence)) {
+                if (tvEnableGeofence.text.toString() == mActivity?.getString(R.string.add_geofence)) {
                     mGeofenceInterface?.hideShowBottomNavigationBar(
                         true,
                         GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
@@ -356,6 +358,12 @@ class GeofenceUtils {
                 } else {
                     (mActivity as MainActivity).showGeofenceCloudFormation()
                 }
+            }
+            btnTryGeofence.setOnClickListener {
+                openSimulationWelcome()
+            }
+            cardTrackerGeofenceSimulation.setOnClickListener {
+                openSimulationWelcome()
             }
 
             clAddGeofence.setOnClickListener {
@@ -406,6 +414,13 @@ class GeofenceUtils {
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
                     }
                 })
+        }
+    }
+
+    private fun openSimulationWelcome() {
+        val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+        (mActivity as MainActivity).supportFragmentManager.let {
+            simulationBottomSheetFragment.show(it, WelcomeBottomSheetFragment::javaClass.name)
         }
     }
 

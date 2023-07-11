@@ -62,6 +62,14 @@ class GeofenceUseCase @Inject constructor(private val mGeofenceRepository: Geofe
         batchLocationUpdateInterface: BatchLocationUpdateInterface
     ) = mGeofenceRepository.batchUpdateDevicePosition(trackerName, position, deviceId, date, batchLocationUpdateInterface)
 
+    suspend fun evaluateGeofence(
+        trackerName: String,
+        position: List<Double>,
+        deviceId: String,
+        date: Date,
+        batchLocationUpdateInterface: BatchLocationUpdateInterface
+    ) = mGeofenceRepository.evaluateGeofence(trackerName, position, deviceId, date, batchLocationUpdateInterface)
+
     suspend fun getLocationHistory(
         trackerName: String,
         deviceId: String,

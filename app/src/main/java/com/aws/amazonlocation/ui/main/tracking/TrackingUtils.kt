@@ -180,10 +180,10 @@ class TrackingUtils(
                 (activity as MainActivity).openCloudFormation()
             }
             btnTryTracker.setOnClickListener {
-                val simulationBottomSheetFragment = SimulationBottomSheetFragment()
-                (activity as MainActivity).supportFragmentManager.let {
-                    simulationBottomSheetFragment.show(it, WelcomeBottomSheetFragment::javaClass.name)
-                }
+                openSimulationWelcome()
+            }
+            cardTrackerGeofenceSimulation.setOnClickListener {
+                openSimulationWelcome()
             }
 
             tvDeleteTrackingData.setOnClickListener {
@@ -265,6 +265,16 @@ class TrackingUtils(
                     }
                 })
             initAdapter()
+        }
+    }
+
+    private fun openSimulationWelcome() {
+        val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+        (activity as MainActivity).supportFragmentManager.let {
+            simulationBottomSheetFragment.show(
+                it,
+                WelcomeBottomSheetFragment::javaClass.name
+            )
         }
     }
 

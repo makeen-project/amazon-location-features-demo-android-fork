@@ -86,7 +86,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_simulation_popup"
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/navigation_top_dialog_size"
             android:layout_height="@dimen/dp_40"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:visibility="gone"
@@ -178,7 +178,7 @@
             app:cardBackgroundColor="@color/white"
             app:cardPreventCornerOverlap="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_simulation_popup"
+            app:layout_constraintTop_toBottomOf="@id/view_top"
             app:shapeAppearanceOverlay="@style/CardViewTopRadius">
 
             <androidx.appcompat.widget.AppCompatImageView

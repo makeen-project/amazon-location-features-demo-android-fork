@@ -468,14 +468,20 @@ class MainActivity : BaseActivity() {
 
     fun hideSimulationSheet() {
         showBottomBar()
-        mSimulationUtils?.hideTrackingBottomSheet()
+        mSimulationUtils?.hideSimulationBottomSheet()
         mBottomSheetHelper.hideSearchBottomSheet(false)
         mBinding.bottomNavigationMain.selectedItemId =
             R.id.menu_explore
+        showNavigationIcon()
+        showDirectionAndCurrentLocationIcon()
     }
 
     fun showSimulationSheet() {
-        mBinding.bottomNavigationMain.hide()
+        if (isTablet) {
+            mBinding.bottomNavigationMain.invisible()
+        } else {
+            mBinding.bottomNavigationMain.hide()
+        }
         if (!isTablet) {
             mBottomSheetHelper.hideMapStyleSheet()
         }
@@ -503,7 +509,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    fun showSimulationTop() {
+    private fun showSimulationTop() {
         if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {

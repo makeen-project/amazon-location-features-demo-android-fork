@@ -95,6 +95,14 @@ interface RemoteDataSource {
         mTrackingInterface: BatchLocationUpdateInterface
     )
 
+    suspend fun evaluateGeofence(
+        trackerName: String,
+        position: List<Double>,
+        deviceId: String,
+        date: Date,
+        mTrackingInterface: BatchLocationUpdateInterface
+    )
+
     suspend fun getLocationHistory(
         trackerName: String,
         deviceId: String,
