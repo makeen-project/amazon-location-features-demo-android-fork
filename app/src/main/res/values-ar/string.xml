@@ -202,4 +202,6 @@
     <string name="label_ft">قدم</string>
     <string name="label_mi">أنا</string>
     <string name="label_language">لغة</string>
+    <string name="label_tracker_entered">دخل المقتفي</string>
+ <string name="label_tracker_exited">خرج المقتفي</string>
 </resources>

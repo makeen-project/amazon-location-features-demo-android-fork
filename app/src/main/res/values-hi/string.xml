@@ -202,4 +202,6 @@
     <string name="label_ft">फुट</string>
     <string name="label_mi">मुझे</string>
     <string name="label_language">भाषा</string>
+    <string name="label_tracker_entered">ट्रैकर प्रवेश किया</string>
+ <string name="label_tracker_exited">ट्रैकर बाहर निकल गया</string>
 </resources>

@@ -202,4 +202,6 @@
     <string name="label_ft">フィート</string>
     <string name="label_mi">自分</string>
     <string name="label_language">言語</string>
+    <string name="label_tracker_entered">トラッカーが入力されました</string>
+ <string name="label_tracker_exited">トラッカーが終了しました</string>
 </resources>

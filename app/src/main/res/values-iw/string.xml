@@ -202,4 +202,6 @@
     <string name="label_ft">ft</string>
     <string name="label_mi">לִי</string>
     <string name="label_language">שפה</string>
+    <string name="label_tracker_exited">הגשש יצא</string>
+ <string name="label_tracker_entered">הגשש נכנס</string>
 </resources>

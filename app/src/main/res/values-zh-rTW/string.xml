@@ -202,4 +202,6 @@
     <string name="label_ft">英尺</string>
     <string name="label_mi">我</string>
     <string name="label_language">語言</string>
+    <string name="label_tracker_entered">追踪器已輸入</string>
+ <string name="label_tracker_exited">追踪器退出</string>
 </resources>

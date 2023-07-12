@@ -202,4 +202,6 @@
     <string name="label_ft">ft</string>
     <string name="label_mi">Mich</string>
     <string name="label_language">Sprache</string>
+    <string name="label_tracker_entered">Tracker eingegeben</string>
+ <string name="label_tracker_exited">Tracker wurde beendet</string>
 </resources>

@@ -202,4 +202,6 @@
     <string name="label_ft">피트</string>
     <string name="label_mi">나</string>
     <string name="label_language">언어</string>
+    <string name="label_tracker_exited">트래커 종료됨</string>
+ <string name="label_tracker_entered">트래커 진입</string>
 </resources>

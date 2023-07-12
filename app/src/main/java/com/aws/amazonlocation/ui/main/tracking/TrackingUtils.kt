@@ -377,9 +377,9 @@ class TrackingUtils(
                     val type = jsonObject.get("trackerEventType").asString
                     val geofenceName = jsonObject.get("geofenceId").asString
                     val subTitle = if (type.equals("ENTER", true)) {
-                        "Tracker entered $geofenceName"
+                        "${mFragmentActivity?.getString(R.string.label_tracker_entered)} $geofenceName"
                     } else {
-                        "Tracker exited $geofenceName"
+                        "${mFragmentActivity?.getString(R.string.label_tracker_exited)} $geofenceName"
                     }
                     runOnUiThread {
                         activity?.messageDialog(
