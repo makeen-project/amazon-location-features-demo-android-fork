@@ -202,4 +202,6 @@
     <string name="label_ft">pi</string>
     <string name="label_mi">moi</string>
     <string name="label_language">Langue</string>
+    <string name="label_tracker_exited">Tracker quitté</string>
+ <string name="label_tracker_entered">Traqueur saisi</string>
 </resources>

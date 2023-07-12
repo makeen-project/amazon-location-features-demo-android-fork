@@ -202,4 +202,6 @@
     <string name="label_ft">pés</string>
     <string name="label_mi">meu</string>
     <string name="label_language">Linguagem</string>
+    <string name="label_tracker_entered">Rastreador inserido</string>
+ <string name="label_tracker_exited">Rastreador encerrado</string>
 </resources>

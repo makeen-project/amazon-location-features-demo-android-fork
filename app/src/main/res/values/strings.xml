@@ -269,6 +269,8 @@
     <string name="label_exited">Exited</string>
     <string name="label_geofence">geofence</string>
     <string name="label_language">Language</string>
+    <string name="label_tracker_entered">Tracker entered</string>
+    <string name="label_tracker_exited">Tracker exited</string>
     <string name="label_deutsch" translatable="false">Deutsch</string>
     <string name="label_espa_ol" translatable="false">Español</string>
     <string name="label_english" translatable="false">English</string>

@@ -54,15 +54,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tracking_your_activity"
             style="@style/LogoutMessageStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
-            android:gravity="center"
+            android:gravity="start"
+            android:textDirection="locale"
             android:text="@string/label_not_tracking_your_activity"
             android:textColor="@color/color_hint_text"
-            android:textDirection="locale"
             android:textSize="@dimen/sp_13"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/card_start_tracking"
             app:layout_constraintTop_toBottomOf="@+id/tv_tracking_history" />
 
         <com.google.android.material.card.MaterialCardView
