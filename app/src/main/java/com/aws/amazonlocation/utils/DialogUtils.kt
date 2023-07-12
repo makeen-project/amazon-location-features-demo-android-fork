@@ -3,6 +3,7 @@ package com.aws.amazonlocation.utils
 import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.widget.Switch
 import androidx.appcompat.widget.AppCompatButton
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.R
@@ -174,13 +175,20 @@ fun Context.userSignOutDialog() {
 fun Context.restartAppMapStyleDialog(
     restartInterface: MapStyleRestartInterface
 ) {
+    val layoutInflater = LayoutInflater.from(applicationContext)
+    val customView = layoutInflater.inflate(R.layout.dialog_custom_layout, null)
+
+    val switchToggle: Switch = customView.findViewById(R.id.switchToggle)
+
     val mDialog = MaterialAlertDialogBuilder(this, R.style.MyGrabDialogTheme)
+
     mDialog.setTitle(resources.getString(R.string.label_restart_app_title))
-    mDialog.setMessage(resources.getString(R.string.label_restart_app_description))
+    mDialog.setMessage(R.string.label_restart_app_description)
+    mDialog.setView(customView)
     mDialog.setPositiveButton(
         this.resources.getString(R.string.enable_grab)
     ) { dialog, _ ->
-        restartInterface.onOkClick(dialog)
+        restartInterface.onOkClick(dialog, switchToggle.isChecked)
         dialog.dismiss()
     }
     mDialog.setNeutralButton(
@@ -191,6 +199,7 @@ fun Context.restartAppMapStyleDialog(
     mDialog.setNegativeButton(
         this.resources.getString(R.string.learn_more)
     ) { dialog, _ ->
+        //dialog.dismiss()
         restartInterface.onLearnMoreClick(dialog)
     }
     mDialog.show()
@@ -224,6 +233,6 @@ interface MessageInterface {
 }
 
 interface MapStyleRestartInterface {
-    fun onOkClick(dialog: DialogInterface)
+    fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean)
     fun onLearnMoreClick(dialog: DialogInterface)
 }

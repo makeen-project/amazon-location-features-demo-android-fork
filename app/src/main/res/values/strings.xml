@@ -219,6 +219,7 @@
     <string name="label_restart_app_title">Enable Grab</string>
     <string name="label_restart_app_description">Grab provides Maps, Routes and Place search in Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, and Cambodia.\n\nWhile car and motorcycle routes are available across the above countries, the bicycle and walking routes are supported in only key cities such as Singapore, Jakarta, Manila, Klang Valley, Bangkok, Ho Chi Minh City, and Hanoi. </string>
     <string name="enable_grab">Enable Grab</string>
+    <string name="dont_ask_again">Don\'t ask again</string>
     <string name="your_location_not_supported_by_grab">Your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia.</string>
     <string name="label_current_location_disabled">Current location disabled</string>
     <string name="label_grab_limitation">Distance can\'t be calculated, since your current location has been disabled due to grab limitation</string>

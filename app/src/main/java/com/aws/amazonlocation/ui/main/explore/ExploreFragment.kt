@@ -4452,9 +4452,11 @@ class ExploreFragment :
             position != 2
         }
         if (isRestartNeeded) {
-            if (position == 2) {
+            val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
+            if (position == 2 && shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-                    override fun onOkClick(dialog: DialogInterface) {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
                         changeMapStyle(isMapClick, position, innerPosition)
                         lifecycleScope.launch {
                             if (!isRunningTest) {
