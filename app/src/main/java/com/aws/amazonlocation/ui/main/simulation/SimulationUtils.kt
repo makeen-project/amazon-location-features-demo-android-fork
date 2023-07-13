@@ -3,7 +3,6 @@ package com.aws.amazonlocation.ui.main.simulation
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -43,9 +42,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import java.util.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -56,7 +55,9 @@ class SimulationUtils(
     val activity: Activity?,
     val mAWSLocationHelper: AWSLocationHelper
 ) {
-    private var isExitClicked: Boolean = false
+    private var timer: Timer? = null
+    private var isBus1TrackerFinish: Boolean = false
+    private var isBus2TrackerFinish: Boolean = false
     private var mqttManager: AWSIotMqttManager? = null
     private var adapter: SimulationTrackingListAdapter? = null
     private var adapterSimulation: SimulationNotificationAdapter? = null
@@ -74,6 +75,7 @@ class SimulationUtils(
     private val mCircleUnit: String = TurfConstants.UNIT_METERS
     private var mIsDefaultGeofence = false
     private var mGeofenceList = ArrayList<ListGeofenceResponseEntry>()
+    private var simulationUpdate = HashMap<Int, Int>()
 
     fun setMapBox(
         activity: Activity,
@@ -105,60 +107,139 @@ class SimulationUtils(
 
     private fun initData() {
         mFragmentActivity?.applicationContext?.let {
-            val geometries = GeoJsonReader.readGeoJsonFile(it, "bus1_line.geojson")
-            val mLatLngList = ArrayList<LatLng>()
-            val coordinates = arrayListOf<Point>()
-            (activity as MainActivity).lifecycleScope.launch {
-                mActivity?.let { activity1 ->
-                    mMapHelper?.addMarkerSimulation(
-                        "tracker1",
-                        activity1,
-                        LatLng(
-                            (geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
-                            (geometries[0] as MultiLineString).coordinates()[0][0].longitude()
-                        )
-                    )
-                }
-                geometries.forEachIndexed { _, geometry ->
-                    if (geometry is MultiLineString) {
-                        geometry.coordinates().forEachIndexed { _, points ->
-                            points.forEachIndexed { _, point ->
-                                if (isExitClicked) {
-                                    return@launch
+            val bus1Geometries = GeoJsonReader.readGeoJsonFile(it, "bus1_line.geojson")
+            val bus2Geometries = GeoJsonReader.readGeoJsonFile(it, "bus2_line.geojson")
+            val mInitialLatLngList = ArrayList<LatLng>()
+            val bus1Coordinates = arrayListOf<Point>()
+            val bus2Coordinates = arrayListOf<Point>()
+            mInitialLatLngList.add(
+                LatLng(
+                    (bus1Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                    (bus1Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                )
+            )
+            mInitialLatLngList.add(
+                LatLng(
+                    (bus2Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                    (bus2Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                )
+            )
+            mActivity?.let { activity1 ->
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 0,
+                    activity1,
+                    mInitialLatLngList[0],
+                    0
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 1,
+                    activity1,
+                    mInitialLatLngList[1],
+                    1
+                )
+            }
+            mMapHelper?.adjustMapBounds(
+                mInitialLatLngList,
+                mActivity?.resources?.getDimension(R.dimen.dp_110)
+                    ?.toInt()!!
+            )
+            timer = Timer()
+            val task = object : TimerTask() {
+                override fun run() {
+                    if (!isBus1TrackerFinish) {
+                        bus1Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[0]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        0
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus1Coordinates.add(latLngPoint)
+                                                    if (bus1Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus1Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 0,
+                                                            "sourceId" + "tracker" + 0
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[0]?.plus(1) ?: 0
+                                                simulationUpdate[0] = updatedValue
+                                            }
+                                        } else {
+                                            isBus1TrackerFinish = true
+                                            simulationUpdate[0] = 0
+                                        }
+                                    }
                                 }
-                                val latLng = LatLng(
-                                    point.latitude(),
-                                    point.longitude()
-                                )
-                                simulationInterface?.evaluateGeofence(latLng)
-                                mMapHelper?.startAnimation(
-                                    latLng
-                                )
-                                delay(DELAY_1000)
-                                val latLngPoint =
-                                    Point.fromLngLat(
-                                        point.longitude(),
-                                        point.latitude()
-                                    )
-                                coordinates.add(latLngPoint)
-                                mLatLngList.add(latLng)
-                                if (coordinates.size > 1) {
-                                    mMapHelper?.addTrackerLine(
-                                        coordinates,
-                                        true,
-                                        "layerId1",
-                                        "sourceId1"
-                                    )
+                            }
+                        }
+                    }
+                    if (!isBus2TrackerFinish) {
+                        bus2Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[1]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        1
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus2Coordinates.add(latLngPoint)
+                                                    if (bus2Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus2Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 1,
+                                                            "sourceId" + "tracker" + 1
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[1]?.plus(1) ?: 0
+                                                simulationUpdate[1] = updatedValue
+                                            }
+                                        } else {
+                                            isBus2TrackerFinish = true
+                                            simulationUpdate[1] = 0
+                                        }
+                                    }
                                 }
-                                mMapHelper?.adjustMapBounds(
-                                    mLatLngList,
-                                    mActivity?.resources?.getDimension(R.dimen.dp_110)?.toInt()!!
-                                )
                             }
                         }
                     }
                 }
             }
+
+            timer?.scheduleAtFixedRate(task, 0, DELAY_1000)
         }
     }
 
@@ -186,6 +267,18 @@ class SimulationUtils(
             notificationData.add(NotificationData("Bus 08 Victoria", false))
             notificationData.add(NotificationData("Bus 09 Knight", false))
             notificationData.add(NotificationData("Bus 10 UBC", false))
+
+            simulationUpdate.clear()
+            simulationUpdate[0] = 0
+            simulationUpdate[1] = 0
+            simulationUpdate[2] = 0
+            simulationUpdate[3] = 0
+            simulationUpdate[4] = 0
+            simulationUpdate[5] = 0
+            simulationUpdate[6] = 0
+            simulationUpdate[7] = 0
+            simulationUpdate[8] = 0
+            simulationUpdate[9] = 0
 
             mBottomSheetTrackingBehavior = BottomSheetBehavior.from(root)
             mBottomSheetTrackingBehavior?.isHideable = true
@@ -376,7 +469,6 @@ class SimulationUtils(
                     tvStopTracking.hide()
                     cardStartTracking.isEnabled = false
                     mIsLocationUpdateEnable = true
-                    Log.e("TAG", "initClick: startMqttManager")
                     startMqttManager()
                 }
             }
@@ -547,36 +639,27 @@ class SimulationUtils(
     @SuppressLint("NotifyDataSetChanged")
     fun hideSimulationBottomSheet() {
         mBottomSheetTrackingBehavior.let {
-            isExitClicked = true
+            timer?.cancel()
             (activity as MainActivity).lifecycleScope.launch {
                 delay(DELAY_1000)
+                notificationData.forEachIndexed { index, notificationData ->
+                    mMapHelper?.removeSource("sourceIdtracker$index")
+                    mMapHelper?.removeSource("source-idtracker$index")
+                    mMapHelper?.removeLayer("layerIdtracker$index")
+                    mMapHelper?.removeLayer("layer-idtracker$index")
+                }
                 mMapHelper?.clearMarker()
                 mMapHelper?.removeLine()
-                mMapHelper?.removeSource("sourceId1")
-                mMapHelper?.removeSource("source-id")
-                mMapHelper?.removeLayer("layerId1")
-                mMapHelper?.removeLayer("layer-id")
+            }
+            mGeofenceList.forEachIndexed { index, _ ->
+                mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index")
             }
             it?.isHideable = true
             it?.state = BottomSheetBehavior.STATE_HIDDEN
             it?.isFitToContents = false
             stopMqttManager()
-//            mMapHelper?.clearMarker()
-//            mMapHelper?.removeLine()
-//            trackingHistoryData.clear()
-//            if (adapter != null) {
-//                adapter?.notifyDataSetChanged()
-//            }
-//            if (mIsLocationUpdateEnable) {
-//                mBindingTracking?.apply {
-//                    mActivity?.getColor(R.color.color_primary_green)
-//                        ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
-//                    tvStopTracking.text = mActivity?.getText(R.string.label_start_tracking)
-//                }
-//                mTrackingInterface?.removeUpdateBatch()
-//                mIsLocationUpdateEnable = !mIsLocationUpdateEnable
-//            }
-//            stopMqttManager()
         }
     }
 

@@ -70,9 +70,8 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
-import java.util.*
 import org.json.JSONObject
-
+import java.util.*
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -105,9 +104,12 @@ class MapHelper(private val appContext: Context) {
     private var mMapLibreView: MapLibreView? = null
     private var mapStyleChangeListener: MapStyleChangeListener? = null
     private var mPreferenceManager: PreferenceManager? = null
-    private var geoJsonSource: GeoJsonSource? = null
-    private var animator: ValueAnimator? = null
-    private var currentPosition: LatLng? = null
+    private var geoJsonSourceBus1: GeoJsonSource? = null
+    private var geoJsonSourceBus2: GeoJsonSource? = null
+    private var animatorBus1: ValueAnimator? = null
+    private var animatorBus2: ValueAnimator? = null
+    private var currentPositionBus1: LatLng? = null
+    private var currentPositionBus2: LatLng? = null
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -830,9 +832,9 @@ class MapHelper(private val appContext: Context) {
     fun addMarkerSimulation(
         trackerImageName: String,
         activity: Activity,
-        currentPlace: LatLng
+        currentPlace: LatLng,
+        index: Int
     ) {
-        currentPosition = currentPlace
         mMapboxMap?.getStyle { style ->
             BitmapUtils.getBitmapFromDrawable(
                 ContextCompat.getDrawable(
@@ -843,49 +845,86 @@ class MapHelper(private val appContext: Context) {
                 style.addImage(trackerImageName, it)
             }
 
-            geoJsonSource = GeoJsonSource(
-                "source-id",
-                Feature.fromGeometry(
-                    Point.fromLngLat(
-                        currentPlace.longitude,
-                        currentPlace.latitude
+            when (index) {
+                0 -> {
+                    currentPositionBus1 = currentPlace
+                    geoJsonSourceBus1 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
                     )
-                )
-            )
-            style.addSource(geoJsonSource!!)
+                    geoJsonSourceBus1?.let {
+                        style.addSource(it)
+                    }
+                }
+                1 -> {
+                    currentPositionBus2 = currentPlace
+                    geoJsonSourceBus2 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus2?.let {
+                        style.addSource(it)
+                    }
+                }
+            }
             style.addLayer(
-                SymbolLayer("layer-id", "source-id")
+                SymbolLayer("layer-id$trackerImageName", "source-id$trackerImageName")
                     .withProperties(
                         PropertyFactory.iconImage(trackerImageName),
                         PropertyFactory.iconIgnorePlacement(true),
                         PropertyFactory.iconAllowOverlap(true)
                     )
             )
-//            mSymbolManagerTracker?.textAllowOverlap = true
-//            mSymbolManagerTracker?.iconAllowOverlap = true
-//            mSymbolManagerTracker?.iconIgnorePlacement = false
-//            val symbolOptions = SymbolOptions()
-//                .withLatLng(currentPlace)
-//                .withIconImage(
-//                    trackerImageName
-//                )
-//                .withIconAnchor(if (markerType.name == MarkerEnum.GEOFENCE_ICON.name) Property.ICON_ANCHOR_CENTER else Property.ICON_ANCHOR_CENTER)
-//            mSymbolManagerTracker?.create(symbolOptions)
         }
     }
 
-    fun startAnimation(point: LatLng) {
-        if (animator != null && animator!!.isStarted) {
-            currentPosition = animator!!.animatedValue as LatLng
-            animator!!.cancel()
-        }
+    fun startAnimation(point: LatLng, index: Int) {
+        when (index) {
+            0 -> {
+                if (animatorBus1 != null) {
+                    animatorBus1?.let {
+                        if (it.isStarted) {
+                            currentPositionBus1 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
 
-        animator = ObjectAnimator
-            .ofObject(latLngEvaluator, currentPosition, point)
-            .setDuration(DELAY_1000)
-        animator?.addUpdateListener(animatorUpdateListener)
-        animator?.start()
-        currentPosition = point
+                animatorBus1 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus1, currentPositionBus1, point)
+                    .setDuration(DELAY_1000)
+                animatorBus1?.addUpdateListener(animatorUpdateBus1Listener)
+                animatorBus1?.start()
+                currentPositionBus1 = point
+            }
+            1 -> {
+                if (animatorBus2 != null) {
+                    animatorBus2?.let {
+                        if (it.isStarted) {
+                            currentPositionBus2 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus2 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus2, currentPositionBus2, point)
+                    .setDuration(DELAY_1000)
+                animatorBus2?.addUpdateListener(animatorUpdateBus2Listener)
+                animatorBus2?.start()
+                currentPositionBus2 = point
+            }
+        }
     }
     fun getLiveLocation(): LatLng? {
         isGrabSelectedAndOutsideBound = false
@@ -1334,9 +1373,19 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
-    private val animatorUpdateListener = AnimatorUpdateListener { valueAnimator ->
+    private val animatorUpdateBus1Listener = AnimatorUpdateListener { valueAnimator ->
         val animatedPosition = valueAnimator.animatedValue as LatLng
-        geoJsonSource?.setGeoJson(
+        geoJsonSourceBus1?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus2Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus2?.setGeoJson(
             Point.fromLngLat(
                 animatedPosition.longitude,
                 animatedPosition.latitude
@@ -1345,7 +1394,23 @@ class MapHelper(private val appContext: Context) {
     }
 
     // Class is used to interpolate the marker animation.
-    private val latLngEvaluator: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+    private val latLngEvaluatorBus1: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus2: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
         private val latLng = LatLng()
         override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
             latLng.latitude = (

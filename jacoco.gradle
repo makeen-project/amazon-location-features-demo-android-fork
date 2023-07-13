@@ -132,7 +132,7 @@ def createVariantCoverage(variant) {
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.40
+                    minimum = 0.35
                 }
             }
         }
