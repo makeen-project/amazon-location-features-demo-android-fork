@@ -15,6 +15,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentDataProviderBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
@@ -145,26 +146,39 @@ class DataProviderFragment : BaseFragment() {
 
     private fun showRestartDialog(isHere: Boolean, isGrab: Boolean) {
         if (isGrab) {
-            activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-                override fun onOkClick(dialog: DialogInterface) {
-                    changeDataProviderGrab()
-                    lifecycleScope.launch {
-                        if (!isRunningTest) {
-                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                            activity?.restartApplication()
+            val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
+            if(shouldShowGrabDialog) {
+                activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
+                        changeDataProviderGrab()
+                        lifecycleScope.launch {
+                            if (!isRunningTest) {
+                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                activity?.restartApplication()
+                            }
                         }
                     }
-                }
 
-                override fun onLearnMoreClick(dialog: DialogInterface) {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                    override fun onLearnMoreClick(dialog: DialogInterface) {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                            )
                         )
-                    )
+                    }
+                })
+            }
+            else {
+                changeDataProviderGrab()
+                lifecycleScope.launch {
+                    if (!isRunningTest) {
+                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                        activity?.restartApplication()
+                    }
                 }
-            })
+            }
         } else {
             if (isHere) {
                 changeDataProviderHere()

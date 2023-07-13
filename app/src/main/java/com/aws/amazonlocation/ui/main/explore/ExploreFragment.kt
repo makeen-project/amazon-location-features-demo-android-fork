@@ -4964,14 +4964,12 @@ class ExploreFragment :
                 selectedProvider != getString(R.string.grab)
             }
         if (isRestartNeeded) {
-            if (selectedProvider == getString(R.string.grab)) {
+            val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
+            if (selectedProvider == getString(R.string.grab) && shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-                    override fun onOkClick(dialog: DialogInterface) {
-                        changeMapStyle(
-                            isMapClick,
-                            selectedProvider,
-                            selectedInnerData
-                        )
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
                         lifecycleScope.launch {
                             if (!isRunningTest) {
                                 delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting

@@ -24,6 +24,7 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SortingAdapter
 import com.aws.amazonlocation.utils.DELAY_300
+import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
@@ -230,9 +231,11 @@ class MapStyleFragment : BaseFragment() {
                 selectedProvider != getString(R.string.grab)
             }
         if (isRestartNeeded) {
-            if (selectedProvider == getString(R.string.grab)) {
+            val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
+            if (selectedProvider == getString(R.string.grab)  && shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-                    override fun onOkClick(dialog: DialogInterface) {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
                         changeMapStyle(
                             isMapClick,
                             selectedProvider,
