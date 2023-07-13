@@ -51,7 +51,6 @@ import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.Units.meterToFeet
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
-import java.util.Locale
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
