@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui.main.simulation
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
 import android.view.View
@@ -19,16 +18,29 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos
 import com.amazonaws.services.geo.AmazonLocationClient
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.*
-import com.aws.amazonlocation.data.response.TrackingHistoryData
+import com.aws.amazonlocation.data.response.SimulationHistoryData
+import com.aws.amazonlocation.data.response.SimulationHistoryInnerData
 import com.aws.amazonlocation.databinding.BottomSheetTrackSimulationBinding
-import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.SimulationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.AWSLocationHelper
+import com.aws.amazonlocation.utils.DELAY_1000
+import com.aws.amazonlocation.utils.Durations
+import com.aws.amazonlocation.utils.GeoJsonReader
+import com.aws.amazonlocation.utils.GeofenceCons
+import com.aws.amazonlocation.utils.MapHelper
+import com.aws.amazonlocation.utils.MessageInterface
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.WEB_SOCKET_URL
+import com.aws.amazonlocation.utils.checkGeofenceInsideGrab
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
+import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.hideViews
+import com.aws.amazonlocation.utils.messageDialog
+import com.aws.amazonlocation.utils.show
+import com.aws.amazonlocation.utils.showViews
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.JsonParser
 import com.mapbox.geojson.LineString
@@ -42,9 +54,14 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import java.util.*
+import java.util.Date
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -55,9 +72,17 @@ class SimulationUtils(
     val activity: Activity?,
     val mAWSLocationHelper: AWSLocationHelper
 ) {
-    private var timer: Timer? = null
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var isBus1TrackerFinish: Boolean = false
     private var isBus2TrackerFinish: Boolean = false
+    private var isBus3TrackerFinish: Boolean = false
+    private var isBus4TrackerFinish: Boolean = false
+    private var isBus5TrackerFinish: Boolean = false
+    private var isBus6TrackerFinish: Boolean = false
+    private var isBus7TrackerFinish: Boolean = false
+    private var isBus8TrackerFinish: Boolean = false
+    private var isBus9TrackerFinish: Boolean = false
+    private var isBus10TrackerFinish: Boolean = false
     private var mqttManager: AWSIotMqttManager? = null
     private var adapter: SimulationTrackingListAdapter? = null
     private var adapterSimulation: SimulationNotificationAdapter? = null
@@ -70,12 +95,23 @@ class SimulationUtils(
     private var mClient: AmazonLocationClient? = null
     private var mActivity: Activity? = null
     private var mIsLocationUpdateEnable = false
-    private var trackingHistoryData = arrayListOf<TrackingHistoryData>()
+    private var trackingHistoryData = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus1Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus2Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus3Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus4Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus5Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus6Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus7Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus8Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus9Data = arrayListOf<SimulationHistoryData>()
+    private var trackingHistoryBus10Data = arrayListOf<SimulationHistoryData>()
     private val notificationData = arrayListOf<NotificationData>()
     private val mCircleUnit: String = TurfConstants.UNIT_METERS
     private var mIsDefaultGeofence = false
     private var mGeofenceList = ArrayList<ListGeofenceResponseEntry>()
     private var simulationUpdate = HashMap<Int, Int>()
+    private var selectedTrackerIndex = 0
 
     fun setMapBox(
         activity: Activity,
@@ -109,33 +145,115 @@ class SimulationUtils(
         mFragmentActivity?.applicationContext?.let {
             val bus1Geometries = GeoJsonReader.readGeoJsonFile(it, "bus1_line.geojson")
             val bus2Geometries = GeoJsonReader.readGeoJsonFile(it, "bus2_line.geojson")
+            val bus3Geometries = GeoJsonReader.readGeoJsonFile(it, "bus3_line.geojson")
+            val bus4Geometries = GeoJsonReader.readGeoJsonFile(it, "bus4_line.geojson")
+            val bus5Geometries = GeoJsonReader.readGeoJsonFile(it, "bus5_line.geojson")
+            val bus6Geometries = GeoJsonReader.readGeoJsonFile(it, "bus6_line.geojson")
+            val bus7Geometries = GeoJsonReader.readGeoJsonFile(it, "bus7_line.geojson")
+            val bus8Geometries = GeoJsonReader.readGeoJsonFile(it, "bus8_line.geojson")
+            val bus9Geometries = GeoJsonReader.readGeoJsonFile(it, "bus9_line.geojson")
+            val bus10Geometries = GeoJsonReader.readGeoJsonFile(it, "bus10_line.geojson")
             val mInitialLatLngList = ArrayList<LatLng>()
             val bus1Coordinates = arrayListOf<Point>()
             val bus2Coordinates = arrayListOf<Point>()
-            mInitialLatLngList.add(
-                LatLng(
-                    (bus1Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
-                    (bus1Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
-                )
-            )
-            mInitialLatLngList.add(
-                LatLng(
-                    (bus2Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
-                    (bus2Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
-                )
-            )
+            val bus3Coordinates = arrayListOf<Point>()
+            val bus4Coordinates = arrayListOf<Point>()
+            val bus5Coordinates = arrayListOf<Point>()
+            val bus6Coordinates = arrayListOf<Point>()
+            val bus7Coordinates = arrayListOf<Point>()
+            val bus8Coordinates = arrayListOf<Point>()
+            val bus9Coordinates = arrayListOf<Point>()
+            val bus10Coordinates = arrayListOf<Point>()
             mActivity?.let { activity1 ->
                 mMapHelper?.addMarkerSimulation(
                     "tracker" + 0,
                     activity1,
-                    mInitialLatLngList[0],
+                    LatLng(
+                        (bus1Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus1Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
                     0
                 )
                 mMapHelper?.addMarkerSimulation(
                     "tracker" + 1,
                     activity1,
-                    mInitialLatLngList[1],
+                    LatLng(
+                        (bus2Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus2Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
                     1
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 2,
+                    activity1,
+                    LatLng(
+                        (bus3Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus3Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    2
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 3,
+                    activity1,
+                    LatLng(
+                        (bus4Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus4Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    3
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 4,
+                    activity1,
+                    LatLng(
+                        (bus5Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus5Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    4
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 5,
+                    activity1,
+                    LatLng(
+                        (bus6Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus6Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    5
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 6,
+                    activity1,
+                    LatLng(
+                        (bus7Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus7Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    6
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 7,
+                    activity1,
+                    LatLng(
+                        (bus8Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus8Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    7
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 8,
+                    activity1,
+                    LatLng(
+                        (bus9Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus9Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    8
+                )
+                mMapHelper?.addMarkerSimulation(
+                    "tracker" + 9,
+                    activity1,
+                    LatLng(
+                        (bus10Geometries[0] as MultiLineString).coordinates()[0][0].latitude(),
+                        (bus10Geometries[0] as MultiLineString).coordinates()[0][0].longitude()
+                    ),
+                    9
                 )
             }
             mMapHelper?.adjustMapBounds(
@@ -143,9 +261,9 @@ class SimulationUtils(
                 mActivity?.resources?.getDimension(R.dimen.dp_110)
                     ?.toInt()!!
             )
-            timer = Timer()
-            val task = object : TimerTask() {
-                override fun run() {
+            coroutineScope.launch {
+                while (isActive) {
+                    val trackingHistorySize = trackingHistoryData.size
                     if (!isBus1TrackerFinish) {
                         bus1Geometries[0].let { geometry ->
                             if (geometry is MultiLineString) {
@@ -170,6 +288,28 @@ class SimulationUtils(
                                                             point.latitude()
                                                         )
                                                     bus1Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus1Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus1Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
                                                     if (bus1Coordinates.size > 1) {
                                                         mMapHelper?.addTrackerLine(
                                                             bus1Coordinates,
@@ -215,6 +355,28 @@ class SimulationUtils(
                                                             point.latitude()
                                                         )
                                                     bus2Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus2Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus2Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
                                                     if (bus2Coordinates.size > 1) {
                                                         mMapHelper?.addTrackerLine(
                                                             bus2Coordinates,
@@ -236,10 +398,548 @@ class SimulationUtils(
                             }
                         }
                     }
+                    if (!isBus3TrackerFinish) {
+                        bus3Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[2]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        2
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus3Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus3Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus3Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus3Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus3Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 2,
+                                                            "sourceId" + "tracker" + 2
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[2]?.plus(1) ?: 0
+                                                simulationUpdate[2] = updatedValue
+                                            }
+                                        } else {
+                                            isBus3TrackerFinish = true
+                                            simulationUpdate[2] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus4TrackerFinish) {
+                        bus4Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[3]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        3
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus4Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus4Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus4Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus4Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus4Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 3,
+                                                            "sourceId" + "tracker" + 3
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[3]?.plus(1) ?: 0
+                                                simulationUpdate[3] = updatedValue
+                                            }
+                                        } else {
+                                            isBus4TrackerFinish = true
+                                            simulationUpdate[3] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus5TrackerFinish) {
+                        bus5Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[4]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        4
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus5Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus5Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus5Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus5Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus5Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 4,
+                                                            "sourceId" + "tracker" + 4
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[4]?.plus(1) ?: 0
+                                                simulationUpdate[4] = updatedValue
+                                            }
+                                        } else {
+                                            isBus5TrackerFinish = true
+                                            simulationUpdate[4] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus6TrackerFinish) {
+                        bus6Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[5]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        5
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus6Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus6Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus6Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus6Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus6Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 5,
+                                                            "sourceId" + "tracker" + 5
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[5]?.plus(1) ?: 0
+                                                simulationUpdate[5] = updatedValue
+                                            }
+                                        } else {
+                                            isBus6TrackerFinish = true
+                                            simulationUpdate[5] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus7TrackerFinish) {
+                        bus7Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[6]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        6
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus7Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus7Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus7Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus7Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus7Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 6,
+                                                            "sourceId" + "tracker" + 6
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[6]?.plus(1) ?: 0
+                                                simulationUpdate[6] = updatedValue
+                                            }
+                                        } else {
+                                            isBus7TrackerFinish = true
+                                            simulationUpdate[6] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus8TrackerFinish) {
+                        bus8Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[7]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        7
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus8Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus8Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus8Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus8Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus8Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 7,
+                                                            "sourceId" + "tracker" + 7
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[7]?.plus(1) ?: 0
+                                                simulationUpdate[7] = updatedValue
+                                            }
+                                        } else {
+                                            isBus8TrackerFinish = true
+                                            simulationUpdate[7] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus9TrackerFinish) {
+                        bus9Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[8]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        8
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus9Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus9Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus9Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus9Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus9Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 8,
+                                                            "sourceId" + "tracker" + 8
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[8]?.plus(1) ?: 0
+                                                simulationUpdate[8] = updatedValue
+                                            }
+                                        } else {
+                                            isBus9TrackerFinish = true
+                                            simulationUpdate[8] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!isBus10TrackerFinish) {
+                        bus10Geometries[0].let { geometry ->
+                            if (geometry is MultiLineString) {
+                                geometry.coordinates()[0].let { points ->
+                                    simulationUpdate[9]?.let { update ->
+                                        if (points.size > update && points[update] != null) {
+                                            points[update].let { point ->
+                                                (activity as MainActivity).lifecycleScope.launch {
+                                                    val latLng = LatLng(
+                                                        point.latitude(),
+                                                        point.longitude()
+                                                    )
+//                                                    simulationInterface?.evaluateGeofence(latLng)
+                                                    mMapHelper?.startAnimation(
+                                                        latLng,
+                                                        9
+                                                    )
+                                                    delay(DELAY_1000)
+                                                    val latLngPoint =
+                                                        Point.fromLngLat(
+                                                            point.longitude(),
+                                                            point.latitude()
+                                                        )
+                                                    bus10Coordinates.add(latLngPoint)
+                                                    val positionData: String =
+                                                        when (bus10Coordinates.size) {
+                                                            1 -> {
+                                                                it.getString(R.string.label_position_start)
+                                                            }
+                                                            points.size -> {
+                                                                it.getString(R.string.label_position_end)
+                                                            }
+                                                            else -> {
+                                                                it.getString(R.string.label_position_data)
+                                                            }
+                                                        }
+                                                    trackingHistoryBus10Data.add(
+                                                        SimulationHistoryData(
+                                                            positionData,
+                                                            SimulationHistoryInnerData(
+                                                                point.latitude(),
+                                                                point.longitude(),
+                                                                Date()
+                                                            )
+                                                        )
+                                                    )
+                                                    if (bus10Coordinates.size > 1) {
+                                                        mMapHelper?.addTrackerLine(
+                                                            bus10Coordinates,
+                                                            true,
+                                                            "layerId" + "tracker" + 9,
+                                                            "sourceId" + "tracker" + 9
+                                                        )
+                                                    }
+                                                }
+                                                val updatedValue = simulationUpdate[9]?.plus(1) ?: 0
+                                                simulationUpdate[9] = updatedValue
+                                            }
+                                        } else {
+                                            isBus10TrackerFinish = true
+                                            simulationUpdate[9] = 0
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        adapter?.notifyItemRangeInserted(trackingHistorySize, 1)
+                    }
+                    delay(DELAY_1000)
                 }
             }
-
-            timer?.scheduleAtFixedRate(task, 0, DELAY_1000)
         }
     }
 
@@ -392,6 +1092,11 @@ class SimulationUtils(
                     position: Int,
                     id: Long
                 ) {
+                    selectedTrackerIndex = position
+                    val selectedData = notificationData[selectedTrackerIndex].name
+                    tvChangeRoute.text =
+                        selectedData.split(" ")[0] + " " + selectedData.split(" ")[1]
+                    tvChangeRouteName.text = selectedData.split(" ")[2]
                     adapter.setSelection(position)
                 }
 
@@ -615,7 +1320,6 @@ class SimulationUtils(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun initAdapter() {
         val notificationLayoutManager = LinearLayoutManager(mActivity?.applicationContext)
         adapterSimulation = SimulationNotificationAdapter(
@@ -628,21 +1332,18 @@ class SimulationUtils(
         mBindingTracking?.rvRouteNotifications?.adapter = adapterSimulation
         mBindingTracking?.rvRouteNotifications?.layoutManager = notificationLayoutManager
 
-//        val type = object : TypeToken<ArrayList<TrackingHistoryData>>() {}.type
-//        trackingHistoryData = Gson().fromJson(SIMULATION_DUMMY_DATA, type)
-//        val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
-//        adapter = SimulationTrackingListAdapter(trackingHistoryData)
-//        mBindingTracking?.rvTracking?.adapter = adapter
-//        mBindingTracking?.rvTracking?.layoutManager = layoutManager
+        val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
+        adapter = SimulationTrackingListAdapter(trackingHistoryData)
+        mBindingTracking?.rvTracking?.adapter = adapter
+        mBindingTracking?.rvTracking?.layoutManager = layoutManager
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun hideSimulationBottomSheet() {
         mBottomSheetTrackingBehavior.let {
-            timer?.cancel()
+            coroutineScope.cancel()
             (activity as MainActivity).lifecycleScope.launch {
                 delay(DELAY_1000)
-                notificationData.forEachIndexed { index, notificationData ->
+                notificationData.forEachIndexed { index, _ ->
                     mMapHelper?.removeSource("sourceIdtracker$index")
                     mMapHelper?.removeSource("source-idtracker$index")
                     mMapHelper?.removeLayer("layerIdtracker$index")

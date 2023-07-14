@@ -258,4 +258,6 @@
     <string name="label_start_simulation">Start simulation</string>
     <string name="label_tracking_and_geofence_simulation">Tracking and Geofence simulation</string>
     <string name="change">Change</string>
+    <string name="label_macdonald">Macdonald</string>
+    <string name="label_bus_01">Bus 01</string>
 </resources>

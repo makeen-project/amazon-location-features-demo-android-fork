@@ -106,10 +106,34 @@ class MapHelper(private val appContext: Context) {
     private var mPreferenceManager: PreferenceManager? = null
     private var geoJsonSourceBus1: GeoJsonSource? = null
     private var geoJsonSourceBus2: GeoJsonSource? = null
+    private var geoJsonSourceBus3: GeoJsonSource? = null
+    private var geoJsonSourceBus4: GeoJsonSource? = null
+    private var geoJsonSourceBus5: GeoJsonSource? = null
+    private var geoJsonSourceBus6: GeoJsonSource? = null
+    private var geoJsonSourceBus7: GeoJsonSource? = null
+    private var geoJsonSourceBus8: GeoJsonSource? = null
+    private var geoJsonSourceBus9: GeoJsonSource? = null
+    private var geoJsonSourceBus10: GeoJsonSource? = null
     private var animatorBus1: ValueAnimator? = null
     private var animatorBus2: ValueAnimator? = null
+    private var animatorBus3: ValueAnimator? = null
+    private var animatorBus4: ValueAnimator? = null
+    private var animatorBus5: ValueAnimator? = null
+    private var animatorBus6: ValueAnimator? = null
+    private var animatorBus7: ValueAnimator? = null
+    private var animatorBus8: ValueAnimator? = null
+    private var animatorBus9: ValueAnimator? = null
+    private var animatorBus10: ValueAnimator? = null
     private var currentPositionBus1: LatLng? = null
     private var currentPositionBus2: LatLng? = null
+    private var currentPositionBus3: LatLng? = null
+    private var currentPositionBus4: LatLng? = null
+    private var currentPositionBus5: LatLng? = null
+    private var currentPositionBus6: LatLng? = null
+    private var currentPositionBus7: LatLng? = null
+    private var currentPositionBus8: LatLng? = null
+    private var currentPositionBus9: LatLng? = null
+    private var currentPositionBus10: LatLng? = null
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -876,6 +900,126 @@ class MapHelper(private val appContext: Context) {
                         style.addSource(it)
                     }
                 }
+                2 -> {
+                    currentPositionBus3 = currentPlace
+                    geoJsonSourceBus3 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus3?.let {
+                        style.addSource(it)
+                    }
+                }
+                3 -> {
+                    currentPositionBus4 = currentPlace
+                    geoJsonSourceBus4 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus4?.let {
+                        style.addSource(it)
+                    }
+                }
+                4 -> {
+                    currentPositionBus5 = currentPlace
+                    geoJsonSourceBus5 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus5?.let {
+                        style.addSource(it)
+                    }
+                }
+                5 -> {
+                    currentPositionBus6 = currentPlace
+                    geoJsonSourceBus6 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus6?.let {
+                        style.addSource(it)
+                    }
+                }
+                6 -> {
+                    currentPositionBus7 = currentPlace
+                    geoJsonSourceBus7 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus7?.let {
+                        style.addSource(it)
+                    }
+                }
+                7 -> {
+                    currentPositionBus8 = currentPlace
+                    geoJsonSourceBus8 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus8?.let {
+                        style.addSource(it)
+                    }
+                }
+                8 -> {
+                    currentPositionBus9 = currentPlace
+                    geoJsonSourceBus9 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus9?.let {
+                        style.addSource(it)
+                    }
+                }
+                9 -> {
+                    currentPositionBus10 = currentPlace
+                    geoJsonSourceBus10 = GeoJsonSource(
+                        "source-id$trackerImageName",
+                        Feature.fromGeometry(
+                            Point.fromLngLat(
+                                currentPlace.longitude,
+                                currentPlace.latitude
+                            )
+                        )
+                    )
+                    geoJsonSourceBus10?.let {
+                        style.addSource(it)
+                    }
+                }
             }
             style.addLayer(
                 SymbolLayer("layer-id$trackerImageName", "source-id$trackerImageName")
@@ -902,7 +1046,7 @@ class MapHelper(private val appContext: Context) {
 
                 animatorBus1 = ObjectAnimator
                     .ofObject(latLngEvaluatorBus1, currentPositionBus1, point)
-                    .setDuration(DELAY_1000)
+                    .setDuration(DELAY_2000)
                 animatorBus1?.addUpdateListener(animatorUpdateBus1Listener)
                 animatorBus1?.start()
                 currentPositionBus1 = point
@@ -923,6 +1067,142 @@ class MapHelper(private val appContext: Context) {
                 animatorBus2?.addUpdateListener(animatorUpdateBus2Listener)
                 animatorBus2?.start()
                 currentPositionBus2 = point
+            }
+            2 -> {
+                if (animatorBus3 != null) {
+                    animatorBus3?.let {
+                        if (it.isStarted) {
+                            currentPositionBus3 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus3 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus3, currentPositionBus3, point)
+                    .setDuration(DELAY_1000)
+                animatorBus3?.addUpdateListener(animatorUpdateBus3Listener)
+                animatorBus3?.start()
+                currentPositionBus3 = point
+            }
+            3 -> {
+                if (animatorBus4 != null) {
+                    animatorBus4?.let {
+                        if (it.isStarted) {
+                            currentPositionBus4 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus4 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus4, currentPositionBus4, point)
+                    .setDuration(DELAY_1000)
+                animatorBus4?.addUpdateListener(animatorUpdateBus4Listener)
+                animatorBus4?.start()
+                currentPositionBus4 = point
+            }
+            4 -> {
+                if (animatorBus5 != null) {
+                    animatorBus5?.let {
+                        if (it.isStarted) {
+                            currentPositionBus5 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus5 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus5, currentPositionBus5, point)
+                    .setDuration(DELAY_1000)
+                animatorBus5?.addUpdateListener(animatorUpdateBus5Listener)
+                animatorBus5?.start()
+                currentPositionBus5 = point
+            }
+            5 -> {
+                if (animatorBus6 != null) {
+                    animatorBus6?.let {
+                        if (it.isStarted) {
+                            currentPositionBus6 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus6 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus6, currentPositionBus6, point)
+                    .setDuration(DELAY_1000)
+                animatorBus6?.addUpdateListener(animatorUpdateBus6Listener)
+                animatorBus6?.start()
+                currentPositionBus6 = point
+            }
+            6 -> {
+                if (animatorBus7 != null) {
+                    animatorBus7?.let {
+                        if (it.isStarted) {
+                            currentPositionBus7 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus7 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus7, currentPositionBus7, point)
+                    .setDuration(DELAY_1000)
+                animatorBus7?.addUpdateListener(animatorUpdateBus7Listener)
+                animatorBus7?.start()
+                currentPositionBus7 = point
+            }
+            7 -> {
+                if (animatorBus8 != null) {
+                    animatorBus8?.let {
+                        if (it.isStarted) {
+                            currentPositionBus8 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus8 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus8, currentPositionBus8, point)
+                    .setDuration(DELAY_1000)
+                animatorBus8?.addUpdateListener(animatorUpdateBus8Listener)
+                animatorBus8?.start()
+                currentPositionBus8 = point
+            }
+            8 -> {
+                if (animatorBus9 != null) {
+                    animatorBus9?.let {
+                        if (it.isStarted) {
+                            currentPositionBus9 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus9 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus9, currentPositionBus9, point)
+                    .setDuration(DELAY_1000)
+                animatorBus9?.addUpdateListener(animatorUpdateBus9Listener)
+                animatorBus9?.start()
+                currentPositionBus9 = point
+            }
+            9 -> {
+                if (animatorBus10 != null) {
+                    animatorBus10?.let {
+                        if (it.isStarted) {
+                            currentPositionBus10 = it.animatedValue as LatLng
+                            it.cancel()
+                        }
+                    }
+                }
+
+                animatorBus10 = ObjectAnimator
+                    .ofObject(latLngEvaluatorBus10, currentPositionBus10, point)
+                    .setDuration(DELAY_1000)
+                animatorBus10?.addUpdateListener(animatorUpdateBus10Listener)
+                animatorBus10?.start()
+                currentPositionBus10 = point
             }
         }
     }
@@ -1393,6 +1673,86 @@ class MapHelper(private val appContext: Context) {
         )
     }
 
+    private val animatorUpdateBus3Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus3?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus4Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus4?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus5Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus5?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus6Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus6?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus7Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus7?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus8Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus8?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus9Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus9?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
+    private val animatorUpdateBus10Listener = AnimatorUpdateListener { valueAnimator ->
+        val animatedPosition = valueAnimator.animatedValue as LatLng
+        geoJsonSourceBus10?.setGeoJson(
+            Point.fromLngLat(
+                animatedPosition.longitude,
+                animatedPosition.latitude
+            )
+        )
+    }
+
     // Class is used to interpolate the marker animation.
     private val latLngEvaluatorBus1: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
         private val latLng = LatLng()
@@ -1411,6 +1771,134 @@ class MapHelper(private val appContext: Context) {
 
     // Class is used to interpolate the marker animation.
     private val latLngEvaluatorBus2: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus3: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus4: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus5: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus6: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus7: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus8: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus9: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
+        private val latLng = LatLng()
+        override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+            latLng.latitude = (
+                startValue.latitude +
+                    (endValue.latitude - startValue.latitude) * fraction
+                )
+            latLng.longitude = (
+                startValue.longitude +
+                    (endValue.longitude - startValue.longitude) * fraction
+                )
+            return latLng
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluatorBus10: TypeEvaluator<LatLng> = object : TypeEvaluator<LatLng> {
         private val latLng = LatLng()
         override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
             latLng.latitude = (

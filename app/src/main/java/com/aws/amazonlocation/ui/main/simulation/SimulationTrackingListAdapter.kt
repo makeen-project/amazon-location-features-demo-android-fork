@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.response.TrackingHistoryData
+import com.aws.amazonlocation.data.response.SimulationHistoryData
 import com.aws.amazonlocation.databinding.RvTrackingItemBinding
 import com.aws.amazonlocation.utils.DateFormat
 import com.aws.amazonlocation.utils.hide
@@ -17,16 +17,16 @@ import java.util.Locale
 
 // SPDX-License-Identifier: MIT-0
 class SimulationTrackingListAdapter(
-    private val notificationData: ArrayList<TrackingHistoryData>,
+    private val notificationData: ArrayList<SimulationHistoryData>
 ) :
     RecyclerView.Adapter<SimulationTrackingListAdapter.SearchPlaceVH>() {
 
     inner class SearchPlaceVH(private val binding: RvTrackingItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: TrackingHistoryData) {
+        fun bind(item: SimulationHistoryData) {
             binding.apply {
                 item.devicePositionData?.let {
-                    tvLatLng.text = String.format("%7f , %7f", it.position[1], it.position[0])
+                    tvLatLng.text = String.format("%7f , %7f", it.latitude, it.longitude)
                     val date = convertToCustomFormat(it.receivedTime)
                     tvTime.text = date
                 }
