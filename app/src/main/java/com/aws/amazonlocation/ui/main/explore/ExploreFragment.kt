@@ -574,18 +574,34 @@ class ExploreFragment :
         override fun getGeofenceList(collectionName: String) {
             mSimulationViewModel.getGeofenceList(collectionName)
         }
-        override fun evaluateGeofence(latLng: LatLng) {
-            latLng.let {
-                val positionData = arrayListOf<Double>()
-                positionData.add(it.longitude)
-                positionData.add(it.latitude)
-                mSimulationViewModel.evaluateGeofence(
-                    GeofenceCons.GEOFENCE_COLLECTION,
-                    positionData,
-                    getDeviceId(requireContext()),
-                    Date()
-                )
-            }
+
+        override fun evaluateGeofence(
+            position1: List<Double>?,
+            position2: List<Double>?,
+            position3: List<Double>?,
+            position4: List<Double>?,
+            position5: List<Double>?,
+            position6: List<Double>?,
+            position7: List<Double>?,
+            position8: List<Double>?,
+            position9: List<Double>?,
+            position10: List<Double>?
+        ) {
+            mSimulationViewModel.evaluateGeofence(
+                GeofenceCons.GEOFENCE_COLLECTION,
+                position1,
+                position2,
+                position3,
+                position4,
+                position5,
+                position6,
+                position7,
+                position8,
+                position9,
+                position10,
+                getDeviceId(requireContext()),
+                Date()
+            )
         }
     }
 

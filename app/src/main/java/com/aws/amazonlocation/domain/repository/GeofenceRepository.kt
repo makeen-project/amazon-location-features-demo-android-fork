@@ -55,7 +55,16 @@ interface GeofenceRepository {
 
     suspend fun evaluateGeofence(
         trackerName: String,
-        position: List<Double>,
+        position1: List<Double>? = null,
+        position2: List<Double>? = null,
+        position3: List<Double>? = null,
+        position4: List<Double>? = null,
+        position5: List<Double>? = null,
+        position6: List<Double>? = null,
+        position7: List<Double>? = null,
+        position8: List<Double>? = null,
+        position9: List<Double>? = null,
+        position10: List<Double>? = null,
         deviceId: String,
         date: Date,
         batchLocationUpdateInterface: BatchLocationUpdateInterface

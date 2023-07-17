@@ -66,14 +66,32 @@ class SimulationViewModel @Inject constructor(
 
     fun evaluateGeofence(
         trackerName: String,
-        position: List<Double>,
+        position1: List<Double>? = null,
+        position2: List<Double>? = null,
+        position3: List<Double>? = null,
+        position4: List<Double>? = null,
+        position5: List<Double>? = null,
+        position6: List<Double>? = null,
+        position7: List<Double>? = null,
+        position8: List<Double>? = null,
+        position9: List<Double>? = null,
+        position10: List<Double>? = null,
         deviceId: String,
         date: Date
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             mGetGeofenceUseCase.evaluateGeofence(
                 trackerName,
-                position,
+                position1,
+                position2,
+                position3,
+                position4,
+                position5,
+                position6,
+                position7,
+                position8,
+                position9,
+                position10,
                 deviceId,
                 date,
                 object : BatchLocationUpdateInterface {

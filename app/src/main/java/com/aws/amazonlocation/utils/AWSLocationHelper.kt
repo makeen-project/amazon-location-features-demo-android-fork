@@ -606,7 +606,16 @@ class AWSLocationHelper(
 
     fun evaluateGeofence(
         trackerName: String,
-        position: List<Double>,
+        position1: List<Double>? = null,
+        position2: List<Double>? = null,
+        position3: List<Double>? = null,
+        position4: List<Double>? = null,
+        position5: List<Double>? = null,
+        position6: List<Double>? = null,
+        position7: List<Double>? = null,
+        position8: List<Double>? = null,
+        position9: List<Double>? = null,
+        position10: List<Double>? = null,
         deviceId: String,
         date: Date
     ): UpdateBatchLocationResponse {
@@ -622,12 +631,80 @@ class AWSLocationHelper(
                 }
             }
         }
-        val devicePositionUpdate =
-            DevicePositionUpdate().withPosition(position).withDeviceId(deviceId)
-                .withSampleTime(date)
-                .withPositionProperties(map)
+        val devicePositionUpdateList = arrayListOf<DevicePositionUpdate>()
 
-        val data = BatchEvaluateGeofencesRequest().withCollectionName(trackerName).withDevicePositionUpdates(devicePositionUpdate)
+        if (!position1.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position1).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position2.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position2).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position3.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position3).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position4.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position4).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position5.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position5).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position6.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position6).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position7.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position7).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position8.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position8).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position9.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position9).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        if (!position10.isNullOrEmpty()) {
+            val devicePositionUpdate =
+                DevicePositionUpdate().withPosition(position10).withDeviceId(deviceId)
+                    .withSampleTime(date)
+                    .withPositionProperties(map)
+            devicePositionUpdateList.add(devicePositionUpdate)
+        }
+        val data = BatchEvaluateGeofencesRequest().withCollectionName(trackerName)
+            .withDevicePositionUpdates(devicePositionUpdateList)
         return try {
             mClient?.batchEvaluateGeofences(data)
             UpdateBatchLocationResponse(null, true)
