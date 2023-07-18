@@ -53,15 +53,16 @@ import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.mapboxsdk.geometry.LatLng
+import java.util.Locale
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
-import java.util.Locale
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -219,6 +220,10 @@ fun Activity.hideKeyboard() {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun Activity.hideSoftKeyboard(input: TextInputEditText) {
+    val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(input.windowToken, 0)
+}
 fun checkLatLngValid(latitude: Double?, longitude: Double?): Boolean {
     return latitude?.toInt() in -90 until 90 && longitude?.toInt() in -180 until 180
 }
@@ -600,4 +605,23 @@ fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): 
         isGrabMapEnable = true
     }
     return isGrabMapEnable
+}
+
+fun checkGeofenceInsideGrab(
+    mLatLng: LatLng,
+    mPreferenceManager: PreferenceManager?,
+    context: Context?
+): Boolean {
+    context?.let {
+        mPreferenceManager?.let { preferenceManager ->
+            if (isGrabMapSelected(preferenceManager, it)) {
+                mLatLng.let {
+                    return (it.latitude in latSouth..latNorth && it.longitude in lonWest..lonEast)
+                }
+            } else {
+                return true
+            }
+        }
+    }
+    return true
 }

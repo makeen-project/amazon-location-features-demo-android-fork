@@ -15,8 +15,8 @@ import com.aws.amazonlocation.utils.HERE
 
 // SPDX-License-Identifier: MIT-0
 class MapStyleInnerAdapter(
-    private val mMapStyleData: ArrayList<MapStyleInnerData>,
-    var mapInterface: MapInterface,
+    private val mMapStyleData: List<MapStyleInnerData>,
+    var mapInterface: MapInterface
 ) :
     RecyclerView.Adapter<MapStyleInnerAdapter.SearchPlaceVH>() {
 
@@ -46,7 +46,7 @@ class MapStyleInnerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlaceVH {
         return SearchPlaceVH(
-            ItemMapNameBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemMapNameBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

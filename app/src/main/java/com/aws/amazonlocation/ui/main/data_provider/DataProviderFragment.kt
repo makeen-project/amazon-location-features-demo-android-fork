@@ -137,7 +137,7 @@ class DataProviderFragment : BaseFragment() {
         ) {
             mPreferenceManager.setValue(
                 KEY_MAP_STYLE_NAME,
-                resources.getString(R.string.map_contrast)
+                resources.getString(R.string.map_explore)
             )
         }
         mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.here))

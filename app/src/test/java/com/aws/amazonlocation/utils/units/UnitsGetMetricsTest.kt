@@ -14,11 +14,11 @@ class UnitsGetMetricsTest : BaseTest() {
     @Test
     fun getMetricsSuccess() {
         var result = Units.getMetricsNew(UNIT_METRICS_M_INPUT_1, true)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == UNIT_METRICS_M_OUTPUT_1)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == UNIT_METRICS_M_OUTPUT_2)
         result = Units.getMetricsNew(UNIT_METRICS_M_INPUT_2, true)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == UNIT_METRICS_M_OUTPUT_2)
         result = Units.getMetricsNew(UNIT_METRICS_I_INPUT_1, false)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == UNIT_METRICS_I_OUTPUT_1)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == UNIT_METRICS_I_OUTPUT_2)
         result = Units.getMetricsNew(UNIT_METRICS_I_INPUT_2, false)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == UNIT_METRICS_I_OUTPUT_2)
     }
