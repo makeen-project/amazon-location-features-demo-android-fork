@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">Sie können diese Ressourcen über die Option zum Löschen des Stapels oder über die Seite „Ressourcen verwalten“ im Menü auf der linken Seite löschen.</string>
     <string name="how_to_connect_2_1">Verbinden Sie die Demo-App mit den kürzlich erstellten AWS-Ressourcen, indem Sie Eingabefelder kopieren.</string>
     <string name="how_to_connect_2_2">Kopieren Sie aus Ihrem CloudFormation-Ausgabeabschnitt die entsprechenden benannten Werte, wie sie im rechten Abschnittsformular dargestellt sind (IdentityPoolId usw.). Erfahren Sie mehr.</string>
-    <string name="learn_more">
-      <b>Erfahren Sie mehr</b>
-   </string>
+    <string name="learn_more">Erfahren Sie mehr</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">Melden Sie sich mit den generierten Benutzeranmeldeinformationen an.</string>
@@ -42,8 +40,8 @@
     <string name="identityPoolId">IdentityPoolld</string>
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">UserPoolld</string>
-    <string name="by_connecting_i_agree_to_amazon">Durch die Verbindung stimme ich den\nAllgemeinen Geschäftsbedingungen von Amazon Location zu</string>
-    <string name="terms_condition">Terms &amp; amp; Bedingungen</string>
+    <string name="by_connecting_i_agree_to_amazon">Door verbinding te maken, ga ik akkoord met de Amazon-locatie\n Terms &amp; Bedingungen</string>
+    <string name="terms_condition">Terms &amp; Bedingungen</string>
     <string name="help">Hilfe</string>
     <string name="click_here">klicken Sie hier</string>
     <string name="user_domain">Benutzerdomäne</string>
@@ -162,9 +160,9 @@
     <string name="label_welcome_amazon">Willkommen bei\nAmazon Location Demo</string>
     <string name="label_continue">Weitermachen</string>
     <string name="label_right_aws">© 2023, Amazon Web Services, Inc. oder seine verbundenen Unternehmen. Alle Rechte vorbehalten.</string>
-    <string name="label_terms_desc">Durch das Herunterladen, Installieren oder Verwenden der Amazon Location Demo-App stimmen Sie den Nutzungsbedingungen der App zu.</string>
-    <string name="label_terms_desc_terms_page">Durch das Herunterladen, Installieren oder Verwenden der Amazon Location Demo-App stimmen Sie den Nutzungsbedingungen der App zu.</string>
-    <string name="text_terms_desc_coloured_1">Terms &amp; amp; Bedingungen</string>
+    <string name="label_terms_desc">Door de Amazon Location Demo-app te downloaden, te installeren of te gebruiken, gaat u akkoord met de voorwaarden van de Terms &amp; Bedingungen voor gebruik.</string>
+    <string name="label_terms_desc_terms_page">Door de Amazon Location Demo-app te downloaden, te installeren of te gebruiken, gaat u akkoord met de voorwaarden van de Terms &amp; Bedingungen voor gebruik.</string>
+    <string name="text_terms_desc_coloured_1">Terms &amp; Bedingungen</string>
     <string name="text_terms_desc_coloured_2">AWS-Richtlinie zur akzeptablen Nutzung</string>
     <string name="text_terms_desc_coloured_3">AWS-Datenschutzerklärung</string>
     <string name="label_legal_and_privacy">Recht und Datenschutz</string>

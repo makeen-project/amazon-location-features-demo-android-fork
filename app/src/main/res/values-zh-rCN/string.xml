@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">您可以通过堆栈删除选项或左侧菜单中的“管理资源”页面来删除这些资源。</string>
     <string name="how_to_connect_2_1">通过复制输入字段，将演示应用程序与最近创建的 AWS 资源连接起来。</string>
     <string name="how_to_connect_2_2">从 CloudFormation 输出部分复制右侧部分表单中反映的相应命名值（IdentityPoolId 等）。了解更多。</string>
-    <string name="learn_more">
-      <b>了解更多</b>
-   </string>
+    <string name="learn_more">了解更多</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">使用生成的用户凭据登录。</string>
@@ -43,9 +41,9 @@
     <string name="user_pool_client_id">用户池客户端ID</string>
     <string name="user_pool_ld">用户池ID</string>
     <string name="by_connecting_i_agree_to_amazon">通过连接，我同意 Amazon Location 的\n条款和条件</string>
-    <string name="terms_condition">条款及条件</string>
+    <string name="terms_condition">条款和条</string>
     <string name="help">帮助</string>
-    <string name="click_here">点击这里</string>
+    <string name="click_here">单击此处</string>
     <string name="user_domain">用户域</string>
     <string name="enter_user_domain">输入用户域</string>
     <string name="enter_identity_pool_id">输入身份池 ID</string>
@@ -164,7 +162,7 @@
     <string name="label_right_aws">© 2023，Amazon Web Services, Inc. 或其附属公司。版权所有。</string>
     <string name="label_terms_desc">下载、安装或使用亚马逊定位演示应用程序，即表示您同意该应用程序的使用条款和条件。</string>
     <string name="label_terms_desc_terms_page">下载、安装或使用亚马逊定位演示应用程序，即表示您同意该应用程序的使用条款和条件。</string>
-    <string name="text_terms_desc_coloured_1">条款及条件</string>
+    <string name="text_terms_desc_coloured_1">条款和条</string>
     <string name="text_terms_desc_coloured_2">AWS 可接受使用政策</string>
     <string name="text_terms_desc_coloured_3">AWS 隐私声明</string>
     <string name="label_legal_and_privacy">法律和隐私</string>

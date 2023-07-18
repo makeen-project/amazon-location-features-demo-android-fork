@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">스택 삭제 옵션 또는 왼쪽 메뉴의 \'리소스 관리\' 페이지를 통해 이러한 리소스를 삭제할 수 있습니다.</string>
     <string name="how_to_connect_2_1">입력 필드를 복사하여 최근에 생성된 AWS 리소스와 데모 앱을 연결합니다.</string>
     <string name="how_to_connect_2_2">CloudFormation 출력 섹션에서 오른쪽 섹션 양식(IdentityPoolId 등)에 반영된 해당 명명된 값을 복사합니다. 더 알아보기.</string>
-    <string name="learn_more">
-      <b>더 알아보기</b>
-   </string>
+    <string name="learn_more">더 알아보기</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">생성된 사용자 자격 증명을 사용하여 로그인합니다.</string>
@@ -45,7 +43,7 @@
     <string name="by_connecting_i_agree_to_amazon">연결함으로써 Amazon Location의\n이용약관에 동의합니다.</string>
     <string name="terms_condition">이용약관</string>
     <string name="help">돕다</string>
-    <string name="click_here">여기를 클릭하세요</string>
+    <string name="click_here">여기를 클릭하십시오</string>
     <string name="user_domain">사용자 도메인</string>
     <string name="enter_user_domain">사용자 도메인 입력</string>
     <string name="enter_identity_pool_id">IdentityPoolId 입력</string>

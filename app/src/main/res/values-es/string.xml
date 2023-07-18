@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">Puede eliminar estos recursos a través de la opción de eliminación de pila o de las páginas "Administrar recursos" en el menú de la izquierda.</string>
     <string name="how_to_connect_2_1">Conecte la aplicación de demostración con los recursos de AWS creados recientemente copiando los campos de entrada.</string>
     <string name="how_to_connect_2_2">Desde su sección de salida de CloudFormation, copie los valores con nombre correspondientes como se refleja en el formulario de la sección derecha (IdentityPoolId, etc.). Aprende más.</string>
-    <string name="learn_more">
-      <b>Aprende más</b>
-   </string>
+    <string name="learn_more">Aprende más</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">Inicie sesión con las credenciales de usuario generadas.</string>

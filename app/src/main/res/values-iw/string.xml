@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">"אתה יכול למחוק משאבים אלה דרך אפשרות מחיקת המחסנית או דפי \'נהל משאבים' בתפריט משמאל."</string>
     <string name="how_to_connect_2_1">חבר את אפליקציית ההדגמה למשאבי AWS שנוצרו לאחרונה על ידי העתקה בשדות קלט.</string>
     <string name="how_to_connect_2_2">ממקטע הפלט של CloudFormation, העתק את הערכים המתאימים כפי שהם משתקפים בטופס המקטע הימני (IdentityPoolId וכו\'). למד עוד.</string>
-    <string name="learn_more">
-      <b>למד עוד</b>
-   </string>
+    <string name="learn_more">למד עוד</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">התחבר באמצעות אישורי המשתמש שנוצרו.</string>
@@ -43,7 +41,7 @@
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">UserPoolld</string>
     <string name="by_connecting_i_agree_to_amazon">בחיבור אני מסכים לתנאים וההגבלות של Amazon Location\n</string>
-    <string name="terms_condition">תנאים והגבלות</string>
+    <string name="terms_condition">תנאים וההגבלות</string>
     <string name="help">עֶזרָה</string>
     <string name="click_here">לחץ כאן</string>
     <string name="user_domain">UserDomain</string>
@@ -164,7 +162,7 @@
     <string name="label_right_aws">© 2023, Amazon Web Services, Inc. או שותפיה. כל הזכויות שמורות.</string>
     <string name="label_terms_desc">על ידי הורדה, התקנה או שימוש באפליקציית Amazon Location Demo, אתה מסכים לתנאים וההגבלות של האפליקציה לשימוש.</string>
     <string name="label_terms_desc_terms_page">על ידי הורדה, התקנה או שימוש באפליקציית Amazon Location Demo, אתה מסכים לתנאים וההגבלות של האפליקציה לשימוש.</string>
-    <string name="text_terms_desc_coloured_1">תנאים והגבלות</string>
+    <string name="text_terms_desc_coloured_1">תנאים וההגבלות</string>
     <string name="text_terms_desc_coloured_2">מדיניות השימוש המקובל של AWS</string>
     <string name="text_terms_desc_coloured_3">הודעת פרטיות של AWS</string>
     <string name="label_legal_and_privacy">משפטי ופרטיות</string>

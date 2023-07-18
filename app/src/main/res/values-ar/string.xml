@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">يمكنك حذف هذه الموارد من خلال خيار حذف المكدس أو صفحات "إدارة الموارد" في القائمة الموجودة على اليسار.</string>
     <string name="how_to_connect_2_1">قم بتوصيل التطبيق التجريبي بموارد AWS التي تم إنشاؤها مؤخرًا عن طريق النسخ في حقول الإدخال.</string>
     <string name="how_to_connect_2_2">من قسم الإخراج CloudFormation الخاص بك ، انسخ القيم المسماة المقابلة كما هو موضح في نموذج القسم الأيمن (IdentityPoolId وما إلى ذلك). يتعلم أكثر.</string>
-    <string name="learn_more">
-      <b>يتعلم أكثر</b>
-   </string>
+    <string name="learn_more">يتعلم أكثر</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">تسجيل الدخول باستخدام بيانات اعتماد المستخدم التي تم إنشاؤها.</string>
@@ -42,8 +40,8 @@
     <string name="identityPoolId">الهوية</string>
     <string name="user_pool_client_id">أوسيربولكلينتيد</string>
     <string name="user_pool_ld">أوسيربولد</string>
-    <string name="by_connecting_i_agree_to_amazon">من خلال الاتصال ، أوافق على الشروط والأحكام الخاصة بموقع Amazon</string>
-    <string name="terms_condition">البنود و الظروف</string>
+    <string name="by_connecting_i_agree_to_amazon">من خلال الاتصال ، أوافق على شروط وأحكام موقع أمازون</string>
+    <string name="terms_condition">شروط وأحكام</string>
     <string name="help">يساعد</string>
     <string name="click_here">انقر هنا</string>
     <string name="user_domain">UserDomain</string>
@@ -164,7 +162,7 @@
     <string name="label_right_aws">حقوق النشر © لعام 2023 لشركة Amazon Web Services، Inc. أو الشركات التابعة لها. كل الحقوق محفوظة.</string>
     <string name="label_terms_desc">عن طريق تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه ، فإنك توافق على شروط وأحكام استخدام التطبيق.</string>
     <string name="label_terms_desc_terms_page">عن طريق تنزيل تطبيق Amazon Location Demo أو تثبيته أو استخدامه ، فإنك توافق على شروط وأحكام استخدام التطبيق.</string>
-    <string name="text_terms_desc_coloured_1">البنود و الظروف</string>
+    <string name="text_terms_desc_coloured_1">شروط وأحكام</string>
     <string name="text_terms_desc_coloured_2">سياسة الاستخدام المقبول لدى AWS</string>
     <string name="text_terms_desc_coloured_3">إشعار خصوصية AWS</string>
     <string name="label_legal_and_privacy">الشؤون القانونية والخصوصية</string>
