@@ -260,4 +260,6 @@
     <string name="change">Change</string>
     <string name="label_macdonald">Macdonald</string>
     <string name="label_bus_01">Bus 01</string>
+    <string name="routes_notifications">Routes notifications</string>
+    <string name="routes_active">routes active</string>
 </resources>

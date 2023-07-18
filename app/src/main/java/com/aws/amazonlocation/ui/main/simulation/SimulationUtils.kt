@@ -1,10 +1,15 @@
 package com.aws.amazonlocation.ui.main.simulation
 
 import android.app.Activity
-import android.content.DialogInterface
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
@@ -17,6 +22,7 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos
 import com.amazonaws.services.geo.AmazonLocationClient
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.SimulationHistoryData
 import com.aws.amazonlocation.data.response.SimulationHistoryInnerData
@@ -30,7 +36,6 @@ import com.aws.amazonlocation.utils.Durations
 import com.aws.amazonlocation.utils.GeoJsonReader
 import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.MapHelper
-import com.aws.amazonlocation.utils.MessageInterface
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.checkGeofenceInsideGrab
@@ -39,7 +44,6 @@ import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
-import com.aws.amazonlocation.utils.messageDialog
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -73,6 +77,7 @@ class SimulationUtils(
     val activity: Activity?,
     val mAWSLocationHelper: AWSLocationHelper
 ) {
+    private var notificationId: Int = 1
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var isBus1TrackerFinish: Boolean = false
     private var isBus2TrackerFinish: Boolean = false
@@ -84,6 +89,16 @@ class SimulationUtils(
     private var isBus8TrackerFinish: Boolean = false
     private var isBus9TrackerFinish: Boolean = false
     private var isBus10TrackerFinish: Boolean = false
+    private var isBus1TrackerNotificationEnable: Boolean = false
+    private var isBus2TrackerNotificationEnable: Boolean = false
+    private var isBus3TrackerNotificationEnable: Boolean = false
+    private var isBus4TrackerNotificationEnable: Boolean = false
+    private var isBus5TrackerNotificationEnable: Boolean = false
+    private var isBus6TrackerNotificationEnable: Boolean = false
+    private var isBus7TrackerNotificationEnable: Boolean = false
+    private var isBus8TrackerNotificationEnable: Boolean = false
+    private var isBus9TrackerNotificationEnable: Boolean = false
+    private var isBus10TrackerNotificationEnable: Boolean = false
     private var mqttManager: AWSIotMqttManager? = null
     private var adapter: SimulationTrackingListAdapter? = null
     private var adapterSimulation: SimulationNotificationAdapter? = null
@@ -141,6 +156,7 @@ class SimulationUtils(
             }
         }
         simulationInterface?.getGeofenceList(GeofenceCons.GEOFENCE_COLLECTION)
+        createNotificationChannel()
     }
 
     private fun initData() {
@@ -283,9 +299,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position1 = arrayListOf()
-                                                        position1?.add(latLng.longitude)
-                                                        position1?.add(latLng.latitude)
+                                                        if (isBus1TrackerNotificationEnable) {
+                                                            position1 = arrayListOf()
+                                                            position1?.add(latLng.longitude)
+                                                            position1?.add(latLng.latitude)
+                                                        } else {
+                                                            position1 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             0
@@ -353,9 +373,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position2 = arrayListOf()
-                                                        position2?.add(latLng.longitude)
-                                                        position2?.add(latLng.latitude)
+                                                        if (isBus2TrackerNotificationEnable) {
+                                                            position2 = arrayListOf()
+                                                            position2?.add(latLng.longitude)
+                                                            position2?.add(latLng.latitude)
+                                                        } else {
+                                                            position2 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             1
@@ -423,9 +447,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position3 = arrayListOf()
-                                                        position3?.add(latLng.longitude)
-                                                        position3?.add(latLng.latitude)
+                                                        if (isBus3TrackerNotificationEnable) {
+                                                            position3 = arrayListOf()
+                                                            position3?.add(latLng.longitude)
+                                                            position3?.add(latLng.latitude)
+                                                        } else {
+                                                            position3 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             2
@@ -493,9 +521,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position4 = arrayListOf()
-                                                        position4?.add(latLng.longitude)
-                                                        position4?.add(latLng.latitude)
+                                                        if (isBus4TrackerNotificationEnable) {
+                                                            position4 = arrayListOf()
+                                                            position4?.add(latLng.longitude)
+                                                            position4?.add(latLng.latitude)
+                                                        } else {
+                                                            position4 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             3
@@ -563,9 +595,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position5 = arrayListOf()
-                                                        position5?.add(latLng.longitude)
-                                                        position5?.add(latLng.latitude)
+                                                        if (isBus5TrackerNotificationEnable) {
+                                                            position5 = arrayListOf()
+                                                            position5?.add(latLng.longitude)
+                                                            position5?.add(latLng.latitude)
+                                                        } else {
+                                                            position5 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             4
@@ -633,9 +669,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position6 = arrayListOf()
-                                                        position6?.add(latLng.longitude)
-                                                        position6?.add(latLng.latitude)
+                                                        if (isBus6TrackerNotificationEnable) {
+                                                            position6 = arrayListOf()
+                                                            position6?.add(latLng.longitude)
+                                                            position6?.add(latLng.latitude)
+                                                        } else {
+                                                            position6 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             5
@@ -703,9 +743,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position7 = arrayListOf()
-                                                        position7?.add(latLng.longitude)
-                                                        position7?.add(latLng.latitude)
+                                                        if (isBus7TrackerNotificationEnable) {
+                                                            position7 = arrayListOf()
+                                                            position7?.add(latLng.longitude)
+                                                            position7?.add(latLng.latitude)
+                                                        } else {
+                                                            position7 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             6
@@ -773,9 +817,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position8 = arrayListOf()
-                                                        position8?.add(latLng.longitude)
-                                                        position8?.add(latLng.latitude)
+                                                        if (isBus8TrackerNotificationEnable) {
+                                                            position8 = arrayListOf()
+                                                            position8?.add(latLng.longitude)
+                                                            position8?.add(latLng.latitude)
+                                                        } else {
+                                                            position8 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             7
@@ -843,9 +891,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position9 = arrayListOf()
-                                                        position9?.add(latLng.longitude)
-                                                        position9?.add(latLng.latitude)
+                                                        if (isBus9TrackerNotificationEnable) {
+                                                            position9 = arrayListOf()
+                                                            position9?.add(latLng.longitude)
+                                                            position9?.add(latLng.latitude)
+                                                        } else {
+                                                            position9 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             8
@@ -913,9 +965,13 @@ class SimulationUtils(
                                                             point.latitude(),
                                                             point.longitude()
                                                         )
-                                                        position10 = arrayListOf()
-                                                        position10?.add(latLng.longitude)
-                                                        position10?.add(latLng.latitude)
+                                                        if (isBus10TrackerNotificationEnable) {
+                                                            position10 = arrayListOf()
+                                                            position10?.add(latLng.longitude)
+                                                            position10?.add(latLng.latitude)
+                                                        } else {
+                                                            position10 = null
+                                                        }
                                                         mMapHelper?.startAnimation(
                                                             latLng,
                                                             9
@@ -971,7 +1027,22 @@ class SimulationUtils(
                                 }
                             }
                         }
-                        simulationInterface?.evaluateGeofence(position1, position2, position3, position4, position5, position6, position7, position8, position9, position10)
+                        if (position1 != null || position2 != null || position3 != null || position4 != null || position5 != null ||
+                            position6 != null || position7 != null || position8 != null || position9 != null || position10 != null
+                        ) {
+                            simulationInterface?.evaluateGeofence(
+                                position1,
+                                position2,
+                                position3,
+                                position4,
+                                position5,
+                                position6,
+                                position7,
+                                position8,
+                                position9,
+                                position10
+                            )
+                        }
                         trackingHistoryData.clear()
                         when (selectedTrackerIndex) {
                             0 -> {
@@ -1093,6 +1164,65 @@ class SimulationUtils(
             initClick()
             initAdapter()
             setSpinnerData()
+            setSelectedNotificationCount()
+        }
+    }
+
+    private val CHANNEL_ID = "my_channel_simulation"
+    private val CHANNEL_NAME = "simulation Notification Channel"
+    private val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mActivity?.let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val importance = NotificationManager.IMPORTANCE_DEFAULT
+                    val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
+                        description = CHANNEL_NAME
+                    }
+                    // Register the channel with the system
+                    val notificationManager: NotificationManager =
+                        it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.createNotificationChannel(channel)
+                }
+            }
+        }
+    }
+
+    // Function to check if a notification group exists
+    private fun isNotificationGroupActive(context: Context, groupId: String): Boolean {
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        val activeNotifications = notificationManager.activeNotifications
+
+        // Check if any of the active notifications belong to the specified group
+        for (notification in activeNotifications) {
+            val groupKey = notification.notification.group
+            if (groupKey == groupId) {
+                return true // Group is still active
+            }
+        }
+        return false // Group is not active or device is below API 23
+    }
+
+    private fun showNotification(
+        notificationId: Int,
+        title: String,
+        subTitle: String,
+        setGroupSummary: Boolean
+    ) {
+        mActivity?.let {
+            val builder = NotificationCompat.Builder(it, CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_logo)
+                .setContentTitle(title)
+                .setContentText(subTitle)
+                .setGroupSummary(setGroupSummary)
+                .setGroup(GROUP_KEY_WORK_SIMULATION)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
+
+            NotificationManagerCompat.from(it).apply {
+                // notificationId is a unique int for each notification that you must define
+                notify(notificationId, builder)
+            }
         }
     }
 
@@ -1386,17 +1516,13 @@ class SimulationUtils(
                     } else {
                         "Tracker exited $geofenceName"
                     }
-                    runOnUiThread {
-                        activity?.messageDialog(
-                            title = geofenceName,
-                            subTitle = subTitle,
-                            false,
-                            object : MessageInterface {
-                                override fun onMessageClick(dialog: DialogInterface) {
-                                    dialog.dismiss()
-                                }
-                            }
-                        )
+                    notificationId++
+                    mActivity?.let {
+                        if (isNotificationGroupActive(it, GROUP_KEY_WORK_SIMULATION)) {
+                            showNotification(notificationId, geofenceName, subTitle, false)
+                        } else {
+                            showNotification(notificationId, geofenceName, subTitle, true)
+                        }
                     }
                 }
             }
@@ -1411,6 +1537,40 @@ class SimulationUtils(
             notificationData,
             object : SimulationNotificationAdapter.NotificationInterface {
                 override fun click(position: Int, isSelected: Boolean) {
+                    notificationData[position].isSelected = isSelected
+                    when (position) {
+                        0 -> {
+                            isBus1TrackerNotificationEnable = isSelected
+                        }
+                        1 -> {
+                            isBus2TrackerNotificationEnable = isSelected
+                        }
+                        2 -> {
+                            isBus3TrackerNotificationEnable = isSelected
+                        }
+                        3 -> {
+                            isBus4TrackerNotificationEnable = isSelected
+                        }
+                        4 -> {
+                            isBus5TrackerNotificationEnable = isSelected
+                        }
+                        5 -> {
+                            isBus6TrackerNotificationEnable = isSelected
+                        }
+                        6 -> {
+                            isBus7TrackerNotificationEnable = isSelected
+                        }
+                        7 -> {
+                            isBus8TrackerNotificationEnable = isSelected
+                        }
+                        8 -> {
+                            isBus9TrackerNotificationEnable = isSelected
+                        }
+                        9 -> {
+                            isBus10TrackerNotificationEnable = isSelected
+                        }
+                    }
+                    setSelectedNotificationCount()
                 }
             }
         )
@@ -1421,6 +1581,47 @@ class SimulationUtils(
         adapter = SimulationTrackingListAdapter(trackingHistoryData)
         mBindingTracking?.rvTracking?.adapter = adapter
         mBindingTracking?.rvTracking?.layoutManager = layoutManager
+    }
+
+    private fun setSelectedNotificationCount() {
+        var totalCount = 0
+        if (isBus1TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus2TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus3TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus4TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus5TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus6TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus7TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus8TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus9TrackerNotificationEnable) {
+            totalCount++
+        }
+        if (isBus10TrackerNotificationEnable) {
+            totalCount++
+        }
+        mBindingTracking?.apply {
+            tvRouteNotificationsName.text = buildString {
+                append(totalCount)
+                append(" ")
+                append(tvRouteNotificationsName.context.getString(R.string.routes_active))
+            }
+        }
     }
 
     fun hideSimulationBottomSheet() {

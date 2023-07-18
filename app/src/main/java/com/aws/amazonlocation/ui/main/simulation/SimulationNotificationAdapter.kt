@@ -27,6 +27,9 @@ class SimulationNotificationAdapter(
                 } else {
                     viewNotification.show()
                 }
+                switchBusNotification.setOnCheckedChangeListener { _, isChecked ->
+                    notificationInterface.click(adapterPosition, isChecked)
+                }
             }
         }
     }

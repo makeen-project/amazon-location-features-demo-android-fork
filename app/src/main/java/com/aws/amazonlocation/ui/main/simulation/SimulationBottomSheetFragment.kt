@@ -1,12 +1,23 @@
 package com.aws.amazonlocation.ui.main.simulation
 
+import android.Manifest.permission.POST_NOTIFICATIONS
+import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetStartSimulationBinding
 import com.aws.amazonlocation.ui.main.MainActivity
@@ -82,8 +93,30 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
     private fun clickListener() {
         mBinding.apply {
             btnStartSimulation.setOnClickListener {
-                (activity as MainActivity).showSimulationSheet()
-                dialog.dismiss()
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        POST_NOTIFICATIONS
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        openSimulation()
+                    }
+                    shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
+                        if (!NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()) {
+                            // If notifications are not enabled, prompt the user to enable them
+                            openAppNotificationSettings(requireContext())
+                        }
+                    }
+                    else -> {
+                        // The registered ActivityResultCallback gets the result of this request
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            requestPermissionLauncher.launch(
+                                POST_NOTIFICATIONS
+                            )
+                        } else {
+                            openSimulation()
+                        }
+                    }
+                }
             }
             tvMaybeLater.setOnClickListener {
                 dialog.dismiss()
@@ -92,6 +125,41 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
                 dialog.dismiss()
             }
         }
+    }
+    @SuppressLint("ObsoleteSdkInt")
+    private fun openAppNotificationSettings(context: Context) {
+        val intent = Intent()
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                // For Android 8.0 (Oreo) and above, open the notification settings for the app
+                intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                // For Android 5.0 (Lollipop) and above, open the app's notification settings
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                }
+                intent.putExtra("app_package", context.packageName)
+                intent.putExtra("app_uid", context.applicationInfo.uid)
+            }
+            else -> {
+                // For older Android versions, open the app details settings
+                intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                intent.data = Uri.fromParts("package", context.packageName, null)
+            }
+        }
+        context.startActivity(intent)
+    }
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _: Boolean ->
+        openSimulation()
+    }
+
+    private fun openSimulation() {
+        (activity as MainActivity).showSimulationSheet()
+        dialog.dismiss()
     }
 
     private fun init() {
