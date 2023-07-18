@@ -49,8 +49,14 @@ class WelcomeBottomSheetFragment : BottomSheetDialogFragment() {
                 dialog.setCancelable(false)
                 behaviour.isHideable = false
                 behaviour.isFitToContents = false
-                if (!(activity as MainActivity).isTablet) {
-                    behaviour.expandedOffset = resources.getDimension(R.dimen.dp_50).toInt()
+                if (activity != null) {
+                    if (!(activity as MainActivity).isTablet) {
+                        behaviour.expandedOffset = requireContext().resources.getDimension(R.dimen.dp_50).toInt()
+                    }
+                } else {
+                    activity?.let{ fragmentActivity ->
+                        behaviour.expandedOffset = fragmentActivity.resources.getDimension(R.dimen.dp_50).toInt()
+                    }
                 }
                 dialog.setCanceledOnTouchOutside(false)
                 setupFullHeight(layout)

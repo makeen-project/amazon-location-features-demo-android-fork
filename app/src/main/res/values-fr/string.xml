@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">"Vous pouvez supprimer ces ressources via l'option de suppression de pile ou les pages "Gérer les ressources" dans le menu de gauche."</string>
     <string name="how_to_connect_2_1">"Connectez l'application de démonstration aux ressources AWS récemment créées en copiant dans les champs de saisie."</string>
     <string name="how_to_connect_2_2">"À partir de votre section de sortie CloudFormation, copiez les valeurs nommées correspondantes, comme indiqué dans le formulaire de section de droite (IdentityPoolId, etc.). Apprendre encore plus."</string>
-    <string name="learn_more">
-      <b>Apprendre encore plus</b>
-   </string>
+    <string name="learn_more">Apprendre encore plus</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">"Connectez-vous à l'aide des informations d'identification de l'utilisateur générées."</string>
@@ -43,7 +41,7 @@
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">UserPoold</string>
     <string name="by_connecting_i_agree_to_amazon">"En me connectant, j'accepte les\nConditions d'utilisation d'Amazon Location"</string>
-    <string name="terms_condition">termes et conditions</string>
+    <string name="terms_condition">"Conditions d'utilisation"</string>
     <string name="help">Aider</string>
     <string name="click_here">Cliquez ici</string>
     <string name="user_domain">UserDomain</string>
@@ -164,7 +162,7 @@
     <string name="label_right_aws">© 2023, Amazon Web Services, Inc. ou ses sociétés affiliées. Tous les droits sont réservés.</string>
     <string name="label_terms_desc">"En téléchargeant, installant ou utilisant l'application Amazon Location Demo, vous acceptez les conditions d'utilisation de l'application."</string>
     <string name="label_terms_desc_terms_page">"En téléchargeant, installant ou utilisant l'application Amazon Location Demo, vous acceptez les conditions d'utilisation de l'application."</string>
-    <string name="text_terms_desc_coloured_1">termes et conditions</string>
+    <string name="text_terms_desc_coloured_1">"Conditions d'utilisation"</string>
     <string name="text_terms_desc_coloured_2">"Politique d'utilisation acceptable d'AWS</string>
     <string name="text_terms_desc_coloured_3">"Avis de confidentialité d'AWS"</string>
     <string name="label_legal_and_privacy">Juridique et confidentialité</string>

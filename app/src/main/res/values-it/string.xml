@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">Puoi eliminare queste risorse tramite l\'opzione di eliminazione dello stack o le pagine "Gestisci risorse" nel menu a sinistra.</string>
     <string name="how_to_connect_2_1">Connetti l\'app demo con le risorse AWS create di recente copiando i campi di input.</string>
     <string name="how_to_connect_2_2">Dalla sezione di output di CloudFormation copia i valori denominati corrispondenti come indicato nel modulo della sezione a destra (IdentityPoolId ecc.). Saperne di più.</string>
-    <string name="learn_more">
-      <b>Saperne di più</b>
-   </string>
+    <string name="learn_more">Saperne di più</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">Accedi utilizzando le credenziali utente generate.</string>
@@ -42,10 +40,10 @@
     <string name="identityPoolId">IdentityPoolld</string>
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">UserPoolld</string>
-    <string name="by_connecting_i_agree_to_amazon">Collegandomi accetto i\nTermini e condizioni di Amazon Location</string>
+    <string name="by_connecting_i_agree_to_amazon">Effettuando la connessione, accetto i\nTermini &amp; Condizioni</string>
     <string name="terms_condition">Termini &amp; Condizioni</string>
     <string name="help">Aiuto</string>
-    <string name="click_here">clicca qui</string>
+    <string name="click_here">Fare clic qui</string>
     <string name="user_domain">UserDomain</string>
     <string name="enter_user_domain">Immettere UserDomain</string>
     <string name="enter_identity_pool_id">Immettere IdentityPoolId</string>
@@ -162,8 +160,8 @@
     <string name="label_welcome_amazon">Benvenuto in\nAmazon Location Demo</string>
     <string name="label_continue">Continua</string>
     <string name="label_right_aws">© 2023, Amazon Web Services, Inc. o sue affiliate. Tutti i diritti riservati.</string>
-    <string name="label_terms_desc">Scaricando, installando o utilizzando l\'app Amazon Location Demo, accetti i termini e le condizioni d\'uso dell\'app.</string>
-    <string name="label_terms_desc_terms_page">Scaricando, installando o utilizzando l\'app Amazon Location Demo, accetti i termini e le condizioni d\'uso dell\'app.</string>
+    <string name="label_terms_desc">Scaricando, installando o utilizzando l\'app Amazon Location Demo, accetti i Termini &amp; Condizioni d\'uso dell\'app.</string>
+    <string name="label_terms_desc_terms_page">Scaricando, installando o utilizzando l\'app Amazon Location Demo, accetti i Termini &amp; Condizioni d\'uso dell\'app.</string>
     <string name="text_terms_desc_coloured_1">Termini &amp; Condizioni</string>
     <string name="text_terms_desc_coloured_2">Policy di utilizzo accettabile di AWS</string>
     <string name="text_terms_desc_coloured_3">Informativa sulla privacy di AWS</string>

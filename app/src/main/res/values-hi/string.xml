@@ -26,14 +26,12 @@
     <string name="geofencing_and_tracking_features">जियोफ़ेंस और ट्रैकर्स को सक्षम करने के लिए अपना AWS खाता कनेक्ट करें। यह सुनिश्चित करेगा कि आपका ट्रैकिंग और जियोफेंसिंग डेटा केवल आपके खाते में संग्रहीत है। आपके लॉग इन करने के बाद, डेमो ऐप की सभी सुविधाएं आपके AWS खाते में तैनात संसाधनों का उपयोग करके चलेंगी। यदि आप AWS के डेमो ऐप खाते में संसाधनों का उपयोग करके डेमो ऐप चलाना जारी रखना चाहते हैं तो लॉग आउट करें।</string>
     <string name="connect">जोड़ना</string>
     <string name="how_to_connect">कैसे जुड़ें</string>
-    <string name="how_to_connect_1_1">आवश्यक संसाधनों को सुरक्षित रूप से बनाने के लिए क्लाउडफॉर्मेशन टेम्पलेट चलाने के लिए यहां क्लिक करें।</string>
+    <string name="how_to_connect_1_1">आवश्यक संसाधनों को सुरक्षित रूप से बनाने के लिए क्लाउडफॉर्मेशन टेम्पलेट चलाने के लिए यहाँ क्लिक करें।</string>
     <string name="how_to_connect_1_2">यह सुरक्षित रूप से सभी आवश्यक संसाधन तैयार करेगा।</string>
     <string name="how_to_connect_1_3">"आप इन संसाधनों को बाईं ओर मेनू में स्टैक हटाने के विकल्प या \'संसाधन प्रबंधित करें' पृष्ठों के माध्यम से हटा सकते हैं।"</string>
     <string name="how_to_connect_2_1">इनपुट फ़ील्ड में कॉपी करके डेमो ऐप को हाल ही में बनाए गए AWS संसाधनों से कनेक्ट करें।</string>
     <string name="how_to_connect_2_2">अपने क्लाउडफॉर्मेशन आउटपुट सेक्शन से संबंधित नामित मानों को कॉपी करें जैसा कि सही सेक्शन फॉर्म (आइडेंटिटीपूलआईडी आदि) में दर्शाया गया है। और अधिक जानें।</string>
-    <string name="learn_more">
-      <b>और अधिक जानें</b>
-   </string>
+    <string name="learn_more">और अधिक जानें</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">उत्पन्न उपयोगकर्ता क्रेडेंशियल का उपयोग करके लॉगिन करें।</string>
@@ -43,7 +41,7 @@
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">उपयोगकर्तापूलल्ड</string>
     <string name="by_connecting_i_agree_to_amazon">कनेक्ट करके मैं अमेज़ॅन लोकेशन के नियम और शर्तों से सहमत हूं</string>
-    <string name="terms_condition">नियम एवं शर्तें</string>
+    <string name="terms_condition">नियम और शर्तों</string>
     <string name="help">मदद</string>
     <string name="click_here">यहाँ क्लिक करें</string>
     <string name="user_domain">उपयोगकर्ताडोमेन</string>
@@ -110,7 +108,7 @@
     <string name="label_connected">आप जुड़ गए हैं</string>
     <string name="label_connected_description">जियोफ़ेंस और ट्रैकर्स को सक्षम करने के लिए अपना AWS खाता कनेक्ट करें। यह सुनिश्चित करेगा कि आपका ट्रैकिंग और जियोफेंसिंग डेटा केवल आपके खाते में संग्रहीत है। आपके लॉग इन करने के बाद, डेमो ऐप की सभी सुविधाएं आपके AWS खाते में तैनात संसाधनों का उपयोग करके चलेंगी। यदि आप AWS के डेमो ऐप खाते में संसाधनों का उपयोग करके डेमो ऐप चलाना जारी रखना चाहते हैं तो लॉग आउट करें।</string>
     <string name="label_how_to_remove">कैसे हटाएं:</string>
-    <string name="label_connected_title_1">क्लाउडफ़ॉर्मेशन टेम्पलेट हटाने के लिए यहां क्लिक करें</string>
+    <string name="label_connected_title_1">क्लाउडफ़ॉर्मेशन टेम्पलेट हटाने के लिए यहाँ क्लिक करें</string>
     <string name="label_connected_title_2">यह सुरक्षित रूप से सभी आवश्यक संसाधन तैयार करेगा।</string>
     <string name="label_connected_title_3">अमेज़ॅन लोकेशन ऐप को बनाए गए संसाधनों से कनेक्ट करें</string>
     <string name="label_connected_title_4">कृपया स्थान में निम्नलिखित आवश्यक फ़ील्ड दर्ज करें।</string>
@@ -162,8 +160,8 @@
     <string name="label_welcome_amazon">अमेज़ॅन लोकेशन डेमो में आपका स्वागत है</string>
     <string name="label_continue">जारी रखना</string>
     <string name="label_right_aws">© 2023, अमेज़ॅन वेब सर्विसेज, इंक. या उसके सहयोगी। सर्वाधिकार सुरक्षित।</string>
-    <string name="label_terms_desc">अमेज़ॅन लोकेशन डेमो ऐप को डाउनलोड, इंस्टॉल या उपयोग करके, आप उपयोग के लिए ऐप के नियमों और शर्तों से सहमत हैं।</string>
-    <string name="label_terms_desc_terms_page">अमेज़ॅन लोकेशन डेमो ऐप को डाउनलोड, इंस्टॉल या उपयोग करके, आप उपयोग के लिए ऐप के नियमों और शर्तों से सहमत हैं।</string>
+    <string name="label_terms_desc">अमेज़ॅन लोकेशन डेमो ऐप को डाउनलोड, इंस्टॉल या उपयोग करके, आप उपयोग के लिए ऐप के नियम एवं शर्तें से सहमत हैं।</string>
+    <string name="label_terms_desc_terms_page">अमेज़ॅन लोकेशन डेमो ऐप को डाउनलोड, इंस्टॉल या उपयोग करके, आप उपयोग के लिए ऐप के नियम एवं शर्तें से सहमत हैं।</string>
     <string name="text_terms_desc_coloured_1">नियम एवं शर्तें</string>
     <string name="text_terms_desc_coloured_2">AWS स्वीकार्य उपयोग नीति</string>
     <string name="text_terms_desc_coloured_3">AWS गोपनीयता सूचना</string>

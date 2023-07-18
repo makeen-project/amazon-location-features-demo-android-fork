@@ -31,9 +31,7 @@
     <string name="how_to_connect_1_3">Você pode excluir esses recursos por meio da opção de exclusão de pilha ou das páginas "Gerenciar recursos" no menu à esquerda.</string>
     <string name="how_to_connect_2_1">Conecte o aplicativo de demonstração com os recursos da AWS criados recentemente copiando nos campos de entrada.</string>
     <string name="how_to_connect_2_2">Na seção de saída do CloudFormation, copie os valores nomeados correspondentes conforme refletido no formulário da seção correta (IdentityPoolId etc.). Saber mais.</string>
-    <string name="learn_more">
-      <b>Saber mais</b>
-   </string>
+    <string name="learn_more">Saber mais</string>
     <string name="one">1</string>
     <string name="two">2</string>
     <string name="how_to_connect_3_1">Faça login usando as credenciais de usuário geradas.</string>
