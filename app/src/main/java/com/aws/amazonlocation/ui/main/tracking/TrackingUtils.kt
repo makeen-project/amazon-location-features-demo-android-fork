@@ -218,7 +218,9 @@ class TrackingUtils(
                     viewLoader.show()
                     tvStopTracking.hide()
                     cardStartTracking.isEnabled = false
-                    startMqttManager()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        startMqttManager()
+                    }, 10)
                 }
             }
             mBottomSheetTrackingBehavior?.addBottomSheetCallback(object :
