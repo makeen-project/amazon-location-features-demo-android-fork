@@ -571,34 +571,17 @@ class ExploreFragment :
     }
 
     private val mSimulationInterface = object : SimulationInterface {
-        override fun getGeofenceList(collectionName: String) {
-            mSimulationViewModel.getGeofenceList(collectionName)
+        override fun getGeofenceList() {
+            mSimulationViewModel.callAllSimulation()
         }
 
         override fun evaluateGeofence(
-            position1: List<Double>?,
-            position2: List<Double>?,
-            position3: List<Double>?,
-            position4: List<Double>?,
-            position5: List<Double>?,
-            position6: List<Double>?,
-            position7: List<Double>?,
-            position8: List<Double>?,
-            position9: List<Double>?,
-            position10: List<Double>?
+            collectionName: String,
+            position1: List<Double>?
         ) {
             mSimulationViewModel.evaluateGeofence(
-                GeofenceCons.GEOFENCE_COLLECTION,
+                collectionName,
                 position1,
-                position2,
-                position3,
-                position4,
-                position5,
-                position6,
-                position7,
-                position8,
-                position9,
-                position10,
                 getDeviceId(requireContext()),
                 Date()
             )

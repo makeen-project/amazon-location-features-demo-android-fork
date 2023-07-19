@@ -78,20 +78,11 @@ class GeofenceImp(private val mRemoteDataSource: RemoteDataSourceImpl) :
     override suspend fun evaluateGeofence(
         trackerName: String,
         position1: List<Double>?,
-        position2: List<Double>?,
-        position3: List<Double>?,
-        position4: List<Double>?,
-        position5: List<Double>?,
-        position6: List<Double>?,
-        position7: List<Double>?,
-        position8: List<Double>?,
-        position9: List<Double>?,
-        position10: List<Double>?,
         deviceId: String,
         date: Date,
         batchLocationUpdateInterface: BatchLocationUpdateInterface
     ) {
-        mRemoteDataSource.evaluateGeofence(trackerName, position1, position2, position3, position4, position5, position6, position7, position8, position9, position10, deviceId, date, batchLocationUpdateInterface)
+        mRemoteDataSource.evaluateGeofence(trackerName, position1, deviceId, date, batchLocationUpdateInterface)
     }
     override suspend fun getLocationHistory(
         trackerName: String,

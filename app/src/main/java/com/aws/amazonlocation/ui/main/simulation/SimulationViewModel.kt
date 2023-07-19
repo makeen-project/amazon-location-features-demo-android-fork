@@ -1,17 +1,20 @@
 package com.aws.amazonlocation.ui.main.simulation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.data.common.DataSourceException
 import com.aws.amazonlocation.data.common.HandleResult
 import com.aws.amazonlocation.data.response.GeofenceData
+import com.aws.amazonlocation.data.response.SimulationGeofenceData
 import com.aws.amazonlocation.data.response.UpdateBatchLocationResponse
 import com.aws.amazonlocation.domain.`interface`.BatchLocationUpdateInterface
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.utils.simulationCollectionName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -29,14 +32,26 @@ class SimulationViewModel @Inject constructor(
     ViewModel() {
 
     private val _getGeofenceList =
-        Channel<HandleResult<ArrayList<ListGeofenceResponseEntry>>>(Channel.BUFFERED)
-    val mGetGeofenceList: Flow<HandleResult<ArrayList<ListGeofenceResponseEntry>>> =
+        Channel<HandleResult<SimulationGeofenceData>>(Channel.BUFFERED)
+    val mGetGeofenceList: Flow<HandleResult<SimulationGeofenceData>> =
         _getGeofenceList.receiveAsFlow()
 
     private val _getUpdateDevicePosition =
         Channel<HandleResult<UpdateBatchLocationResponse>>(Channel.BUFFERED)
     val mGetUpdateDevicePosition: Flow<HandleResult<UpdateBatchLocationResponse>> =
         _getUpdateDevicePosition.receiveAsFlow()
+
+    fun callAllSimulation() {
+        viewModelScope.launch(Dispatchers.IO) {
+//            getGeofenceList(simulationCollectionName[9])
+            simulationCollectionName.forEach {
+                val data = async {
+                    getGeofenceList(it)
+                }
+                data.await()
+            }
+        }
+    }
 
     fun getGeofenceList(collectionName: String) {
         _getGeofenceList.trySend(HandleResult.Loading)
@@ -56,7 +71,8 @@ class SimulationViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            _getGeofenceList.trySend(HandleResult.Success(geofenceData.geofenceList))
+                            Log.e("TAG", "getGeofenceList $collectionName: ${geofenceData.geofenceList.size}")
+                            _getGeofenceList.trySend(HandleResult.Success(SimulationGeofenceData(collectionName, geofenceData.geofenceList)))
                         }
                     }
                 }
@@ -66,32 +82,14 @@ class SimulationViewModel @Inject constructor(
 
     fun evaluateGeofence(
         trackerName: String,
-        position1: List<Double>? = null,
-        position2: List<Double>? = null,
-        position3: List<Double>? = null,
-        position4: List<Double>? = null,
-        position5: List<Double>? = null,
-        position6: List<Double>? = null,
-        position7: List<Double>? = null,
-        position8: List<Double>? = null,
-        position9: List<Double>? = null,
-        position10: List<Double>? = null,
+        position: List<Double>? = null,
         deviceId: String,
         date: Date
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             mGetGeofenceUseCase.evaluateGeofence(
                 trackerName,
-                position1,
-                position2,
-                position3,
-                position4,
-                position5,
-                position6,
-                position7,
-                position8,
-                position9,
-                position10,
+                position,
                 deviceId,
                 date,
                 object : BatchLocationUpdateInterface {

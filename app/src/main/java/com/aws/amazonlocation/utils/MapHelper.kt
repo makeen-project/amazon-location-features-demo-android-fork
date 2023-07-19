@@ -1046,7 +1046,7 @@ class MapHelper(private val appContext: Context) {
 
                 animatorBus1 = ObjectAnimator
                     .ofObject(latLngEvaluatorBus1, currentPositionBus1, point)
-                    .setDuration(DELAY_2000)
+                    .setDuration(DELAY_1000)
                 animatorBus1?.addUpdateListener(animatorUpdateBus1Listener)
                 animatorBus1?.start()
                 currentPositionBus1 = point
