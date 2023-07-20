@@ -49,6 +49,7 @@ const val KEY_ACCESS_TOKEN = "key_access_token"
 const val KEY_REFRESH_TOKEN = "key_refresh_token"
 const val KEY_PROVIDER = "key_provider"
 const val IOT_POLICY = "AmazonLocationIotPolicy"
+const val IOT_POLICY_UN_AUTH = "AmazonLocationIotPolicyUnauth"
 
 const val STRING_FORMAT = "%.2f, %.2f"
 
@@ -132,6 +133,7 @@ object Distance {
 }
 
 object MapCameraZoom {
+    const val SIMULATION_CAMERA_ZOOM = 9.0
     const val NAVIGATION_CAMERA_ZOOM = 14.0
     const val DEFAULT_CAMERA_ZOOM = 14.0
     const val TRACKING_CAMERA_ZOOM = 14.0
@@ -217,5 +219,14 @@ object DateFormat {
 }
 
 val simulationCollectionName = arrayListOf(
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection02"
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection01",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection02",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection03",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection04",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection05",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection06",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection07",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection08",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection09",
+//    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection10"
 )

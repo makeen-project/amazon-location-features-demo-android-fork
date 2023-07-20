@@ -611,8 +611,8 @@ class AWSLocationHelper(
         date: Date
     ): UpdateBatchLocationResponse {
         val map: HashMap<String, String> = HashMap()
-        val identityId = AWSMobileClient.getInstance().identityId
-        identityId?.let { identityPId ->
+        val identityId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        identityId.let { identityPId ->
             identityPId.split(":").let { splitStringList ->
                 splitStringList[0].let { region ->
                     map["region"] = region
@@ -622,20 +622,21 @@ class AWSLocationHelper(
                 }
             }
         }
+        val devicePositionUpdateList = arrayListOf<DevicePositionUpdate>()
 
         val devicePositionUpdate =
             DevicePositionUpdate().withPosition(position1).withDeviceId(deviceId)
                 .withSampleTime(date)
                 .withPositionProperties(map)
+        devicePositionUpdateList.add(devicePositionUpdate)
 
         val data = BatchEvaluateGeofencesRequest().withCollectionName(trackerName)
-            .withDevicePositionUpdates(devicePositionUpdate)
+            .withDevicePositionUpdates(devicePositionUpdateList)
         return try {
             mClient?.batchEvaluateGeofences(data)
             UpdateBatchLocationResponse(null, true)
         } catch (e: Exception) {
             e.printStackTrace()
-//            mBaseActivity?.handleException(e)
             UpdateBatchLocationResponse(e.message, true)
         }
     }

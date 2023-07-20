@@ -58,6 +58,7 @@ class MainActivity : BaseActivity() {
 
     private var isAppNotFirstOpened: Boolean = false
     private var reStartApp: Boolean = false
+    private var isSimulationPolicyAttached: Boolean = false
     private lateinit var mNavHostFragment: NavHostFragment
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mNavController: NavController
@@ -277,6 +278,28 @@ class MainActivity : BaseActivity() {
         })
     }
 
+    private fun setSimulationIotPolicy() {
+        val mCognitoCredentialsProvider: CognitoCredentialsProvider? =
+            mAWSLocationHelper.initCognitoCachingCredentialsProvider()
+
+        val identityId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+
+        // Initialize the AWSIotMqttManager with the configuration
+        val attachPolicyReq =
+            AttachPolicyRequest().withPolicyName(IOT_POLICY_UN_AUTH)
+                .withTarget(identityId)
+        val mIotAndroidClient =
+            AWSIotClient(mCognitoCredentialsProvider)
+        var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+
+        if (region.isNullOrEmpty()) {
+            region = BuildConfig.DEFAULT_REGION
+        }
+        mIotAndroidClient.setRegion(Region.getRegion(region))
+        mIotAndroidClient.attachPolicy(attachPolicyReq)
+        isSimulationPolicyAttached = true
+    }
+
     private fun hideProgressAndShowData() {
         hideProgress()
         runOnUiThread {
@@ -477,6 +500,7 @@ class MainActivity : BaseActivity() {
     }
 
     fun showSimulationSheet() {
+        mBottomSheetHelper.hideSearchBottomSheet(true)
         if (isTablet) {
             mBinding.bottomNavigationMain.invisible()
         } else {
@@ -486,6 +510,9 @@ class MainActivity : BaseActivity() {
             mBottomSheetHelper.hideMapStyleSheet()
         }
         showSimulationTop()
+        if (!isSimulationPolicyAttached) {
+            setSimulationIotPolicy()
+        }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
         mSimulationUtils?.showSimulationBottomSheet()

@@ -2,10 +2,11 @@ package com.aws.amazonlocation.ui.main.simulation
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.SimulationHistoryData
-import com.aws.amazonlocation.databinding.RvTrackingItemBinding
+import com.aws.amazonlocation.databinding.RvSimulationItemBinding
 import com.aws.amazonlocation.utils.DateFormat
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
@@ -21,7 +22,7 @@ class SimulationTrackingListAdapter(
 ) :
     RecyclerView.Adapter<SimulationTrackingListAdapter.SearchPlaceVH>() {
 
-    inner class SearchPlaceVH(private val binding: RvTrackingItemBinding) :
+    inner class SearchPlaceVH(private val binding: RvSimulationItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SimulationHistoryData) {
             binding.apply {
@@ -30,6 +31,28 @@ class SimulationTrackingListAdapter(
                     val date = convertToCustomFormat(it.receivedTime)
                     tvTime.text = date
                 }
+//                if (item.isBusStopData) {
+//                    tvBusStop.show()
+//                    tvBusStop.text = String.format("Bus stop number %2d", item.busStopCount)
+//                    tvLatLng.setTextColor(
+//                        ContextCompat.getColor(
+//                            tvLatLng.context,
+//                            R.color.color_hint_text
+//                        )
+//                    )
+//                    val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_4)
+//                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+//                } else {
+//                    tvBusStop.hide()
+//                    tvLatLng.setTextColor(
+//                        ContextCompat.getColor(
+//                            tvLatLng.context,
+//                            R.color.color_medium_black
+//                        )
+//                    )
+//                    val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
+//                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+//                }
                 when (item.headerData) {
                     viewTopDotted.context.getString(R.string.label_position_start) -> {
                         viewTopDotted.hide()
@@ -59,7 +82,7 @@ class SimulationTrackingListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlaceVH {
         return SearchPlaceVH(
-            RvTrackingItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            RvSimulationItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 

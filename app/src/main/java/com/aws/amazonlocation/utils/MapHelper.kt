@@ -42,6 +42,7 @@ import com.aws.amazonlocation.utils.Durations.DEFAULT_INTERVAL_IN_MILLISECONDS
 import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID
 import com.aws.amazonlocation.utils.MapCameraZoom.DEFAULT_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.NAVIGATION_CAMERA_ZOOM
+import com.aws.amazonlocation.utils.MapCameraZoom.SIMULATION_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.TRACKING_CAMERA_ZOOM
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
@@ -760,6 +761,39 @@ class MapHelper(private val appContext: Context) {
         clearMarker()
     }
 
+    fun removeSimulationData() {
+        geoJsonSourceBus1 = null
+        geoJsonSourceBus2 = null
+        geoJsonSourceBus3 = null
+        geoJsonSourceBus4 = null
+        geoJsonSourceBus5 = null
+        geoJsonSourceBus6 = null
+        geoJsonSourceBus7 = null
+        geoJsonSourceBus8 = null
+        geoJsonSourceBus9 = null
+        geoJsonSourceBus10 = null
+        animatorBus1 = null
+        animatorBus2 = null
+        animatorBus3 = null
+        animatorBus4 = null
+        animatorBus5 = null
+        animatorBus6 = null
+        animatorBus7 = null
+        animatorBus8 = null
+        animatorBus9 = null
+        animatorBus10 = null
+        currentPositionBus1 = null
+        currentPositionBus2 = null
+        currentPositionBus3 = null
+        currentPositionBus4 = null
+        currentPositionBus5 = null
+        currentPositionBus6 = null
+        currentPositionBus7 = null
+        currentPositionBus8 = null
+        currentPositionBus9 = null
+        currentPositionBus10 = null
+    }
+
     fun addMultipleMarker(
         activity: Activity,
         markerType: MarkerEnum,
@@ -1336,6 +1370,16 @@ class MapHelper(private val appContext: Context) {
                 CAMERA_DURATION_1000
             )
         }
+    }
+
+    fun simulationZoomCamera(latLng: LatLng) {
+        mMapboxMap?.easeCamera(
+            CameraUpdateFactory.newCameraPosition(
+                CameraPosition.Builder().zoom(SIMULATION_CAMERA_ZOOM).target(latLng)
+                    .build()
+            ),
+            CAMERA_DURATION_1000
+        )
     }
 
     @SuppressLint("MissingPermission")
