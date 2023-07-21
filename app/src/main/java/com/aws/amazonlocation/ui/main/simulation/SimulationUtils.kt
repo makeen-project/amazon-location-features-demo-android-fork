@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui.main.simulation
 
 import android.app.Activity
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -381,7 +382,7 @@ class SimulationUtils(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mActivity?.let {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val importance = NotificationManager.IMPORTANCE_DEFAULT
+                    val importance = NotificationManager.IMPORTANCE_HIGH
                     val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
                         description = CHANNEL_NAME
                     }
@@ -422,6 +423,7 @@ class SimulationUtils(
                 .setContentText(subTitle)
                 .setGroupSummary(setGroupSummary)
                 .setGroup(GROUP_KEY_WORK_SIMULATION)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH).build()
 
             NotificationManagerCompat.from(it).apply {
