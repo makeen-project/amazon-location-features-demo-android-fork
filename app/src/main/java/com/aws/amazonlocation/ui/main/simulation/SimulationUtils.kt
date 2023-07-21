@@ -26,6 +26,7 @@ import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.BusRouteCoordinates
+import com.aws.amazonlocation.data.response.NotificationSimulationData
 import com.aws.amazonlocation.data.response.RouteSimulationData
 import com.aws.amazonlocation.data.response.SimulationGeofenceData
 import com.aws.amazonlocation.data.response.SimulationHistoryData
@@ -58,7 +59,6 @@ import com.aws.amazonlocation.utils.vancouverLat
 import com.aws.amazonlocation.utils.vancouverLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.mapbox.geojson.LineString
 import com.mapbox.geojson.Point
 import com.mapbox.geojson.Polygon
@@ -68,6 +68,9 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.util.Date
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -75,9 +78,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.util.Date
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -166,10 +166,7 @@ class SimulationUtils(
             val inputStream: InputStream = assetManager.open("route_data.json")
             val inputStreamReader = InputStreamReader(inputStream)
 
-            // Use Gson to convert the JSON data to a Person object
-            val gson = Gson()
-            routeData = gson.fromJson(inputStreamReader, RouteSimulationData::class.java)
-            var prevTrackingHistorySize = 0
+            routeData = Gson().fromJson(inputStreamReader, RouteSimulationData::class.java)
 
             routeData?.let { route ->
                 mActivity?.let { activity ->
@@ -181,7 +178,6 @@ class SimulationUtils(
                 coroutineScope.launch {
                     while (isActive) {
                         if (mIsLocationUpdateEnable) {
-                            prevTrackingHistorySize = simulationHistoryData.size
                             getNextCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
                                 busRouteCoordinates.coordinates?.let { list ->
                                     updateSimulationLocation(
@@ -426,7 +422,7 @@ class SimulationUtils(
                 .setContentText(subTitle)
                 .setGroupSummary(setGroupSummary)
                 .setGroup(GROUP_KEY_WORK_SIMULATION)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).build()
+                .setPriority(NotificationCompat.PRIORITY_HIGH).build()
 
             NotificationManagerCompat.from(it).apply {
                 // notificationId is a unique int for each notification that you must define
@@ -704,17 +700,15 @@ class SimulationUtils(
 
                 val stringData = String(data)
                 if (stringData.isNotEmpty()) {
-                    val jsonObject = JsonParser.parseString(stringData).asJsonObject
-                    val type = jsonObject.get("trackerEventType").asString
-                    val geofenceName = jsonObject.get("geofenceId").asString
-                    val geofenceCollection = jsonObject.get("geofenceCollection").asString
+                    val notificationData =
+                        Gson().fromJson(stringData, NotificationSimulationData::class.java)
                     var subTitle = ""
-                    if (type.equals("ENTER", true)) {
-                        subTitle = "Entered $geofenceName geofence"
+                    if (notificationData.trackerEventType.equals("ENTER", true)) {
+                        subTitle = "Entered ${notificationData.geofenceId} geofence"
                         var selectedIndex = 0
                         var busStopCount = 0
                         routeData?.forEachIndexed { index, routeSimulationDataItem ->
-                            if (routeSimulationDataItem.geofenceCollection == geofenceCollection) {
+                            if (routeSimulationDataItem.geofenceCollection == notificationData.geofenceCollection) {
                                 selectedIndex = index
                                 busStopCount = routeSimulationDataItem.busStopCount + 1
                                 routeSimulationDataItem.busStopCount++
@@ -727,23 +721,41 @@ class SimulationUtils(
                                     it.getString(R.string.label_position_data),
                                     true,
                                     busStopCount,
-                                    SimulationHistoryInnerData(
-                                        -123.121987,
-                                        49.286464,
-                                        Date()
-                                    )
+                                    notificationData.coordinates?.get(0)?.let { longitude ->
+                                        notificationData.coordinates?.get(1)?.let { latitude ->
+                                            SimulationHistoryInnerData(
+                                                latitude,
+                                                longitude,
+                                                Date()
+                                            )
+                                        }
+                                    }
                                 )
                             )
                         }
                     } else {
-                        subTitle = "Exited $geofenceName geofence"
+                        subTitle = "Exited ${notificationData.geofenceId} geofence"
                     }
                     notificationId++
                     mActivity?.let {
                         if (isNotificationGroupActive(it, GROUP_KEY_WORK_SIMULATION)) {
-                            showNotification(notificationId, geofenceName, subTitle, false)
+                            notificationData.geofenceId?.let { it1 ->
+                                showNotification(
+                                    notificationId,
+                                    it1,
+                                    subTitle,
+                                    false
+                                )
+                            }
                         } else {
-                            showNotification(notificationId, geofenceName, subTitle, true)
+                            notificationData.geofenceId?.let { it1 ->
+                                showNotification(
+                                    notificationId,
+                                    it1,
+                                    subTitle,
+                                    true
+                                )
+                            }
                         }
                     }
                 }

@@ -1,8 +1,5 @@
 package com.aws.amazonlocation.data.response
 
-/**
- * Created by Abhin.
- */
 class RouteSimulationData : ArrayList<RouteSimulationDataItem>()
 
 data class RouteSimulationDataItem(
