@@ -18,41 +18,41 @@ import java.util.Locale
 
 // SPDX-License-Identifier: MIT-0
 class SimulationTrackingListAdapter(
-    private val notificationData: ArrayList<SimulationHistoryData>
+    private val simulationHistoryData: ArrayList<SimulationHistoryData>
 ) :
-    RecyclerView.Adapter<SimulationTrackingListAdapter.SearchPlaceVH>() {
+    RecyclerView.Adapter<SimulationTrackingListAdapter.SimulationVH>() {
 
-    inner class SearchPlaceVH(private val binding: RvSimulationItemBinding) :
+    inner class SimulationVH(private val binding: RvSimulationItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SimulationHistoryData) {
             binding.apply {
                 item.devicePositionData?.let {
-                    tvLatLng.text = String.format("%7f , %7f", it.latitude, it.longitude)
+                    tvLatLng.text = String.format("%7f, %7f", it.latitude, it.longitude)
                     val date = convertToCustomFormat(it.receivedTime)
                     tvTime.text = date
                 }
-//                if (item.isBusStopData) {
-//                    tvBusStop.show()
-//                    tvBusStop.text = String.format("Bus stop number %2d", item.busStopCount)
-//                    tvLatLng.setTextColor(
-//                        ContextCompat.getColor(
-//                            tvLatLng.context,
-//                            R.color.color_hint_text
-//                        )
-//                    )
-//                    val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_4)
-//                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
-//                } else {
-//                    tvBusStop.hide()
-//                    tvLatLng.setTextColor(
-//                        ContextCompat.getColor(
-//                            tvLatLng.context,
-//                            R.color.color_medium_black
-//                        )
-//                    )
-//                    val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
-//                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
-//                }
+                if (item.isBusStopData) {
+                    tvBusStop.show()
+                    tvBusStop.text = String.format("Bus stop number %2d", item.busStopCount)
+                    tvLatLng.setTextColor(
+                        ContextCompat.getColor(
+                            tvLatLng.context,
+                            R.color.color_hint_text
+                        )
+                    )
+                    val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_4)
+                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+                } else {
+                    tvBusStop.hide()
+                    tvLatLng.setTextColor(
+                        ContextCompat.getColor(
+                            tvLatLng.context,
+                            R.color.color_medium_black
+                        )
+                    )
+                    val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
+                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+                }
                 when (item.headerData) {
                     viewTopDotted.context.getString(R.string.label_position_start) -> {
                         viewTopDotted.hide()
@@ -80,15 +80,15 @@ class SimulationTrackingListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPlaceVH {
-        return SearchPlaceVH(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SimulationVH {
+        return SimulationVH(
             RvSimulationItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: SearchPlaceVH, position: Int) {
-        holder.bind(notificationData[position])
+    override fun onBindViewHolder(holder: SimulationVH, position: Int) {
+        holder.bind(simulationHistoryData[position])
     }
 
-    override fun getItemCount() = notificationData.size
+    override fun getItemCount() = simulationHistoryData.size
 }

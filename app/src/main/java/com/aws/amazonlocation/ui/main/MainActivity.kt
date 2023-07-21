@@ -543,6 +543,7 @@ class MainActivity : BaseActivity() {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {
                 fragment.showSimulationTop()
+                fragment.hideGeofence()
             }
         }
     }

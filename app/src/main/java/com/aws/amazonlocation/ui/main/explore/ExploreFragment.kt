@@ -4137,6 +4137,10 @@ class ExploreFragment :
         }
     }
 
+    fun hideGeofence() {
+        mBinding.cardGeofenceMap.hide()
+    }
+
     fun hideDirectionAndCurrentLocationIcon() {
         hideViews(
             mBinding.cardDirection,

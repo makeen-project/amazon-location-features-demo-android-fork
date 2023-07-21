@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.res.AssetManager
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -94,7 +95,7 @@ class SimulationUtils(
     private var notificationId: Int = 1
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var mqttManager: AWSIotMqttManager? = null
-    private var simulationTrackingListAdapter: SimulationTrackingListAdapter? = null
+    private var simulationTrackingListAdapter: SimulationListAdapter? = null
     private var simulationNotificationAdapter: SimulationNotificationAdapter? = null
     private var mBottomSheetSimulationBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var simulationBinding: BottomSheetTrackSimulationBinding? = null
@@ -183,7 +184,7 @@ class SimulationUtils(
                             prevTrackingHistorySize = simulationHistoryData.size
                             getNextCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
                                 busRouteCoordinates.coordinates?.let { list ->
-                                    updateBusLocation(
+                                    updateSimulationLocation(
                                         busRouteCoordinates.id,
                                         index,
                                         list,
@@ -199,10 +200,7 @@ class SimulationUtils(
                                 )
                             )
                             withContext(Dispatchers.Main) {
-                                simulationTrackingListAdapter?.notifyItemRangeInserted(
-                                    prevTrackingHistorySize,
-                                    1
-                                )
+                                simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
                             }
                         }
                         delay(DELAY_1000)
@@ -248,8 +246,8 @@ class SimulationUtils(
         }
     }
 
-    private suspend fun updateBusLocation(
-        busIndex1: String?,
+    private suspend fun updateSimulationLocation(
+        busId: String?,
         busIndex: Int,
         point: List<Double>,
         context: Context,
@@ -283,8 +281,8 @@ class SimulationUtils(
                 mMapHelper?.addTrackerLine(
                     busesCoordinates[busIndex],
                     true,
-                    "layer$busIndex1",
-                    "source$busIndex1"
+                    "layer$busId",
+                    "source$busId"
                 )
             }
         }
@@ -486,17 +484,14 @@ class SimulationUtils(
                         mIsLocationUpdateEnable = false
                         CoroutineScope(Dispatchers.Default).launch {
                             delay(DELAY_1000)
-                            simulationHistoryData.clear()
-                            simulationHistoryData.addAll(
-                                getSelectedBusTrackingData(
-                                    selectedTrackerIndex
-                                )
-                            )
                             withContext(Dispatchers.Main) {
-                                simulationTrackingListAdapter?.notifyItemRangeChanged(
-                                    0,
-                                    simulationHistoryData.size
+                                simulationHistoryData.clear()
+                                simulationHistoryData.addAll(
+                                    getSelectedBusTrackingData(
+                                        selectedTrackerIndex
+                                    )
                                 )
+                                simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
                             }
                             mIsLocationUpdateEnable = true
                         }
@@ -770,7 +765,7 @@ class SimulationUtils(
         simulationBinding?.rvRouteNotifications?.layoutManager = notificationLayoutManager
 
         val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
-        simulationTrackingListAdapter = SimulationTrackingListAdapter(simulationHistoryData)
+        simulationTrackingListAdapter = SimulationListAdapter()
         simulationBinding?.rvTracking?.adapter = simulationTrackingListAdapter
         simulationBinding?.rvTracking?.layoutManager = layoutManager
     }
