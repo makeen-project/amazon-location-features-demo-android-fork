@@ -38,10 +38,21 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_navigation_icon"
-            android:layout_width="@dimen/dp_15"
-            android:layout_height="@dimen/dp_15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_20"
             android:src="@drawable/ic_navigation_route"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/cl_navigation_item"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cl_navigation_item" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_simulation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_18"
+            android:src="@drawable/ic_simulation_bus_stop"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/cl_navigation_item"
             app:layout_constraintStart_toStartOf="parent"

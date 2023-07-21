@@ -305,11 +305,7 @@ class ExploreFragment :
             mTrackingInterface
         )
 
-        mBaseActivity?.mSimulationUtils?.initSimulationView(
-            activity,
-            mBinding.bottomSheetTrackSimulation,
-            mSimulationInterface
-        )
+        initSimulationView()
         setUserProfile()
         if ((activity as MainActivity).isAppNotFirstOpened()) {
             checkPermission()
@@ -345,6 +341,14 @@ class ExploreFragment :
             AWSMobileClient.getInstance().signOut()
             activity?.userSignOutDialog()
         }
+    }
+
+    fun initSimulationView() {
+        mBaseActivity?.mSimulationUtils?.initSimulationView(
+            activity,
+            mBinding.bottomSheetTrackSimulation,
+            mSimulationInterface
+        )
     }
 
     private fun initGeofenceObserver() {
@@ -4141,6 +4145,10 @@ class ExploreFragment :
         mBinding.cardGeofenceMap.hide()
     }
 
+    fun showGeofence() {
+        mBinding.cardGeofenceMap.show()
+    }
+
     fun hideDirectionAndCurrentLocationIcon() {
         hideViews(
             mBinding.cardDirection,
@@ -4828,11 +4836,6 @@ class ExploreFragment :
                 mapboxMap,
                 mMapHelper
             )
-            mBaseActivity?.mSimulationUtils?.setMapBox(
-                it,
-                mapboxMap,
-                mMapHelper
-            )
         }
         mapboxMap.uiSettings.isCompassEnabled = false
         this.mMapboxMap = mapboxMap
@@ -4843,6 +4846,19 @@ class ExploreFragment :
                 mViewModel.mLatLng = LatLng(
                     mapboxMap.cameraPosition.target.latitude,
                     mapboxMap.cameraPosition.target.longitude
+                )
+            }
+        }
+        setMapBoxInSimulation()
+    }
+
+    fun setMapBoxInSimulation() {
+        activity?.let {
+            mMapboxMap?.let { it1 ->
+                mBaseActivity?.mSimulationUtils?.setMapBox(
+                    it,
+                    it1,
+                    mMapHelper
                 )
             }
         }

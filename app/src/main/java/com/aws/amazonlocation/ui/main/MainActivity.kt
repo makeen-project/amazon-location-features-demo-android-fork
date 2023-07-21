@@ -45,6 +45,7 @@ import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.setting.AWSCloudInformationFragment
 import com.aws.amazonlocation.ui.main.setting.SettingFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
+import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
@@ -500,6 +501,16 @@ class MainActivity : BaseActivity() {
     }
 
     fun showSimulationSheet() {
+        if (mSimulationUtils == null) {
+            mSimulationUtils = SimulationUtils(mPreferenceManager, this@MainActivity, mAWSLocationHelper)
+            if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+                val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                if (fragment is ExploreFragment) {
+                    fragment.initSimulationView()
+                    fragment.setMapBoxInSimulation()
+                }
+            }
+        }
         mBottomSheetHelper.hideSearchBottomSheet(true)
         if (isTablet) {
             mBinding.bottomNavigationMain.invisible()
@@ -520,6 +531,9 @@ class MainActivity : BaseActivity() {
         mSimulationUtils?.showSimulationBottomSheet()
     }
 
+    fun reInitializeSimulation() {
+        mSimulationUtils = null
+    }
     fun showNavigationIcon() {
         if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -534,6 +548,7 @@ class MainActivity : BaseActivity() {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {
                 fragment.showDirectionAndCurrentLocationIcon()
+                fragment.showGeofence()
             }
         }
     }

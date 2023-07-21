@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.res.AssetManager
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -33,6 +32,7 @@ import com.aws.amazonlocation.data.response.SimulationHistoryData
 import com.aws.amazonlocation.data.response.SimulationHistoryInnerData
 import com.aws.amazonlocation.databinding.BottomSheetTrackSimulationBinding
 import com.aws.amazonlocation.domain.`interface`.SimulationInterface
+import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
@@ -562,19 +562,7 @@ class SimulationUtils(
         simulationBinding?.apply {
             cardStartTracking.setOnClickListener {
                 if (mIsLocationUpdateEnable) {
-                    mActivity?.getColor(R.color.color_primary_green)
-                        ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
-                    tvStopTracking.text = mActivity?.getText(R.string.label_start_tracking)
-                    tvTrackingYourActivity.text =
-                        mActivity?.getText(R.string.label_not_tracking_your_activity)
-                    tvTrackingYourActivity.context?.let {
-                        tvTrackingYourActivity.setTextColor(
-                            ContextCompat.getColor(
-                                it,
-                                R.color.color_hint_text
-                            )
-                        )
-                    }
+                    stopTracker()
                     stopMqttManager()
                 } else {
                     viewLoader.show()
@@ -602,6 +590,22 @@ class SimulationUtils(
                     ivBackArrowChangeRoute.rotation = 180f
                 }
             }
+        }
+    }
+
+    private fun BottomSheetTrackSimulationBinding.stopTracker() {
+        mActivity?.getColor(R.color.color_primary_green)
+            ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
+        tvStopTracking.text = mActivity?.getText(R.string.label_start_tracking)
+        tvTrackingYourActivity.text =
+            mActivity?.getText(R.string.label_not_tracking_your_activity)
+        tvTrackingYourActivity.context?.let {
+            tvTrackingYourActivity.setTextColor(
+                ContextCompat.getColor(
+                    it,
+                    R.color.color_hint_text
+                )
+            )
         }
     }
 
@@ -788,6 +792,10 @@ class SimulationUtils(
 
     fun hideSimulationBottomSheet() {
         mBottomSheetSimulationBehavior.let {
+            mMapboxMap?.removeViewBounds()
+            simulationBinding?.apply {
+                stopTracker()
+            }
             coroutineScope.cancel()
             (activity as MainActivity).lifecycleScope.launch {
                 delay(DELAY_1000)
@@ -804,10 +812,13 @@ class SimulationUtils(
                 mMapHelper?.removeSimulationData()
                 mGeofenceList.clear()
                 routeData?.clear()
-                notificationData.clear()
+                notificationData.forEach { data ->
+                    data.isSelected = false
+                }
                 geofenceDataCount = 0
                 notificationId = 1
                 busSimulationNotificationFlags = BooleanArray(10) { false }
+                mIsLocationUpdateEnable = false
             }
             mGeofenceList.forEachIndexed { index, _ ->
                 mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index")
@@ -818,6 +829,7 @@ class SimulationUtils(
             it?.state = BottomSheetBehavior.STATE_HIDDEN
             it?.isFitToContents = false
             stopMqttManager()
+            activity.reInitializeSimulation()
         }
     }
 
@@ -863,5 +875,12 @@ class SimulationUtils(
             .include(rightBottomLatLng)
             .build()
         setLatLngBoundsForCameraTarget(newBounds)
+    }
+
+    private fun MapboxMap.removeViewBounds() {
+        // Set the LatLngBounds for the camera target to null
+        setLatLngBoundsForCameraTarget(null)
+        style?.let { mMapHelper?.updateZoomRange(it) }
+        mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
     }
 }

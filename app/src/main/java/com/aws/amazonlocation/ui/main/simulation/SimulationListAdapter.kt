@@ -11,6 +11,7 @@ import com.aws.amazonlocation.data.response.SimulationHistoryData
 import com.aws.amazonlocation.databinding.RvSimulationItemBinding
 import com.aws.amazonlocation.utils.DateFormat
 import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.invisible
 import com.aws.amazonlocation.utils.show
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -50,6 +51,8 @@ class SimulationListAdapter :
                         R.color.color_hint_text
                     )
                 )
+                ivSimulation.show()
+                ivNavigationIcon.invisible()
                 val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_4)
                 clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
             } else {
@@ -60,6 +63,8 @@ class SimulationListAdapter :
                         R.color.color_medium_black
                     )
                 )
+                ivSimulation.hide()
+                ivNavigationIcon.show()
                 val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
                 clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
             }

@@ -762,6 +762,18 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun removeSimulationData() {
+        mMapboxMap?.getStyle { style ->
+            geoJsonSourceBus1?.let { style.removeSource(it) }
+            geoJsonSourceBus2?.let { style.removeSource(it) }
+            geoJsonSourceBus3?.let { style.removeSource(it) }
+            geoJsonSourceBus4?.let { style.removeSource(it) }
+            geoJsonSourceBus5?.let { style.removeSource(it) }
+            geoJsonSourceBus6?.let { style.removeSource(it) }
+            geoJsonSourceBus7?.let { style.removeSource(it) }
+            geoJsonSourceBus8?.let { style.removeSource(it) }
+            geoJsonSourceBus9?.let { style.removeSource(it) }
+            geoJsonSourceBus10?.let { style.removeSource(it) }
+        }
         geoJsonSourceBus1 = null
         geoJsonSourceBus2 = null
         geoJsonSourceBus3 = null
@@ -1653,7 +1665,7 @@ class MapHelper(private val appContext: Context) {
         fun mapLoadedSuccess()
     }
 
-    private fun updateZoomRange(style: Style) {
+    fun updateZoomRange(style: Style) {
         mMapboxMap?.getStyle {
             val cameraPosition = mMapboxMap?.cameraPosition
             val zoom = cameraPosition?.zoom
