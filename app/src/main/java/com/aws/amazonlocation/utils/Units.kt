@@ -15,6 +15,14 @@ object Units {
 
     fun getMetricsNew(distance: Double, isMetric: Boolean): String {
         return if (isMetric) {
+            "${DecimalFormat("##.##").format((distance / 1000))} km"
+        } else {
+            "${DecimalFormat("##.##").format((distance / 5280))} mi"
+        }
+    }
+
+    fun getMetrics(distance: Double, isMetric: Boolean): String {
+        return if (isMetric) {
             if (distance <= 1000) {
                 "${DecimalFormat("##.##").format((distance.toInt()))} m"
             } else {

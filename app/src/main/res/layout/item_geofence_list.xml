@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_main_geofence"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -11,6 +12,7 @@
         android:layout_height="@dimen/dp_24"
         android:layout_marginVertical="@dimen/dp_20"
         android:src="@drawable/icon_delete_"
+        android:layout_marginEnd="@dimen/dp_16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/color_hint_text" />
@@ -20,9 +22,21 @@
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginStart="@dimen/dp_16"
         android:src="@drawable/ic_geofence_marker"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_geofence_icon_disable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/dp_24"
+        android:src="@drawable/ic_geofence_disable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_geofence_address_type"
@@ -54,6 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginHorizontal="@dimen/dp_16"
         android:background="@color/color_view"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_geofence_icon" />

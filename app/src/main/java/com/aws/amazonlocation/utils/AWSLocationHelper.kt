@@ -72,7 +72,7 @@ class AWSLocationHelper(
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
         var defaultRegion = BuildConfig.DEFAULT_REGION
         if (mapName == mapGrabMaps) {
-            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
         }
         if (region.isNullOrEmpty()) {
             region = defaultRegion
@@ -91,8 +91,8 @@ class AWSLocationHelper(
         var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
         var defaultRegion = BuildConfig.DEFAULT_REGION
         if (mapName == mapGrabMaps) {
-            defaultIdentityPoolId = BuildConfig.DEFAULT_SE_IDENTITY_POOL_ID
-            defaultRegion = BuildConfig.DEFAULT_SE_REGION
+            defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
+            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
         }
         if (region.isNullOrEmpty()) {
             region = defaultRegion

@@ -15,7 +15,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
-class MapStyleVMSetHereMapListData : BaseTest() {
+class MapStyleVMSetGrabMapListData : BaseTest() {
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -31,8 +31,8 @@ class MapStyleVMSetHereMapListData : BaseTest() {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun setHereMapListDataSuccess() = runTest {
-        mMapStyleViewModel.setHereMapListData(context)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE, mMapStyleViewModel.hereList.size == 5)
+    fun setGrabMapListDataSuccess() = runTest {
+        mMapStyleViewModel.setMapListData(context, true)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE, mMapStyleViewModel.mStyleList.size == 3)
     }
 }

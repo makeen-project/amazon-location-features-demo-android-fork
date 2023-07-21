@@ -6,6 +6,7 @@ import com.amazonaws.services.geo.model.SearchForPositionResult
 import com.amazonaws.services.geo.model.SearchPlaceIndexForPositionResult
 import com.amazonaws.services.geo.model.SearchPlaceIndexForPositionSummary
 import com.aws.amazonlocation.mock.ESRI
+import com.aws.amazonlocation.mock.LIGHT
 import com.aws.amazonlocation.mock.NO_DATA_FOUND
 import com.aws.amazonlocation.mock.Responses
 import com.aws.amazonlocation.mock.TEST_DATA
@@ -28,6 +29,7 @@ import com.aws.amazonlocation.mock.TEST_FAILED_SEARCH_SUGGESTION_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_SIGN_OUT_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_TRACKING_HISTORY_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_UPDATE_BATCH_DATA
+import com.aws.amazonlocation.mock.VECTOR
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -202,6 +204,9 @@ class ResponseDataTest {
     fun mapStyleInnerDataTest() {
         val data = MapStyleInnerData(
             mapName = null,
+            ESRI,
+            listOf(LIGHT),
+            listOf(VECTOR),
             isSelected = false,
             image = 0,
             mMapName = null,
@@ -214,6 +219,9 @@ class ResponseDataTest {
     fun mapStyleDataTest() {
         val data = MapStyleInnerData(
             mapName = null,
+            ESRI,
+            listOf(LIGHT),
+            listOf(VECTOR),
             isSelected = false,
             image = 0,
             mMapName = null,

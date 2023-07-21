@@ -486,13 +486,15 @@ class TrackingUtils(
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEachIndexed { index, data ->
                 val latLng = LatLng(data.geometry.circle.center[1], data.geometry.circle.center[0])
-                setDefaultIconWithGeofence(index)
-                mLatLngList.add(latLng)
-                drawGeofence(
-                    fromLngLat(latLng.longitude, latLng.latitude),
-                    data.geometry.circle.radius.toInt(),
-                    index
-                )
+                if (checkGeofenceInsideGrab(latLng, mPreferenceManager, mActivity?.applicationContext)) {
+                    setDefaultIconWithGeofence(index)
+                    mLatLngList.add(latLng)
+                    drawGeofence(
+                        fromLngLat(latLng.longitude, latLng.latitude),
+                        data.geometry.circle.radius.toInt(),
+                        index
+                    )
+                }
             }
             mMapHelper?.adjustMapBounds(
                 mLatLngList,

@@ -19,7 +19,6 @@
         android:clickable="true"
         android:focusable="true"
         android:layout_marginTop="@dimen/dp_20"
-        android:paddingHorizontal="@dimen/dp_16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,6 +42,7 @@
             android:layout_marginTop="@dimen/dp_13"
             app:cardBackgroundColor="@color/color_primary_green"
             app:cardCornerRadius="@dimen/dp_8"
+            android:layout_marginEnd="@dimen/dp_16"
             app:cardUseCompatPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_geofence_list">
@@ -87,6 +87,7 @@
             android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:text="@string/menu_geofence"
+            android:layout_marginStart="@dimen/dp_16"
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toBottomOf="@id/card_add_geofence"
             app:layout_constraintEnd_toStartOf="@id/card_add_geofence"
@@ -113,6 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_16"
             android:visibility="gone"
+            android:layout_marginHorizontal="@dimen/dp_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/card_add_geofence" />
@@ -121,6 +123,7 @@
             android:id="@+id/cl_no_internet_connection_geofence_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_add_geofence">
