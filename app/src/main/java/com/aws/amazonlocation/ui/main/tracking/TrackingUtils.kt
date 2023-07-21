@@ -179,10 +179,8 @@ class TrackingUtils(
             btnEnableTracking.setOnClickListener {
                 (activity as MainActivity).openCloudFormation()
             }
+            cardTrackerGeofenceSimulation.hide()
             btnTryTracker.setOnClickListener {
-                openSimulationWelcome()
-            }
-            cardTrackerGeofenceSimulation.setOnClickListener {
                 openSimulationWelcome()
             }
 

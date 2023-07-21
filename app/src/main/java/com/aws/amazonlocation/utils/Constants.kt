@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.ui.main.simulation.NotificationData
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -80,6 +81,13 @@ const val lonEast = 146.25
 const val latSouth = -21.943045533438166
 const val lonWest = 90.0
 
+const val simulationLatNorth = 49.3097
+const val simulationLonEast = -123.0229
+const val simulationLatSouth = 49.1999
+const val simulationLonWest = -123.2246
+const val vancouverLat = 49.2827
+const val vancouverLng = -123.1207
+
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
     Pair("US East (N. Virginia) us-east-1", "us-east-1"),
@@ -134,6 +142,7 @@ object Distance {
 
 object MapCameraZoom {
     const val SIMULATION_CAMERA_ZOOM = 9.0
+    const val SIMULATION_CAMERA_ZOOM_1 = 10.0
     const val NAVIGATION_CAMERA_ZOOM = 14.0
     const val DEFAULT_CAMERA_ZOOM = 14.0
     const val TRACKING_CAMERA_ZOOM = 14.0
@@ -219,7 +228,7 @@ object DateFormat {
 }
 
 val simulationCollectionName = arrayListOf(
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection01",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection01"
 //    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection02",
 //    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection03",
 //    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection04",
@@ -229,4 +238,17 @@ val simulationCollectionName = arrayListOf(
 //    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection08",
 //    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection09",
 //    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection10"
+)
+
+val notificationData = arrayListOf(
+    NotificationData("Bus 01 Macdonald", false),
+    NotificationData("Bus 02 Main", false),
+    NotificationData("Bus 03 Robson", false),
+    NotificationData("Bus 04 Davie", false),
+    NotificationData("Bus 05 Fraser", false),
+    NotificationData("Bus 06 Granville", false),
+    NotificationData("Bus 07 Downtown, Oak", false),
+    NotificationData("Bus 08 Victoria", false),
+    NotificationData("Bus 09 Knight", false),
+    NotificationData("Bus 10 UBC", false)
 )

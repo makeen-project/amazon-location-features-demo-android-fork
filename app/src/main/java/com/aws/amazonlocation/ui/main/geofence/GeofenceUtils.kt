@@ -359,10 +359,8 @@ class GeofenceUtils {
                     (mActivity as MainActivity).showGeofenceCloudFormation()
                 }
             }
+            cardTrackerGeofenceSimulation.hide()
             btnTryGeofence.setOnClickListener {
-                openSimulationWelcome()
-            }
-            cardTrackerGeofenceSimulation.setOnClickListener {
                 openSimulationWelcome()
             }
 
@@ -540,6 +538,7 @@ class GeofenceUtils {
         if (isTablet) {
             (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
         }
+        mBindingGeofenceList?.btnTryGeofence?.hide()
         mBindingGeofenceList?.tvEnableGeofence?.text = mActivity?.getString(R.string.add_geofence)
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {

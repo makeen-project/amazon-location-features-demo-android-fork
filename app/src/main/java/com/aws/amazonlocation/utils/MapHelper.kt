@@ -907,7 +907,7 @@ class MapHelper(private val appContext: Context) {
                 0 -> {
                     currentPositionBus1 = currentPlace
                     geoJsonSourceBus1 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -922,7 +922,7 @@ class MapHelper(private val appContext: Context) {
                 1 -> {
                     currentPositionBus2 = currentPlace
                     geoJsonSourceBus2 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -937,7 +937,7 @@ class MapHelper(private val appContext: Context) {
                 2 -> {
                     currentPositionBus3 = currentPlace
                     geoJsonSourceBus3 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -952,7 +952,7 @@ class MapHelper(private val appContext: Context) {
                 3 -> {
                     currentPositionBus4 = currentPlace
                     geoJsonSourceBus4 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -967,7 +967,7 @@ class MapHelper(private val appContext: Context) {
                 4 -> {
                     currentPositionBus5 = currentPlace
                     geoJsonSourceBus5 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -982,7 +982,7 @@ class MapHelper(private val appContext: Context) {
                 5 -> {
                     currentPositionBus6 = currentPlace
                     geoJsonSourceBus6 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -997,7 +997,7 @@ class MapHelper(private val appContext: Context) {
                 6 -> {
                     currentPositionBus7 = currentPlace
                     geoJsonSourceBus7 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -1012,7 +1012,7 @@ class MapHelper(private val appContext: Context) {
                 7 -> {
                     currentPositionBus8 = currentPlace
                     geoJsonSourceBus8 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -1027,7 +1027,7 @@ class MapHelper(private val appContext: Context) {
                 8 -> {
                     currentPositionBus9 = currentPlace
                     geoJsonSourceBus9 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -1042,7 +1042,7 @@ class MapHelper(private val appContext: Context) {
                 9 -> {
                     currentPositionBus10 = currentPlace
                     geoJsonSourceBus10 = GeoJsonSource(
-                        "source-id$trackerImageName",
+                        trackerImageName,
                         Feature.fromGeometry(
                             Point.fromLngLat(
                                 currentPlace.longitude,
@@ -1056,7 +1056,7 @@ class MapHelper(private val appContext: Context) {
                 }
             }
             style.addLayer(
-                SymbolLayer("layer-id$trackerImageName", "source-id$trackerImageName")
+                SymbolLayer(trackerImageName, trackerImageName)
                     .withProperties(
                         PropertyFactory.iconImage(trackerImageName),
                         PropertyFactory.iconIgnorePlacement(true),

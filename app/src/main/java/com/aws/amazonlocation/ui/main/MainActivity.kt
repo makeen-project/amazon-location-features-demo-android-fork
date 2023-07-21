@@ -511,7 +511,9 @@ class MainActivity : BaseActivity() {
         }
         showSimulationTop()
         if (!isSimulationPolicyAttached) {
-            setSimulationIotPolicy()
+            lifecycleScope.launch {
+                setSimulationIotPolicy()
+            }
         }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
