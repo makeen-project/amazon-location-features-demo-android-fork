@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui.main.simulation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aws.amazonlocation.data.common.DataSourceException
@@ -43,7 +42,6 @@ class SimulationViewModel @Inject constructor(
 
     fun callAllSimulation() {
         viewModelScope.launch(Dispatchers.IO) {
-//            getGeofenceList(simulationCollectionName[9])
             simulationCollectionName.forEach {
                 val data = async {
                     getGeofenceList(it)
@@ -71,7 +69,6 @@ class SimulationViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            Log.e("TAG", "getGeofenceList $collectionName: ${geofenceData.geofenceList.size}")
                             _getGeofenceList.trySend(HandleResult.Success(SimulationGeofenceData(collectionName, geofenceData.geofenceList)))
                         }
                     }

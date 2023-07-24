@@ -690,7 +690,8 @@ class MapHelper(private val appContext: Context) {
         coordinates: List<Point>,
         isWalk: Boolean,
         mLayerId: String,
-        mSourceId: String
+        mSourceId: String,
+        color: Int
     ) {
         mMapboxMap?.getStyle { style ->
             style.removeLayer(mLayerId)
@@ -716,7 +717,7 @@ class MapHelper(private val appContext: Context) {
                         PropertyFactory.lineColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_primary_green
+                                color
                             )
                         )
                     ),
@@ -759,6 +760,93 @@ class MapHelper(private val appContext: Context) {
     fun removeMarkerAndLine() {
         removeLine()
         clearMarker()
+    }
+
+    fun removeGeoJsonSourceData(index: Int) {
+        mMapboxMap?.getStyle { style ->
+            when (index) {
+                0 -> {
+                    geoJsonSourceBus1?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus1 = null
+                }
+                1 -> {
+                    geoJsonSourceBus2?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus2 = null
+                }
+                2 -> {
+                    geoJsonSourceBus3?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus3 = null
+                }
+                3 -> {
+                    geoJsonSourceBus4?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus4 = null
+                }
+                4 -> {
+                    geoJsonSourceBus5?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus5 = null
+                }
+                5 -> {
+                    geoJsonSourceBus6?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus6 = null
+                }
+                6 -> {
+                    geoJsonSourceBus7?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus7 = null
+                }
+                7 -> {
+                    geoJsonSourceBus8?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus8 = null
+                }
+                8 -> {
+                    geoJsonSourceBus9?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus9 = null
+                }
+                9 -> {
+                    geoJsonSourceBus10?.let {
+                        if (style.getSource(it.id) != null) {
+                            style.removeSource(it)
+                        }
+                    }
+                    geoJsonSourceBus10 = null
+                }
+            }
+        }
     }
 
     fun removeSimulationData() {
@@ -804,6 +892,39 @@ class MapHelper(private val appContext: Context) {
         currentPositionBus8 = null
         currentPositionBus9 = null
         currentPositionBus10 = null
+    }
+
+    fun setGeoJsonSourceEmpty() {
+        if (geoJsonSourceBus1 != null) {
+            geoJsonSourceBus1 = null
+        }
+        if (geoJsonSourceBus2 != null) {
+            geoJsonSourceBus2 = null
+        }
+        if (geoJsonSourceBus3 != null) {
+            geoJsonSourceBus3 = null
+        }
+        if (geoJsonSourceBus4 != null) {
+            geoJsonSourceBus4 = null
+        }
+        if (geoJsonSourceBus5 != null) {
+            geoJsonSourceBus5 = null
+        }
+        if (geoJsonSourceBus6 != null) {
+            geoJsonSourceBus6 = null
+        }
+        if (geoJsonSourceBus7 != null) {
+            geoJsonSourceBus7 = null
+        }
+        if (geoJsonSourceBus8 != null) {
+            geoJsonSourceBus8 = null
+        }
+        if (geoJsonSourceBus9 != null) {
+            geoJsonSourceBus9 = null
+        }
+        if (geoJsonSourceBus10 != null) {
+            geoJsonSourceBus10 = null
+        }
     }
 
     fun addMultipleMarker(
@@ -918,152 +1039,172 @@ class MapHelper(private val appContext: Context) {
             when (index) {
                 0 -> {
                     currentPositionBus1 = currentPlace
-                    geoJsonSourceBus1 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus1 == null) {
+                        geoJsonSourceBus1 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus1?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus1?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 1 -> {
                     currentPositionBus2 = currentPlace
-                    geoJsonSourceBus2 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus2 == null) {
+                        geoJsonSourceBus2 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus2?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus2?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 2 -> {
                     currentPositionBus3 = currentPlace
-                    geoJsonSourceBus3 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus3 == null) {
+                        geoJsonSourceBus3 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus3?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus3?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 3 -> {
                     currentPositionBus4 = currentPlace
-                    geoJsonSourceBus4 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus4 == null) {
+                        geoJsonSourceBus4 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus4?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus4?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 4 -> {
                     currentPositionBus5 = currentPlace
-                    geoJsonSourceBus5 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus5 == null) {
+                        geoJsonSourceBus5 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus5?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus5?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 5 -> {
                     currentPositionBus6 = currentPlace
-                    geoJsonSourceBus6 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus6 == null) {
+                        geoJsonSourceBus6 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus6?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus6?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 6 -> {
                     currentPositionBus7 = currentPlace
-                    geoJsonSourceBus7 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus7 == null) {
+                        geoJsonSourceBus7 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus7?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus7?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 7 -> {
                     currentPositionBus8 = currentPlace
-                    geoJsonSourceBus8 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus8 == null) {
+                        geoJsonSourceBus8 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus8?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus8?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 8 -> {
                     currentPositionBus9 = currentPlace
-                    geoJsonSourceBus9 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus9 == null) {
+                        geoJsonSourceBus9 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus9?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus9?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
                 9 -> {
                     currentPositionBus10 = currentPlace
-                    geoJsonSourceBus10 = GeoJsonSource(
-                        trackerImageName,
-                        Feature.fromGeometry(
-                            Point.fromLngLat(
-                                currentPlace.longitude,
-                                currentPlace.latitude
+                    if (geoJsonSourceBus10 == null) {
+                        geoJsonSourceBus10 = GeoJsonSource(
+                            trackerImageName,
+                            Feature.fromGeometry(
+                                Point.fromLngLat(
+                                    currentPlace.longitude,
+                                    currentPlace.latitude
+                                )
                             )
                         )
-                    )
-                    geoJsonSourceBus10?.let {
-                        style.addSource(it)
+                        geoJsonSourceBus10?.let {
+                            style.addSource(it)
+                        }
                     }
                 }
             }

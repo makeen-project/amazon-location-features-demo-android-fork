@@ -78,6 +78,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.android.gestures.StandardScaleGestureDetector
 import com.mapbox.geojson.Point
@@ -2095,41 +2096,39 @@ class ExploreFragment :
                                 mViewModel,
                                 object : MapStyleAdapter.MapInterface {
                                     override fun mapStyleClick(position: Int, innerPosition: Int) {
-                                        if (checkInternetConnection()) {
-                                            if (position != -1 && innerPosition != -1) {
-                                                val selectedProvider =
-                                                    mViewModel.mStyleList[position].styleNameDisplay
-                                                val selectedInnerData =
-                                                    mViewModel.mStyleList[position].mapInnerData?.get(
-                                                        innerPosition
-                                                    )?.mapName
-                                                for (data in mViewModel.mStyleListForFilter) {
-                                                    if (data.styleNameDisplay.equals(
-                                                            selectedProvider
-                                                        )
-                                                    ) {
-                                                        data.mapInnerData.let {
-                                                            if (it != null) {
-                                                                for (innerData in it) {
-                                                                    if (innerData.mapName.equals(
-                                                                            selectedInnerData
-                                                                        )
-                                                                    ) {
-                                                                        if (innerData.isSelected) return
-                                                                    }
+                                        if (checkInternetConnection() && position != -1 && innerPosition != -1) {
+                                            val selectedProvider =
+                                                mViewModel.mStyleList[position].styleNameDisplay
+                                            val selectedInnerData =
+                                                mViewModel.mStyleList[position].mapInnerData?.get(
+                                                    innerPosition
+                                                )?.mapName
+                                            for (data in mViewModel.mStyleListForFilter) {
+                                                if (data.styleNameDisplay.equals(
+                                                        selectedProvider
+                                                    )
+                                                ) {
+                                                    data.mapInnerData.let {
+                                                        if (it != null) {
+                                                            for (innerData in it) {
+                                                                if (innerData.mapName.equals(
+                                                                        selectedInnerData
+                                                                    )
+                                                                ) {
+                                                                    if (innerData.isSelected) return
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 }
-                                                selectedProvider?.let { it2 ->
-                                                    selectedInnerData?.let { it3 ->
-                                                        mapStyleChange(
-                                                            false,
-                                                            it2,
-                                                            it3
-                                                        )
-                                                    }
+                                            }
+                                            selectedProvider?.let { it2 ->
+                                                selectedInnerData?.let { it3 ->
+                                                    mapStyleChange(
+                                                        false,
+                                                        it2,
+                                                        it3
+                                                    )
                                                 }
                                             }
                                         }
@@ -2152,6 +2151,9 @@ class ExploreFragment :
                         mBaseActivity?.bottomNavigationVisibility(false)
                     }
                     when {
+                        mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true -> {
+                            mBaseActivity?.mSimulationUtils?.setSimulationDraggable(false)
+                        }
                         mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
                             mBaseActivity?.mTrackingUtils?.collapseTracking()
                         }
@@ -2163,8 +2165,12 @@ class ExploreFragment :
             }
 
             cardExit.setOnClickListener {
-                cardSimulationPopup.hide()
-                (activity as MainActivity).hideSimulationSheet()
+                requireContext().simulationExit(object : SimulationDialogInterface {
+                    override fun onExitClick(dialog: DialogInterface) {
+                        cardSimulationPopup.hide()
+                        (activity as MainActivity).hideSimulationSheet()
+                    }
+                })
             }
             bottomSheetNavigationComplete.ivNavigationCompleteClose.setOnClickListener {
                 if (checkInternetConnection()) {
@@ -4143,10 +4149,20 @@ class ExploreFragment :
 
     fun hideGeofence() {
         mBinding.cardGeofenceMap.hide()
+        val defaultShapeAppearance = ShapeAppearanceModel.builder()
+            .build()
+        mBinding.cardMap.shapeAppearanceModel = defaultShapeAppearance
+        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_8).toFloat()
     }
 
     fun showGeofence() {
         mBinding.cardGeofenceMap.show()
+        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_0).toFloat()
+        val shapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setTopLeftCorner(CornerFamily.ROUNDED, 16f)
+            .setTopRightCorner(CornerFamily.ROUNDED, 16f)
+            .build()
+        mBinding.cardMap.shapeAppearanceModel = shapeAppearanceModel
     }
 
     fun hideDirectionAndCurrentLocationIcon() {
@@ -4180,7 +4196,7 @@ class ExploreFragment :
             )
             clearMapLineMarker()
             clearSearchList()
-            if (!mBottomSheetHelper.isMapStyleVisible()) {
+            if (!mBottomSheetHelper.isMapStyleVisible() && mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
                 mBaseActivity?.bottomNavigationVisibility(true)
                 mBottomSheetHelper.hideSearchBottomSheet(false)
             }

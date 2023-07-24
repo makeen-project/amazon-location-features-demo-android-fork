@@ -633,7 +633,8 @@ class TrackingUtils(
                             coordinates,
                             true,
                             "layerId$headerId",
-                            "sourceId$headerId"
+                            "sourceId$headerId",
+                            R.color.color_primary_green
                         )
                         mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
                             mMapHelper?.adjustMapBounds(
@@ -666,7 +667,8 @@ class TrackingUtils(
                             coordinates,
                             true,
                             "layerId$headerId",
-                            "sourceId$headerId"
+                            "sourceId$headerId",
+                            R.color.color_primary_green
                         )
                         mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
                             mMapHelper?.adjustMapBounds(
@@ -860,7 +862,7 @@ class TrackingUtils(
             } else {
                 headerIdsToRemove.add("layerId1")
                 sourceIdsToRemove.add("sourceId1")
-                mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1")
+                mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1", R.color.color_primary_green)
                 mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
                     mMapHelper?.adjustMapBounds(
                         latLngList,

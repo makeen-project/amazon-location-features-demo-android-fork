@@ -181,14 +181,22 @@ class BottomSheetHelper {
                                                 exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed()
                                                     ?.let { it1 ->
                                                         if (!it1) {
-                                                            hideSearchBottomSheet(false)
+                                                            if (exportFragment?.mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                                                                hideSearchBottomSheet(false)
+                                                            } else {
+                                                                exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationData()
+                                                            }
                                                         }
                                                     }
                                             }
                                         }
                                     }
                             } else {
-                                hideSearchBottomSheet(false)
+                                if (exportFragment?.mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                                    hideSearchBottomSheet(false)
+                                } else {
+                                    exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationData()
+                                }
                             }
                         }
                         BottomSheetBehavior.STATE_SETTLING -> {

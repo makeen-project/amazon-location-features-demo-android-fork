@@ -417,6 +417,7 @@ class MainActivity : BaseActivity() {
                     mNavController.navigate(R.id.setting_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
                 }
                 R.id.menu_more -> {
@@ -424,6 +425,7 @@ class MainActivity : BaseActivity() {
                     mNavController.navigate(R.id.about_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
                 }
             }

@@ -69,9 +69,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.util.Date
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -79,6 +76,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.util.Date
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -110,14 +110,13 @@ class SimulationUtils(
     private var simulationHistoryData = arrayListOf<SimulationHistoryData>()
     private val mCircleUnit: String = TurfConstants.UNIT_METERS
     private var mIsDefaultGeofence = false
-    private var mGeofenceList = ArrayList<ListGeofenceResponseEntry>()
     private var selectedTrackerIndex = 0
-    private var geofenceDataCount = 0
-    private var timerCount = 0
-    private val busesCoordinates = MutableList(10) { mutableListOf<Point>() }
-    private var busSimulationNotificationFlags = BooleanArray(10) { false }
-    private val busSimulationHistoryData =
-        MutableList(10) { mutableListOf<SimulationHistoryData>() }
+    private var timerCounts: MutableList<Int>? = null
+    private var busesCoordinates = MutableList(notificationData.size) { mutableListOf<Point>() }
+    private var busSimulationNotificationFlags: MutableList<Boolean>? = null
+    private var busSimulationHistoryData = MutableList(notificationData.size) { mutableListOf<SimulationHistoryData>() }
+    private var mGeofenceList = MutableList(notificationData.size) { mutableListOf<ListGeofenceResponseEntry>() }
+    private var mPreDrawTrackerLine = MutableList(notificationData.size) { mutableListOf<Point>() }
 
     fun setMapBox(
         activity: Activity,
@@ -146,6 +145,10 @@ class SimulationUtils(
         }
         simulationInterface?.getGeofenceList()
         createNotificationChannel()
+        setBounds()
+    }
+
+    private fun setBounds() {
         // Define your bounds coordinates
         val bounds = LatLngBounds.Builder()
             .include(LatLng(simulationLatNorth, simulationLonEast)) // Northeast corner
@@ -170,24 +173,35 @@ class SimulationUtils(
             routeData = Gson().fromJson(inputStreamReader, RouteSimulationData::class.java)
 
             routeData?.let { route ->
+                timerCounts = MutableList(route.size) { 0 }
+                busSimulationNotificationFlags = MutableList(route.size) { false }
+                busSimulationNotificationFlags?.set(0, true)
+                notificationData[0].isSelected = true
+                setSelectedNotificationCount()
+                simulationNotificationAdapter?.notifyItemChanged(0)
                 mActivity?.let { activity ->
                     getFirstCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
-                        addMarkerSimulation(activity, index, busRouteCoordinates)
+                        if (isBusTrackerNotificationEnable(index)) {
+                            addMarkerSimulation(activity, index, busRouteCoordinates)
+                        }
                     }
                 }
-
+                drawGeofenceWithPosition(0)
+                addPreDrawTrackerLine(route, 0)
                 coroutineScope.launch {
                     while (isActive) {
                         if (mIsLocationUpdateEnable) {
                             getNextCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
-                                busRouteCoordinates.coordinates?.let { list ->
-                                    updateSimulationLocation(
-                                        busRouteCoordinates.id,
-                                        index,
-                                        list,
-                                        context,
-                                        route.size
-                                    )
+                                if (busRouteCoordinates.isUpdateNeeded) {
+                                    busRouteCoordinates.coordinates?.let { list ->
+                                        updateSimulationLocation(
+                                            busRouteCoordinates.id,
+                                            index,
+                                            list,
+                                            context,
+                                            route.size
+                                        )
+                                    }
                                 }
                             }
                             simulationHistoryData.clear()
@@ -207,29 +221,105 @@ class SimulationUtils(
         }
     }
 
+    private fun drawGeofenceWithPosition(position: Int) {
+        val mLatLngList = arrayListOf<LatLng>()
+        if (mGeofenceList.isNotEmpty()) {
+            mGeofenceList[position].forEachIndexed { index, data ->
+                val latLng =
+                    LatLng(data.geometry.circle.center[1], data.geometry.circle.center[0])
+                setDefaultIconWithGeofence("$position$index")
+                mLatLngList.add(latLng)
+                drawSimulationPolygonCircle(
+                    Point.fromLngLat(latLng.longitude, latLng.latitude),
+                    data.geometry.circle.radius.toInt(),
+                    "$position$index"
+                )
+            }
+        }
+    }
+
+    private fun removeGeofenceWithPosition(position: Int) {
+        if (mGeofenceList.isNotEmpty()) {
+            mGeofenceList[position].forEachIndexed { index, _ ->
+                mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$position$index")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$position$index")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$position$index")
+            }
+        }
+    }
+
+    private fun addPreDrawTrackerLine(route: RouteSimulationData, index: Int) {
+        val trackerLineToPreDraw = arrayListOf<Point>()
+        route[index].coordinates?.forEach {
+            trackerLineToPreDraw.add(Point.fromLngLat(it[0], it[1]))
+        }
+        mPreDrawTrackerLine[index] = trackerLineToPreDraw
+        addTrackerLine(trackerLineToPreDraw, route, index)
+    }
+
+    private fun addTrackerLine(
+        trackerLineToPreDraw: ArrayList<Point>,
+        route: RouteSimulationData,
+        index: Int
+    ) {
+        mMapHelper?.addTrackerLine(
+            trackerLineToPreDraw,
+            true,
+            "layer${route[index].id}_pre_draw",
+            "source${route[index].id}_pre_draw",
+            R.color.color_hint_text
+        )
+    }
+
+    private fun removePreDrawTrackerLine(route: RouteSimulationData, index: Int) {
+        route[index].let {
+            it.id?.let { it1 -> mMapHelper?.removeSource(it1) }
+            it.id?.let { it1 -> mMapHelper?.removeLayer(it1) }
+            mMapHelper?.removeLayer("layer${it.id}")
+            mMapHelper?.removeLayer("source${it.id}")
+            mMapHelper?.removeLayer("layer${it.id}_pre_draw")
+            mMapHelper?.removeLayer("source${it.id}_pre_draw")
+        }
+    }
+
     private fun getNextCoordinates(): List<BusRouteCoordinates>? {
         val maxCoordinatesSize = routeData?.maxOfOrNull { it.coordinates?.size ?: 0 } ?: 0
         val nextCoordinates = routeData?.mapIndexedNotNull { index, routeSimulationDataItem ->
-            val coordinatesSize = routeSimulationDataItem.coordinates?.size ?: 0
-            if (coordinatesSize > 0) {
-                val currentIndex = timerCount % coordinatesSize
-                if (currentIndex == 0) {
-                    (activity as MainActivity).lifecycleScope.launch {
-                        mMapHelper?.removeLayer("layer${routeSimulationDataItem.id}")
-                        mMapHelper?.removeLayer("source${routeSimulationDataItem.id}")
-                        busesCoordinates[index].clear()
+            if (isBusTrackerNotificationEnable(index)) {
+                val coordinatesSize = routeSimulationDataItem.coordinates?.size ?: 0
+                if (coordinatesSize > 0) {
+                    timerCounts?.let {
+                        val currentIndex = (it[index]) % coordinatesSize
+                        if (currentIndex == 0) {
+                            (activity as MainActivity).lifecycleScope.launch {
+                                mMapHelper?.removeLayer("layer${routeSimulationDataItem.id}")
+                                mMapHelper?.removeLayer("source${routeSimulationDataItem.id}")
+                                busesCoordinates[index].clear()
+                                routeData?.let { route ->
+                                    addPreDrawTrackerLine(route, index)
+                                }
+                            }
+                        }
+                        it[index] = (it[index] + 1) % maxCoordinatesSize
+                        BusRouteCoordinates(
+                            routeSimulationDataItem.id,
+                            routeSimulationDataItem.geofenceCollection,
+                            routeSimulationDataItem.coordinates?.get(currentIndex),
+                            true
+                        )
                     }
+                } else {
+                    null
                 }
+            } else {
                 BusRouteCoordinates(
                     routeSimulationDataItem.id,
                     routeSimulationDataItem.geofenceCollection,
-                    routeSimulationDataItem.coordinates?.get(currentIndex)
+                    null,
+                    false
                 )
-            } else {
-                null
             }
         }
-        timerCount = (timerCount + 1) % maxCoordinatesSize
         return nextCoordinates
     }
 
@@ -243,6 +333,14 @@ class SimulationUtils(
         }
     }
 
+    private fun getFirstCoordinates(position: Int): BusRouteCoordinates {
+        return BusRouteCoordinates(
+            routeData?.get(position)?.id,
+            routeData?.get(position)?.geofenceCollection,
+            routeData?.get(position)?.coordinates?.first()
+        )
+    }
+
     private suspend fun updateSimulationLocation(
         busId: String?,
         busIndex: Int,
@@ -252,12 +350,12 @@ class SimulationUtils(
     ) {
         (activity as MainActivity).lifecycleScope.launch {
             val latLng = LatLng(point[1], point[0])
-            if (isBusTrackerNotificationEnable(busIndex)) {
-                val position = arrayListOf<Double>()
-                position.add(latLng.longitude)
-                position.add(latLng.latitude)
-                simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
-            }
+            // TODO - for notification uncomment
+//            val position = arrayListOf<Double>()
+//            position.add(latLng.longitude)
+//            position.add(latLng.latitude)
+//            simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
+
             mMapHelper?.startAnimation(latLng, busIndex)
             delay(DELAY_1000)
             val latLngPoint = Point.fromLngLat(point[0], point[1])
@@ -279,17 +377,27 @@ class SimulationUtils(
                     busesCoordinates[busIndex],
                     true,
                     "layer$busId",
-                    "source$busId"
+                    "source$busId",
+                    R.color.color_primary_green
                 )
+                mPreDrawTrackerLine[busIndex].removeAt(0)
+                routeData?.let { route ->
+                    addTrackerLine(mPreDrawTrackerLine[busIndex] as ArrayList<Point>, route, busIndex)
+                }
             }
         }
     }
 
     private fun isBusTrackerNotificationEnable(busIndex: Int): Boolean {
-        return when (busIndex) {
-            in busSimulationNotificationFlags.indices -> busSimulationNotificationFlags[busIndex]
-            else -> false
+        busSimulationNotificationFlags?.let {
+            return when (busIndex) {
+                in it.indices -> {
+                    it[busIndex]
+                }
+                else -> false
+            }
         }
+        return false
     }
 
     private fun getSelectedBusTrackingData(busIndex: Int): List<SimulationHistoryData> {
@@ -512,10 +620,10 @@ class SimulationUtils(
         }
     }
 
-    private fun setDefaultIconWithGeofence(index: Int) {
+    private fun setDefaultIconWithGeofence(index: String) {
         mMapboxMap?.getStyle { style ->
-            if (style.getSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index") == null) {
-                style.addSource(GeoJsonSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"))
+            if (style.getSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index) == null) {
+                style.addSource(GeoJsonSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index))
             }
             initPolygonCircleFillLayer(index)
         }
@@ -525,11 +633,11 @@ class SimulationUtils(
     /**
      * Add a [FillLayer] to display a [Polygon] in a the shape of a circle.
      */
-    private fun initPolygonCircleFillLayer(index: Int) {
+    private fun initPolygonCircleFillLayer(index: String) {
         mMapboxMap?.getStyle { style ->
             val fillLayer = FillLayer(
-                GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index",
-                GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"
+                GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + index,
+                GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index
             )
 
             mFragmentActivity?.applicationContext?.let {
@@ -550,8 +658,8 @@ class SimulationUtils(
                 )
             }
 
-            if (style.getLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index") == null) {
-                style.addLayerBelow(fillLayer, GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index")
+            if (style.getLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + index) == null) {
+                style.addLayerBelow(fillLayer, GeofenceCons.CIRCLE_CENTER_LAYER_ID + index)
             }
         }
     }
@@ -596,7 +704,7 @@ class SimulationUtils(
             ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
         tvStopTracking.text = mActivity?.getText(R.string.label_start_tracking)
         tvTrackingYourActivity.text =
-            mActivity?.getText(R.string.label_not_tracking_your_activity)
+            mActivity?.getText(R.string.label_tracking_in_active)
         tvTrackingYourActivity.context?.let {
             tvTrackingYourActivity.setTextColor(
                 ContextCompat.getColor(
@@ -675,7 +783,7 @@ class SimulationUtils(
             tvStopTracking.text =
                 mActivity?.getText(R.string.label_stop_tracking)
             tvTrackingYourActivity.text =
-                mActivity?.getText(R.string.label_tracking_your_activity)
+                mActivity?.getText(R.string.label_tracking_active)
             tvTrackingYourActivity.context.let {
                 tvTrackingYourActivity.setTextColor(
                     ContextCompat.getColor(
@@ -774,8 +882,27 @@ class SimulationUtils(
             object : SimulationNotificationAdapter.NotificationInterface {
                 override fun click(position: Int, isSelected: Boolean) {
                     notificationData[position].isSelected = isSelected
-                    busSimulationNotificationFlags[position] = isSelected
+                    busSimulationNotificationFlags?.set(position, isSelected)
                     setSelectedNotificationCount()
+                    routeData?.let { route ->
+                        if (isSelected) {
+                            addPreDrawTrackerLine(route, position)
+                            drawGeofenceWithPosition(position)
+                            mActivity?.let { activity ->
+                                val data = getFirstCoordinates(position)
+                                addMarkerSimulation(activity, position, data)
+                            }
+                        } else {
+                            (activity as MainActivity).lifecycleScope.launch {
+                                delay(DELAY_1000)
+                                busSimulationHistoryData[position].clear()
+                                removePreDrawTrackerLine(route, position)
+                                removeGeofenceWithPosition(position)
+                                timerCounts?.set(position, 0)
+                                mMapHelper?.removeGeoJsonSourceData(position)
+                            }
+                        }
+                    }
                 }
             }
         )
@@ -790,7 +917,7 @@ class SimulationUtils(
 
     private fun setSelectedNotificationCount() {
         var totalCount = 0
-        busSimulationNotificationFlags.forEach {
+        busSimulationNotificationFlags?.forEach {
             if (it) {
                 totalCount++
             }
@@ -799,9 +926,26 @@ class SimulationUtils(
             tvRouteNotificationsName.text = buildString {
                 append(totalCount)
                 append(" ")
-                append(tvRouteNotificationsName.context.getString(R.string.routes_active))
+                if (totalCount >= 1) append(tvRouteNotificationsName.context.getString(R.string.routes_active)) else append(tvRouteNotificationsName.context.getString(R.string.route_active))
             }
         }
+    }
+
+    fun isSimulationBottomSheetVisible(): Boolean {
+        return mBottomSheetSimulationBehavior?.state != BottomSheetBehavior.STATE_HIDDEN
+    }
+
+    fun setSimulationDraggable(isDrag: Boolean) {
+        if (!isDrag) {
+            mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        mBottomSheetSimulationBehavior?.isDraggable = isDrag
+    }
+
+    fun setSimulationData() {
+        setSimulationDraggable(true)
+        setBounds()
+        mMapHelper?.setGeoJsonSourceEmpty()
     }
 
     fun hideSimulationBottomSheet() {
@@ -819,26 +963,29 @@ class SimulationUtils(
                         mMapHelper?.removeLayer(it1)
                         mMapHelper?.removeLayer("layer$it1")
                         mMapHelper?.removeLayer("source$it1")
+                        mMapHelper?.removeLayer("layer${it1}_pre_draw")
+                        mMapHelper?.removeLayer("source${it1}_pre_draw")
                     }
                 }
                 mMapHelper?.clearMarker()
                 mMapHelper?.removeLine()
                 mMapHelper?.removeSimulationData()
-                mGeofenceList.clear()
                 routeData?.clear()
                 notificationData.forEach { data ->
                     data.isSelected = false
                 }
-                geofenceDataCount = 0
                 notificationId = 1
-                busSimulationNotificationFlags = BooleanArray(10) { false }
+                busSimulationNotificationFlags = null
                 mIsLocationUpdateEnable = false
             }
-            mGeofenceList.forEachIndexed { index, _ ->
-                mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index")
-                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index")
-                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index")
+            mGeofenceList.forEachIndexed { index, data ->
+                data.forEachIndexed { indexInner, _ ->
+                    mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner")
+                    mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner")
+                    mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner")
+                }
             }
+            mGeofenceList.clear()
             it?.isHideable = true
             it?.state = BottomSheetBehavior.STATE_HIDDEN
             it?.isFitToContents = false
@@ -848,26 +995,12 @@ class SimulationUtils(
     }
 
     fun manageGeofenceListUI(dataGeofence: SimulationGeofenceData) {
-        if (geofenceDataCount == simulationCollectionName.size) {
-            mGeofenceList.clear()
-        }
-        geofenceDataCount++
-        mGeofenceList.addAll(dataGeofence.devicePositionData)
-        if (geofenceDataCount == simulationCollectionName.size) {
-            val mLatLngList = arrayListOf<LatLng>()
-            if (mGeofenceList.isNotEmpty()) {
-                mGeofenceList.forEachIndexed { index, data ->
-                    val latLng =
-                        LatLng(data.geometry.circle.center[1], data.geometry.circle.center[0])
-                    setDefaultIconWithGeofence(index)
-                    mLatLngList.add(latLng)
-                    drawSimulationPolygonCircle(
-                        Point.fromLngLat(latLng.longitude, latLng.latitude),
-                        data.geometry.circle.radius.toInt(),
-                        index.toString()
-                    )
-                }
-            }
+        val position =
+            simulationCollectionName.indexOfFirst { it.contains(dataGeofence.collectionName) }
+        mGeofenceList[position].clear()
+        mGeofenceList[position] = dataGeofence.devicePositionData
+        if (isBusTrackerNotificationEnable(position)) {
+            drawGeofenceWithPosition(position)
         }
     }
 

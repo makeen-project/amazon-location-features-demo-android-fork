@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
             android:gravity="center"
-            android:text="@string/label_not_tracking_your_activity"
+            android:text="@string/label_tracking_in_active"
             android:textColor="@color/color_hint_text"
             android:textSize="@dimen/sp_13"
             app:layout_constraintStart_toStartOf="parent"

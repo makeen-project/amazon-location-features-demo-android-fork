@@ -262,4 +262,8 @@
     <string name="label_bus_01">Bus 01</string>
     <string name="routes_notifications">Routes notifications</string>
     <string name="routes_active">routes active</string>
+    <string name="route_active">route active</string>
+    <string name="simulation_exit_title">Are you sure you want to exit simulation?</string>
+    <string name="label_tracking_active">Device tracking is active</string>
+    <string name="label_tracking_in_active">Device tracking inactive</string>
 </resources>
