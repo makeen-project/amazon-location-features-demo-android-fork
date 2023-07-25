@@ -184,7 +184,7 @@ class BottomSheetHelper {
                                                             if (exportFragment?.mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
                                                                 hideSearchBottomSheet(false)
                                                             } else {
-                                                                exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationData()
+                                                                exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationDraggable()
                                                             }
                                                         }
                                                     }
@@ -195,7 +195,7 @@ class BottomSheetHelper {
                                 if (exportFragment?.mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
                                     hideSearchBottomSheet(false)
                                 } else {
-                                    exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationData()
+                                    exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationDraggable()
                                 }
                             }
                         }

@@ -81,10 +81,10 @@ const val lonEast = 146.25
 const val latSouth = -21.943045533438166
 const val lonWest = 90.0
 
-const val simulationLatNorth = 49.3097
-const val simulationLonEast = -123.0229
-const val simulationLatSouth = 49.1999
-const val simulationLonWest = -123.2246
+const val simulationLatNorth = 49.295509609061924
+const val simulationLonEast = -123.04870086158795
+const val simulationLatSouth = 49.25908827302493
+const val simulationLonWest = -123.17226119977276
 const val vancouverLat = 49.2827
 const val vancouverLng = -123.1207
 
@@ -232,23 +232,13 @@ val simulationCollectionName = arrayListOf(
     LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection02",
     LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection03",
     LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection04",
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection05",
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection06",
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection07",
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection08",
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection09",
-    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection10"
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection05"
 )
 
 val notificationData = arrayListOf(
-    NotificationData("Bus 01 Macdonald", false),
-    NotificationData("Bus 02 Main", false),
-    NotificationData("Bus 03 Robson", false),
-    NotificationData("Bus 04 Davie", false),
-    NotificationData("Bus 05 Fraser", false),
-    NotificationData("Bus 06 Granville", false),
-    NotificationData("Bus 07 Downtown, Oak", false),
-    NotificationData("Bus 08 Victoria", false),
-    NotificationData("Bus 09 Knight", false),
-    NotificationData("Bus 10 UBC", false)
+    NotificationData("Bus 01 Robson", false),
+    NotificationData("Bus 02 Davie", false),
+    NotificationData("Bus 03 Victoria", false),
+    NotificationData("Bus 04 Knight", false),
+    NotificationData("Bus 05 UBC", false)
 )

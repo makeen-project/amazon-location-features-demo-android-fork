@@ -1,6 +1,8 @@
 package com.aws.amazonlocation.data.response
 
-class RouteSimulationData : ArrayList<RouteSimulationDataItem>()
+class RouteSimulationData(
+    var busRoutesData: ArrayList<RouteSimulationDataItem>? = null
+)
 
 data class RouteSimulationDataItem(
     var coordinates: List<List<Double>>? = null,

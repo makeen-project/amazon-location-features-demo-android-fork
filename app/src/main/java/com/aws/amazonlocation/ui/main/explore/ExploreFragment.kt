@@ -5386,6 +5386,9 @@ class ExploreFragment :
     }
 
     override fun onMapStyleChanged(mapStyle: String) {
+        if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+            mBaseActivity?.mSimulationUtils?.setSimulationData()
+        }
         val logoResId = when (mapStyle) {
             ESRI_LIGHT,
             MapNames.ESRI_STREET_MAP,

@@ -83,6 +83,7 @@ class SimulationViewModel @Inject constructor(
         deviceId: String,
         date: Date
     ) {
+        _getUpdateDevicePosition.trySend(HandleResult.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             mGetGeofenceUseCase.evaluateGeofence(
                 trackerName,

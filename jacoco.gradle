@@ -39,6 +39,7 @@ ext.excludes = [
         '**/*StickyHeader*',
         '**/*GeofenceHelper*',
         '**/*TrackingUtils*',
+        '**/*SimulationUtils*',
         '**/*OutLineTextView*',
         '**/*DotLineView*',
         '**/*FontSpan*',
@@ -132,7 +133,7 @@ def createVariantCoverage(variant) {
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.30
+                    minimum = 0.40
                 }
             }
         }

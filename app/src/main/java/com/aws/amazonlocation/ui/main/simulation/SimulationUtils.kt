@@ -5,8 +5,8 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.res.AssetManager
 import android.os.Build
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.BusRouteCoordinates
 import com.aws.amazonlocation.data.response.NotificationSimulationData
-import com.aws.amazonlocation.data.response.RouteSimulationData
+import com.aws.amazonlocation.data.response.RouteSimulationDataItem
 import com.aws.amazonlocation.data.response.SimulationGeofenceData
 import com.aws.amazonlocation.data.response.SimulationHistoryData
 import com.aws.amazonlocation.data.response.SimulationHistoryInnerData
@@ -43,6 +43,7 @@ import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.MapCameraZoom.SIMULATION_CAMERA_ZOOM_1
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.Units.readRouteData
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
@@ -76,8 +77,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.util.Date
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -92,7 +91,7 @@ class SimulationUtils(
     private val CHANNEL_ID = "my_channel_simulation"
     private val CHANNEL_NAME = "simulation Notification Channel"
     private val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
-    private var routeData: RouteSimulationData? = null
+    private var routeData: ArrayList<RouteSimulationDataItem>? = null
     private var notificationId: Int = 1
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var mqttManager: AWSIotMqttManager? = null
@@ -166,11 +165,7 @@ class SimulationUtils(
 
     private fun initData() {
         mFragmentActivity?.applicationContext?.let { context ->
-            val assetManager: AssetManager = context.assets
-            val inputStream: InputStream = assetManager.open("route_data.json")
-            val inputStreamReader = InputStreamReader(inputStream)
-
-            routeData = Gson().fromJson(inputStreamReader, RouteSimulationData::class.java)
+            routeData = readRouteData(context)?.busRoutesData
 
             routeData?.let { route ->
                 timerCounts = MutableList(route.size) { 0 }
@@ -188,6 +183,7 @@ class SimulationUtils(
                 }
                 drawGeofenceWithPosition(0)
                 addPreDrawTrackerLine(route, 0)
+                zoomCamera()
                 coroutineScope.launch {
                     while (isActive) {
                         if (mIsLocationUpdateEnable) {
@@ -248,7 +244,7 @@ class SimulationUtils(
         }
     }
 
-    private fun addPreDrawTrackerLine(route: RouteSimulationData, index: Int) {
+    private fun addPreDrawTrackerLine(route: ArrayList<RouteSimulationDataItem>, index: Int) {
         val trackerLineToPreDraw = arrayListOf<Point>()
         route[index].coordinates?.forEach {
             trackerLineToPreDraw.add(Point.fromLngLat(it[0], it[1]))
@@ -257,9 +253,31 @@ class SimulationUtils(
         addTrackerLine(trackerLineToPreDraw, route, index)
     }
 
+    private fun zoomCamera() {
+        val cameraZoomList = arrayListOf<LatLng>()
+        notificationData.forEachIndexed { index, notificationData ->
+            if (notificationData.isSelected) {
+                cameraZoomList.add(
+                    LatLng(
+                        mPreDrawTrackerLine[index].first().latitude(),
+                        mPreDrawTrackerLine[index].first().longitude()
+                    )
+                )
+                cameraZoomList.add(
+                    LatLng(
+                        mPreDrawTrackerLine[index].last().latitude(),
+                        mPreDrawTrackerLine[index].last().longitude()
+                    )
+                )
+            }
+        }
+        mActivity?.resources?.getDimension(R.dimen.dp_80)?.toInt()
+            ?.let { mMapHelper?.adjustMapBounds(cameraZoomList, it) }
+    }
+
     private fun addTrackerLine(
         trackerLineToPreDraw: ArrayList<Point>,
-        route: RouteSimulationData,
+        route: ArrayList<RouteSimulationDataItem>,
         index: Int
     ) {
         mMapHelper?.addTrackerLine(
@@ -271,7 +289,7 @@ class SimulationUtils(
         )
     }
 
-    private fun removePreDrawTrackerLine(route: RouteSimulationData, index: Int) {
+    private fun removePreDrawTrackerLine(route: ArrayList<RouteSimulationDataItem>, index: Int) {
         route[index].let {
             it.id?.let { it1 -> mMapHelper?.removeSource(it1) }
             it.id?.let { it1 -> mMapHelper?.removeLayer(it1) }
@@ -419,15 +437,18 @@ class SimulationUtils(
         routeSimulationDataItem: BusRouteCoordinates
     ) {
         routeSimulationDataItem.coordinates?.get(0)?.let { longitude ->
-            routeSimulationDataItem.coordinates[1].let { latitude -> LatLng(latitude, longitude) }
+            routeSimulationDataItem.coordinates?.get(1)
+                ?.let { latitude -> LatLng(latitude, longitude) }
                 .let {
                     routeSimulationDataItem.id?.let { id ->
-                        mMapHelper?.addMarkerSimulation(
-                            id,
-                            activity1,
-                            it,
-                            index
-                        )
+                        it?.let { latLng ->
+                            mMapHelper?.addMarkerSimulation(
+                                id,
+                                activity1,
+                                latLng,
+                                index
+                            )
+                        }
                     }
                 }
         }
@@ -504,14 +525,14 @@ class SimulationUtils(
     }
 
     // Function to check if a notification group exists
-    private fun isNotificationGroupActive(context: Context, groupId: String): Boolean {
+    private fun isNotificationGroupActive(context: Context): Boolean {
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         val activeNotifications = notificationManager.activeNotifications
 
         // Check if any of the active notifications belong to the specified group
         for (notification in activeNotifications) {
             val groupKey = notification.notification.group
-            if (groupKey == groupId) {
+            if (groupKey == GROUP_KEY_WORK_SIMULATION) {
                 return true // Group is still active
             }
         }
@@ -730,6 +751,7 @@ class SimulationUtils(
     }
 
     private fun startMqttManager() {
+        mIsLocationUpdateEnable = true
         if (mqttManager != null) stopMqttManager()
         val identityId: String =
             BuildConfig.DEFAULT_IDENTITY_POOL_ID
@@ -743,7 +765,6 @@ class SimulationUtils(
             false // To be able to display Exceptions and debug the problem.
         mqttManager?.keepAlive = 60
         mqttManager?.setCleanSession(true)
-
         try {
             val instance = mAWSLocationHelper.getCognitoCachingCredentialsProvider()
             mqttManager?.connect(instance) { status, throwable ->
@@ -759,6 +780,9 @@ class SimulationUtils(
                         }
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost -> {
                             throwable?.printStackTrace()
+                            if (mIsLocationUpdateEnable) {
+                                startTracking()
+                            }
                         }
                         else -> {
                             simulationBinding?.apply {
@@ -777,7 +801,6 @@ class SimulationUtils(
 
     private fun startTracking() {
         simulationBinding?.apply {
-            mIsLocationUpdateEnable = true
             mActivity?.getColor(R.color.color_red)
                 ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
             tvStopTracking.text =
@@ -848,7 +871,7 @@ class SimulationUtils(
                     }
                     notificationId++
                     mActivity?.let {
-                        if (isNotificationGroupActive(it, GROUP_KEY_WORK_SIMULATION)) {
+                        if (isNotificationGroupActive(it)) {
                             notificationData.geofenceId?.let { it1 ->
                                 showNotification(
                                     notificationId,
@@ -892,6 +915,7 @@ class SimulationUtils(
                                 val data = getFirstCoordinates(position)
                                 addMarkerSimulation(activity, position, data)
                             }
+                            zoomCamera()
                         } else {
                             (activity as MainActivity).lifecycleScope.launch {
                                 delay(DELAY_1000)
@@ -942,10 +966,32 @@ class SimulationUtils(
         mBottomSheetSimulationBehavior?.isDraggable = isDrag
     }
 
-    fun setSimulationData() {
+    fun setSimulationDraggable() {
         setSimulationDraggable(true)
+    }
+
+    fun setSimulationData() {
         setBounds()
         mMapHelper?.setGeoJsonSourceEmpty()
+        notificationData.forEachIndexed { index, notificationData ->
+            if (notificationData.isSelected) {
+                val coordinatesSize = routeData?.get(index)?.coordinates?.size ?: 0
+                if (coordinatesSize > 0) {
+                    timerCounts?.let {
+                        val currentIndex = (it[index]) % coordinatesSize
+                        val data = BusRouteCoordinates(
+                            routeData?.get(index)?.id,
+                            routeData?.get(index)?.geofenceCollection,
+                            routeData?.get(index)?.coordinates?.get(currentIndex)
+                        )
+                        mActivity?.let { activity ->
+                            addMarkerSimulation(activity, index, data)
+                        }
+                    }
+                }
+            }
+        }
+        zoomCamera()
     }
 
     fun hideSimulationBottomSheet() {
