@@ -6,7 +6,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -131,6 +130,7 @@ class SimulationUtils(
     fun showSimulationBottomSheet() {
         mBottomSheetSimulationBehavior?.isHideable = false
         mBottomSheetSimulationBehavior?.isFitToContents = false
+        simulationBinding?.clPersistentBottomSheetSimulation?.show()
         simulationBinding?.clTracking?.context?.let {
             if ((activity as MainActivity).isTablet) {
                 mBottomSheetSimulationBehavior?.peekHeight =
@@ -700,8 +700,7 @@ class SimulationUtils(
             }
             ivBackArrowRouteNotifications.setOnClickListener {
                 if (rvRouteNotifications.isVisible) {
-                    hideViews(rvRouteNotifications, viewDividerNotification)
-                    ivBackArrowRouteNotifications.rotation = 0f
+                    closeNotificationCard()
                 } else {
                     showViews(rvRouteNotifications, viewDividerNotification)
                     ivBackArrowRouteNotifications.rotation = 180f
@@ -710,14 +709,23 @@ class SimulationUtils(
 
             ivBackArrowChangeRoute.setOnClickListener {
                 if (rvTracking.isVisible) {
-                    hideViews(rvTracking, viewDividerBus)
-                    ivBackArrowChangeRoute.rotation = 0f
+                    closeTrackingCard()
                 } else {
                     showViews(rvTracking, viewDividerBus)
                     ivBackArrowChangeRoute.rotation = 180f
                 }
             }
         }
+    }
+
+    private fun BottomSheetTrackSimulationBinding.closeNotificationCard() {
+        hideViews(rvRouteNotifications, viewDividerNotification)
+        ivBackArrowRouteNotifications.rotation = 0f
+    }
+
+    private fun BottomSheetTrackSimulationBinding.closeTrackingCard() {
+        hideViews(rvTracking, viewDividerBus)
+        ivBackArrowChangeRoute.rotation = 0f
     }
 
     private fun BottomSheetTrackSimulationBinding.stopTracker() {
@@ -991,47 +999,59 @@ class SimulationUtils(
                 }
             }
         }
-        zoomCamera()
+        (activity as MainActivity).lifecycleScope.launch {
+            delay(DELAY_1000)
+            zoomCamera()
+        }
     }
 
     fun hideSimulationBottomSheet() {
+        mMapboxMap?.removeViewBounds()
+        simulationBinding?.apply {
+            closeTrackingCard()
+            closeNotificationCard()
+            clPersistentBottomSheetSimulation.hide()
+        }
+        simulationBinding?.apply {
+            stopTracker()
+        }
+        coroutineScope.cancel()
+        (activity as MainActivity).lifecycleScope.launch {
+            delay(DELAY_1000)
+            routeData?.forEach { routeSimulationDataItem ->
+                routeSimulationDataItem.id?.let { it1 ->
+                    mMapHelper?.removeSource(it1)
+                    mMapHelper?.removeLayer(it1)
+                    mMapHelper?.removeLayer("layer$it1")
+                    mMapHelper?.removeLayer("source$it1")
+                    mMapHelper?.removeLayer("layer${it1}_pre_draw")
+                    mMapHelper?.removeLayer("source${it1}_pre_draw")
+                }
+            }
+            mMapHelper?.clearMarker()
+            mMapHelper?.removeLine()
+            mMapHelper?.removeSimulationData()
+            routeData?.clear()
+            notificationData.forEach { data ->
+                data.isSelected = false
+            }
+            notificationId = 1
+            busSimulationNotificationFlags = null
+            mIsLocationUpdateEnable = false
+        }
+        mGeofenceList.forEachIndexed { index, data ->
+            data.forEachIndexed { indexInner, _ ->
+                mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner")
+            }
+        }
+        mGeofenceList.clear()
+        hideSimulationSheet(activity)
+    }
+
+    private fun hideSimulationSheet(activity: MainActivity) {
         mBottomSheetSimulationBehavior.let {
-            mMapboxMap?.removeViewBounds()
-            simulationBinding?.apply {
-                stopTracker()
-            }
-            coroutineScope.cancel()
-            (activity as MainActivity).lifecycleScope.launch {
-                delay(DELAY_1000)
-                routeData?.forEach { routeSimulationDataItem ->
-                    routeSimulationDataItem.id?.let { it1 ->
-                        mMapHelper?.removeSource(it1)
-                        mMapHelper?.removeLayer(it1)
-                        mMapHelper?.removeLayer("layer$it1")
-                        mMapHelper?.removeLayer("source$it1")
-                        mMapHelper?.removeLayer("layer${it1}_pre_draw")
-                        mMapHelper?.removeLayer("source${it1}_pre_draw")
-                    }
-                }
-                mMapHelper?.clearMarker()
-                mMapHelper?.removeLine()
-                mMapHelper?.removeSimulationData()
-                routeData?.clear()
-                notificationData.forEach { data ->
-                    data.isSelected = false
-                }
-                notificationId = 1
-                busSimulationNotificationFlags = null
-                mIsLocationUpdateEnable = false
-            }
-            mGeofenceList.forEachIndexed { index, data ->
-                data.forEachIndexed { indexInner, _ ->
-                    mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner")
-                    mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner")
-                    mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner")
-                }
-            }
-            mGeofenceList.clear()
             it?.isHideable = true
             it?.state = BottomSheetBehavior.STATE_HIDDEN
             it?.isFitToContents = false

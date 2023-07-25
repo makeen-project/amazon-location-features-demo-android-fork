@@ -4191,9 +4191,11 @@ class ExploreFragment :
             showViews(
                 mBinding.cardDirection,
                 mBinding.cardNavigation,
-                mBinding.cardMap,
-                mBinding.cardGeofenceMap
+                mBinding.cardMap
             )
+            if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                mBinding.cardGeofenceMap.show()
+            }
             clearMapLineMarker()
             clearSearchList()
             if (!mBottomSheetHelper.isMapStyleVisible() && mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
@@ -5317,9 +5319,11 @@ class ExploreFragment :
                     showViews(
                         cardDirection,
                         cardNavigation,
-                        cardMap,
-                        cardGeofenceMap
+                        cardMap
                     )
+                    if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                        cardGeofenceMap.show()
+                    }
                 }
             }
             clearNavigationData()
@@ -5386,9 +5390,6 @@ class ExploreFragment :
     }
 
     override fun onMapStyleChanged(mapStyle: String) {
-        if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
-            mBaseActivity?.mSimulationUtils?.setSimulationData()
-        }
         val logoResId = when (mapStyle) {
             ESRI_LIGHT,
             MapNames.ESRI_STREET_MAP,
@@ -5433,6 +5434,12 @@ class ExploreFragment :
         mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
         mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle?.setImageResource(logoResId)
+        if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+            lifecycleScope.launch {
+                delay(DELAY_500)
+                mBaseActivity?.mSimulationUtils?.setSimulationData()
+            }
+        }
     }
 
     private fun checkGrabMapInsideBounds() {

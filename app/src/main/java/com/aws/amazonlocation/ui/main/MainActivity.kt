@@ -486,6 +486,7 @@ class MainActivity : BaseActivity() {
         }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
+        mSimulationUtils?.hideSimulationBottomSheet()
     }
 
     fun showBottomBar() {
