@@ -100,7 +100,8 @@ interface RemoteDataSource {
         position1: List<Double>? = null,
         deviceId: String,
         date: Date,
-        mTrackingInterface: BatchLocationUpdateInterface
+        identityId: String,
+        mTrackingInterface: BatchLocationUpdateInterface,
     )
 
     suspend fun getLocationHistory(

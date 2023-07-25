@@ -368,11 +368,10 @@ class SimulationUtils(
     ) {
         (activity as MainActivity).lifecycleScope.launch {
             val latLng = LatLng(point[1], point[0])
-            // TODO - for notification uncomment
-//            val position = arrayListOf<Double>()
-//            position.add(latLng.longitude)
-//            position.add(latLng.latitude)
-//            simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
+            val position = arrayListOf<Double>()
+            position.add(latLng.longitude)
+            position.add(latLng.latitude)
+            simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
 
             mMapHelper?.startAnimation(latLng, busIndex)
             delay(DELAY_1000)
@@ -761,8 +760,8 @@ class SimulationUtils(
     private fun startMqttManager() {
         mIsLocationUpdateEnable = true
         if (mqttManager != null) stopMqttManager()
-        val identityId: String =
-            BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        val identityId: String? =
+            mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
 
         mqttManager =
             AWSIotMqttManager(
@@ -782,7 +781,7 @@ class SimulationUtils(
                         }
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connected -> {
                             startTracking()
-                            subscribeTopic(identityId)
+                            identityId?.let { subscribeTopic(it) }
                         }
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Reconnecting -> {
                         }

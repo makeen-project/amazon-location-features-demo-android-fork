@@ -293,10 +293,11 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         position1: List<Double>?,
         deviceId: String,
         date: Date,
+        identityId: String,
         mTrackingInterface: BatchLocationUpdateInterface
     ) {
         val response =
-            mAWSLocationHelper.evaluateGeofence(trackerName, position1, deviceId, date)
+            mAWSLocationHelper.evaluateGeofence(trackerName, position1, deviceId, date, identityId)
         mTrackingInterface.success(response)
     }
 

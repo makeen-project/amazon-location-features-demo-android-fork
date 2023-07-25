@@ -608,10 +608,10 @@ class AWSLocationHelper(
         trackerName: String,
         position1: List<Double>? = null,
         deviceId: String,
-        date: Date
+        date: Date,
+        identityId: String
     ): UpdateBatchLocationResponse {
         val map: HashMap<String, String> = HashMap()
-        val identityId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
         identityId.let { identityPId ->
             identityPId.split(":").let { splitStringList ->
                 splitStringList[0].let { region ->

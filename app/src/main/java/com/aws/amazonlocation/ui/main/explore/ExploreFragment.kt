@@ -584,12 +584,17 @@ class ExploreFragment :
             collectionName: String,
             position1: List<Double>?
         ) {
-            mSimulationViewModel.evaluateGeofence(
-                collectionName,
-                position1,
-                getDeviceId(requireContext()),
-                Date()
-            )
+            val identityId: String? =
+                mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
+            identityId?.let {
+                mSimulationViewModel.evaluateGeofence(
+                    collectionName,
+                    position1,
+                    getDeviceId(requireContext()),
+                    Date(),
+                    it
+                )
+            }
         }
     }
 

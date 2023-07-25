@@ -283,7 +283,8 @@ class MainActivity : BaseActivity() {
         val mCognitoCredentialsProvider: CognitoCredentialsProvider? =
             mAWSLocationHelper.initCognitoCachingCredentialsProvider()
 
-        val identityId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        val identityId: String? =
+            mCognitoCredentialsProvider?.identityId
 
         // Initialize the AWSIotMqttManager with the configuration
         val attachPolicyReq =

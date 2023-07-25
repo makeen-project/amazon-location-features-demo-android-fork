@@ -81,7 +81,8 @@ class SimulationViewModel @Inject constructor(
         trackerName: String,
         position: List<Double>? = null,
         deviceId: String,
-        date: Date
+        date: Date,
+        identityId: String
     ) {
         _getUpdateDevicePosition.trySend(HandleResult.Loading)
         viewModelScope.launch(Dispatchers.IO) {
@@ -90,6 +91,7 @@ class SimulationViewModel @Inject constructor(
                 position,
                 deviceId,
                 date,
+                identityId,
                 object : BatchLocationUpdateInterface {
                     override fun success(searchResponse: UpdateBatchLocationResponse) {
                         if (searchResponse.isLocationDataAdded) {

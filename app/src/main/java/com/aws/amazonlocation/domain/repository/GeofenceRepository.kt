@@ -58,6 +58,7 @@ interface GeofenceRepository {
         position1: List<Double>? = null,
         deviceId: String,
         date: Date,
+        identityId: String,
         batchLocationUpdateInterface: BatchLocationUpdateInterface
     )
 
