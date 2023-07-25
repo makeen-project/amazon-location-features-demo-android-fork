@@ -1,0 +1,16 @@
+{
+  "name": "translate",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "run-translate": "yarn install && node translate.js",
+    "translate": "node translate.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-translate": "^3.372.0",
+    "aws-amplify": "^5.3.5",
+    "dotenv": "^16.3.1",
+    "xml2js": "^0.6.0"
+  }
+}
