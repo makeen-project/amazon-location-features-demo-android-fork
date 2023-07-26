@@ -68,7 +68,7 @@
     <string name="directions">Directions</string>
     <string name="search">Search</string>
     <string name="no_matching_places_found">No matching places found</string>
-    <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">Make sure your search is spelled correctly. Try adding a city, country or postcode.</string>
+    <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">Make sure your search is spelled correctly. Try adding a city, postcode, or country.</string>
     <string name="search_nearby">Search nearby</string>
     <string name="text_switch_avoid_tools">Avoid tolls</string>
     <string name="text_switch_avoid_highways">Avoid highways</string>
