@@ -147,7 +147,7 @@ class MapStyleBottomSheetFragment(
 
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
                     cardGrabMap.isClickable = false
-                    cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+                    cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
                 } else {
                     cardGrabMap.isClickable = true
                     cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -460,6 +460,7 @@ class MapStyleBottomSheetFragment(
         rvMapStyle.hide()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun BottomSheetMapStyleBinding.searchText(text: CharSequence?) {
         tilSearch.isEndIconVisible = !text.isNullOrEmpty()
         val providerNames = arrayListOf<String>()
@@ -481,6 +482,7 @@ class MapStyleBottomSheetFragment(
         if (filterList.isNotEmpty()) {
             mViewModel.mStyleList.clear()
             mViewModel.mStyleList.addAll(filterList)
+            checkSimulationDisableForGrab()
             activity?.runOnUiThread {
                 mMapStyleAdapter?.notifyDataSetChanged()
             }

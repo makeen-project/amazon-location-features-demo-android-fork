@@ -2155,7 +2155,7 @@ class ExploreFragment :
                         }
                         if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
                             mBinding.bottomSheetMapStyle.cardGrabMap.isClickable = false
-                            mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+                            mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
                         } else {
                             mBinding.bottomSheetMapStyle.cardGrabMap.isClickable = true
                             mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
@@ -3084,6 +3084,7 @@ class ExploreFragment :
         if (filterList.isNotEmpty()) {
             mViewModel.mStyleList.clear()
             mViewModel.mStyleList.addAll(filterList)
+            checkSimulationDisableForGrab()
             activity?.runOnUiThread {
                 mMapStyleAdapter?.notifyDataSetChanged()
             }
