@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
+import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreViewModel
 import com.aws.amazonlocation.ui.main.explore.MapStyleAdapter
 import com.aws.amazonlocation.ui.main.explore.SortingAdapter
@@ -31,10 +32,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -42,6 +43,7 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class MapStyleBottomSheetFragment(
     private val mViewModel: ExploreViewModel,
+    private val mBaseActivity: BaseActivity? = null,
     private val mapInterface: MapStyleAdapter.MapInterface
 ) : BottomSheetDialogFragment() {
 
@@ -142,6 +144,20 @@ class MapStyleBottomSheetFragment(
                         }
                     )
                 this.adapter = mMapStyleAdapter
+
+                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                    cardGrabMap.isClickable = false
+                    cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+                } else {
+                    cardGrabMap.isClickable = true
+                    cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
+                mViewModel.mStyleList.forEachIndexed { index, mapStyleData ->
+                    if (mapStyleData.styleNameDisplay.equals(getString(R.string.grab))) {
+                        mapStyleData.isDisable = mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true
+                        mMapStyleAdapter?.notifyItemChanged(index)
+                    }
+                }
             }
             rvProvider.layoutManager = LinearLayoutManager(requireContext())
             mProviderAdapter =
@@ -186,6 +202,9 @@ class MapStyleBottomSheetFragment(
             rvType.adapter = mTypeAdapter
             ivMapStyleClose.setOnClickListener {
                 mapStyleShowList()
+                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                    mBaseActivity?.mSimulationUtils?.setSimulationDraggable()
+                }
                 dismiss()
             }
 
@@ -222,6 +241,7 @@ class MapStyleBottomSheetFragment(
                 if (filterList.isNotEmpty()) {
                     mViewModel.mStyleList.clear()
                     mViewModel.mStyleList.addAll(filterList)
+                    checkSimulationDisableForGrab()
                     activity?.runOnUiThread {
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
@@ -260,6 +280,7 @@ class MapStyleBottomSheetFragment(
                 tvClearFilter.hide()
                 mViewModel.mStyleList.clear()
                 mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                checkSimulationDisableForGrab()
                 mMapStyleAdapter?.notifyDataSetChanged()
             }
             btnApplyFilter.setOnClickListener {
@@ -318,6 +339,7 @@ class MapStyleBottomSheetFragment(
                 if (filterList.isNotEmpty()) {
                     mViewModel.mStyleList.clear()
                     mViewModel.mStyleList.addAll(filterList)
+                    checkSimulationDisableForGrab()
                     activity?.runOnUiThread {
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
@@ -409,6 +431,9 @@ class MapStyleBottomSheetFragment(
                 }
             }
             cardGrabMap.setOnClickListener {
+                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                    return@setOnClickListener
+                }
                 val mapName =
                     mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 if (mapName != getString(R.string.grab)) {
@@ -499,6 +524,15 @@ class MapStyleBottomSheetFragment(
         }
     }
 
+    private fun checkSimulationDisableForGrab() {
+        mViewModel.mStyleList.forEachIndexed { _, mapStyleData ->
+            if (mapStyleData.styleNameDisplay.equals(getString(R.string.grab))) {
+                mapStyleData.isDisable =
+                    mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true
+            }
+        }
+    }
+
     private fun BottomSheetMapStyleBinding.openSearch(params: ViewGroup.LayoutParams?) {
         viewLine.hide()
         tilSearch.show()
@@ -538,6 +572,7 @@ class MapStyleBottomSheetFragment(
     private fun BottomSheetMapStyleBinding.setDefaultMapStyleList() {
         mViewModel.mStyleList.clear()
         mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+        checkSimulationDisableForGrab()
         activity?.runOnUiThread {
             etSearchMap.setText("")
             mMapStyleAdapter?.notifyDataSetChanged()

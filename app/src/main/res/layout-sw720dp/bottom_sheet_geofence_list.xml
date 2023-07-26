@@ -101,6 +101,7 @@
             android:layout_marginTop="@dimen/dp_16"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/dp_8"
+            android:visibility="gone"
             android:layout_marginHorizontal="@dimen/dp_16"
             app:cardUseCompatPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -296,23 +297,29 @@
             android:layout_marginHorizontal="@dimen/dp_24"
             android:layout_marginTop="@dimen/dp_8"
             android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/btn_try_geofence"
             android:text="@string/add_geo_fence_1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_add_geofence_empty_geofence_list" />
+
+        <View
+            android:id="@+id/view_space"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_16"
+            app:layout_constraintTop_toBottomOf="@id/sheet_geofence_list_tv_add_geofence_description"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/btn_try_geofence"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_48"
             android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_16"
             app:cardBackgroundColor="@color/color_primary_green"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sheet_geofence_list_tv_add_geofence_description">
+            app:layout_constraintTop_toBottomOf="@id/view_space">
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/SP16BoldMediumBlackTextStyle"
@@ -336,7 +343,7 @@
             android:layout_height="@dimen/dp_48"
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_8"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/color_primary_green"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -351,7 +358,7 @@
                 android:layout_gravity="center"
                 android:text="@string/label_enable_live_geofences"
                 android:textAllCaps="false"
-                android:textColor="@color/color_medium_black"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_direction_sheet_geofence_list"

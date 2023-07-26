@@ -38,13 +38,13 @@ class SimulationListAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SimulationHistoryData) = binding.apply {
             item.devicePositionData?.let {
-                tvLatLng.text = String.format("%7f , %7f", it.latitude, it.longitude)
+                tvLatLng.text = String.format("%7f, %7f", it.latitude, it.longitude)
                 val date = convertToCustomFormat(it.receivedTime)
                 tvTime.text = date
             }
             if (item.isBusStopData) {
                 tvBusStop.show()
-                tvBusStop.text = String.format("Bus stop number %2d", item.busStopCount)
+                tvBusStop.text = String.format("Bus stop number %d", item.busStopCount)
                 tvLatLng.setTextColor(
                     ContextCompat.getColor(
                         tvLatLng.context,
@@ -68,22 +68,18 @@ class SimulationListAdapter :
                 val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
                 clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
             }
-            when (item.headerData) {
-                viewTopDotted.context.getString(R.string.label_position_start) -> {
+            when (adapterPosition) {
+                0 -> {
                     viewTopDotted.hide()
                     viewBottomDotted.show()
                 }
-                viewTopDotted.context.getString(R.string.label_position_end) -> {
+                currentList.size -> {
                     viewTopDotted.show()
                     viewBottomDotted.hide()
-                }
-                viewTopDotted.context.getString(R.string.label_position_data) -> {
-                    viewTopDotted.show()
-                    viewBottomDotted.show()
                 }
                 else -> {
-                    viewTopDotted.hide()
-                    viewBottomDotted.hide()
+                    viewTopDotted.show()
+                    viewBottomDotted.show()
                 }
             }
         }

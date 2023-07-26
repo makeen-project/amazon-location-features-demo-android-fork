@@ -2099,6 +2099,7 @@ class ExploreFragment :
                         mapStyleBottomSheetFragment =
                             MapStyleBottomSheetFragment(
                                 mViewModel,
+                                mBaseActivity,
                                 object : MapStyleAdapter.MapInterface {
                                     override fun mapStyleClick(position: Int, innerPosition: Int) {
                                         if (checkInternetConnection() && position != -1 && innerPosition != -1) {
@@ -2151,6 +2152,19 @@ class ExploreFragment :
                     } else {
                         if (!isGrabMapEnable(mPreferenceManager)) {
                             mBinding.bottomSheetMapStyle.cardGrabMap.hide()
+                        }
+                        if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                            mBinding.bottomSheetMapStyle.cardGrabMap.isClickable = false
+                            mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+                        } else {
+                            mBinding.bottomSheetMapStyle.cardGrabMap.isClickable = true
+                            mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        }
+                        mViewModel.mStyleList.forEachIndexed { index, mapStyleData ->
+                            if (mapStyleData.styleNameDisplay.equals(getString(R.string.grab))) {
+                                mapStyleData.isDisable = mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true
+                                mMapStyleAdapter?.notifyItemChanged(index)
+                            }
                         }
                         mBottomSheetHelper.halfExpandMapStyleSheet()
                         mBaseActivity?.bottomNavigationVisibility(false)
@@ -2682,6 +2696,42 @@ class ExploreFragment :
                 etSearchMap.textChanges().debounce(DELAY_300).onEach { text ->
                     mapStyleShowList()
                     searchText(text)
+                    tilSearch.isEndIconVisible = !text.isNullOrEmpty()
+                    val providerNames = arrayListOf<String>()
+                    val attributeNames = arrayListOf<String>()
+                    val typeNames = arrayListOf<String>()
+                    mViewModel.providerOptions.filter { it.isSelected }
+                        .forEach { data -> providerNames.add(data.name) }
+                    mViewModel.attributeOptions.filter { it.isSelected }
+                        .forEach { data -> attributeNames.add(data.name) }
+                    mViewModel.typeOptions.filter { it.isSelected }
+                        .forEach { data -> typeNames.add(data.name) }
+                    val filterList = mViewModel.filterAndSortItems(
+                        requireContext(),
+                        text.toString().ifEmpty { null },
+                        providerNames.ifEmpty { null },
+                        attributeNames.ifEmpty { null },
+                        typeNames.ifEmpty { null }
+                    )
+                    if (filterList.isNotEmpty()) {
+                        mViewModel.mStyleList.clear()
+                        mViewModel.mStyleList.addAll(filterList)
+                        checkSimulationDisableForGrab()
+                        activity?.runOnUiThread {
+                            mMapStyleAdapter?.notifyDataSetChanged()
+                        }
+                        rvMapStyle.show()
+                        layoutNoDataFound.root.hide()
+                        isNoDataFoundVisible = false
+                    } else {
+                        mViewModel.mStyleList.clear()
+                        activity?.runOnUiThread {
+                            mMapStyleAdapter?.notifyDataSetChanged()
+                        }
+                        isNoDataFoundVisible = true
+                        layoutNoDataFound.root.show()
+                        rvMapStyle.hide()
+                    }
                 }.launchIn(lifecycleScope)
                 val params = cardSearchFilter.layoutParams
                 tilSearch.setEndIconOnClickListener {
@@ -2712,6 +2762,7 @@ class ExploreFragment :
                     if (filterList.isNotEmpty()) {
                         mViewModel.mStyleList.clear()
                         mViewModel.mStyleList.addAll(filterList)
+                        checkSimulationDisableForGrab()
                         activity?.runOnUiThread {
                             mMapStyleAdapter?.notifyDataSetChanged()
                         }
@@ -2750,6 +2801,7 @@ class ExploreFragment :
                     tvClearFilter.hide()
                     mViewModel.mStyleList.clear()
                     mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                    checkSimulationDisableForGrab()
                     mMapStyleAdapter?.notifyDataSetChanged()
                 }
                 btnApplyFilter.setOnClickListener {
@@ -2808,6 +2860,7 @@ class ExploreFragment :
                     if (filterList.isNotEmpty()) {
                         mViewModel.mStyleList.clear()
                         mViewModel.mStyleList.addAll(filterList)
+                        checkSimulationDisableForGrab()
                         activity?.runOnUiThread {
                             mMapStyleAdapter?.notifyDataSetChanged()
                         }
@@ -3120,9 +3173,19 @@ class ExploreFragment :
     private fun BottomSheetMapStyleBinding.setDefaultMapStyleList() {
         mViewModel.mStyleList.clear()
         mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+        checkSimulationDisableForGrab()
         activity?.runOnUiThread {
             etSearchMap.setText("")
             mMapStyleAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun checkSimulationDisableForGrab() {
+        mViewModel.mStyleList.forEachIndexed { _, mapStyleData ->
+            if (mapStyleData.styleNameDisplay.equals(getString(R.string.grab))) {
+                mapStyleData.isDisable =
+                    mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true
+            }
         }
     }
 
@@ -4194,12 +4257,16 @@ class ExploreFragment :
                 tvDirectionError.invisible()
             }
             showViews(
-                mBinding.cardDirection,
-                mBinding.cardNavigation,
                 mBinding.cardMap
             )
             if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
                 mBinding.cardGeofenceMap.show()
+                mBaseActivity?.isTablet?.let {
+                    if (!it) {
+                        mBinding.cardDirection.show()
+                        mBinding.cardNavigation.show()
+                    }
+                }
             }
             clearMapLineMarker()
             clearSearchList()
@@ -5322,12 +5389,16 @@ class ExploreFragment :
             mBinding.apply {
                 bottomSheetNavigation.apply {
                     showViews(
-                        cardDirection,
-                        cardNavigation,
                         cardMap
                     )
                     if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
                         cardGeofenceMap.show()
+                        mBaseActivity?.isTablet?.let {
+                            if (!it) {
+                                cardDirection.show()
+                                cardNavigation.show()
+                            }
+                        }
                     }
                 }
             }

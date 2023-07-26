@@ -50,50 +50,50 @@ class SimulationVMGetGeofenceList : BaseTest() {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getSimulationListSuccess() = runTest {
-//        Mockito.`when`(mRemoteDataSourceImpl.getGeofenceList(any(), any())).thenAnswer {
-//            val callback: GeofenceAPIInterface = it.arguments[1] as GeofenceAPIInterface
-//            callback.getGeofenceList(Responses.RESPONSE_TRACKER_GEOFENCE_LIST)
-//        }
-//
-//        simulationViewModel.mGetGeofenceList.test {
-//            simulationViewModel.getGeofenceList(simulationCollectionName[0])
-//            var result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
-//            result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
-//            cancelAndIgnoreRemainingEvents()
-//        }
+        Mockito.`when`(mRemoteDataSourceImpl.getGeofenceList(any(), any())).thenAnswer {
+            val callback: GeofenceAPIInterface = it.arguments[1] as GeofenceAPIInterface
+            callback.getGeofenceList(Responses.RESPONSE_TRACKER_GEOFENCE_LIST)
+        }
+
+        simulationViewModel.mGetGeofenceList.test {
+            simulationViewModel.getGeofenceList(simulationCollectionName[0])
+            var result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+            result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getSimulationListError() = runTest {
-//        Mockito.`when`(mRemoteDataSourceImpl.getGeofenceList(any(), any()))
-//            .thenAnswer {
-//                val callback: GeofenceAPIInterface = it.arguments[1] as GeofenceAPIInterface
-//                callback.getGeofenceList(Responses.RESPONSE_ERROR_TRACKER_GEOFENCE_LIST_NO_ERROR)
-//            }
-//            .thenAnswer {
-//                val callback: GeofenceAPIInterface = it.arguments[1] as GeofenceAPIInterface
-//                callback.getGeofenceList(Responses.RESPONSE_ERROR_TRACKER_GEOFENCE_LIST)
-//            }
-//
-//        simulationViewModel.mGetGeofenceList.test {
-//            simulationViewModel.getGeofenceList(simulationCollectionName[0])
-//            var result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
-//            result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
-//            simulationViewModel.getGeofenceList(GeofenceCons.GEOFENCE_COLLECTION)
-//            result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
-//            result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_ERROR, result is HandleResult.Error)
-//            Assert.assertTrue(
-//                TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE,
-//                (result as HandleResult.Error).exception.messageResource == MOCK_ERROR
-//            )
-//            cancelAndIgnoreRemainingEvents()
-//        }
+        Mockito.`when`(mRemoteDataSourceImpl.getGeofenceList(any(), any()))
+            .thenAnswer {
+                val callback: GeofenceAPIInterface = it.arguments[1] as GeofenceAPIInterface
+                callback.getGeofenceList(Responses.RESPONSE_ERROR_TRACKER_GEOFENCE_LIST_NO_ERROR)
+            }
+            .thenAnswer {
+                val callback: GeofenceAPIInterface = it.arguments[1] as GeofenceAPIInterface
+                callback.getGeofenceList(Responses.RESPONSE_ERROR_TRACKER_GEOFENCE_LIST)
+            }
+
+        simulationViewModel.mGetGeofenceList.test {
+            simulationViewModel.getGeofenceList(simulationCollectionName[0])
+            var result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+            result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
+            simulationViewModel.getGeofenceList(GeofenceCons.GEOFENCE_COLLECTION)
+            result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+            result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_ERROR, result is HandleResult.Error)
+            Assert.assertTrue(
+                TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE,
+                (result as HandleResult.Error).exception.messageResource == MOCK_ERROR
+            )
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }

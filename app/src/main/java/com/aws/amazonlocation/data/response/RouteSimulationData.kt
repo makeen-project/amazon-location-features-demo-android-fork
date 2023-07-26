@@ -9,8 +9,7 @@ data class RouteSimulationDataItem(
     var geofenceCollection: String? = null,
     var id: String? = null,
     var name: String? = null,
-    var stopCoordinates: List<StopCoordinate?>? = null,
-    var busStopCount: Int = 0
+    var stopCoordinates: List<StopCoordinate?>? = null
 )
 
 data class StopCoordinate(

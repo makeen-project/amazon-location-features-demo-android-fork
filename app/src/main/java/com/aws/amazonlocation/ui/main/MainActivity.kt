@@ -533,6 +533,14 @@ class MainActivity : BaseActivity() {
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
         mSimulationUtils?.showSimulationBottomSheet()
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                if (isTablet) {
+                    fragment.hideDirectionAndCurrentLocationIcon()
+                }
+            }
+        }
     }
 
     fun reInitializeSimulation() {

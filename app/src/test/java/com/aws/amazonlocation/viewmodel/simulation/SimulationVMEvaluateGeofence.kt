@@ -49,26 +49,26 @@ class SimulationVMEvaluateGeofence : BaseTest() {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun getEvaluateGeofenceSuccess() = runTest {
-//        Mockito.`when`(mRemoteDataSourceImpl.evaluateGeofence(any(), any(), any(), any(), any(), any()))
-//            .thenAnswer {
-//                val callback: BatchLocationUpdateInterface =
-//                    it.arguments[4] as BatchLocationUpdateInterface
-//                callback.success(UpdateBatchLocationResponse(null, true))
-//            }
-//
-//        simulationViewModel.mGetUpdateDevicePosition.test {
-//            simulationViewModel.evaluateGeofence(
-//                "test",
-//                arrayListOf(49.281174, -123.116823),
-//                DEVICE_ID,
-//                Date(),
-//                any()
-//            )
-//            var result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
-//            result = awaitItem()
-//            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
-//            cancelAndIgnoreRemainingEvents()
-//        }
+        Mockito.`when`(mRemoteDataSourceImpl.evaluateGeofence(any(), any(), any(), any(), any(), any()))
+            .thenAnswer {
+                val callback: BatchLocationUpdateInterface =
+                    it.arguments[5] as BatchLocationUpdateInterface
+                callback.success(UpdateBatchLocationResponse(null, true))
+            }
+
+        simulationViewModel.mGetUpdateDevicePosition.test {
+            simulationViewModel.evaluateGeofence(
+                "test",
+                arrayListOf(49.281174, -123.116823),
+                DEVICE_ID,
+                Date(),
+                "test"
+            )
+            var result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+            result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
+            cancelAndIgnoreRemainingEvents()
+        }
     }
 }
