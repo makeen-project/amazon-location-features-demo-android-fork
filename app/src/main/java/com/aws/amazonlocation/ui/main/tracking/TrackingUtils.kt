@@ -3,6 +3,8 @@ package com.aws.amazonlocation.ui.main.tracking
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
+import android.os.Handler
+import android.os.Looper
 import android.text.format.DateUtils
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -218,7 +220,9 @@ class TrackingUtils(
                     viewLoader.show()
                     tvStopTracking.hide()
                     cardStartTracking.isEnabled = false
-                    startMqttManager()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        startMqttManager()
+                    }, 10)
                 }
             }
             mBottomSheetTrackingBehavior?.addBottomSheetCallback(object :
