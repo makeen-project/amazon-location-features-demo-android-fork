@@ -70,7 +70,6 @@ import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.style.layers.FillLayer
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
-import java.util.Date
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -78,6 +77,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -432,75 +432,75 @@ class SimulationUtils(
         return false
     }
 
-        private fun isBusTrackerNotificationEnable(busIndex: Int): Boolean {
-            busSimulationNotificationFlags?.let {
-                return when (busIndex) {
-                    in it.indices -> {
-                        it[busIndex]
-                    }
-                    else -> false
-                }
-            }
-            return false
-        }
-
-        private fun getSelectedBusTrackingData(busIndex: Int): List<SimulationHistoryData> {
+    private fun isBusTrackerNotificationEnable(busIndex: Int): Boolean {
+        busSimulationNotificationFlags?.let {
             return when (busIndex) {
-                in 0..9 -> busSimulationHistoryData[busIndex]
-                else -> emptyList()
+                in it.indices -> {
+                    it[busIndex]
+                }
+                else -> false
             }
         }
+        return false
+    }
 
-        private fun updateTrackingHistoryData(busIndex: Int, data: SimulationHistoryData) {
-            if (busIndex in 0..9) {
-                busSimulationHistoryData[busIndex].add(data)
-            }
+    private fun getSelectedBusTrackingData(busIndex: Int): List<SimulationHistoryData> {
+        return when (busIndex) {
+            in 0..9 -> busSimulationHistoryData[busIndex]
+            else -> emptyList()
         }
+    }
 
-        private fun addMarkerSimulation(
-            activity1: Activity,
-            index: Int,
-            routeSimulationDataItem: BusRouteCoordinates
-        ) {
-            routeSimulationDataItem.coordinates?.get(0)?.let { longitude ->
-                routeSimulationDataItem.coordinates?.get(1)
-                    ?.let { latitude -> LatLng(latitude, longitude) }
-                    .let {
-                        routeSimulationDataItem.id?.let { id ->
-                            it?.let { latLng ->
-                                mMapHelper?.addMarkerSimulation(
-                                    id,
-                                    activity1,
-                                    latLng,
-                                    index
-                                )
-                            }
+    private fun updateTrackingHistoryData(busIndex: Int, data: SimulationHistoryData) {
+        if (busIndex in 0..9) {
+            busSimulationHistoryData[busIndex].add(data)
+        }
+    }
+
+    private fun addMarkerSimulation(
+        activity1: Activity,
+        index: Int,
+        routeSimulationDataItem: BusRouteCoordinates
+    ) {
+        routeSimulationDataItem.coordinates?.get(0)?.let { longitude ->
+            routeSimulationDataItem.coordinates?.get(1)
+                ?.let { latitude -> LatLng(latitude, longitude) }
+                .let {
+                    routeSimulationDataItem.id?.let { id ->
+                        it?.let { latLng ->
+                            mMapHelper?.addMarkerSimulation(
+                                id,
+                                activity1,
+                                latLng,
+                                index
+                            )
                         }
                     }
-            }
+                }
         }
+    }
 
-        fun initSimulationView(
-            fragmentActivity: FragmentActivity?,
-            bottomSheetTrackSimulationBinding: BottomSheetTrackSimulationBinding,
-            simulationInterface1: SimulationInterface
-        ) {
-            this.simulationInterface = simulationInterface1
-            this.mFragmentActivity = fragmentActivity
-            this.simulationBinding = bottomSheetTrackSimulationBinding
-            initSimulationBottomSheet()
-        }
+    fun initSimulationView(
+        fragmentActivity: FragmentActivity?,
+        bottomSheetTrackSimulationBinding: BottomSheetTrackSimulationBinding,
+        simulationInterface1: SimulationInterface
+    ) {
+        this.simulationInterface = simulationInterface1
+        this.mFragmentActivity = fragmentActivity
+        this.simulationBinding = bottomSheetTrackSimulationBinding
+        initSimulationBottomSheet()
+    }
 
-        private fun initSimulationBottomSheet() {
-            simulationBinding?.apply {
-                mBottomSheetSimulationBehavior = BottomSheetBehavior.from(root)
-                mBottomSheetSimulationBehavior?.isHideable = true
-                mBottomSheetSimulationBehavior?.isDraggable = true
-                mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
-                mBottomSheetSimulationBehavior?.isFitToContents = false
-                mBottomSheetSimulationBehavior?.halfExpandedRatio = 0.6f
+    private fun initSimulationBottomSheet() {
+        simulationBinding?.apply {
+            mBottomSheetSimulationBehavior = BottomSheetBehavior.from(root)
+            mBottomSheetSimulationBehavior?.isHideable = true
+            mBottomSheetSimulationBehavior?.isDraggable = true
+            mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+            mBottomSheetSimulationBehavior?.isFitToContents = false
+            mBottomSheetSimulationBehavior?.halfExpandedRatio = 0.6f
 
-                mBottomSheetSimulationBehavior?.addBottomSheetCallback(object :
+            mBottomSheetSimulationBehavior?.addBottomSheetCallback(object :
                     BottomSheetBehavior.BottomSheetCallback() {
                     override fun onStateChanged(bottomSheet: View, newState: Int) {
                         when (newState) {
@@ -526,651 +526,651 @@ class SimulationUtils(
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
                     }
                 })
-                initClick()
-                initAdapter()
-                setSpinnerData()
-                setSelectedNotificationCount()
-            }
+            initClick()
+            initAdapter()
+            setSpinnerData()
+            setSelectedNotificationCount()
         }
+    }
 
-        private fun createNotificationChannel() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mActivity?.let {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val importance = NotificationManager.IMPORTANCE_HIGH
-                        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
-                            description = CHANNEL_NAME
-                        }
-                        // Register the channel with the system
-                        val notificationManager: NotificationManager =
-                            it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                        notificationManager.createNotificationChannel(channel)
-                    }
-                }
-            }
-        }
-
-        // Function to check if a notification group exists
-        private fun isNotificationGroupActive(context: Context): Boolean {
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            val activeNotifications = notificationManager.activeNotifications
-
-            // Check if any of the active notifications belong to the specified group
-            for (notification in activeNotifications) {
-                val groupKey = notification.notification.group
-                if (groupKey == GROUP_KEY_WORK_SIMULATION) {
-                    return true // Group is still active
-                }
-            }
-            return false // Group is not active or device is below API 23
-        }
-
-        private fun showNotification(
-            notificationId: Int,
-            subTitle: String,
-            setGroupSummary: Boolean
-        ) {
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mActivity?.let {
-                val builder = NotificationCompat.Builder(it, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.app_logo)
-                    .setContentText(subTitle)
-                    .setGroupSummary(setGroupSummary)
-                    .setGroup(GROUP_KEY_WORK_SIMULATION)
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH).build()
-
-                NotificationManagerCompat.from(it).apply {
-                    // notificationId is a unique int for each notification that you must define
-                    notify(notificationId, builder)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val importance = NotificationManager.IMPORTANCE_HIGH
+                    val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
+                        description = CHANNEL_NAME
+                    }
+                    // Register the channel with the system
+                    val notificationManager: NotificationManager =
+                        it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                    notificationManager.createNotificationChannel(channel)
                 }
             }
         }
+    }
 
-        private fun drawSimulationPolygonCircle(circleCenter: Point, radius: Int, index: String) {
-            mMapboxMap?.getStyle { style ->
-                // Use Turf to calculate the Polygon's coordinates
-                val polygonArea: Polygon = getTurfPolygon(circleCenter, radius.toDouble())
-                val pointList = TurfMeta.coordAll(polygonArea, false)
+    // Function to check if a notification group exists
+    private fun isNotificationGroupActive(context: Context): Boolean {
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        val activeNotifications = notificationManager.activeNotifications
 
-                // Update the source's GeoJSON to draw a new fill circle
-                val polygonCircleSource =
-                    style.getSourceAs<GeoJsonSource>(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index)
-                polygonCircleSource?.setGeoJson(
-                    Polygon.fromOuterInner(
-                        LineString.fromLngLats(pointList)
-                    )
-                )
+        // Check if any of the active notifications belong to the specified group
+        for (notification in activeNotifications) {
+            val groupKey = notification.notification.group
+            if (groupKey == GROUP_KEY_WORK_SIMULATION) {
+                return true // Group is still active
             }
         }
+        return false // Group is not active or device is below API 23
+    }
 
-        /**
-         * Use the Turf library {@link TurfTransformation#circle(Point, double, int, String)} method to
-         * retrieve a {@link Polygon} .
-         *
-         * @param centerPoint a {@link Point} which the circle will center around
-         * @param radius      the radius of the circle
-         * @return a Polygon which represents the newly created circle
-         */
-        private fun getTurfPolygon(
-            centerPoint: Point,
-            radius: Double
-        ): Polygon {
-            return TurfTransformation.circle(centerPoint, radius, 360, mCircleUnit)
+    private fun showNotification(
+        notificationId: Int,
+        subTitle: String,
+        setGroupSummary: Boolean
+    ) {
+        mActivity?.let {
+            val builder = NotificationCompat.Builder(it, CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_logo)
+                .setContentText(subTitle)
+                .setGroupSummary(setGroupSummary)
+                .setGroup(GROUP_KEY_WORK_SIMULATION)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setPriority(NotificationCompat.PRIORITY_HIGH).build()
+
+            NotificationManagerCompat.from(it).apply {
+                // notificationId is a unique int for each notification that you must define
+                notify(notificationId, builder)
+            }
+        }
+    }
+
+    private fun drawSimulationPolygonCircle(circleCenter: Point, radius: Int, index: String) {
+        mMapboxMap?.getStyle { style ->
+            // Use Turf to calculate the Polygon's coordinates
+            val polygonArea: Polygon = getTurfPolygon(circleCenter, radius.toDouble())
+            val pointList = TurfMeta.coordAll(polygonArea, false)
+
+            // Update the source's GeoJSON to draw a new fill circle
+            val polygonCircleSource =
+                style.getSourceAs<GeoJsonSource>(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index)
+            polygonCircleSource?.setGeoJson(
+                Polygon.fromOuterInner(
+                    LineString.fromLngLats(pointList)
+                )
+            )
+        }
+    }
+
+    /**
+     * Use the Turf library {@link TurfTransformation#circle(Point, double, int, String)} method to
+     * retrieve a {@link Polygon} .
+     *
+     * @param centerPoint a {@link Point} which the circle will center around
+     * @param radius      the radius of the circle
+     * @return a Polygon which represents the newly created circle
+     */
+    private fun getTurfPolygon(
+        centerPoint: Point,
+        radius: Double
+    ): Polygon {
+        return TurfTransformation.circle(centerPoint, radius, 360, mCircleUnit)
+    }
+
+    private fun setSpinnerData() {
+        simulationBinding?.apply {
+            val adapter = ChangeBusSpinnerAdapter(spinnerChangeBus.context, notificationData)
+            spinnerChangeBus.adapter = adapter
+
+            spinnerChangeBus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (selectedTrackerIndex != position) {
+                        selectedTrackerIndex = position
+                        mIsLocationUpdateEnable = false
+                        CoroutineScope(Dispatchers.Default).launch {
+                            delay(DELAY_1000)
+                            withContext(Dispatchers.Main) {
+                                simulationHistoryData.clear()
+                                simulationHistoryData.addAll(
+                                    getSelectedBusTrackingData(
+                                        selectedTrackerIndex
+                                    )
+                                )
+                                simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
+                            }
+                            mIsLocationUpdateEnable = true
+                        }
+                    }
+                    val selectedData = notificationData[selectedTrackerIndex].name
+                    tvChangeRoute.text =
+                        buildString {
+                            append(selectedData.split(" ")[0])
+                            append(" ")
+                            append(selectedData.split(" ")[1])
+                        }
+                    tvChangeRouteName.text = selectedData.split(" ")[2]
+                    adapter.setSelection(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Do something when nothing is selected
+                }
+            }
+        }
+    }
+
+    private fun setDefaultIconWithGeofence(index: String) {
+        mMapboxMap?.getStyle { style ->
+            if (style.getSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index) == null) {
+                style.addSource(GeoJsonSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index))
+            }
+            initPolygonCircleFillLayer(index)
+        }
+        mIsDefaultGeofence = true
+    }
+
+    /**
+     * Add a [FillLayer] to display a [Polygon] in a the shape of a circle.
+     */
+    private fun initPolygonCircleFillLayer(index: String) {
+        mMapboxMap?.getStyle { style ->
+            val fillLayer = FillLayer(
+                GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + index,
+                GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index
+            )
+
+            mFragmentActivity?.applicationContext?.let {
+                fillLayer.setProperties(
+                    PropertyFactory.fillColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.color_bn_selected
+                        )
+                    ),
+                    PropertyFactory.fillOutlineColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.color_bn_selected
+                        )
+                    ),
+                    PropertyFactory.fillOpacity(0.2f)
+                )
+            }
+
+            if (style.getLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + index) == null) {
+                style.addLayerBelow(fillLayer, GeofenceCons.CIRCLE_CENTER_LAYER_ID + index)
+            }
+        }
+    }
+
+    private fun initClick() {
+        simulationBinding?.apply {
+            cardStartTracking.setOnClickListener {
+                if (mIsLocationUpdateEnable) {
+                    stopTracker()
+                    stopMqttManager()
+                } else {
+                    viewLoader.show()
+                    tvStopTracking.hide()
+                    cardStartTracking.isEnabled = false
+                    startMqttManager()
+                }
+            }
+            ivBackArrowRouteNotifications.setOnClickListener {
+                if (rvRouteNotifications.isVisible) {
+                    closeNotificationCard()
+                } else {
+                    showViews(rvRouteNotifications, viewDividerNotification)
+                    ivBackArrowRouteNotifications.rotation = 180f
+                }
+            }
+
+            ivBackArrowChangeRoute.setOnClickListener {
+                if (rvTrackingSimulation.isVisible) {
+                    closeTrackingCard()
+                } else {
+                    showViews(rvTrackingSimulation, viewDividerBus)
+                    ivBackArrowChangeRoute.rotation = 180f
+                }
+            }
+        }
+    }
+
+    private fun BottomSheetTrackSimulationBinding.closeNotificationCard() {
+        hideViews(rvRouteNotifications, viewDividerNotification)
+        ivBackArrowRouteNotifications.rotation = 0f
+    }
+
+    private fun BottomSheetTrackSimulationBinding.closeTrackingCard() {
+        hideViews(rvTrackingSimulation, viewDividerBus)
+        ivBackArrowChangeRoute.rotation = 0f
+    }
+
+    private fun BottomSheetTrackSimulationBinding.stopTracker() {
+        mActivity?.getColor(R.color.color_primary_green)
+            ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
+        tvStopTracking.text = mActivity?.getText(R.string.label_start_tracking)
+        tvTrackingYourActivity.text =
+            mActivity?.getText(R.string.label_tracking_in_active)
+        tvTrackingYourActivity.context?.let {
+            tvTrackingYourActivity.setTextColor(
+                ContextCompat.getColor(
+                    it,
+                    R.color.color_hint_text
+                )
+            )
+        }
+    }
+
+    private fun stopMqttManager() {
+        mIsLocationUpdateEnable = false
+        try {
+            mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
+        } catch (_: Exception) {
         }
 
-        private fun setSpinnerData() {
-            simulationBinding?.apply {
-                val adapter = ChangeBusSpinnerAdapter(spinnerChangeBus.context, notificationData)
-                spinnerChangeBus.adapter = adapter
+        try {
+            mqttManager?.disconnect()
+        } catch (_: Exception) {
+        }
+        mqttManager = null
+    }
 
-                spinnerChangeBus.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: AdapterView<*>,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        if (selectedTrackerIndex != position) {
-                            selectedTrackerIndex = position
-                            mIsLocationUpdateEnable = false
-                            CoroutineScope(Dispatchers.Default).launch {
-                                delay(DELAY_1000)
-                                withContext(Dispatchers.Main) {
-                                    simulationHistoryData.clear()
-                                    simulationHistoryData.addAll(
-                                        getSelectedBusTrackingData(
-                                            selectedTrackerIndex
-                                        )
-                                    )
-                                    simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
-                                }
-                                mIsLocationUpdateEnable = true
+    private fun startMqttManager() {
+        mIsLocationUpdateEnable = true
+        if (mqttManager != null) stopMqttManager()
+        val identityId: String? =
+            mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
+
+        mqttManager =
+            AWSIotMqttManager(
+                identityId,
+                BuildConfig.SIMULATION_WEB_SOCKET_URL
+            )
+        mqttManager?.isAutoReconnect =
+            false // To be able to display Exceptions and debug the problem.
+        mqttManager?.keepAlive = 60
+        mqttManager?.setCleanSession(true)
+        try {
+            val instance = mAWSLocationHelper.getCognitoCachingCredentialsProvider()
+            mqttManager?.connect(instance) { status, throwable ->
+                runOnUiThread {
+                    when (status) {
+                        AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connecting -> {
+                        }
+                        AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connected -> {
+                            startTracking()
+                            identityId?.let { subscribeTopic(it) }
+                        }
+                        AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Reconnecting -> {
+                        }
+                        AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost -> {
+                            throwable?.printStackTrace()
+                            if (mIsLocationUpdateEnable) {
+                                startTracking()
                             }
                         }
-                        val selectedData = notificationData[selectedTrackerIndex].name
-                        tvChangeRoute.text =
-                            buildString {
-                                append(selectedData.split(" ")[0])
-                                append(" ")
-                                append(selectedData.split(" ")[1])
+                        else -> {
+                            simulationBinding?.apply {
+                                viewLoader.hide()
+                                tvStopTracking.show()
+                                cardStartTracking.isEnabled = true
                             }
-                        tvChangeRouteName.text = selectedData.split(" ")[2]
-                        adapter.setSelection(position)
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>) {
-                        // Do something when nothing is selected
+                        }
                     }
                 }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+    }
 
-        private fun setDefaultIconWithGeofence(index: String) {
-            mMapboxMap?.getStyle { style ->
-                if (style.getSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index) == null) {
-                    style.addSource(GeoJsonSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index))
-                }
-                initPolygonCircleFillLayer(index)
-            }
-            mIsDefaultGeofence = true
-        }
-
-        /**
-         * Add a [FillLayer] to display a [Polygon] in a the shape of a circle.
-         */
-        private fun initPolygonCircleFillLayer(index: String) {
-            mMapboxMap?.getStyle { style ->
-                val fillLayer = FillLayer(
-                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + index,
-                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index
-                )
-
-                mFragmentActivity?.applicationContext?.let {
-                    fillLayer.setProperties(
-                        PropertyFactory.fillColor(
-                            ContextCompat.getColor(
-                                it,
-                                R.color.color_bn_selected
-                            )
-                        ),
-                        PropertyFactory.fillOutlineColor(
-                            ContextCompat.getColor(
-                                it,
-                                R.color.color_bn_selected
-                            )
-                        ),
-                        PropertyFactory.fillOpacity(0.2f)
-                    )
-                }
-
-                if (style.getLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + index) == null) {
-                    style.addLayerBelow(fillLayer, GeofenceCons.CIRCLE_CENTER_LAYER_ID + index)
-                }
-            }
-        }
-
-        private fun initClick() {
-            simulationBinding?.apply {
-                cardStartTracking.setOnClickListener {
-                    if (mIsLocationUpdateEnable) {
-                        stopTracker()
-                        stopMqttManager()
-                    } else {
-                        viewLoader.show()
-                        tvStopTracking.hide()
-                        cardStartTracking.isEnabled = false
-                        startMqttManager()
-                    }
-                }
-                ivBackArrowRouteNotifications.setOnClickListener {
-                    if (rvRouteNotifications.isVisible) {
-                        closeNotificationCard()
-                    } else {
-                        showViews(rvRouteNotifications, viewDividerNotification)
-                        ivBackArrowRouteNotifications.rotation = 180f
-                    }
-                }
-
-                ivBackArrowChangeRoute.setOnClickListener {
-                    if (rvTracking.isVisible) {
-                        closeTrackingCard()
-                    } else {
-                        showViews(rvTracking, viewDividerBus)
-                        ivBackArrowChangeRoute.rotation = 180f
-                    }
-                }
-            }
-        }
-
-        private fun BottomSheetTrackSimulationBinding.closeNotificationCard() {
-            hideViews(rvRouteNotifications, viewDividerNotification)
-            ivBackArrowRouteNotifications.rotation = 0f
-        }
-
-        private fun BottomSheetTrackSimulationBinding.closeTrackingCard() {
-            hideViews(rvTracking, viewDividerBus)
-            ivBackArrowChangeRoute.rotation = 0f
-        }
-
-        private fun BottomSheetTrackSimulationBinding.stopTracker() {
-            mActivity?.getColor(R.color.color_primary_green)
+    private fun startTracking() {
+        simulationBinding?.apply {
+            mActivity?.getColor(R.color.color_red)
                 ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
-            tvStopTracking.text = mActivity?.getText(R.string.label_start_tracking)
+            tvStopTracking.text =
+                mActivity?.getText(R.string.label_stop_tracking)
             tvTrackingYourActivity.text =
-                mActivity?.getText(R.string.label_tracking_in_active)
-            tvTrackingYourActivity.context?.let {
+                mActivity?.getText(R.string.label_tracking_active)
+            tvTrackingYourActivity.context.let {
                 tvTrackingYourActivity.setTextColor(
                     ContextCompat.getColor(
                         it,
-                        R.color.color_hint_text
+                        R.color.color_red
                     )
                 )
             }
-        }
-
-        private fun stopMqttManager() {
-            mIsLocationUpdateEnable = false
-            try {
-                mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
-            } catch (_: Exception) {
-            }
-
-            try {
-                mqttManager?.disconnect()
-            } catch (_: Exception) {
-            }
-            mqttManager = null
-        }
-
-        private fun startMqttManager() {
-            mIsLocationUpdateEnable = true
-            if (mqttManager != null) stopMqttManager()
-            val identityId: String? =
-                mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
-
-            mqttManager =
-                AWSIotMqttManager(
-                    identityId,
-                    BuildConfig.SIMULATION_WEB_SOCKET_URL
-                )
-            mqttManager?.isAutoReconnect =
-                false // To be able to display Exceptions and debug the problem.
-            mqttManager?.keepAlive = 60
-            mqttManager?.setCleanSession(true)
-            try {
-                val instance = mAWSLocationHelper.getCognitoCachingCredentialsProvider()
-                mqttManager?.connect(instance) { status, throwable ->
-                    runOnUiThread {
-                        when (status) {
-                            AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connecting -> {
-                            }
-                            AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connected -> {
-                                startTracking()
-                                identityId?.let { subscribeTopic(it) }
-                            }
-                            AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Reconnecting -> {
-                            }
-                            AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost -> {
-                                throwable?.printStackTrace()
-                                if (mIsLocationUpdateEnable) {
-                                    startTracking()
-                                }
-                            }
-                            else -> {
-                                simulationBinding?.apply {
-                                    viewLoader.hide()
-                                    tvStopTracking.show()
-                                    cardStartTracking.isEnabled = true
-                                }
+            viewLoader.hide()
+            tvStopTracking.show()
+            cardStartTracking.isEnabled = true
+            if (routeData == null) {
+                initData()
+            } else {
+                if (isAnyBusTrackerEnable()) {
+                    return
+                }
+                busSimulationNotificationFlags?.set(0, true)
+                notificationData[0].isSelected = true
+                setSelectedNotificationCount()
+                simulationNotificationAdapter?.notifyItemChanged(0)
+                routeData?.let { route ->
+                    mActivity?.let { activity ->
+                        getFirstCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
+                            if (isBusTrackerNotificationEnable(index)) {
+                                addMarkerSimulation(activity, index, busRouteCoordinates)
                             }
                         }
                     }
+                    drawGeofenceWithPosition(0)
+                    addPreDrawTrackerLine(route, 0)
+                    zoomCamera()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
+    }
 
-        private fun startTracking() {
-            simulationBinding?.apply {
-                mActivity?.getColor(R.color.color_red)
-                    ?.let { it1 -> cardStartTracking.setCardBackgroundColor(it1) }
-                tvStopTracking.text =
-                    mActivity?.getText(R.string.label_stop_tracking)
-                tvTrackingYourActivity.text =
-                    mActivity?.getText(R.string.label_tracking_active)
-                tvTrackingYourActivity.context.let {
-                    tvTrackingYourActivity.setTextColor(
-                        ContextCompat.getColor(
-                            it,
-                            R.color.color_red
-                        )
-                    )
-                }
-                viewLoader.hide()
-                tvStopTracking.show()
-                cardStartTracking.isEnabled = true
-                if (routeData == null) {
-                    initData()
-                } else {
-                    if (isAnyBusTrackerEnable()) {
-                        return
+    private fun subscribeTopic(identityId: String) {
+        try {
+            mqttManager?.subscribeToTopic(
+                "$identityId/tracker",
+                AWSIotMqttQos.QOS0
+            ) { _, data ->
+
+                val stringData = String(data)
+                if (stringData.isNotEmpty()) {
+                    val notificationData =
+                        Gson().fromJson(stringData, NotificationSimulationData::class.java)
+                    val subTitle: String
+                    if (notificationData.trackerEventType.equals("ENTER", true)) {
+                        subTitle = "Bus ${
+                        notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
+                        }: Entered ${notificationData.stopName} geofence"
+                        Log.e("TAG", "subscribeTopic: Entered ${notificationData.geofenceId}")
+                        routeData?.forEachIndexed { index, routeSimulationDataItem ->
+                            if (routeSimulationDataItem.geofenceCollection == notificationData.geofenceCollection) {
+                                busStopCounts?.set(
+                                    index,
+                                    busStopCounts?.get(index)?.plus(1) ?: 0
+                                )
+                                busStopCounts?.get(index)
+                                    ?.let { addDataInList(index, it, notificationData) }
+                                return@forEachIndexed
+                            }
+                        }
+                    } else {
+                        subTitle = "Bus ${
+                        notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
+                        }: Exited ${notificationData.stopName} geofence"
                     }
-                    busSimulationNotificationFlags?.set(0, true)
-                    notificationData[0].isSelected = true
+                    notificationId++
+                    mActivity?.let {
+                        if (isNotificationGroupActive(it)) {
+                            showNotification(
+                                notificationId,
+                                subTitle,
+                                false
+                            )
+                        } else {
+                            showNotification(
+                                notificationId,
+                                subTitle,
+                                true
+                            )
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun addDataInList(
+        selectedIndex: Int,
+        busStopCount: Int,
+        notificationData: NotificationSimulationData
+    ) {
+        Log.e("TAG", "subscribeTopic: Entered $selectedIndex")
+        CoroutineScope(Dispatchers.Default).launch {
+            delay(DELAY_1000)
+            withContext(Dispatchers.Main) {
+            }
+        }
+        mFragmentActivity?.applicationContext?.let {
+            busSimulationHistoryData[selectedIndex].add(
+                SimulationHistoryData(
+                    it.getString(R.string.label_position_data),
+                    true,
+                    busStopCount,
+                    notificationData.coordinates?.get(0)?.let { longitude ->
+                        notificationData.coordinates?.get(1)?.let { latitude ->
+                            SimulationHistoryInnerData(
+                                latitude,
+                                longitude,
+                                Date()
+                            )
+                        }
+                    }
+                )
+            )
+        }
+    }
+
+    private fun initAdapter() {
+        val notificationLayoutManager = LinearLayoutManager(mActivity?.applicationContext)
+        simulationNotificationAdapter = SimulationNotificationAdapter(
+            notificationData,
+            object : SimulationNotificationAdapter.NotificationInterface {
+                override fun click(position: Int, isSelected: Boolean) {
+                    notificationData[position].isSelected = isSelected
+                    busSimulationNotificationFlags?.set(position, isSelected)
                     setSelectedNotificationCount()
-                    simulationNotificationAdapter?.notifyItemChanged(0)
                     routeData?.let { route ->
-                        mActivity?.let { activity ->
-                            getFirstCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
-                                if (isBusTrackerNotificationEnable(index)) {
-                                    addMarkerSimulation(activity, index, busRouteCoordinates)
-                                }
+                        if (isSelected) {
+                            addPreDrawTrackerLine(route, position)
+                            drawGeofenceWithPosition(position)
+                            mActivity?.let { activity ->
+                                val data = getFirstCoordinates(position)
+                                addMarkerSimulation(activity, position, data)
+                            }
+                        } else {
+                            (activity as MainActivity).lifecycleScope.launch {
+                                delay(DELAY_1000)
+                                busSimulationHistoryData[position].clear()
+                                removePreDrawTrackerLine(route, position)
+                                removeGeofenceWithPosition(position)
+                                timerCounts?.set(position, 0)
+                                mMapHelper?.removeGeoJsonSourceData(position)
                             }
                         }
-                        drawGeofenceWithPosition(0)
-                        addPreDrawTrackerLine(route, 0)
                         zoomCamera()
                     }
                 }
             }
+        )
+        simulationBinding?.rvRouteNotifications?.adapter = simulationNotificationAdapter
+        simulationBinding?.rvRouteNotifications?.layoutManager = notificationLayoutManager
+
+        val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
+        simulationTrackingListAdapter = SimulationListAdapter()
+        simulationBinding?.rvTrackingSimulation?.adapter = simulationTrackingListAdapter
+        simulationBinding?.rvTrackingSimulation?.layoutManager = layoutManager
+    }
+
+    private fun setSelectedNotificationCount() {
+        var totalCount = 0
+        busSimulationNotificationFlags?.forEach {
+            if (it) {
+                totalCount++
+            }
         }
+        simulationBinding?.apply {
+            tvRouteNotificationsName.text = buildString {
+                append(totalCount)
+                append(" ")
+                if (totalCount > 1) append(tvRouteNotificationsName.context.getString(R.string.routes_active)) else append(tvRouteNotificationsName.context.getString(R.string.route_active))
+            }
+        }
+    }
 
-        private fun subscribeTopic(identityId: String) {
-            try {
-                mqttManager?.subscribeToTopic(
-                    "$identityId/tracker",
-                    AWSIotMqttQos.QOS0
-                ) { _, data ->
+    fun isSimulationBottomSheetVisible(): Boolean {
+        return mBottomSheetSimulationBehavior?.state != BottomSheetBehavior.STATE_HIDDEN
+    }
 
-                    val stringData = String(data)
-                    if (stringData.isNotEmpty()) {
-                        val notificationData =
-                            Gson().fromJson(stringData, NotificationSimulationData::class.java)
-                        val subTitle: String
-                        if (notificationData.trackerEventType.equals("ENTER", true)) {
-                            subTitle = "Bus ${
-                                notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
-                            }: Entered ${notificationData.stopName} geofence"
-                            Log.e("TAG", "subscribeTopic: Entered ${notificationData.geofenceId}")
-                            routeData?.forEachIndexed { index, routeSimulationDataItem ->
-                                if (routeSimulationDataItem.geofenceCollection == notificationData.geofenceCollection) {
-                                    busStopCounts?.set(
-                                        index,
-                                        busStopCounts?.get(index)?.plus(1) ?: 0
+    fun setSimulationDraggable(isDrag: Boolean) {
+        if (!isDrag) {
+            mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        mBottomSheetSimulationBehavior?.isDraggable = isDrag
+    }
+
+    fun setSimulationDraggable() {
+        setSimulationDraggable(true)
+    }
+
+    fun setSimulationData() {
+        setBounds()
+        mMapHelper?.setGeoJsonSourceEmpty()
+        notificationData.forEachIndexed { index, notificationData ->
+            if (notificationData.isSelected) {
+                val coordinatesSize = routeData?.get(index)?.coordinates?.size ?: 0
+                if (coordinatesSize > 0) {
+                    timerCounts?.let {
+                        val currentIndex = (it[index]) % coordinatesSize
+                        val data = BusRouteCoordinates(
+                            routeData?.get(index)?.id,
+                            routeData?.get(index)?.geofenceCollection,
+                            routeData?.get(index)?.coordinates?.get(currentIndex)
+                        )
+                        mActivity?.let { activity ->
+                            addMarkerSimulation(activity, index, data)
+                        }
+                        drawGeofenceWithPosition(index)
+                        if (!mIsLocationUpdateEnable) {
+                            routeData?.let { route ->
+                                addTrackerLine(
+                                    mPreDrawTrackerLine[index] as ArrayList<Point>,
+                                    route,
+                                    index
+                                )
+                                if (busesCoordinates[index].size > 1) {
+                                    mMapHelper?.addTrackerLine(
+                                        busesCoordinates[index],
+                                        true,
+                                        "layer${route[index].id}",
+                                        "source${route[index].id}",
+                                        R.color.color_primary_green
                                     )
-                                    busStopCounts?.get(index)
-                                        ?.let { addDataInList(index, it, notificationData) }
-                                    return@forEachIndexed
-                                }
-                            }
-                        } else {
-                            subTitle = "Bus ${
-                                notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
-                            }: Exited ${notificationData.stopName} geofence"
-                        }
-                        notificationId++
-                        mActivity?.let {
-                            if (isNotificationGroupActive(it)) {
-                                showNotification(
-                                    notificationId,
-                                    subTitle,
-                                    false
-                                )
-                            } else {
-                                showNotification(
-                                    notificationId,
-                                    subTitle,
-                                    true
-                                )
-                            }
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        private fun addDataInList(
-            selectedIndex: Int,
-            busStopCount: Int,
-            notificationData: NotificationSimulationData
-        ) {
-            Log.e("TAG", "subscribeTopic: Entered $selectedIndex")
-            CoroutineScope(Dispatchers.Default).launch {
-                delay(DELAY_1000)
-                withContext(Dispatchers.Main) {
-                }
-            }
-            mFragmentActivity?.applicationContext?.let {
-                busSimulationHistoryData[selectedIndex].add(
-                    SimulationHistoryData(
-                        it.getString(R.string.label_position_data),
-                        true,
-                        busStopCount,
-                        notificationData.coordinates?.get(0)?.let { longitude ->
-                            notificationData.coordinates?.get(1)?.let { latitude ->
-                                SimulationHistoryInnerData(
-                                    latitude,
-                                    longitude,
-                                    Date()
-                                )
-                            }
-                        }
-                    )
-                )
-            }
-        }
-
-        private fun initAdapter() {
-            val notificationLayoutManager = LinearLayoutManager(mActivity?.applicationContext)
-            simulationNotificationAdapter = SimulationNotificationAdapter(
-                notificationData,
-                object : SimulationNotificationAdapter.NotificationInterface {
-                    override fun click(position: Int, isSelected: Boolean) {
-                        notificationData[position].isSelected = isSelected
-                        busSimulationNotificationFlags?.set(position, isSelected)
-                        setSelectedNotificationCount()
-                        routeData?.let { route ->
-                            if (isSelected) {
-                                addPreDrawTrackerLine(route, position)
-                                drawGeofenceWithPosition(position)
-                                mActivity?.let { activity ->
-                                    val data = getFirstCoordinates(position)
-                                    addMarkerSimulation(activity, position, data)
-                                }
-                            } else {
-                                (activity as MainActivity).lifecycleScope.launch {
-                                    delay(DELAY_1000)
-                                    busSimulationHistoryData[position].clear()
-                                    removePreDrawTrackerLine(route, position)
-                                    removeGeofenceWithPosition(position)
-                                    timerCounts?.set(position, 0)
-                                    mMapHelper?.removeGeoJsonSourceData(position)
-                                }
-                            }
-                            zoomCamera()
-                        }
-                    }
-                }
-            )
-            simulationBinding?.rvRouteNotifications?.adapter = simulationNotificationAdapter
-            simulationBinding?.rvRouteNotifications?.layoutManager = notificationLayoutManager
-
-            val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
-            simulationTrackingListAdapter = SimulationListAdapter()
-            simulationBinding?.rvTracking?.adapter = simulationTrackingListAdapter
-            simulationBinding?.rvTracking?.layoutManager = layoutManager
-        }
-
-        private fun setSelectedNotificationCount() {
-            var totalCount = 0
-            busSimulationNotificationFlags?.forEach {
-                if (it) {
-                    totalCount++
-                }
-            }
-            simulationBinding?.apply {
-                tvRouteNotificationsName.text = buildString {
-                    append(totalCount)
-                    append(" ")
-                    if (totalCount > 1) append(tvRouteNotificationsName.context.getString(R.string.routes_active)) else append(tvRouteNotificationsName.context.getString(R.string.route_active))
-                }
-            }
-        }
-
-        fun isSimulationBottomSheetVisible(): Boolean {
-            return mBottomSheetSimulationBehavior?.state != BottomSheetBehavior.STATE_HIDDEN
-        }
-
-        fun setSimulationDraggable(isDrag: Boolean) {
-            if (!isDrag) {
-                mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
-            mBottomSheetSimulationBehavior?.isDraggable = isDrag
-        }
-
-        fun setSimulationDraggable() {
-            setSimulationDraggable(true)
-        }
-
-        fun setSimulationData() {
-            setBounds()
-            mMapHelper?.setGeoJsonSourceEmpty()
-            notificationData.forEachIndexed { index, notificationData ->
-                if (notificationData.isSelected) {
-                    val coordinatesSize = routeData?.get(index)?.coordinates?.size ?: 0
-                    if (coordinatesSize > 0) {
-                        timerCounts?.let {
-                            val currentIndex = (it[index]) % coordinatesSize
-                            val data = BusRouteCoordinates(
-                                routeData?.get(index)?.id,
-                                routeData?.get(index)?.geofenceCollection,
-                                routeData?.get(index)?.coordinates?.get(currentIndex)
-                            )
-                            mActivity?.let { activity ->
-                                addMarkerSimulation(activity, index, data)
-                            }
-                            drawGeofenceWithPosition(index)
-                            if (!mIsLocationUpdateEnable) {
-                                routeData?.let { route ->
-                                    addTrackerLine(
-                                        mPreDrawTrackerLine[index] as ArrayList<Point>,
-                                        route,
-                                        index
-                                    )
-                                    if (busesCoordinates[index].size > 1) {
-                                        mMapHelper?.addTrackerLine(
-                                            busesCoordinates[index],
-                                            true,
-                                            "layer${route[index].id}",
-                                            "source${route[index].id}",
-                                            R.color.color_primary_green
-                                        )
-                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            (activity as MainActivity).lifecycleScope.launch {
-                delay(DELAY_1000)
-                zoomCamera()
-            }
         }
+        (activity as MainActivity).lifecycleScope.launch {
+            delay(DELAY_1000)
+            zoomCamera()
+        }
+    }
 
-        fun hideSimulationBottomSheet() {
-            mMapboxMap?.removeViewBounds()
-            simulationBinding?.apply {
-                closeTrackingCard()
-                closeNotificationCard()
-                clPersistentBottomSheetSimulation.hide()
-            }
-            simulationBinding?.apply {
-                stopTracker()
-            }
-            coroutineScope.cancel()
-            (activity as MainActivity).lifecycleScope.launch {
-                delay(DELAY_1000)
-                routeData?.forEach { routeSimulationDataItem ->
-                    routeSimulationDataItem.id?.let { it1 ->
-                        mMapHelper?.removeSource(it1)
-                        mMapHelper?.removeLayer(it1)
-                        mMapHelper?.removeLayer("layer$it1")
-                        mMapHelper?.removeLayer("source$it1")
-                        mMapHelper?.removeLayer("layer${it1}_pre_draw")
-                        mMapHelper?.removeLayer("source${it1}_pre_draw")
-                    }
-                }
-                mMapHelper?.clearMarker()
-                mMapHelper?.removeLine()
-                mMapHelper?.removeSimulationData()
-                routeData?.clear()
-                routeData = null
-                notificationData.forEach { data ->
-                    data.isSelected = false
-                }
-                notificationId = 1
-                busSimulationNotificationFlags = null
-                mIsLocationUpdateEnable = false
-            }
-            mGeofenceList.forEachIndexed { index, data ->
-                data.forEachIndexed { indexInner, _ ->
-                    mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner")
-                    mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner")
-                    mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner")
+    fun hideSimulationBottomSheet() {
+        mMapboxMap?.removeViewBounds()
+        simulationBinding?.apply {
+            closeTrackingCard()
+            closeNotificationCard()
+            clPersistentBottomSheetSimulation.hide()
+        }
+        simulationBinding?.apply {
+            stopTracker()
+        }
+        coroutineScope.cancel()
+        (activity as MainActivity).lifecycleScope.launch {
+            delay(DELAY_1000)
+            routeData?.forEach { routeSimulationDataItem ->
+                routeSimulationDataItem.id?.let { it1 ->
+                    mMapHelper?.removeSource(it1)
+                    mMapHelper?.removeLayer(it1)
+                    mMapHelper?.removeLayer("layer$it1")
+                    mMapHelper?.removeLayer("source$it1")
+                    mMapHelper?.removeLayer("layer${it1}_pre_draw")
+                    mMapHelper?.removeLayer("source${it1}_pre_draw")
                 }
             }
-            mGeofenceList.clear()
-            hideSimulationSheet(activity)
+            mMapHelper?.clearMarker()
+            mMapHelper?.removeLine()
+            mMapHelper?.removeSimulationData()
+            routeData?.clear()
+            routeData = null
+            notificationData.forEach { data ->
+                data.isSelected = false
+            }
+            notificationId = 1
+            busSimulationNotificationFlags = null
+            mIsLocationUpdateEnable = false
         }
-
-        private fun hideSimulationSheet(activity: MainActivity) {
-            mBottomSheetSimulationBehavior.let {
-                it?.isHideable = true
-                it?.state = BottomSheetBehavior.STATE_HIDDEN
-                it?.isFitToContents = false
-                stopMqttManager()
-                activity.reInitializeSimulation()
+        mGeofenceList.forEachIndexed { index, data ->
+            data.forEachIndexed { indexInner, _ ->
+                mMapboxMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner")
+                mMapboxMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner")
             }
         }
+        mGeofenceList.clear()
+        hideSimulationSheet(activity)
+    }
 
-        fun manageGeofenceListUI(dataGeofence: SimulationGeofenceData) {
-            val position =
-                simulationCollectionName.indexOfFirst { it.contains(dataGeofence.collectionName) }
-            mGeofenceList[position].clear()
-            mGeofenceList[position] = dataGeofence.devicePositionData
-            if (isBusTrackerNotificationEnable(position)) {
-                drawGeofenceWithPosition(position)
-            }
+    private fun hideSimulationSheet(activity: MainActivity) {
+        mBottomSheetSimulationBehavior.let {
+            it?.isHideable = true
+            it?.state = BottomSheetBehavior.STATE_HIDDEN
+            it?.isFitToContents = false
+            stopMqttManager()
+            activity.reInitializeSimulation()
         }
+    }
 
-        private fun MapboxMap.limitViewToBounds(bounds: LatLngBounds) {
-            val newBoundsHeight =
-                bounds.latitudeSpan - projection.visibleRegion.latLngBounds.latitudeSpan
-            val newBoundsWidth =
-                bounds.longitudeSpan - projection.visibleRegion.latLngBounds.longitudeSpan
-            val leftTopLatLng = LatLng(
-                bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2,
-                bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth
-            )
-            val rightBottomLatLng = LatLng(
-                bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2 - newBoundsHeight,
-                bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2
-            )
-            val newBounds = LatLngBounds.Builder()
-                .include(leftTopLatLng)
-                .include(rightBottomLatLng)
-                .build()
-            setLatLngBoundsForCameraTarget(newBounds)
+    fun manageGeofenceListUI(dataGeofence: SimulationGeofenceData) {
+        val position =
+            simulationCollectionName.indexOfFirst { it.contains(dataGeofence.collectionName) }
+        mGeofenceList[position].clear()
+        mGeofenceList[position] = dataGeofence.devicePositionData
+        if (isBusTrackerNotificationEnable(position)) {
+            drawGeofenceWithPosition(position)
         }
+    }
 
-        private fun MapboxMap.removeViewBounds() {
-            // Set the LatLngBounds for the camera target to null
-            setLatLngBoundsForCameraTarget(null)
-            style?.let { mMapHelper?.updateZoomRange(it) }
-            mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
-        }
+    private fun MapboxMap.limitViewToBounds(bounds: LatLngBounds) {
+        val newBoundsHeight =
+            bounds.latitudeSpan - projection.visibleRegion.latLngBounds.latitudeSpan
+        val newBoundsWidth =
+            bounds.longitudeSpan - projection.visibleRegion.latLngBounds.longitudeSpan
+        val leftTopLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2 - newBoundsWidth
+        )
+        val rightBottomLatLng = LatLng(
+            bounds.latNorth - (bounds.latitudeSpan - newBoundsHeight) / 2 - newBoundsHeight,
+            bounds.lonEast - (bounds.longitudeSpan - newBoundsWidth) / 2
+        )
+        val newBounds = LatLngBounds.Builder()
+            .include(leftTopLatLng)
+            .include(rightBottomLatLng)
+            .build()
+        setLatLngBoundsForCameraTarget(newBounds)
+    }
+
+    private fun MapboxMap.removeViewBounds() {
+        // Set the LatLngBounds for the camera target to null
+        setLatLngBoundsForCameraTarget(null)
+        style?.let { mMapHelper?.updateZoomRange(it) }
+        mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
+    }
 }
