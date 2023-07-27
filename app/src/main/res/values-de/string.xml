@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Standort</string>
   <string name="menu_explore">Erkunden</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">Wie zu verbinden zu</string>
   <string name="how_to_connect_1_1">Klick hier zu Lauf ein Wolkenbildung Muster zu sicher erstellen erforderlich Ressourcen.</string>
   <string name="how_to_connect_1_2">Es Testament sicher erstellen alles erforderlich Ressourcen.</string>
-  <string name="how_to_connect_1_3">Du Dose löschen diese Ressourcen durch die stapeln Löschung Option oder 'Verwalten Ressourcen“ Seiten in die Speisekarte auf die links.</string>
+  <string name="how_to_connect_1_3">Du Dose löschen diese Ressourcen durch die stapeln Löschung Option oder \'Verwalten Ressourcen“ Seiten in die Speisekarte auf die links.</string>
   <string name="how_to_connect_2_1">Verbinden die Demo App mit die vor kurzem erstellt AWS Ressourcen von Kopieren in Eingang Felder.</string>
   <string name="how_to_connect_2_2">Von dein Wolkenbildung Ausgang Abschnitt Kopie die entsprechende genannt Werte als reflektiert in die Recht Abschnitt bilden (Identity) Oolid usw.). Lernen mehr.</string>
   <string name="learn_more">

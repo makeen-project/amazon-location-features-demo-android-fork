@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon 地点</string>
   <string name="menu_explore">探索</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">怎么样 到 连接 到</string>
   <string name="how_to_connect_1_1">点击 这里 到 运行 一个 云形成 模板 到 安全 创造 规定的 资源。</string>
   <string name="how_to_connect_1_2">它 将 安全 创造 所有 规定的 资源。</string>
-  <string name="how_to_connect_1_3">你 能够 删除 这些 资源 通过 这 堆 删除 选项 要么 '管理 资源' 页面 在 这 菜单 上 这 左。</string>
+  <string name="how_to_connect_1_3">你 能够 删除 这些 资源 通过 这 堆 删除 选项 要么 \'管理 资源\' 页面 在 这 菜单 上 这 左。</string>
   <string name="how_to_connect_2_1">连接 这 演示 应用 和 这 最近 创造 AWS 资源 通过 复制 在 输入 字段。</string>
   <string name="how_to_connect_2_2">来自 您的 云形成 输出 部分 复制 这 相应的 被命名 价值 如同 反映 在 这 权利 部分 表单 (identityPoolID 等等）。 学习 更多。</string>
   <string name="learn_more">

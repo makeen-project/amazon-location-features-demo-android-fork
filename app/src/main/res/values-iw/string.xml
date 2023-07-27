@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon מיקום</string>
   <string name="menu_explore">חקור</string>
@@ -28,9 +29,9 @@
   <string name="how_to_connect">איך כדי להתחבר כדי</string>
   <string name="how_to_connect_1_1">לחץ פה כדי לרוץ א תצורת ענן תבנית כדי בצורה מאובטחת ליצור נדרש משאבים.</string>
   <string name="how_to_connect_1_2">זה צוואה בצורה מאובטחת ליצור כל נדרש משאבים.</string>
-  <string name="how_to_connect_1_3">אתה מסוגל למחוק אלו משאבים דרך ה ערימה מחיקה אפשרות או 'לנהל משאבים עמודים בתוך ה תפריט על ה שמאלה.</string>
+  <string name="how_to_connect_1_3">אתה מסוגל למחוק אלו משאבים דרך ה ערימה מחיקה אפשרות או \'לנהל משאבים עמודים בתוך ה תפריט על ה שמאלה.</string>
   <string name="how_to_connect_2_1">התחבר ה דמו יישום עם ה לאחרונה נברא AWS משאבים על ידי להעתיק בתוך להזין שדות.</string>
-  <string name="how_to_connect_2_2">מ שלך תצורת ענן פלט קטע העתק ה תואם בשם ערכים בתור משתקף בתוך ה ימין קטע טופס (זהותPoolid וכו '). ללמוד יותר.</string>
+  <string name="how_to_connect_2_2">מ שלך תצורת ענן פלט קטע העתק ה תואם בשם ערכים בתור משתקף בתוך ה ימין קטע טופס (זהותPoolid וכו \'). ללמוד יותר.</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -66,7 +67,7 @@
   <string name="text_switch_avoid_tools">הימנע אגרות</string>
   <string name="text_switch_avoid_highways">הימנע כבישים מהירים</string>
   <string name="text_switch_avoid_ferries">הימנע מעבורות</string>
-  <string name="_2_min">2 דק'</string>
+  <string name="_2_min">2 דק\'</string>
   <string name="label_search_destination">חיפוש יעד</string>
   <string name="label_my_location">שלי מיקום</string>
   <string name="label_directions">הוראות</string>
@@ -204,7 +205,7 @@
   <string name="subtitle_imperial">מיילס, פאונד</string>
   <string name="automatic">אוטומטי</string>
   <string name="label_restart_app_title">הפעל Grab</string>
-  <string name="label_restart_app_description">Grab מעניק מפות, מסלולים ו מקום חפש בתוך מלזיה, פיליפינים, תאילנד, סינגפור, וייטנאם, אינדונזיה, מיאנמר, ו קמבודיה. \ n\ n בזמן מכונית ו אופנוע מסלולים מהווים זמינה מעבר ה לעיל מדינות, ה אופניים ו הליכה מסלולים מהווים תמך בתוך רק מפתח ערים כזה בתור סינגפור, ג'קרטה, מנילה, קלאנג עמק, בנגקוק, הו צ'י מין עיר, ו האנוי. </string>
+  <string name="label_restart_app_description">Grab מעניק מפות, מסלולים ו מקום חפש בתוך מלזיה, פיליפינים, תאילנד, סינגפור, וייטנאם, אינדונזיה, מיאנמר, ו קמבודיה. \ n\ n בזמן מכונית ו אופנוע מסלולים מהווים זמינה מעבר ה לעיל מדינות, ה אופניים ו הליכה מסלולים מהווים תמך בתוך רק מפתח ערים כזה בתור סינגפור, ג\'קרטה, מנילה, קלאנג עמק, בנגקוק, הו צ\'י מין עיר, ו האנוי. </string>
   <string name="enable_grab">הפעל Grab</string>
   <string name="your_location_not_supported_by_grab">שלך נוכחי מקום הווה החוצה ארצות תמך על ידי Grab. נכון לעכשיו, Grab תומך מלזיה, פיליפינים, תאילנד, סינגפור, וייטנאם, אינדונזיה, מיאנמר, קמבודיה.</string>
   <string name="label_current_location_disabled">נוכחי מקום מושבת</string>
@@ -212,7 +213,7 @@
   <string name="label_automatic_sub_title_mile">מבוסס על שלך דפדפן הגדרות (מיילס, פאונד)</string>
   <string name="label_automatic_sub_title_km">מבוסס על שלך דפדפן הגדרות (קילומטרים, קילוגרמים)</string>
   <string name="label_sec">שניות</string>
-  <string name="label_min">דק'</string>
+  <string name="label_min">דק\'</string>
   <string name="label_hr">hr</string>
   <string name="label_m">מ</string>
   <string name="label_km">"ק""מ"</string>
