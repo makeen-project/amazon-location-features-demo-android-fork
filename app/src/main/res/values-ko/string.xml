@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon 위치</string>
   <string name="menu_explore">둘러보기</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">어떻게 에 잇다 에</string>
   <string name="how_to_connect_1_1">클릭 이리 에 를 실행합니다 a 클라우드 포메이션 주형 에 안전하게 을 (를) 만듭니다 필수 자원.</string>
   <string name="how_to_connect_1_2">그것 의지 안전하게 을 (를) 만듭니다 모든 필수 자원.</string>
-  <string name="how_to_connect_1_3">당신 양철통 지우다 이들 자원 를 통해 그 스택 삭제 선택권 또는 '관리 리소스' 페이지 에서 그 메뉴 ...에 그 왼쪽.</string>
+  <string name="how_to_connect_1_3">당신 양철통 지우다 이들 자원 를 통해 그 스택 삭제 선택권 또는 \'관리 리소스\' 페이지 에서 그 메뉴 ...에 그 왼쪽.</string>
   <string name="how_to_connect_2_1">커넥트 그 데모 앱 와 그 최근에 생성되었습니다 AWS 자원 에 의해 복사 에서 입력 필드.</string>
   <string name="how_to_connect_2_2">에서 당신의 클라우드 포메이션 출력 섹션 복사 그 동 이름이 지정되어 있습니다 가치 같이 반영 에서 그 오른쪽 섹션 형식 (아이덴티티 풀 ID) 등). 배우기 더 보기.</string>
   <string name="learn_more">
@@ -179,8 +180,8 @@
   <string name="label_welcome_amazon">어서 오십시오 to\nAmazon 위치 데모</string>
   <string name="label_continue">계속</string>
   <string name="label_right_aws">© 2023, Amazon 웹 서비스, 주식회사 또는 그것의 계열사. 모두 권한 예약되어 있습니다.</string>
-  <string name="label_terms_desc">에 의해 다운로드, 설치, 또는 를 사용하여 그 Amazon 위치 데모 앱, 당신 동의하다 에 그 앱\ '의 약관 &amp; 조건 ...에 대한 용도.</string>
-  <string name="label_terms_desc_terms_page">에 의해 다운로드, 설치, 또는 를 사용하여 그 Amazon 위치 데모 앱, 당신 동의하다 에 그 앱\ '의 약관 &amp; 조건 ...에 대한 용도.</string>
+  <string name="label_terms_desc">에 의해 다운로드, 설치, 또는 를 사용하여 그 Amazon 위치 데모 앱, 당신 동의하다 에 그 앱\ \'의 약관 &amp; 조건 ...에 대한 용도.</string>
+  <string name="label_terms_desc_terms_page">에 의해 다운로드, 설치, 또는 를 사용하여 그 Amazon 위치 데모 앱, 당신 동의하다 에 그 앱\ \'의 약관 &amp; 조건 ...에 대한 용도.</string>
   <string name="text_terms_desc_coloured_1">약관 &amp; 조건</string>
   <string name="text_terms_desc_coloured_2">AWS 수용 가능 용도 정책</string>
   <string name="text_terms_desc_coloured_3">AWS 프라이버시 공지</string>

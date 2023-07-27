@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon ロケーション</string>
   <string name="menu_explore">探索</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">どうやって に 接続 に</string>
   <string name="how_to_connect_1_1">クリック ここに に 走る ある クラウド形成 テンプレート に 安全に 作成 必須 資源。</string>
   <string name="how_to_connect_1_2">それ だろう 安全に 作成 すべて 必須 資源。</string>
-  <string name="how_to_connect_1_3">あなた できます 削除する これら リソース を通して その スタック 削除 オプション または '管理 リソース ' ページ数 に その メニュー オン その 左。</string>
+  <string name="how_to_connect_1_3">あなた できます 削除する これら リソース を通して その スタック 削除 オプション または \'管理 リソース \' ページ数 に その メニュー オン その 左。</string>
   <string name="how_to_connect_2_1">接続 その デモ アプリ と その 最近です 作成した AWS リソース によって コピー に 入力 畑。</string>
   <string name="how_to_connect_2_2">から きみの クラウド形成 出力 セクション コピーします その 対応する 名前付き 値 なので 反映 に その 右 セクション フォーム (ID プール ID など)。 学ぶ もっと。</string>
   <string name="learn_more">

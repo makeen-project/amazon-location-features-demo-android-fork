@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Localização</string>
   <string name="menu_explore">Explorar</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">Como para conectar para</string>
   <string name="how_to_connect_1_1">Clique aqui para corre uma Formação de nuvem modelo para com segurança criar requeridos recursos.</string>
   <string name="how_to_connect_1_2">Isso vai com segurança criar tudo requeridos recursos.</string>
-  <string name="how_to_connect_1_3">Você lata deletar estes recursos através a pilha eliminação opção ou “Gerenciar recursos' páginas em a cardápio em a esquerda.</string>
+  <string name="how_to_connect_1_3">Você lata deletar estes recursos através a pilha eliminação opção ou “Gerenciar recursos\' páginas em a cardápio em a esquerda.</string>
   <string name="how_to_connect_2_1">Conectar a demonstração aplicativo com a recentemente criada AWS recursos de copiando em entrada campos.</string>
   <string name="how_to_connect_2_2">De seu Formação de nuvem saída seção copiar a correspondente nomeado valores como refletido em a certo seção forma (ID do pool de identidade) etc.). Aprenda mais.</string>
   <string name="learn_more">

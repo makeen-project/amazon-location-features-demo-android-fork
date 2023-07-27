@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Ubicación</string>
   <string name="menu_explore">Explora</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">Cómo a conectar a</string>
   <string name="how_to_connect_1_1">Haga clic aquí a correr un Formación en la nube modelo a de forma segura crear requerido recursos.</string>
   <string name="how_to_connect_1_2">Es voluntad de forma segura crear todo requerido recursos.</string>
-  <string name="how_to_connect_1_3">Tú poder eliminar estos recursos por la pila eliminación opción o «Gestionar recursos' páginas en la menú en la izquierda.</string>
+  <string name="how_to_connect_1_3">Tú poder eliminar estos recursos por la pila eliminación opción o «Gestionar recursos\' páginas en la menú en la izquierda.</string>
   <string name="how_to_connect_2_1">Conéctate la muestra app con la recientemente creado AWS recursos por copiado en entrada campos.</string>
   <string name="how_to_connect_2_2">De vuestro Formación en la nube salida sección copiar la correspondiente llamado valora tan reflejada en la derecha sección formulario (ID de grupo de identidad) etc.). Aprenda más.</string>
   <string name="learn_more">

@@ -68,8 +68,19 @@ const main = async() => {
                         } else {
                             const data = await client.send(new TranslateTextCommand(params));
                             const translatedWord = data.TranslatedText.trim();
-                            if (translatedWord !== '') {
-                                const translatedWordWithTags = word.includes('<b>') ? `<b>${translatedWord}</b>` : translatedWord;
+                            if (translatedWord !== "") {
+                                let translatedWordWithTags = word.includes("<b>") ?
+                                    `<b>${translatedWord}</b>` :
+                                    translatedWord;
+
+                                // Add a backslash before the ' sign if not already present
+                                if (!translatedWordWithTags.includes("\\'")) {
+                                    translatedWordWithTags = translatedWordWithTags.replace(
+                                        /'/g,
+                                        "\\'"
+                                    );
+                                }
+
                                 translatedWords.push(translatedWordWithTags);
                             } else {
                                 translatedWords.push(word);

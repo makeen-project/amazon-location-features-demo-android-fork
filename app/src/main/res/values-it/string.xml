@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Posizione</string>
   <string name="menu_explore">Esplora</string>
@@ -28,7 +29,7 @@
   <string name="how_to_connect">Come a connettersi a</string>
   <string name="how_to_connect_1_1">Fare clic qui a correre un Formazione sul cloud modello a fermamente creare necessario risorse.</string>
   <string name="how_to_connect_1_2">È volontà fermamente creare tutti necessario risorse.</string>
-  <string name="how_to_connect_1_3">Tu lattina eliminare questi risorse attraverso lo pila cancellazione opzione o 'Gestisci risorse» pagine nel lo menù sul lo sinistra.</string>
+  <string name="how_to_connect_1_3">Tu lattina eliminare questi risorse attraverso lo pila cancellazione opzione o \'Gestisci risorse» pagine nel lo menù sul lo sinistra.</string>
   <string name="how_to_connect_2_1">Connetti lo manifestazione app con lo recentemente creato AWS risorse da copiando nel ingresso campi.</string>
   <string name="how_to_connect_2_2">Da tuo Formazione sul cloud produzione sezione copia lo corrispondenti denominato valori come riflessa nel lo destra sezione modulo (ID del pool di identità) ecc.). Impara altro.</string>
   <string name="learn_more">
