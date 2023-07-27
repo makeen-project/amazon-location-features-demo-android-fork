@@ -856,6 +856,7 @@ class MapHelper(private val appContext: Context) {
         index: Int
     ) {
         mMapboxMap?.getStyle { style ->
+            removeGeoJsonSourceData(index)
             BitmapUtils.getBitmapFromDrawable(
                 ContextCompat.getDrawable(
                     activity,

@@ -38,6 +38,7 @@ import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
+import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.DELAY_1000
 import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.MapCameraZoom.SIMULATION_CAMERA_ZOOM_1
@@ -92,6 +93,7 @@ class SimulationUtils(
     private val CHANNEL_NAME = "simulation Notification Channel"
     private val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
     private var routeData: ArrayList<RouteSimulationDataItem>? = null
+    private var isCoroutineStarted: Boolean = false
     private var notificationId: Int = 1
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
     private var mqttManager: AWSIotMqttManager? = null
@@ -147,6 +149,15 @@ class SimulationUtils(
         simulationInterface?.getGeofenceList()
         createNotificationChannel()
         setBounds()
+        mFragmentActivity?.applicationContext?.let { context ->
+            routeData = readRouteData(context)?.busRoutesData
+
+            routeData?.let { route ->
+                timerCounts = MutableList(route.size) { 0 }
+                busSimulationNotificationFlags = MutableList(route.size) { false }
+                busStopCounts = MutableList(route.size) { 0 }
+            }
+        }
     }
 
     private fun setBounds() {
@@ -167,26 +178,23 @@ class SimulationUtils(
 
     private fun initData() {
         mFragmentActivity?.applicationContext?.let { context ->
-            routeData = readRouteData(context)?.busRoutesData
-
             routeData?.let { route ->
-                timerCounts = MutableList(route.size) { 0 }
-                busSimulationNotificationFlags = MutableList(route.size) { false }
-                busStopCounts = MutableList(route.size) { 0 }
-                busSimulationNotificationFlags?.set(0, true)
-                notificationData[0].isSelected = true
-                setSelectedNotificationCount()
-                simulationNotificationAdapter?.notifyItemChanged(0)
-                mActivity?.let { activity ->
-                    getFirstCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
-                        if (isBusTrackerNotificationEnable(index)) {
-                            addMarkerSimulation(activity, index, busRouteCoordinates)
+                if (!isAnyBusTrackerEnable()) {
+                    busSimulationNotificationFlags?.set(0, true)
+                    notificationData[0].isSelected = true
+                    setSelectedNotificationCount()
+                    simulationNotificationAdapter?.notifyItemChanged(0)
+                    mActivity?.let { activity ->
+                        getFirstCoordinates()?.forEachIndexed { index, busRouteCoordinates ->
+                            if (isBusTrackerNotificationEnable(index)) {
+                                addMarkerSimulation(activity, index, busRouteCoordinates)
+                            }
                         }
                     }
+                    drawGeofenceWithPosition(0)
+                    addPreDrawTrackerLine(route, 0)
+                    zoomCamera()
                 }
-                drawGeofenceWithPosition(0)
-                addPreDrawTrackerLine(route, 0)
-                zoomCamera()
                 coroutineScope.launch {
                     while (isActive) {
                         if (mIsLocationUpdateEnable) {
@@ -218,6 +226,7 @@ class SimulationUtils(
                         delay(DELAY_1000)
                     }
                 }
+                isCoroutineStarted = true
             }
         }
     }
@@ -850,7 +859,7 @@ class SimulationUtils(
             viewLoader.hide()
             tvStopTracking.show()
             cardStartTracking.isEnabled = true
-            if (routeData == null) {
+            if (!isCoroutineStarted) {
                 initData()
             } else {
                 if (isAnyBusTrackerEnable()) {
@@ -1091,6 +1100,7 @@ class SimulationUtils(
         simulationBinding?.apply {
             stopTracker()
         }
+        isCoroutineStarted = false
         coroutineScope.cancel()
         (activity as MainActivity).lifecycleScope.launch {
             delay(DELAY_1000)

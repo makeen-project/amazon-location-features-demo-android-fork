@@ -540,6 +540,8 @@ class GeofenceUtils {
         }
         mBindingGeofenceList?.btnTryGeofence?.hide()
         mBindingGeofenceList?.tvEnableGeofence?.text = mActivity?.getString(R.string.add_geofence)
+        mBindingGeofenceList?.btnAddGeofence?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.color_primary_green))
+        mBindingGeofenceList?.tvEnableGeofence?.setTextColor(ContextCompat.getColor(context, R.color.white))
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
