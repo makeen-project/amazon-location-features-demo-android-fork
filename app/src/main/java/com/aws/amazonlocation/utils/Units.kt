@@ -9,7 +9,7 @@ import com.aws.amazonlocation.data.response.RouteSimulationData
 import com.google.gson.Gson
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
@@ -19,25 +19,33 @@ import java.util.concurrent.TimeUnit
 object Units {
 
     fun getMetricsNew(distance: Double, isMetric: Boolean): String {
+        val formatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+            maximumFractionDigits = 2
+        }
+
         return if (isMetric) {
-            "${DecimalFormat("##.##").format((distance / 1000))} km"
+            "${formatter.format(distance / 1000)} km"
         } else {
-            "${DecimalFormat("##.##").format((distance / 5280))} mi"
+            "${formatter.format(distance / 5280)} mi"
         }
     }
 
     fun getMetrics(distance: Double, isMetric: Boolean): String {
+        val formatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+            maximumFractionDigits = if (isMetric) 1 else 2
+        }
+
         return if (isMetric) {
             if (distance <= 1000) {
-                "${DecimalFormat("##.##").format((distance.toInt()))} m"
+                "${formatter.format(distance)} m"
             } else {
-                "${DecimalFormat("##.#").format((distance / 1000))} km"
+                "${formatter.format(distance / 1000)} km"
             }
         } else {
             if (distance <= 5280) {
-                "${DecimalFormat("##.##").format((distance.toInt()))} ft"
+                "${formatter.format(distance)} ft"
             } else {
-                "${DecimalFormat("##.#").format((distance / 5280))} mi"
+                "${formatter.format(distance / 5280)} mi"
             }
         }
     }
@@ -96,7 +104,7 @@ object Units {
 
     fun getDefaultAwsConfigJson(
         poolID: String?,
-        region: String?,
+        region: String?
     ): String {
         return "{\n" +
             "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
@@ -121,7 +129,7 @@ object Units {
         appClientId: String?,
         domain: String?,
         region: String?,
-        schema: String,
+        schema: String
     ): String {
         return "{\n" +
             "    \"UserAgent\": \"aws-amplify-cli/0.1.0\",\n" +
@@ -164,7 +172,7 @@ object Units {
 
     fun getAmplifyConfigJson(
         poolID: String?,
-        region: String?,
+        region: String?
     ): String {
         return "{\n" +
             "    \"UserAgent\": \"aws-amplify-cli/2.0\",\n" +
@@ -210,7 +218,7 @@ object Units {
     fun getDeviceId(context: Context): String {
         return Settings.Secure.getString(
             context.contentResolver,
-            Settings.Secure.ANDROID_ID,
+            Settings.Secure.ANDROID_ID
         )
     }
 
