@@ -96,6 +96,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
+import java.text.NumberFormat
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -1794,7 +1795,7 @@ class ExploreFragment :
                     getString(R.string.distance_is_greater_than_400_km)
             } else {
                 layoutCardError.tvCardError1.text =
-                    getString(R.string.distance_is_greater_than_248_mi)
+                    String.format(getString(R.string.distance_is_greater_than_248_mi), getFormatter()?.format(248.5))
             }
             layoutCardError.tvCardError2.text =
                 getString(R.string.can_t_calculate_via_esri_kindly_switch_to_here_provider)
@@ -3395,7 +3396,7 @@ class ExploreFragment :
                                         getString(R.string.error_switch_to_here)
                                 } else {
                                     mBinding.bottomSheetDirection.tvDirectionError.text =
-                                        getString(R.string.error_switch_to_here_miles)
+                                        String.format(getString(R.string.error_switch_to_here_miles), getFormatter()?.format(248.5))
                                 }
                             }
                         } else {
@@ -3454,7 +3455,7 @@ class ExploreFragment :
                         if (isMetric) {
                             showError(getString(R.string.error_distance_400))
                         } else {
-                            showError(getString(R.string.error_distance_248_miles))
+                            showError(String.format(getString(R.string.error_distance_248_miles), getFormatter()?.format(248.5)))
                         }
                     }
                 } else {
@@ -3464,6 +3465,13 @@ class ExploreFragment :
                 showError(getString(R.string.no_route_found))
             }
         }
+    }
+
+    private fun getFormatter(): NumberFormat? {
+        val formatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
+            maximumFractionDigits = 1
+        }
+        return formatter
     }
 
     fun navigationExit() {
