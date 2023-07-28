@@ -636,12 +636,7 @@ class TrackingUtils(
                             "sourceId$headerId",
                             R.color.color_primary_green
                         )
-                        mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                            mMapHelper?.adjustMapBounds(
-                                latLngList,
-                                it
-                            )
-                        }
+                        setCameraZoomLevel()
                         coordinates.clear()
                         latLngList.clear()
                     }
@@ -670,12 +665,7 @@ class TrackingUtils(
                             "sourceId$headerId",
                             R.color.color_primary_green
                         )
-                        mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                            mMapHelper?.adjustMapBounds(
-                                latLngList,
-                                it
-                            )
-                        }
+                        setCameraZoomLevel()
                         coordinates.clear()
                         latLngList.clear()
                     }
@@ -863,12 +853,7 @@ class TrackingUtils(
                 headerIdsToRemove.add("layerId1")
                 sourceIdsToRemove.add("sourceId1")
                 mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1", R.color.color_primary_green)
-                mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                    mMapHelper?.adjustMapBounds(
-                        latLngList,
-                        it
-                    )
-                }
+                setCameraZoomLevel()
             }
 
             mBindingTracking?.apply {
@@ -886,6 +871,18 @@ class TrackingUtils(
             trackingHistoryData.addAll(trackingData)
             trackingHistoryData.addAll(existingData)
             submitList()
+        }
+    }
+
+    private fun setCameraZoomLevel() {
+        val liveLocation = mMapHelper?.getLiveLocation()
+        liveLocation?.let {
+            mMapHelper?.moveCameraToLocationTracker(
+                LatLng(
+                    it.latitude,
+                    it.longitude
+                )
+            )
         }
     }
 

@@ -986,6 +986,27 @@ class MapHelper(private val appContext: Context) {
     }
 
     // move camera to  location
+    fun moveCameraToLocationTracker(latLng: LatLng) {
+        mMapboxMap?.getStyle { style ->
+            if (style.isFullyLoaded) {
+                mMapboxMap?.easeCamera(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.Builder().zoom(DEFAULT_CAMERA_ZOOM).padding(
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble()
+                        ).target(
+                            latLng
+                        ).build()
+                    ),
+                    CAMERA_DURATION_1500
+                )
+            }
+        }
+    }
+
+    // move camera to  location
     fun moveCameraToLocation(latLng: LatLng) {
         mMapboxMap?.getStyle { style ->
             if (style.isFullyLoaded) {
