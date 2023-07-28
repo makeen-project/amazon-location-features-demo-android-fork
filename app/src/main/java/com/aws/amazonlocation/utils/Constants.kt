@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.ui.main.simulation.NotificationData
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -49,6 +50,7 @@ const val KEY_ACCESS_TOKEN = "key_access_token"
 const val KEY_REFRESH_TOKEN = "key_refresh_token"
 const val KEY_PROVIDER = "key_provider"
 const val IOT_POLICY = "AmazonLocationIotPolicy"
+const val IOT_POLICY_UN_AUTH = "AmazonLocationIotPolicyUnauth"
 
 const val STRING_FORMAT = "%.2f, %.2f"
 
@@ -78,6 +80,13 @@ const val latNorth = 31.952162238024968
 const val lonEast = 146.25
 const val latSouth = -21.943045533438166
 const val lonWest = 90.0
+
+const val simulationLatNorth = 49.295509609061924
+const val simulationLonEast = -123.04870086158795
+const val simulationLatSouth = 49.25908827302493
+const val simulationLonWest = -123.17226119977276
+const val vancouverLat = 49.2827
+const val vancouverLng = -123.1207
 
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
@@ -132,6 +141,8 @@ object Distance {
 }
 
 object MapCameraZoom {
+    const val SIMULATION_CAMERA_ZOOM = 9.0
+    const val SIMULATION_CAMERA_ZOOM_1 = 10.0
     const val NAVIGATION_CAMERA_ZOOM = 14.0
     const val DEFAULT_CAMERA_ZOOM = 14.0
     const val TRACKING_CAMERA_ZOOM = 14.0
@@ -215,3 +226,19 @@ object DateFormat {
     const val MMM_DD_YYYY = "MMM dd, yyyy"
     const val HH_MM_AA = "HH:mm aa"
 }
+
+val simulationCollectionName = arrayListOf(
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection01",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection02",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection03",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection04",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection05"
+)
+
+val notificationData = arrayListOf(
+    NotificationData("Bus 01 Robson", false),
+    NotificationData("Bus 02 Davie", false),
+    NotificationData("Bus 03 Victoria", false),
+    NotificationData("Bus 04 Knight", false),
+    NotificationData("Bus 05 UBC", false)
+)

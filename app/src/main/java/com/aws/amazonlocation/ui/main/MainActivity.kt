@@ -14,6 +14,7 @@ import android.view.WindowManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -44,6 +45,7 @@ import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.setting.AWSCloudInformationFragment
 import com.aws.amazonlocation.ui.main.setting.SettingFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
+import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
@@ -57,6 +59,7 @@ class MainActivity : BaseActivity() {
 
     private var isAppNotFirstOpened: Boolean = false
     private var reStartApp: Boolean = false
+    private var isSimulationPolicyAttached: Boolean = false
     private lateinit var mNavHostFragment: NavHostFragment
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mNavController: NavController
@@ -147,6 +150,7 @@ class MainActivity : BaseActivity() {
                         }
                     }
                     TabEnum.TAB_TRACKING.name -> {
+                        mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_tracking
                     }
@@ -275,6 +279,29 @@ class MainActivity : BaseActivity() {
         })
     }
 
+    private fun setSimulationIotPolicy() {
+        val mCognitoCredentialsProvider: CognitoCredentialsProvider? =
+            mAWSLocationHelper.initCognitoCachingCredentialsProvider()
+
+        val identityId: String? =
+            mCognitoCredentialsProvider?.identityId
+
+        // Initialize the AWSIotMqttManager with the configuration
+        val attachPolicyReq =
+            AttachPolicyRequest().withPolicyName(IOT_POLICY_UN_AUTH)
+                .withTarget(identityId)
+        val mIotAndroidClient =
+            AWSIotClient(mCognitoCredentialsProvider)
+        var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
+
+        if (region.isNullOrEmpty()) {
+            region = BuildConfig.DEFAULT_REGION
+        }
+        mIotAndroidClient.setRegion(Region.getRegion(region))
+        mIotAndroidClient.attachPolicy(attachPolicyReq)
+        isSimulationPolicyAttached = true
+    }
+
     private fun hideProgressAndShowData() {
         hideProgress()
         runOnUiThread {
@@ -314,10 +341,10 @@ class MainActivity : BaseActivity() {
                     )
                     when (mAuthStatus) {
                         AuthEnum.DEFAULT.name -> {
-                            mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                                TabEnum.TAB_TRACKING,
-                                mCloudFormationInterface
-                            )
+                            hideSearchSheet(fragment)
+                            if (mTrackingUtils?.isTrackingSheetHidden() == true) {
+                                mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
+                            }
                         }
                         AuthEnum.AWS_CONNECTED.name -> {
                             if (reStartApp) {
@@ -333,19 +360,19 @@ class MainActivity : BaseActivity() {
                             }
                         }
                         AuthEnum.SIGNED_IN.name -> {
-                            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
-                            }
+                            hideSearchSheet(fragment)
                             if (mTrackingUtils?.isTrackingSheetHidden() == true) {
                                 if (checkMap()) {
                                     showTracking()
                                 }
                             }
                         }
-                        else -> mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                            TabEnum.TAB_TRACKING,
-                            mCloudFormationInterface
-                        )
+                        else -> {
+                            hideSearchSheet(fragment)
+                            if (mTrackingUtils?.isTrackingSheetHidden() == true) {
+                                mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
+                            }
+                        }
                     }
                     showAmazonLogo()
                 }
@@ -359,10 +386,7 @@ class MainActivity : BaseActivity() {
                     if (!mAuthStatus.isNullOrEmpty()) {
                         when (mAuthStatus) {
                             AuthEnum.DEFAULT.name -> {
-                                mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                                    TabEnum.TAB_GEOFENCE,
-                                    mCloudFormationInterface
-                                )
+                                hideSearchAndShowGeofence()
                             }
                             AuthEnum.AWS_CONNECTED.name -> {
                                 if (reStartApp) {
@@ -380,16 +404,12 @@ class MainActivity : BaseActivity() {
                             AuthEnum.SIGNED_IN.name -> {
                                 showGeofence()
                             }
-                            else -> mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                                TabEnum.TAB_GEOFENCE,
-                                mCloudFormationInterface
-                            )
+                            else -> {
+                                hideSearchAndShowGeofence()
+                            }
                         }
                     } else {
-                        mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
-                            TabEnum.TAB_GEOFENCE,
-                            mCloudFormationInterface
-                        )
+                        hideSearchAndShowGeofence()
                     }
                     showAmazonLogo()
                 }
@@ -398,6 +418,7 @@ class MainActivity : BaseActivity() {
                     mNavController.navigate(R.id.setting_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
                 }
                 R.id.menu_more -> {
@@ -405,11 +426,38 @@ class MainActivity : BaseActivity() {
                     mNavController.navigate(R.id.about_fragment)
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
+                    mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
                 }
             }
             true
         }
+    }
+
+    private fun hideSearchAndShowGeofence() {
+        mBottomSheetHelper.hideSearchBottomSheet(true)
+        mGeofenceUtils?.showGeofenceBeforeLogin()
+    }
+
+    private fun hideSearchSheet(fragment: Fragment?) {
+        mBottomSheetHelper.hideSearchBottomSheet(true)
+        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+            mBottomSheetHelper.hideDirectionSearchBottomSheet(fragment as ExploreFragment)
+        }
+    }
+
+    fun showGeofenceCloudFormation() {
+        mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
+            TabEnum.TAB_GEOFENCE,
+            mCloudFormationInterface
+        )
+    }
+
+    fun openCloudFormation() {
+        mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
+            TabEnum.TAB_TRACKING,
+            mCloudFormationInterface
+        )
     }
 
     private fun hideAmazonLogo() {
@@ -439,12 +487,65 @@ class MainActivity : BaseActivity() {
         }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
+        mSimulationUtils?.hideSimulationBottomSheet()
     }
 
     fun showBottomBar() {
         mBinding.bottomNavigationMain.show()
     }
 
+    fun hideSimulationSheet() {
+        showBottomBar()
+        mSimulationUtils?.hideSimulationBottomSheet()
+        mBottomSheetHelper.hideSearchBottomSheet(false)
+        mBinding.bottomNavigationMain.selectedItemId =
+            R.id.menu_explore
+        showNavigationIcon()
+        showDirectionAndCurrentLocationIcon()
+    }
+
+    fun showSimulationSheet() {
+        if (mSimulationUtils == null) {
+            mSimulationUtils = SimulationUtils(mPreferenceManager, this@MainActivity, mAWSLocationHelper)
+            if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+                val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+                if (fragment is ExploreFragment) {
+                    fragment.initSimulationView()
+                    fragment.setMapBoxInSimulation()
+                }
+            }
+        }
+        mBottomSheetHelper.hideSearchBottomSheet(true)
+        if (isTablet) {
+            mBinding.bottomNavigationMain.invisible()
+        } else {
+            mBinding.bottomNavigationMain.hide()
+        }
+        if (!isTablet) {
+            mBottomSheetHelper.hideMapStyleSheet()
+        }
+        showSimulationTop()
+        if (!isSimulationPolicyAttached) {
+            lifecycleScope.launch {
+                setSimulationIotPolicy()
+            }
+        }
+        mGeofenceUtils?.hideAllGeofenceBottomSheet()
+        mTrackingUtils?.hideTrackingBottomSheet()
+        mSimulationUtils?.showSimulationBottomSheet()
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                if (isTablet) {
+                    fragment.hideDirectionAndCurrentLocationIcon()
+                }
+            }
+        }
+    }
+
+    fun reInitializeSimulation() {
+        mSimulationUtils = null
+    }
     fun showNavigationIcon() {
         if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -459,6 +560,17 @@ class MainActivity : BaseActivity() {
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {
                 fragment.showDirectionAndCurrentLocationIcon()
+                fragment.showGeofence()
+            }
+        }
+    }
+
+    private fun showSimulationTop() {
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                fragment.showSimulationTop()
+                fragment.hideGeofence()
             }
         }
     }

@@ -24,6 +24,7 @@ import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceBottomSheetHelper
 import com.aws.amazonlocation.ui.main.geofence.GeofenceUtils
+import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.tracking.TrackingUtils
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.AmplifyHelper
@@ -59,6 +60,7 @@ open class BaseActivity : AppCompatActivity() {
     var mGeofenceUtils: GeofenceUtils? = null
 
     var mTrackingUtils: TrackingUtils? = null
+    var mSimulationUtils: SimulationUtils? = null
     var isTablet: Boolean = false
 
     @Inject
@@ -88,6 +90,7 @@ open class BaseActivity : AppCompatActivity() {
         val preference = PreferenceManager(this)
         mAWSLocationHelper.initAWSMobileClient(this@BaseActivity)
         mTrackingUtils = TrackingUtils(preference, this@BaseActivity, mAWSLocationHelper)
+        mSimulationUtils = SimulationUtils(preference, this@BaseActivity, mAWSLocationHelper)
         locationPermissionDialog()
     }
 

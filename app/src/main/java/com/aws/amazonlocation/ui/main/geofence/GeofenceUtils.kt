@@ -27,6 +27,8 @@ import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
+import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
+import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Durations.DEFAULT_RADIUS
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
@@ -35,14 +37,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
-import java.text.DecimalFormat
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -348,10 +350,18 @@ class GeofenceUtils {
                 mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
             }
             btnAddGeofence.setOnClickListener {
-                mGeofenceInterface?.hideShowBottomNavigationBar(
-                    true,
-                    GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
-                )
+                if (tvEnableGeofence.text.toString() == mActivity?.getString(R.string.add_geofence)) {
+                    mGeofenceInterface?.hideShowBottomNavigationBar(
+                        true,
+                        GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
+                    )
+                } else {
+                    (mActivity as MainActivity).showGeofenceCloudFormation()
+                }
+            }
+            cardTrackerGeofenceSimulation.hide()
+            btnTryGeofence.setOnClickListener {
+                openSimulationWelcome()
             }
 
             clAddGeofence.setOnClickListener {
@@ -402,6 +412,13 @@ class GeofenceUtils {
                     override fun onSlide(bottomSheet: View, slideOffset: Float) {
                     }
                 })
+        }
+    }
+
+    private fun openSimulationWelcome() {
+        val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+        (mActivity as MainActivity).supportFragmentManager.let {
+            simulationBottomSheetFragment.show(it, WelcomeBottomSheetFragment::javaClass.name)
         }
     }
 
@@ -500,10 +517,31 @@ class GeofenceUtils {
         }
     }
 
+    fun showGeofenceBeforeLogin() {
+        mBindingGeofenceList?.clNoInternetConnectionGeofenceList?.hide()
+        mBindingGeofenceList?.rvGeofence?.hide()
+        mBindingGeofenceList?.clEmptyGeofenceList?.show()
+        mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.isDraggable = false
+        mBindingGeofenceList?.clGeofenceList?.context?.let {
+            if ((mActivity as MainActivity).isTablet) {
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_460)
+                mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+            } else {
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
+                mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+    }
+
     fun showGeofenceListBottomSheet(context: Activity) {
         if (isTablet) {
             (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
         }
+        mBindingGeofenceList?.btnTryGeofence?.hide()
+        mBindingGeofenceList?.tvEnableGeofence?.text = mActivity?.getString(R.string.add_geofence)
+        mBindingGeofenceList?.btnAddGeofence?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.color_primary_green))
+        mBindingGeofenceList?.tvEnableGeofence?.setTextColor(ContextCompat.getColor(context, R.color.white))
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -530,6 +568,7 @@ class GeofenceUtils {
         enableAddGeofenceButton(false)
         mIsBtnEnable = false
         mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 

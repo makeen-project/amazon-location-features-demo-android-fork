@@ -2,8 +2,13 @@ package com.aws.amazonlocation.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.AssetManager
 import android.location.LocationManager
 import android.provider.Settings
+import com.aws.amazonlocation.data.response.RouteSimulationData
+import com.google.gson.Gson
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.text.DecimalFormat
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -240,5 +245,13 @@ object Units {
                 isMetricUsingCountry()
             }
         }
+    }
+
+    fun readRouteData(context: Context): RouteSimulationData? {
+        val assetManager: AssetManager = context.assets
+        val inputStream: InputStream = assetManager.open("route_data.json")
+        val inputStreamReader = InputStreamReader(inputStream)
+
+        return Gson().fromJson(inputStreamReader, RouteSimulationData::class.java)
     }
 }

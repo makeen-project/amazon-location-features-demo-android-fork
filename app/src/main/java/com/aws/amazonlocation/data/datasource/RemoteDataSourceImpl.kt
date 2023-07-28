@@ -288,6 +288,19 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         mTrackingInterface.success(response)
     }
 
+    override suspend fun evaluateGeofence(
+        trackerName: String,
+        position1: List<Double>?,
+        deviceId: String,
+        date: Date,
+        identityId: String,
+        mTrackingInterface: BatchLocationUpdateInterface
+    ) {
+        val response =
+            mAWSLocationHelper.evaluateGeofence(trackerName, position1, deviceId, date, identityId)
+        mTrackingInterface.success(response)
+    }
+
     override suspend fun getLocationHistory(
         trackerName: String,
         deviceId: String,

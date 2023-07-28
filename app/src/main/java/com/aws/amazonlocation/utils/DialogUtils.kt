@@ -205,6 +205,23 @@ fun Context.restartAppMapStyleDialog(
     mDialog.show()
 }
 
+fun Context.simulationExit(simulationInterface: SimulationDialogInterface) {
+    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
+    mDialog.setMessage(this.resources.getString(R.string.simulation_exit_title))
+    mDialog.setPositiveButton(
+        this.resources.getString(R.string.exit)
+    ) { dialog, _ ->
+        simulationInterface.onExitClick(dialog)
+        dialog.dismiss()
+    }
+    mDialog.setNegativeButton(
+        this.resources.getString(R.string.cancel)
+    ) { dialog, _ ->
+        dialog.dismiss()
+    }
+    mDialog.show()
+}
+
 interface EnableTrackerInterface {
     fun continueToTracker(dialog: DialogInterface)
     fun cancel()
@@ -235,4 +252,8 @@ interface MessageInterface {
 interface MapStyleRestartInterface {
     fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean)
     fun onLearnMoreClick(dialog: DialogInterface)
+}
+
+interface SimulationDialogInterface {
+    fun onExitClick(dialog: DialogInterface)
 }

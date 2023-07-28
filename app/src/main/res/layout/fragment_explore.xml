@@ -77,20 +77,108 @@
 
         </com.google.android.material.card.MaterialCardView>
 
+        <View
+            android:id="@+id/view_top"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_simulation_popup"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_20"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_top">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_oval_external"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:src="@drawable/oval_external"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/oval_intrernal"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_oval_external"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_oval_external"
+                    app:layout_constraintStart_toStartOf="@+id/iv_oval_external"
+                    app:layout_constraintTop_toTopOf="@+id/iv_oval_external" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_route_notifications_name"
+                    style="@style/SP16HintRegularTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_16"
+                    android:text="@string/label_tracking_and_geofence_simulation"
+                    android:textSize="@dimen/sp_13"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_oval_external"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_exit"
+                    android:layout_width="@dimen/dp_72"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginHorizontal="@dimen/dp_4"
+                    android:visibility="visible"
+                    app:cardBackgroundColor="@color/color_view_line"
+                    app:cardCornerRadius="@dimen/dp_16"
+                    app:cardUseCompatPadding="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_exit"
+                            style="@style/SP24BoldMediumBlackTextStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/exit"
+                            android:textSize="@dimen/sp_13"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_map"
             android:layout_width="@dimen/dp_48"
             android:layout_height="@dimen/dp_48"
             android:layout_marginStart="@dimen/dp_0"
-            android:layout_marginTop="@dimen/dp_54"
             android:layout_marginEnd="@dimen/dp_16"
             android:layout_marginBottom="@dimen/dp_8"
             android:clickable="true"
+            android:layout_marginTop="@dimen/dp_16"
             android:focusable="true"
             app:cardBackgroundColor="@color/white"
             app:cardPreventCornerOverlap="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_simulation_popup"
             app:shapeAppearanceOverlay="@style/CardViewTopRadius">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -222,6 +310,10 @@
     <include
         android:id="@+id/bottom_sheet_tracking"
         layout="@layout/bottom_sheet_tracking" />
+
+    <include
+        android:id="@+id/bottom_sheet_track_simulation"
+        layout="@layout/bottom_sheet_track_simulation" />
 
     <include
         android:id="@+id/bottom_sheet_map_style"

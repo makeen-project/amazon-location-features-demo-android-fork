@@ -17,6 +17,8 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.TypedValue
 import android.view.*
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -57,6 +59,7 @@ import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
 import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
+import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.*
@@ -75,6 +78,7 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.android.gestures.StandardScaleGestureDetector
 import com.mapbox.geojson.Point
@@ -87,8 +91,6 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import java.util.*
-import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
@@ -146,6 +148,7 @@ class ExploreFragment :
     private val mSignInViewModel: SignInViewModel by viewModels()
     private val mGeofenceViewModel: GeofenceViewModel by viewModels()
     private val mTrackingViewModel: TrackingViewModel by viewModels()
+    private val mSimulationViewModel: SimulationViewModel by viewModels()
     private var mIsAvoidTolls: Boolean = false
     private var mIsAvoidFerries: Boolean = false
     private var mIsRouteOptionsOpened = false
@@ -190,6 +193,8 @@ class ExploreFragment :
         val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
         mBinding.cardNavigationTimeDialog.layoutParams.width = widthTimeDialog
         mBinding.cardNavigationTimeDialog.requestLayout()
+        mBinding.cardSimulationPopup.layoutParams.width = widthTimeDialog
+        mBinding.cardSimulationPopup.requestLayout()
     }
 
     override fun onCreateView(
@@ -300,6 +305,8 @@ class ExploreFragment :
             mBinding.bottomSheetTracking,
             mTrackingInterface
         )
+
+        initSimulationView()
         setUserProfile()
         if ((activity as MainActivity).isAppNotFirstOpened()) {
             checkPermission()
@@ -337,6 +344,14 @@ class ExploreFragment :
         }
     }
 
+    fun initSimulationView() {
+        mBaseActivity?.mSimulationUtils?.initSimulationView(
+            activity,
+            mBinding.bottomSheetTrackSimulation,
+            mSimulationInterface
+        )
+    }
+
     private fun initGeofenceObserver() {
         lifecycleScope.launchWhenStarted {
             mBinding.apply {
@@ -367,6 +382,18 @@ class ExploreFragment :
                 }.onSuccess {
                     lifecycleScope.launch(Dispatchers.Main) {
                         mBaseActivity?.mTrackingUtils?.manageGeofenceListUI(it)
+                    }
+                }.onError {
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            mSimulationViewModel.mGetGeofenceList.collect { handleResult ->
+                handleResult.onLoading {
+                }.onSuccess {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        mBaseActivity?.mSimulationUtils?.manageGeofenceListUI(it)
                     }
                 }.onError {
                 }
@@ -547,6 +574,30 @@ class ExploreFragment :
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
         }
     }
+
+    private val mSimulationInterface = object : SimulationInterface {
+        override fun getGeofenceList() {
+            mSimulationViewModel.callAllSimulation()
+        }
+
+        override fun evaluateGeofence(
+            collectionName: String,
+            position1: List<Double>?
+        ) {
+            val identityId: String? =
+                mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
+            identityId?.let {
+                mSimulationViewModel.evaluateGeofence(
+                    collectionName,
+                    position1,
+                    getDeviceId(requireContext()),
+                    Date(),
+                    it
+                )
+            }
+        }
+    }
+
     private val mTrackingInterface = object : TrackingInterface {
 
         override fun updateBatch(latLng: LatLng) {
@@ -2048,43 +2099,42 @@ class ExploreFragment :
                         mapStyleBottomSheetFragment =
                             MapStyleBottomSheetFragment(
                                 mViewModel,
+                                mBaseActivity,
                                 object : MapStyleAdapter.MapInterface {
                                     override fun mapStyleClick(position: Int, innerPosition: Int) {
-                                        if (checkInternetConnection()) {
-                                            if (position != -1 && innerPosition != -1) {
-                                                val selectedProvider =
-                                                    mViewModel.mStyleList[position].styleNameDisplay
-                                                val selectedInnerData =
-                                                    mViewModel.mStyleList[position].mapInnerData?.get(
-                                                        innerPosition
-                                                    )?.mapName
-                                                for (data in mViewModel.mStyleListForFilter) {
-                                                    if (data.styleNameDisplay.equals(
-                                                            selectedProvider
-                                                        )
-                                                    ) {
-                                                        data.mapInnerData.let {
-                                                            if (it != null) {
-                                                                for (innerData in it) {
-                                                                    if (innerData.mapName.equals(
-                                                                            selectedInnerData
-                                                                        )
-                                                                    ) {
-                                                                        if (innerData.isSelected) return
-                                                                    }
+                                        if (checkInternetConnection() && position != -1 && innerPosition != -1) {
+                                            val selectedProvider =
+                                                mViewModel.mStyleList[position].styleNameDisplay
+                                            val selectedInnerData =
+                                                mViewModel.mStyleList[position].mapInnerData?.get(
+                                                    innerPosition
+                                                )?.mapName
+                                            for (data in mViewModel.mStyleListForFilter) {
+                                                if (data.styleNameDisplay.equals(
+                                                        selectedProvider
+                                                    )
+                                                ) {
+                                                    data.mapInnerData.let {
+                                                        if (it != null) {
+                                                            for (innerData in it) {
+                                                                if (innerData.mapName.equals(
+                                                                        selectedInnerData
+                                                                    )
+                                                                ) {
+                                                                    if (innerData.isSelected) return
                                                                 }
                                                             }
                                                         }
                                                     }
                                                 }
-                                                selectedProvider?.let { it2 ->
-                                                    selectedInnerData?.let { it3 ->
-                                                        mapStyleChange(
-                                                            false,
-                                                            it2,
-                                                            it3
-                                                        )
-                                                    }
+                                            }
+                                            selectedProvider?.let { it2 ->
+                                                selectedInnerData?.let { it3 ->
+                                                    mapStyleChange(
+                                                        false,
+                                                        it2,
+                                                        it3
+                                                    )
                                                 }
                                             }
                                         }
@@ -2103,10 +2153,26 @@ class ExploreFragment :
                         if (!isGrabMapEnable(mPreferenceManager)) {
                             mBinding.bottomSheetMapStyle.cardGrabMap.hide()
                         }
+                        if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                            mBinding.bottomSheetMapStyle.cardGrabMap.isClickable = false
+                            mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
+                        } else {
+                            mBinding.bottomSheetMapStyle.cardGrabMap.isClickable = true
+                            mBinding.bottomSheetMapStyle.cardGrabMap.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                        }
+                        mViewModel.mStyleList.forEachIndexed { index, mapStyleData ->
+                            if (mapStyleData.styleNameDisplay.equals(getString(R.string.grab))) {
+                                mapStyleData.isDisable = mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true
+                                mMapStyleAdapter?.notifyItemChanged(index)
+                            }
+                        }
                         mBottomSheetHelper.halfExpandMapStyleSheet()
                         mBaseActivity?.bottomNavigationVisibility(false)
                     }
                     when {
+                        mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true -> {
+                            mBaseActivity?.mSimulationUtils?.setSimulationDraggable(false)
+                        }
                         mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
                             mBaseActivity?.mTrackingUtils?.collapseTracking()
                         }
@@ -2117,6 +2183,14 @@ class ExploreFragment :
                 }
             }
 
+            cardExit.setOnClickListener {
+                requireContext().simulationExit(object : SimulationDialogInterface {
+                    override fun onExitClick(dialog: DialogInterface) {
+                        cardSimulationPopup.hide()
+                        (activity as MainActivity).hideSimulationSheet()
+                    }
+                })
+            }
             bottomSheetNavigationComplete.ivNavigationCompleteClose.setOnClickListener {
                 if (checkInternetConnection()) {
                     hideArrivedBottomSheet()
@@ -2622,6 +2696,42 @@ class ExploreFragment :
                 etSearchMap.textChanges().debounce(DELAY_300).onEach { text ->
                     mapStyleShowList()
                     searchText(text)
+                    tilSearch.isEndIconVisible = !text.isNullOrEmpty()
+                    val providerNames = arrayListOf<String>()
+                    val attributeNames = arrayListOf<String>()
+                    val typeNames = arrayListOf<String>()
+                    mViewModel.providerOptions.filter { it.isSelected }
+                        .forEach { data -> providerNames.add(data.name) }
+                    mViewModel.attributeOptions.filter { it.isSelected }
+                        .forEach { data -> attributeNames.add(data.name) }
+                    mViewModel.typeOptions.filter { it.isSelected }
+                        .forEach { data -> typeNames.add(data.name) }
+                    val filterList = mViewModel.filterAndSortItems(
+                        requireContext(),
+                        text.toString().ifEmpty { null },
+                        providerNames.ifEmpty { null },
+                        attributeNames.ifEmpty { null },
+                        typeNames.ifEmpty { null }
+                    )
+                    if (filterList.isNotEmpty()) {
+                        mViewModel.mStyleList.clear()
+                        mViewModel.mStyleList.addAll(filterList)
+                        checkSimulationDisableForGrab()
+                        activity?.runOnUiThread {
+                            mMapStyleAdapter?.notifyDataSetChanged()
+                        }
+                        rvMapStyle.show()
+                        layoutNoDataFound.root.hide()
+                        isNoDataFoundVisible = false
+                    } else {
+                        mViewModel.mStyleList.clear()
+                        activity?.runOnUiThread {
+                            mMapStyleAdapter?.notifyDataSetChanged()
+                        }
+                        isNoDataFoundVisible = true
+                        layoutNoDataFound.root.show()
+                        rvMapStyle.hide()
+                    }
                 }.launchIn(lifecycleScope)
                 val params = cardSearchFilter.layoutParams
                 tilSearch.setEndIconOnClickListener {
@@ -2652,6 +2762,7 @@ class ExploreFragment :
                     if (filterList.isNotEmpty()) {
                         mViewModel.mStyleList.clear()
                         mViewModel.mStyleList.addAll(filterList)
+                        checkSimulationDisableForGrab()
                         activity?.runOnUiThread {
                             mMapStyleAdapter?.notifyDataSetChanged()
                         }
@@ -2690,6 +2801,7 @@ class ExploreFragment :
                     tvClearFilter.hide()
                     mViewModel.mStyleList.clear()
                     mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+                    checkSimulationDisableForGrab()
                     mMapStyleAdapter?.notifyDataSetChanged()
                 }
                 btnApplyFilter.setOnClickListener {
@@ -2748,6 +2860,7 @@ class ExploreFragment :
                     if (filterList.isNotEmpty()) {
                         mViewModel.mStyleList.clear()
                         mViewModel.mStyleList.addAll(filterList)
+                        checkSimulationDisableForGrab()
                         activity?.runOnUiThread {
                             mMapStyleAdapter?.notifyDataSetChanged()
                         }
@@ -2971,6 +3084,7 @@ class ExploreFragment :
         if (filterList.isNotEmpty()) {
             mViewModel.mStyleList.clear()
             mViewModel.mStyleList.addAll(filterList)
+            checkSimulationDisableForGrab()
             activity?.runOnUiThread {
                 mMapStyleAdapter?.notifyDataSetChanged()
             }
@@ -3060,9 +3174,19 @@ class ExploreFragment :
     private fun BottomSheetMapStyleBinding.setDefaultMapStyleList() {
         mViewModel.mStyleList.clear()
         mViewModel.mStyleList.addAll(mViewModel.mStyleListForFilter)
+        checkSimulationDisableForGrab()
         activity?.runOnUiThread {
             etSearchMap.setText("")
             mMapStyleAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun checkSimulationDisableForGrab() {
+        mViewModel.mStyleList.forEachIndexed { _, mapStyleData ->
+            if (mapStyleData.styleNameDisplay.equals(getString(R.string.grab))) {
+                mapStyleData.isDisable =
+                    mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true
+            }
         }
     }
 
@@ -3087,6 +3211,21 @@ class ExploreFragment :
             btnApplyFilter
         )
         rvMapStyle.show()
+    }
+
+    fun showSimulationTop() {
+        mBinding.apply {
+            cardSimulationPopup.show()
+            // Create the blink animation
+            val blinkAnimation: Animation = AlphaAnimation(0.0f, 1.0f).apply {
+                duration = 500 // Set the duration of the blink (500 milliseconds)
+                repeatMode = Animation.REVERSE
+                repeatCount = Animation.INFINITE
+            }
+
+            // Apply the blink animation to the ImageView
+            ivOvalExternal.startAnimation(blinkAnimation)
+        }
     }
 
     fun setAttributionDataAndExpandSheet() {
@@ -4077,6 +4216,24 @@ class ExploreFragment :
         }
     }
 
+    fun hideGeofence() {
+        mBinding.cardGeofenceMap.hide()
+        val defaultShapeAppearance = ShapeAppearanceModel.builder()
+            .build()
+        mBinding.cardMap.shapeAppearanceModel = defaultShapeAppearance
+        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_8).toFloat()
+    }
+
+    fun showGeofence() {
+        mBinding.cardGeofenceMap.show()
+        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_0).toFloat()
+        val shapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setTopLeftCorner(CornerFamily.ROUNDED, 16f)
+            .setTopRightCorner(CornerFamily.ROUNDED, 16f)
+            .build()
+        mBinding.cardMap.shapeAppearanceModel = shapeAppearanceModel
+    }
+
     fun hideDirectionAndCurrentLocationIcon() {
         hideViews(
             mBinding.cardDirection,
@@ -4101,14 +4258,20 @@ class ExploreFragment :
                 tvDirectionError.invisible()
             }
             showViews(
-                mBinding.cardDirection,
-                mBinding.cardNavigation,
-                mBinding.cardMap,
-                mBinding.cardGeofenceMap
+                mBinding.cardMap
             )
+            if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                mBinding.cardGeofenceMap.show()
+                mBaseActivity?.isTablet?.let {
+                    if (!it) {
+                        mBinding.cardDirection.show()
+                        mBinding.cardNavigation.show()
+                    }
+                }
+            }
             clearMapLineMarker()
             clearSearchList()
-            if (!mBottomSheetHelper.isMapStyleVisible()) {
+            if (!mBottomSheetHelper.isMapStyleVisible() && mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
                 mBaseActivity?.bottomNavigationVisibility(true)
                 mBottomSheetHelper.hideSearchBottomSheet(false)
             }
@@ -4777,6 +4940,19 @@ class ExploreFragment :
                 )
             }
         }
+        setMapBoxInSimulation()
+    }
+
+    fun setMapBoxInSimulation() {
+        activity?.let {
+            mMapboxMap?.let { it1 ->
+                mBaseActivity?.mSimulationUtils?.setMapBox(
+                    it,
+                    it1,
+                    mMapHelper
+                )
+            }
+        }
     }
 
     // check gps enable or not
@@ -5214,11 +5390,17 @@ class ExploreFragment :
             mBinding.apply {
                 bottomSheetNavigation.apply {
                     showViews(
-                        cardDirection,
-                        cardNavigation,
-                        cardMap,
-                        cardGeofenceMap
+                        cardMap
                     )
+                    if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                        cardGeofenceMap.show()
+                        mBaseActivity?.isTablet?.let {
+                            if (!it) {
+                                cardDirection.show()
+                                cardNavigation.show()
+                            }
+                        }
+                    }
                 }
             }
             clearNavigationData()
@@ -5329,6 +5511,12 @@ class ExploreFragment :
         mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
         mBinding.bottomSheetMapStyle.imgAmazonLogoMapStyle?.setImageResource(logoResId)
+        if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+            lifecycleScope.launch {
+                delay(DELAY_500)
+                mBaseActivity?.mSimulationUtils?.setSimulationData()
+            }
+        }
     }
 
     private fun checkGrabMapInsideBounds() {

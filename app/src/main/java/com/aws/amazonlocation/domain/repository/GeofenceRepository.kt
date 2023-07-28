@@ -53,6 +53,15 @@ interface GeofenceRepository {
         batchLocationUpdateInterface: BatchLocationUpdateInterface
     )
 
+    suspend fun evaluateGeofence(
+        trackerName: String,
+        position1: List<Double>? = null,
+        deviceId: String,
+        date: Date,
+        identityId: String,
+        batchLocationUpdateInterface: BatchLocationUpdateInterface
+    )
+
     suspend fun getLocationHistory(
         trackerName: String,
         deviceId: String,

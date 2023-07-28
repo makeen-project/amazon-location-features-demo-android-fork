@@ -28,6 +28,13 @@ class MapStyleAdapter(
                 } else {
                     viewDivider.show()
                 }
+                if (data.isDisable) {
+                    rvMapName.isClickable = false
+                    rvMapName.alpha = 0.3f
+                } else {
+                    rvMapName.isClickable = true
+                    rvMapName.alpha = 1f
+                }
                 data.mapInnerData?.let {
                     rvMapName.apply {
                         this.layoutManager = GridLayoutManager(this.context, 3)
@@ -35,7 +42,12 @@ class MapStyleAdapter(
                             it,
                             object : MapStyleInnerAdapter.MapInterface {
                                 override fun mapClick(position: Int) {
-                                    mapInterface.mapStyleClick(position = adapterPosition, position)
+                                    if (!data.isDisable) {
+                                        mapInterface.mapStyleClick(
+                                            position = adapterPosition,
+                                            position
+                                        )
+                                    }
                                 }
                             }
                         )

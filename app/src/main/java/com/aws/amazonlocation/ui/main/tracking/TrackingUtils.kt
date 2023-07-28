@@ -30,6 +30,8 @@ import com.aws.amazonlocation.databinding.BottomSheetTrackingBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.TrackingInterface
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
+import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -116,10 +118,10 @@ class TrackingUtils(
                 mBottomSheetTrackingBehavior?.isDraggable = false
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_460)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_390)
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
                         mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
                     }
                 }
@@ -175,7 +177,11 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isFitToContents = false
             mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
             btnEnableTracking.setOnClickListener {
-                mTrackingInterface?.getCheckPermission()
+                (activity as MainActivity).openCloudFormation()
+            }
+            cardTrackerGeofenceSimulation.hide()
+            btnTryTracker.setOnClickListener {
+                openSimulationWelcome()
             }
 
             tvDeleteTrackingData.setOnClickListener {
@@ -257,6 +263,16 @@ class TrackingUtils(
                     }
                 })
             initAdapter()
+        }
+    }
+
+    private fun openSimulationWelcome() {
+        val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+        (activity as MainActivity).supportFragmentManager.let {
+            simulationBottomSheetFragment.show(
+                it,
+                WelcomeBottomSheetFragment::javaClass.name
+            )
         }
     }
 
@@ -617,14 +633,10 @@ class TrackingUtils(
                             coordinates,
                             true,
                             "layerId$headerId",
-                            "sourceId$headerId"
+                            "sourceId$headerId",
+                            R.color.color_primary_green
                         )
-                        mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                            mMapHelper?.adjustMapBounds(
-                                latLngList,
-                                it
-                            )
-                        }
+                        setCameraZoomLevel()
                         coordinates.clear()
                         latLngList.clear()
                     }
@@ -650,14 +662,10 @@ class TrackingUtils(
                             coordinates,
                             true,
                             "layerId$headerId",
-                            "sourceId$headerId"
+                            "sourceId$headerId",
+                            R.color.color_primary_green
                         )
-                        mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                            mMapHelper?.adjustMapBounds(
-                                latLngList,
-                                it
-                            )
-                        }
+                        setCameraZoomLevel()
                         coordinates.clear()
                         latLngList.clear()
                     }
@@ -844,13 +852,8 @@ class TrackingUtils(
             } else {
                 headerIdsToRemove.add("layerId1")
                 sourceIdsToRemove.add("sourceId1")
-                mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1")
-                mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                    mMapHelper?.adjustMapBounds(
-                        latLngList,
-                        it
-                    )
-                }
+                mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1", R.color.color_primary_green)
+                setCameraZoomLevel()
             }
 
             mBindingTracking?.apply {
@@ -868,6 +871,18 @@ class TrackingUtils(
             trackingHistoryData.addAll(trackingData)
             trackingHistoryData.addAll(existingData)
             submitList()
+        }
+    }
+
+    private fun setCameraZoomLevel() {
+        val liveLocation = mMapHelper?.getLiveLocation()
+        liveLocation?.let {
+            mMapHelper?.moveCameraToLocationTracker(
+                LatLng(
+                    it.latitude,
+                    it.longitude
+                )
+            )
         }
     }
 

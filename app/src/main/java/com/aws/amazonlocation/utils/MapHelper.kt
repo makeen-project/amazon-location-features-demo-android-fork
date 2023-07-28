@@ -1,5 +1,8 @@
 package com.aws.amazonlocation.utils
 
+import android.animation.ObjectAnimator
+import android.animation.TypeEvaluator
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -38,6 +41,7 @@ import com.aws.amazonlocation.utils.Durations.DEFAULT_INTERVAL_IN_MILLISECONDS
 import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID
 import com.aws.amazonlocation.utils.MapCameraZoom.DEFAULT_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.NAVIGATION_CAMERA_ZOOM
+import com.aws.amazonlocation.utils.MapCameraZoom.SIMULATION_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.TRACKING_CAMERA_ZOOM
 import com.mapbox.geojson.Feature
 import com.mapbox.geojson.FeatureCollection
@@ -63,6 +67,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
 import org.json.JSONObject
@@ -99,6 +104,10 @@ class MapHelper(private val appContext: Context) {
     private var mMapLibreView: MapLibreView? = null
     private var mapStyleChangeListener: MapStyleChangeListener? = null
     private var mPreferenceManager: PreferenceManager? = null
+    private val MAX_BUSES = notificationData.size
+    private val geoJsonSources: Array<GeoJsonSource?> = Array(MAX_BUSES) { null }
+    private val animators: Array<ValueAnimator?> = Array(MAX_BUSES) { null }
+    private val currentPositions: Array<LatLng?> = Array(MAX_BUSES) { null }
 
     fun initSymbolManager(
         mapView: MapLibreView,
@@ -142,13 +151,6 @@ class MapHelper(private val appContext: Context) {
 
     fun updateStyle(mapView: MapLibreView, mapStyle: String, style: String) {
         mapView.setStyle(MapStyle(mapStyle, style)) {
-            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
-            updateZoomRange(it)
-        }
-    }
-
-    fun updateMapStyle(mapStyle: String, style: String) {
-        mMapLibreView?.setStyle(MapStyle(mapStyle, style)) {
             mapStyleChangeListener?.onMapStyleChanged(mapStyle)
             updateZoomRange(it)
         }
@@ -654,7 +656,8 @@ class MapHelper(private val appContext: Context) {
         coordinates: List<Point>,
         isWalk: Boolean,
         mLayerId: String,
-        mSourceId: String
+        mSourceId: String,
+        color: Int
     ) {
         mMapboxMap?.getStyle { style ->
             style.removeLayer(mLayerId)
@@ -680,7 +683,7 @@ class MapHelper(private val appContext: Context) {
                         PropertyFactory.lineColor(
                             ContextCompat.getColor(
                                 appContext,
-                                R.color.color_primary_green
+                                color
                             )
                         )
                     ),
@@ -723,6 +726,34 @@ class MapHelper(private val appContext: Context) {
     fun removeMarkerAndLine() {
         removeLine()
         clearMarker()
+    }
+
+    fun removeGeoJsonSourceData(index: Int) {
+        mMapboxMap?.getStyle { style ->
+            if (index in 0 until MAX_BUSES) {
+                geoJsonSources[index]?.let { source ->
+                    if (style.getSource(source.id) != null) {
+                        style.removeSource(source)
+                    }
+                }
+                geoJsonSources[index] = null
+            }
+        }
+    }
+
+    fun removeSimulationData() {
+        mMapboxMap?.getStyle { style ->
+            for (index in 0 until MAX_BUSES) {
+                geoJsonSources[index]?.let { style.removeSource(it) }
+            }
+        }
+        geoJsonSources.fill(null)
+        animators.fill(null)
+        currentPositions.fill(null)
+    }
+
+    fun setGeoJsonSourceEmpty() {
+        geoJsonSources.fill(null)
     }
 
     fun addMultipleMarker(
@@ -818,6 +849,67 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
+    fun addMarkerSimulation(
+        trackerImageName: String,
+        activity: Activity,
+        currentPlace: LatLng,
+        index: Int
+    ) {
+        mMapboxMap?.getStyle { style ->
+            removeGeoJsonSourceData(index)
+            BitmapUtils.getBitmapFromDrawable(
+                ContextCompat.getDrawable(
+                    activity,
+                    R.drawable.ic_simulation_my_location
+                )
+            )?.let {
+                style.addImage(trackerImageName, it)
+            }
+
+            if (index in 0 until MAX_BUSES) {
+                currentPositions[index] = currentPlace
+                if (geoJsonSources[index] == null) {
+                    geoJsonSources[index] = GeoJsonSource(
+                        trackerImageName,
+                        Feature.fromGeometry(Point.fromLngLat(currentPlace.longitude, currentPlace.latitude))
+                    )
+                    geoJsonSources[index]?.let {
+                        style.addSource(it)
+                    }
+                }
+            }
+
+            style.addLayer(
+                SymbolLayer(trackerImageName, trackerImageName)
+                    .withProperties(
+                        PropertyFactory.iconImage(trackerImageName),
+                        PropertyFactory.iconIgnorePlacement(true),
+                        PropertyFactory.iconAllowOverlap(true)
+                    )
+            )
+        }
+    }
+
+    fun startAnimation(point: LatLng, index: Int) {
+        if (index in 0 until MAX_BUSES) {
+            animators[index]?.let { animator ->
+                if (animator.isStarted) {
+                    currentPositions[index] = animator.animatedValue as LatLng
+                    animator.cancel()
+                }
+            }
+
+            animators[index] = ObjectAnimator
+                .ofObject(latLngEvaluators[index], currentPositions[index], point)
+                .setDuration(DELAY_1000)
+            animators[index]?.addUpdateListener { valueAnimator ->
+                val animatedPosition = valueAnimator.animatedValue as LatLng
+                geoJsonSources[index]?.setGeoJson(Point.fromLngLat(animatedPosition.longitude, animatedPosition.latitude))
+            }
+            animators[index]?.start()
+            currentPositions[index] = point
+        }
+    }
     fun getLiveLocation(): LatLng? {
         isGrabSelectedAndOutsideBound = false
         var mLatLng: LatLng? = null
@@ -871,13 +963,16 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun adjustMapBounds(latLngList: ArrayList<LatLng>, padding: Int) {
+        adjustMapBounds(latLngList, padding, null)
+    }
+    fun adjustMapBounds(latLngList: ArrayList<LatLng>, padding: Int, topPadding: Int? = null) {
         if (latLngList.size > 1) {
             val latLngBounds = LatLngBounds.Builder().includes(latLngList).build()
             mMapboxMap?.easeCamera(
                 CameraUpdateFactory.newLatLngBounds(
                     latLngBounds,
                     padding,
-                    appContext.resources.getDimension(R.dimen.dp_80).toInt(),
+                    topPadding ?: appContext.resources.getDimension(R.dimen.dp_80).toInt(),
                     padding,
                     appContext.resources.getDimension(R.dimen.dp_350).toInt()
                 ),
@@ -886,6 +981,27 @@ class MapHelper(private val appContext: Context) {
         } else {
             if (latLngList.isNotEmpty()) {
                 moveCameraToLocation(latLngList[0])
+            }
+        }
+    }
+
+    // move camera to  location
+    fun moveCameraToLocationTracker(latLng: LatLng) {
+        mMapboxMap?.getStyle { style ->
+            if (style.isFullyLoaded) {
+                mMapboxMap?.easeCamera(
+                    CameraUpdateFactory.newCameraPosition(
+                        CameraPosition.Builder().zoom(DEFAULT_CAMERA_ZOOM).padding(
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble(),
+                            appContext.resources.getDimension(R.dimen.dp_80).toDouble()
+                        ).target(
+                            latLng
+                        ).build()
+                    ),
+                    CAMERA_DURATION_1500
+                )
             }
         }
     }
@@ -948,6 +1064,16 @@ class MapHelper(private val appContext: Context) {
                 CAMERA_DURATION_1000
             )
         }
+    }
+
+    fun simulationZoomCamera(latLng: LatLng) {
+        mMapboxMap?.easeCamera(
+            CameraUpdateFactory.newCameraPosition(
+                CameraPosition.Builder().zoom(SIMULATION_CAMERA_ZOOM).target(latLng)
+                    .build()
+            ),
+            CAMERA_DURATION_1000
+        )
     }
 
     @SuppressLint("MissingPermission")
@@ -1046,7 +1172,7 @@ class MapHelper(private val appContext: Context) {
                 convertLayoutToGeofenceInvisibleDragBitmap(activity).let { bitmap ->
                     style.addImage(
                         CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID,
-                        bitmap,
+                        bitmap
                     )
                 }
             }
@@ -1169,7 +1295,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     private fun convertLayoutToGeofenceInvisibleDragBitmap(
-        context: Activity,
+        context: Activity
     ): Bitmap {
         val viewGroup: ViewGroup? = null
         val view = context.layoutInflater.inflate(R.layout.layout_geofence_draggable_marker, viewGroup)
@@ -1221,7 +1347,7 @@ class MapHelper(private val appContext: Context) {
         fun mapLoadedSuccess()
     }
 
-    private fun updateZoomRange(style: Style) {
+    fun updateZoomRange(style: Style) {
         mMapboxMap?.getStyle {
             val cameraPosition = mMapboxMap?.cameraPosition
             val zoom = cameraPosition?.zoom
@@ -1262,6 +1388,18 @@ class MapHelper(private val appContext: Context) {
             }
         } catch (e: Exception) {
             MapboxConstants.MINIMUM_ZOOM.toDouble()
+        }
+    }
+
+    // Class is used to interpolate the marker animation.
+    private val latLngEvaluators: Array<TypeEvaluator<LatLng>> = Array(MAX_BUSES) {
+        object : TypeEvaluator<LatLng> {
+            private val latLng = LatLng()
+            override fun evaluate(fraction: Float, startValue: LatLng, endValue: LatLng): LatLng {
+                latLng.latitude = startValue.latitude + (endValue.latitude - startValue.latitude) * fraction
+                latLng.longitude = startValue.longitude + (endValue.longitude - startValue.longitude) * fraction
+                return latLng
+            }
         }
     }
 }
