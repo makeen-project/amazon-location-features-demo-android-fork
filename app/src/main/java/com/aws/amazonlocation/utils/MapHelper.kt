@@ -731,6 +731,9 @@ class MapHelper(private val appContext: Context) {
     fun removeGeoJsonSourceData(index: Int) {
         mMapboxMap?.getStyle { style ->
             if (index in 0 until MAX_BUSES) {
+                animators[index]?.cancel()
+                animators[index] = null
+                currentPositions[index] = null
                 geoJsonSources[index]?.let { source ->
                     if (style.getSource(source.id) != null) {
                         style.removeSource(source)
@@ -856,33 +859,35 @@ class MapHelper(private val appContext: Context) {
         index: Int
     ) {
         mMapboxMap?.getStyle { style ->
-            removeGeoJsonSourceData(index)
+            if (style.getLayer("$LAYER_SIMULATION_ICON$trackerImageName") != null) {
+                style.removeLayer("$LAYER_SIMULATION_ICON$trackerImageName")
+                style.removeSource("$SOURCE_SIMULATION_ICON$trackerImageName")
+            }
             BitmapUtils.getBitmapFromDrawable(
                 ContextCompat.getDrawable(
                     activity,
                     R.drawable.ic_simulation_my_location
                 )
             )?.let {
-                style.addImage(trackerImageName, it)
+                style.addImage("$SOURCE_SIMULATION_ICON$trackerImageName", it)
             }
 
             if (index in 0 until MAX_BUSES) {
                 currentPositions[index] = currentPlace
                 if (geoJsonSources[index] == null) {
-                    geoJsonSources[index] = GeoJsonSource(
-                        trackerImageName,
+                    val source = GeoJsonSource(
+                        "$SOURCE_SIMULATION_ICON$trackerImageName",
                         Feature.fromGeometry(Point.fromLngLat(currentPlace.longitude, currentPlace.latitude))
                     )
-                    geoJsonSources[index]?.let {
-                        style.addSource(it)
-                    }
+                    geoJsonSources[index] = source
+                    style.addSource(source)
                 }
             }
 
             style.addLayer(
-                SymbolLayer(trackerImageName, trackerImageName)
+                SymbolLayer("$LAYER_SIMULATION_ICON$trackerImageName", "$SOURCE_SIMULATION_ICON$trackerImageName")
                     .withProperties(
-                        PropertyFactory.iconImage(trackerImageName),
+                        PropertyFactory.iconImage("$SOURCE_SIMULATION_ICON$trackerImageName"),
                         PropertyFactory.iconIgnorePlacement(true),
                         PropertyFactory.iconAllowOverlap(true)
                     )

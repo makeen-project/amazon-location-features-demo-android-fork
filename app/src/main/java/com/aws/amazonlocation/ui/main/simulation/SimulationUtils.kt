@@ -1,17 +1,10 @@
 package com.aws.amazonlocation.ui.main.simulation
 
 import android.app.Activity
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
@@ -40,10 +33,18 @@ import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.DELAY_1000
+import com.aws.amazonlocation.utils.ENTER
 import com.aws.amazonlocation.utils.GeofenceCons
+import com.aws.amazonlocation.utils.LABEL_PRE_DRAW
+import com.aws.amazonlocation.utils.LAYER
+import com.aws.amazonlocation.utils.LAYER_SIMULATION_ICON
 import com.aws.amazonlocation.utils.MapCameraZoom.SIMULATION_CAMERA_ZOOM_1
 import com.aws.amazonlocation.utils.MapHelper
+import com.aws.amazonlocation.utils.NotificationHelper
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.SOURCE
+import com.aws.amazonlocation.utils.SOURCE_SIMULATION_ICON
+import com.aws.amazonlocation.utils.TRACKER
 import com.aws.amazonlocation.utils.Units.readRouteData
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -89,9 +90,6 @@ class SimulationUtils(
     val activity: Activity?,
     val mAWSLocationHelper: AWSLocationHelper
 ) {
-    private val CHANNEL_ID = "my_channel_simulation"
-    private val CHANNEL_NAME = "simulation Notification Channel"
-    private val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
     private var routeData: ArrayList<RouteSimulationDataItem>? = null
     private var isCoroutineStarted: Boolean = false
     private var notificationId: Int = 1
@@ -115,10 +113,13 @@ class SimulationUtils(
     private var timerCounts: MutableList<Int>? = null
     private var busesCoordinates = MutableList(notificationData.size) { mutableListOf<Point>() }
     private var busSimulationNotificationFlags: MutableList<Boolean>? = null
-    private var busSimulationHistoryData = MutableList(notificationData.size) { mutableListOf<SimulationHistoryData>() }
-    private var mGeofenceList = MutableList(notificationData.size) { mutableListOf<ListGeofenceResponseEntry>() }
+    private var busSimulationHistoryData =
+        MutableList(notificationData.size) { mutableListOf<SimulationHistoryData>() }
+    private var mGeofenceList =
+        MutableList(notificationData.size) { mutableListOf<ListGeofenceResponseEntry>() }
     private var mPreDrawTrackerLine = MutableList(notificationData.size) { mutableListOf<Point>() }
     private var busStopCounts: MutableList<Int>? = null
+    private var notificationHelper: NotificationHelper? = null
 
     fun setMapBox(
         activity: Activity,
@@ -147,9 +148,10 @@ class SimulationUtils(
             }
         }
         simulationInterface?.getGeofenceList()
-        createNotificationChannel()
         setBounds()
         mFragmentActivity?.applicationContext?.let { context ->
+            notificationHelper = NotificationHelper(context)
+            notificationHelper?.createNotificationChannel()
             routeData = readRouteData(context)?.busRoutesData
 
             routeData?.let { route ->
@@ -302,20 +304,20 @@ class SimulationUtils(
         mMapHelper?.addTrackerLine(
             trackerLineToPreDraw,
             true,
-            "layer${route[index].id}_pre_draw",
-            "source${route[index].id}_pre_draw",
+            "$LAYER${route[index].id}$LABEL_PRE_DRAW",
+            "$SOURCE${route[index].id}$LABEL_PRE_DRAW",
             R.color.color_hint_text
         )
     }
 
     private fun removePreDrawTrackerLine(route: ArrayList<RouteSimulationDataItem>, index: Int) {
         route[index].let {
-            it.id?.let { it1 -> mMapHelper?.removeSource(it1) }
-            it.id?.let { it1 -> mMapHelper?.removeLayer(it1) }
-            mMapHelper?.removeLayer("layer${it.id}")
-            mMapHelper?.removeLayer("source${it.id}")
-            mMapHelper?.removeLayer("layer${it.id}_pre_draw")
-            mMapHelper?.removeLayer("source${it.id}_pre_draw")
+            mMapHelper?.removeSource("$SOURCE_SIMULATION_ICON${it.id}")
+            mMapHelper?.removeLayer("$LAYER_SIMULATION_ICON${it.id}")
+            mMapHelper?.removeLayer("$LAYER${it.id}")
+            mMapHelper?.removeLayer("$SOURCE${it.id}")
+            mMapHelper?.removeLayer("$LAYER${it.id}$LABEL_PRE_DRAW")
+            mMapHelper?.removeLayer("$SOURCE${it.id}$LABEL_PRE_DRAW")
         }
     }
 
@@ -329,8 +331,8 @@ class SimulationUtils(
                         val currentIndex = (it[index]) % coordinatesSize
                         if (currentIndex == 0) {
                             (activity as MainActivity).lifecycleScope.launch {
-                                mMapHelper?.removeLayer("layer${routeSimulationDataItem.id}")
-                                mMapHelper?.removeLayer("source${routeSimulationDataItem.id}")
+                                mMapHelper?.removeLayer("$LAYER${routeSimulationDataItem.id}")
+                                mMapHelper?.removeLayer("$SOURCE${routeSimulationDataItem.id}")
                                 busesCoordinates[index].clear()
                                 busSimulationHistoryData[index].clear()
                                 busStopCounts?.set(index, 0)
@@ -414,8 +416,8 @@ class SimulationUtils(
                 mMapHelper?.addTrackerLine(
                     busesCoordinates[busIndex],
                     true,
-                    "layer$busId",
-                    "source$busId",
+                    "$LAYER$busId",
+                    "$SOURCE$busId",
                     R.color.color_primary_green
                 )
                 mPreDrawTrackerLine[busIndex].removeAt(0)
@@ -539,59 +541,6 @@ class SimulationUtils(
             initAdapter()
             setSpinnerData()
             setSelectedNotificationCount()
-        }
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            mActivity?.let {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val importance = NotificationManager.IMPORTANCE_HIGH
-                    val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
-                        description = CHANNEL_NAME
-                    }
-                    // Register the channel with the system
-                    val notificationManager: NotificationManager =
-                        it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                    notificationManager.createNotificationChannel(channel)
-                }
-            }
-        }
-    }
-
-    // Function to check if a notification group exists
-    private fun isNotificationGroupActive(context: Context): Boolean {
-        val notificationManager = context.getSystemService(NotificationManager::class.java)
-        val activeNotifications = notificationManager.activeNotifications
-
-        // Check if any of the active notifications belong to the specified group
-        for (notification in activeNotifications) {
-            val groupKey = notification.notification.group
-            if (groupKey == GROUP_KEY_WORK_SIMULATION) {
-                return true // Group is still active
-            }
-        }
-        return false // Group is not active or device is below API 23
-    }
-
-    private fun showNotification(
-        notificationId: Int,
-        subTitle: String,
-        setGroupSummary: Boolean
-    ) {
-        mActivity?.let {
-            val builder = NotificationCompat.Builder(it, CHANNEL_ID)
-                .setSmallIcon(R.drawable.app_logo)
-                .setContentText(subTitle)
-                .setGroupSummary(setGroupSummary)
-                .setGroup(GROUP_KEY_WORK_SIMULATION)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH).build()
-
-            NotificationManagerCompat.from(it).apply {
-                // notificationId is a unique int for each notification that you must define
-                notify(notificationId, builder)
-            }
         }
     }
 
@@ -780,7 +729,7 @@ class SimulationUtils(
     private fun stopMqttManager() {
         mIsLocationUpdateEnable = false
         try {
-            mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
+            mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/$TRACKER")
         } catch (_: Exception) {
         }
 
@@ -888,7 +837,7 @@ class SimulationUtils(
     private fun subscribeTopic(identityId: String) {
         try {
             mqttManager?.subscribeToTopic(
-                "$identityId/tracker",
+                "$identityId/$TRACKER",
                 AWSIotMqttQos.QOS0
             ) { _, data ->
 
@@ -896,38 +845,47 @@ class SimulationUtils(
                 if (stringData.isNotEmpty()) {
                     val notificationData =
                         Gson().fromJson(stringData, NotificationSimulationData::class.java)
-                    val subTitle: String
-                    if (notificationData.trackerEventType.equals("ENTER", true)) {
-                        subTitle = "Bus ${
-                        notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
-                        }: Entered ${notificationData.stopName} geofence"
-                        Log.e("TAG", "subscribeTopic: Entered ${notificationData.geofenceId}")
-                        routeData?.forEachIndexed { index, routeSimulationDataItem ->
-                            if (routeSimulationDataItem.geofenceCollection == notificationData.geofenceCollection) {
-                                busStopCounts?.set(
-                                    index,
-                                    busStopCounts?.get(index)?.plus(1) ?: 0
-                                )
-                                busStopCounts?.get(index)
-                                    ?.let { addDataInList(index, it, notificationData) }
-                                return@forEachIndexed
+                    var subTitle = ""
+                    mFragmentActivity?.applicationContext?.let {
+                        if (notificationData.trackerEventType.equals(ENTER, true)) {
+                            subTitle = "${it.getString(R.string.label_bus)} ${
+                            notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
+                            }: ${it.getString(R.string.label_entered)} ${notificationData.stopName} ${
+                            it.getString(
+                                R.string.label_geofence
+                            )
+                            }"
+                            routeData?.forEachIndexed { index, routeSimulationDataItem ->
+                                if (routeSimulationDataItem.geofenceCollection == notificationData.geofenceCollection) {
+                                    busStopCounts?.set(
+                                        index,
+                                        busStopCounts?.get(index)?.plus(1) ?: 0
+                                    )
+                                    busStopCounts?.get(index)
+                                        ?.let { addDataInList(index, it, notificationData) }
+                                    return@forEachIndexed
+                                }
                             }
+                        } else {
+                            subTitle = "${it.getString(R.string.label_bus)} ${
+                            notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
+                            }: ${it.getString(R.string.label_exited)} ${notificationData.stopName} ${
+                            it.getString(
+                                R.string.label_geofence
+                            )
+                            }"
                         }
-                    } else {
-                        subTitle = "Bus ${
-                        notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
-                        }: Exited ${notificationData.stopName} geofence"
                     }
                     notificationId++
                     mActivity?.let {
-                        if (isNotificationGroupActive(it)) {
-                            showNotification(
+                        if (notificationHelper?.isNotificationGroupActive() == true) {
+                            notificationHelper?.showNotification(
                                 notificationId,
                                 subTitle,
                                 false
                             )
                         } else {
-                            showNotification(
+                            notificationHelper?.showNotification(
                                 notificationId,
                                 subTitle,
                                 true
@@ -946,7 +904,6 @@ class SimulationUtils(
         busStopCount: Int,
         notificationData: NotificationSimulationData
     ) {
-        Log.e("TAG", "subscribeTopic: Entered $selectedIndex")
         CoroutineScope(Dispatchers.Default).launch {
             delay(DELAY_1000)
             withContext(Dispatchers.Main) {
@@ -990,13 +947,18 @@ class SimulationUtils(
                                 addMarkerSimulation(activity, position, data)
                             }
                         } else {
+                            val needToStart = mIsLocationUpdateEnable
+                            mIsLocationUpdateEnable = false
                             (activity as MainActivity).lifecycleScope.launch {
-                                delay(DELAY_1000)
+                                delay(CLICK_DEBOUNCE_ENABLE)
                                 busSimulationHistoryData[position].clear()
                                 removePreDrawTrackerLine(route, position)
                                 removeGeofenceWithPosition(position)
                                 timerCounts?.set(position, 0)
                                 mMapHelper?.removeGeoJsonSourceData(position)
+                                if (needToStart) {
+                                    mIsLocationUpdateEnable = true
+                                }
                             }
                         }
                         zoomCamera()
@@ -1073,8 +1035,8 @@ class SimulationUtils(
                                     mMapHelper?.addTrackerLine(
                                         busesCoordinates[index],
                                         true,
-                                        "layer${route[index].id}",
-                                        "source${route[index].id}",
+                                        "$LAYER${route[index].id}",
+                                        "$SOURCE${route[index].id}",
                                         R.color.color_primary_green
                                     )
                                 }
@@ -1106,12 +1068,12 @@ class SimulationUtils(
             delay(DELAY_1000)
             routeData?.forEach { routeSimulationDataItem ->
                 routeSimulationDataItem.id?.let { it1 ->
-                    mMapHelper?.removeSource(it1)
-                    mMapHelper?.removeLayer(it1)
-                    mMapHelper?.removeLayer("layer$it1")
-                    mMapHelper?.removeLayer("source$it1")
-                    mMapHelper?.removeLayer("layer${it1}_pre_draw")
-                    mMapHelper?.removeLayer("source${it1}_pre_draw")
+                    mMapHelper?.removeSource("$SOURCE_SIMULATION_ICON$it1")
+                    mMapHelper?.removeLayer("$LAYER_SIMULATION_ICON$it1")
+                    mMapHelper?.removeLayer("$LAYER$it1")
+                    mMapHelper?.removeLayer("$SOURCE$it1")
+                    mMapHelper?.removeLayer("$LAYER$it1$LABEL_PRE_DRAW")
+                    mMapHelper?.removeLayer("$SOURCE$it1$LABEL_PRE_DRAW")
                 }
             }
             mMapHelper?.clearMarker()
