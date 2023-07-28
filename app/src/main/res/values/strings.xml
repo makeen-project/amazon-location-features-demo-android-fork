@@ -266,4 +266,8 @@
     <string name="simulation_exit_title">Are you sure you want to exit simulation?</string>
     <string name="label_tracking_active">Device tracking is active</string>
     <string name="label_tracking_in_active">Device tracking inactive</string>
+    <string name="label_bus">Bus</string>
+    <string name="label_entered">Entered</string>
+    <string name="label_exited">Exited</string>
+    <string name="label_geofence">geofence</string>
 </resources>
