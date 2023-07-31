@@ -6,6 +6,7 @@ import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.mobile.client.Callback
 import com.amazonaws.mobile.client.HostedUIOptions
 import com.amazonaws.mobile.client.SignInUIOptions
+import com.amazonaws.mobile.client.SignOutOptions
 import com.amazonaws.mobile.client.UserStateDetails
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
 import com.amazonaws.services.geo.model.Step
@@ -31,6 +32,7 @@ import com.aws.amazonlocation.utils.validateLatLng
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
 import javax.inject.Inject
+
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -142,11 +144,22 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
         signInInterface: SignInInterface
     ) {
         try {
-            AWSMobileClient.getInstance().signOut()
-            signInInterface.signOutSuccess(
-                context.resources.getString(R.string.sign_out_successfully),
-                isDisconnectFromAWSRequired
-            )
+            AWSMobileClient.getInstance().signOut(
+                SignOutOptions.builder().invalidateTokens(true).build(),
+                object : Callback<Void?> {
+
+                    override fun onResult(result: Void?) {
+                        signInInterface.signOutSuccess(
+                            context.resources.getString(R.string.sign_out_successfully),
+                            isDisconnectFromAWSRequired
+                        )
+                    }
+
+                    override fun onError(e: java.lang.Exception) {
+                        signInInterface.signOutFailed(context.resources.getString(R.string.sign_out_failed))
+                    }
+                })
+
         } catch (e: Exception) {
             signInInterface.signOutFailed(context.resources.getString(R.string.sign_out_failed))
         }
