@@ -71,6 +71,8 @@ const val HERE = "Here"
 const val DESCRIPTION_TAG_ESRI = "ESRI_"
 const val DESCRIPTION_TAG_HERE = "HERE_"
 
+const val MAP_STYLE_ATTRIBUTION = "MapStyleAttribution"
+
 val SE_REGION_LIST = arrayListOf("ap-southeast-1")
 
 const val latNorth = 31.952162238024968
