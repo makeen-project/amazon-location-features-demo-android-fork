@@ -5460,6 +5460,11 @@ class ExploreFragment :
                 ""
             )
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
+            val properties = listOf(
+                Pair(AnalyticsAttribute.TRAVEL_MODE, "Car"),
+                Pair(AnalyticsAttribute.TRIGGERED_BY, "PLACES_POPUP")
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.ROUTE_SEARCH, properties)
             return true
         }
         if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
