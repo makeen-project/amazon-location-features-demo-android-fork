@@ -17,6 +17,9 @@ import com.aws.amazonlocation.ui.main.about.VersionFragment
 import com.aws.amazonlocation.ui.main.attribution.AttributionFragment
 import com.aws.amazonlocation.ui.main.terms_condition.TermsAndConditionFragment
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_URL
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -64,6 +67,10 @@ class AboutFragment : BaseFragment() {
                     )
                 )
             }
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ATTRIBUTION)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
         }
     }
 
@@ -89,6 +96,10 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.attribution_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ATTRIBUTION)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clVersion.setOnClickListener {
                 if (isTablet) {
@@ -110,6 +121,10 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.version_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.VERSION)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clTermsConditions.setOnClickListener {
                 if (isTablet) {
@@ -131,6 +146,10 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.terms_conditions_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TERMS_CONDITIONS)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clHelp.setOnClickListener {
                 startActivity(
@@ -142,6 +161,10 @@ class AboutFragment : BaseFragment() {
                         BuildConfig.BASE_DOMAIN + BuildConfig.CLOUD_FORMATION_READ_MORE_URL
                     )
                 )
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.HELP)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
         }
     }

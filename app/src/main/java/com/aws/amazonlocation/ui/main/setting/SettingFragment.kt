@@ -25,7 +25,10 @@ import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -108,6 +111,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
                 ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
             }
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.UNITS)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
         }
     }
 
@@ -247,6 +254,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.unit_system_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.UNITS)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clDataProvider.setOnClickListener {
                 if (isTablet) {
@@ -264,6 +275,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.data_provider_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.DATA_PROVIDER)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clMapStyle.setOnClickListener {
                 if (isTablet) {
@@ -281,6 +296,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.map_style_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.MAP_STYLE)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clRouteOption.setOnClickListener {
                 if (isTablet) {
@@ -298,6 +317,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.route_option_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clAwsCloudformation.setOnClickListener {
                 if (isTablet) {
@@ -316,6 +339,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.aws_cloud_information_fragment)
                 }
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
             }
             clLanguage.setOnClickListener {
                 if (isTablet) {

@@ -10,13 +10,11 @@ import javax.inject.Inject
 
 class AnalyticsHelper(
     private val context: Context,
-    private val mAWSLocationHelper: AWSLocationHelper
+    private val mAWSLocationHelper: AWSLocationHelper,
+    private val mPreferenceManager: PreferenceManager
 ) {
 
     private var pinpointManager: PinpointManager? = null
-
-    @Inject
-    lateinit var mPreferenceManager: PreferenceManager
 
     fun initAnalytics() {
         val provider = mAWSLocationHelper.getAnalyticsCredentialProvider()

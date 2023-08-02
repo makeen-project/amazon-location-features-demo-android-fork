@@ -152,34 +152,34 @@ class MainActivity : BaseActivity() {
                             }
                         }
                         val properties = listOf(
-                            Pair(AnalyticsAttribute.PAGE_NAME, "Explorer")
+                            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
                         )
-                        analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+                        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
                     }
                     TabEnum.TAB_TRACKING.name -> {
                         mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_tracking
                         val properties = listOf(
-                            Pair(AnalyticsAttribute.PAGE_NAME, "Tracking")
+                            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
                         )
-                        analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+                        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
                     }
                     TabEnum.TAB_GEOFENCE.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_geofence
                         val properties = listOf(
-                            Pair(AnalyticsAttribute.PAGE_NAME, "Geofences")
+                            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.GEOFENCES)
                         )
-                        analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+                        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
                     }
                 }
             }
         } else {
             val properties = listOf(
-                Pair(AnalyticsAttribute.PAGE_NAME, "Explorer")
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
             )
-            analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+            analyticsHelper?.recordEvent(EventType.SCREEN, properties)
         }
         initClick()
         KeyBoardUtils.attachKeyboardListeners(
@@ -210,7 +210,7 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
-        analyticsHelper = AnalyticsHelper(applicationContext, mAWSLocationHelper)
+        analyticsHelper = AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
         analyticsHelper?.initAnalytics()
         analyticsHelper?.startSession()
         lifecycleScope.launch {
@@ -395,9 +395,9 @@ class MainActivity : BaseActivity() {
                     setExplorer()
                     showAmazonLogo()
                     val properties = listOf(
-                        Pair(AnalyticsAttribute.PAGE_NAME, "Explorer")
+                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
                     )
-                    analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+                    analyticsHelper?.recordEvent(EventType.SCREEN, properties)
                 }
                 R.id.menu_tracking -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -492,9 +492,9 @@ class MainActivity : BaseActivity() {
                     mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
                     val properties = listOf(
-                        Pair(AnalyticsAttribute.PAGE_NAME, "Settings")
+                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SETTINGS)
                     )
-                    analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+                    analyticsHelper?.recordEvent(EventType.SCREEN, properties)
                 }
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
@@ -504,9 +504,9 @@ class MainActivity : BaseActivity() {
                     mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
                     val properties = listOf(
-                        Pair(AnalyticsAttribute.PAGE_NAME, "More")
+                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ABOUT)
                     )
-                    analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+                    analyticsHelper?.recordEvent(EventType.SCREEN, properties)
                 }
             }
             true
@@ -680,9 +680,9 @@ class MainActivity : BaseActivity() {
             mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
         }
         val properties = listOf(
-            Pair(AnalyticsAttribute.PAGE_NAME, "Geofences")
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.GEOFENCES)
         )
-        analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
     }
 
     private fun showTracking() {
@@ -697,9 +697,9 @@ class MainActivity : BaseActivity() {
         }
         showTrackingBottomSheet()
         val properties = listOf(
-            Pair(AnalyticsAttribute.PAGE_NAME, "Tracking")
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
         )
-        analyticsHelper?.recordEvent(EventType.VIEW_PAGE, properties)
+        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
     }
 
     private fun checkMap(): Boolean {
