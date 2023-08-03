@@ -3238,12 +3238,7 @@ class ExploreFragment :
         mBinding.apply {
             val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
             bottomSheetAttribution.apply {
-                if (mapName == getString(R.string.map_esri)) {
-                    tvAttribution.text =
-                        getString(R.string.label_esri_here)
-                } else {
-                    tvAttribution.text = getString(R.string.label_here_attribution_text)
-                }
+                tvAttribution.text = mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
             }
         }
     }

@@ -61,7 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/dp_10"
         android:layout_marginHorizontal="@dimen/dp_24"
-        android:text="@string/label_esri_here"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPartnerAttribution"

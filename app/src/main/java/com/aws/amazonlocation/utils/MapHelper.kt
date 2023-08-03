@@ -145,6 +145,7 @@ class MapHelper(private val appContext: Context) {
                 isMapLoadedInterface.mapLoadedSuccess()
                 mapStyleChangedListener.onMapStyleChanged(mapStyle)
                 mapStyleChangeListener = mapStyleChangedListener
+                mPreferenceManager.setValue(MAP_STYLE_ATTRIBUTION,style.sources.first().attribution)
             }
         }
     }
@@ -152,6 +153,15 @@ class MapHelper(private val appContext: Context) {
     fun updateStyle(mapView: MapLibreView, mapStyle: String, style: String) {
         mapView.setStyle(MapStyle(mapStyle, style)) {
             mapStyleChangeListener?.onMapStyleChanged(mapStyle)
+            mPreferenceManager?.setValue(MAP_STYLE_ATTRIBUTION,it.sources.first().attribution)
+            updateZoomRange(it)
+        }
+    }
+
+    fun updateMapStyle(mapStyle: String, style: String) {
+        mMapLibreView?.setStyle(MapStyle(mapStyle, style)) {
+            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
+            mPreferenceManager?.setValue(MAP_STYLE_ATTRIBUTION,it.sources.first().attribution)
             updateZoomRange(it)
         }
     }
