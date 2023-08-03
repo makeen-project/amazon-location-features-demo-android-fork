@@ -273,7 +273,7 @@ val notificationData = arrayListOf(
     NotificationData("Bus 05 UBC", false)
 )
 
-const val ANALYTICS_APP_ID = "7d089e59e6a54f22b7bd65fc1c633fde"
+const val ANALYTICS_APP_ID = "79c66ff618aa43508bbfbcdfa326e048"
 
 object EventType {
     const val SCREEN_OPEN = "SCREEN_OPEN"
