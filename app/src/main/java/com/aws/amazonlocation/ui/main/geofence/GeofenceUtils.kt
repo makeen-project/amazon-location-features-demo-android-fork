@@ -522,15 +522,16 @@ class GeofenceUtils {
         mBindingGeofenceList?.rvGeofence?.hide()
         mBindingGeofenceList?.clEmptyGeofenceList?.show()
         mBottomSheetGeofenceListBehavior?.isHideable = false
-        mBottomSheetGeofenceListBehavior?.isDraggable = false
+        mBottomSheetGeofenceListBehavior?.isDraggable = true
+        mBottomSheetGeofenceListBehavior?.isFitToContents = false
+        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.6f
         mBindingGeofenceList?.clGeofenceList?.context?.let {
             if ((mActivity as MainActivity).isTablet) {
-                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_460)
-                mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
             } else {
-                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
-                mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_110)
             }
+            mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
     }
 

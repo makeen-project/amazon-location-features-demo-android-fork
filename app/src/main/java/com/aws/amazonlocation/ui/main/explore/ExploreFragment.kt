@@ -282,7 +282,7 @@ class ExploreFragment :
         mBottomSheetHelper.setDirectionBottomSheet(mBinding.bottomSheetDirection.clPersistentBottomSheetDirection)
         mBaseActivity?.isTablet?.let {
             if (!it) {
-                mBottomSheetHelper.setMapStyleBottomSheet(activity, mBinding.bottomSheetMapStyle)
+                mBottomSheetHelper.setMapStyleBottomSheet(activity, mBinding.bottomSheetMapStyle, mBaseActivity)
             } else {
                 mBinding.bottomSheetMapStyle.clMapStyleBottomSheet.hide()
             }

@@ -4,6 +4,7 @@ import android.Manifest.permission.POST_NOTIFICATIONS
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
@@ -21,6 +22,8 @@ import androidx.core.content.ContextCompat
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetStartSimulationBinding
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.utils.NotificationDialogInterface
+import com.aws.amazonlocation.utils.notificationPermission
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -102,8 +105,15 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
                     }
                     shouldShowRequestPermissionRationale(POST_NOTIFICATIONS) -> {
                         if (!NotificationManagerCompat.from(requireContext()).areNotificationsEnabled()) {
-                            // If notifications are not enabled, prompt the user to enable them
-                            openAppNotificationSettings(requireContext())
+                            requireContext().notificationPermission(object : NotificationDialogInterface {
+                                override fun onOkClick(dialog: DialogInterface) {
+                                    openAppNotificationSettings(requireContext())
+                                }
+
+                                override fun onCancelClick(dialog: DialogInterface) {
+                                    openSimulation()
+                                }
+                            })
                         }
                     }
                     else -> {
@@ -126,6 +136,7 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
     }
+
     @SuppressLint("ObsoleteSdkInt")
     private fun openAppNotificationSettings(context: Context) {
         val intent = Intent()

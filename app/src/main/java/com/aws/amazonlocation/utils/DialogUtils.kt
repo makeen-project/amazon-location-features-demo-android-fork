@@ -222,6 +222,24 @@ fun Context.simulationExit(simulationInterface: SimulationDialogInterface) {
     mDialog.show()
 }
 
+fun Context.notificationPermission(notificationDialogInterface: NotificationDialogInterface) {
+    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
+    mDialog.setMessage(this.resources.getString(R.string.simulation_notification_permission))
+    mDialog.setPositiveButton(
+        this.resources.getString(R.string.ok)
+    ) { dialog, _ ->
+        notificationDialogInterface.onOkClick(dialog)
+        dialog.dismiss()
+    }
+    mDialog.setNegativeButton(
+        this.resources.getString(R.string.cancel)
+    ) { dialog, _ ->
+        notificationDialogInterface.onCancelClick(dialog)
+        dialog.dismiss()
+    }
+    mDialog.show()
+}
+
 interface EnableTrackerInterface {
     fun continueToTracker(dialog: DialogInterface)
     fun cancel()
@@ -256,4 +274,9 @@ interface MapStyleRestartInterface {
 
 interface SimulationDialogInterface {
     fun onExitClick(dialog: DialogInterface)
+}
+
+interface NotificationDialogInterface {
+    fun onOkClick(dialog: DialogInterface)
+    fun onCancelClick(dialog: DialogInterface)
 }

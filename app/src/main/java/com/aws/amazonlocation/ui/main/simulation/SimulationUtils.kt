@@ -160,6 +160,7 @@ class SimulationUtils(
                 busStopCounts = MutableList(route.size) { 0 }
             }
         }
+        simulationBinding?.cardStartTracking?.performClick()
     }
 
     private fun setBounds() {
@@ -590,7 +591,11 @@ class SimulationUtils(
                 ) {
                     if (selectedTrackerIndex != position) {
                         selectedTrackerIndex = position
-                        mIsLocationUpdateEnable = false
+                        var isLocationStartNeeded = false
+                        if (mIsLocationUpdateEnable) {
+                            mIsLocationUpdateEnable = false
+                            isLocationStartNeeded = true
+                        }
                         CoroutineScope(Dispatchers.Default).launch {
                             delay(DELAY_1000)
                             withContext(Dispatchers.Main) {
@@ -602,7 +607,9 @@ class SimulationUtils(
                                 )
                                 simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
                             }
-                            mIsLocationUpdateEnable = true
+                            if (isLocationStartNeeded) {
+                                mIsLocationUpdateEnable = true
+                            }
                         }
                     }
                     val selectedData = notificationData[selectedTrackerIndex].name
@@ -683,18 +690,26 @@ class SimulationUtils(
             ivBackArrowRouteNotifications.setOnClickListener {
                 if (rvRouteNotifications.isVisible) {
                     closeNotificationCard()
+                    if (!rvTrackingSimulation.isVisible) {
+                        mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
                 } else {
                     showViews(rvRouteNotifications, viewDividerNotification)
                     ivBackArrowRouteNotifications.rotation = 180f
+                    mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }
 
             ivBackArrowChangeRoute.setOnClickListener {
                 if (rvTrackingSimulation.isVisible) {
                     closeTrackingCard()
+                    if (!rvRouteNotifications.isVisible) {
+                        mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
                 } else {
                     showViews(rvTrackingSimulation, viewDividerBus)
                     ivBackArrowChangeRoute.rotation = 180f
+                    mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
                 }
             }
         }
@@ -741,7 +756,6 @@ class SimulationUtils(
     }
 
     private fun startMqttManager() {
-        mIsLocationUpdateEnable = true
         if (mqttManager != null) stopMqttManager()
         val identityId: String? =
             mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
@@ -763,6 +777,7 @@ class SimulationUtils(
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connecting -> {
                         }
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.Connected -> {
+                            mIsLocationUpdateEnable = true
                             startTracking()
                             identityId?.let { subscribeTopic(it) }
                         }
@@ -770,9 +785,6 @@ class SimulationUtils(
                         }
                         AWSIotMqttClientStatusCallback.AWSIotMqttClientStatus.ConnectionLost -> {
                             throwable?.printStackTrace()
-                            if (mIsLocationUpdateEnable) {
-                                startTracking()
-                            }
                         }
                         else -> {
                             simulationBinding?.apply {
