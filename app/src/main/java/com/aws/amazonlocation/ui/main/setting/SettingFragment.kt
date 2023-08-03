@@ -114,7 +114,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             val properties = listOf(
                 Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.UNITS)
             )
-            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
         }
     }
 
@@ -257,7 +257,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.UNITS)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clDataProvider.setOnClickListener {
                 if (isTablet) {
@@ -278,7 +278,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.DATA_PROVIDER)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clMapStyle.setOnClickListener {
                 if (isTablet) {
@@ -299,7 +299,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.MAP_STYLE)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clRouteOption.setOnClickListener {
                 if (isTablet) {
@@ -320,7 +320,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clAwsCloudformation.setOnClickListener {
                 if (isTablet) {
@@ -342,7 +342,11 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                val propertiesAws = listOf(
+                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
             }
             clLanguage.setOnClickListener {
                 if (isTablet) {

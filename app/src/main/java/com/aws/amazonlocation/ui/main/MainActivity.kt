@@ -154,7 +154,7 @@ class MainActivity : BaseActivity() {
                         val properties = listOf(
                             Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
                         )
-                        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                     }
                     TabEnum.TAB_TRACKING.name -> {
                         mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
@@ -163,7 +163,7 @@ class MainActivity : BaseActivity() {
                         val properties = listOf(
                             Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
                         )
-                        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                     }
                     TabEnum.TAB_GEOFENCE.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
@@ -171,7 +171,7 @@ class MainActivity : BaseActivity() {
                         val properties = listOf(
                             Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.GEOFENCES)
                         )
-                        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                     }
                 }
             }
@@ -179,7 +179,7 @@ class MainActivity : BaseActivity() {
             val properties = listOf(
                 Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
             )
-            analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+            analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
         }
         initClick()
         KeyBoardUtils.attachKeyboardListeners(
@@ -397,7 +397,7 @@ class MainActivity : BaseActivity() {
                     val properties = listOf(
                         Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
                     )
-                    analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                    analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                 }
                 R.id.menu_tracking -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -494,7 +494,7 @@ class MainActivity : BaseActivity() {
                     val properties = listOf(
                         Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SETTINGS)
                     )
-                    analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                    analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                 }
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
@@ -506,7 +506,7 @@ class MainActivity : BaseActivity() {
                     val properties = listOf(
                         Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ABOUT)
                     )
-                    analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                    analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                 }
             }
             true
@@ -682,7 +682,7 @@ class MainActivity : BaseActivity() {
         val properties = listOf(
             Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.GEOFENCES)
         )
-        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
     }
 
     private fun showTracking() {
@@ -699,7 +699,7 @@ class MainActivity : BaseActivity() {
         val properties = listOf(
             Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
         )
-        analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
     }
 
     private fun checkMap(): Boolean {

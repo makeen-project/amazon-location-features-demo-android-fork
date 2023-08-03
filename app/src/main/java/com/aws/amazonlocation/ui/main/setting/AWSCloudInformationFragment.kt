@@ -27,7 +27,10 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.signin.CustomSpinnerAdapter
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -98,6 +101,13 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
         clickListener()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val propertiesAws = listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STOPPED, propertiesAws)
+    }
     private fun init() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         mBinding.apply {
@@ -335,6 +345,10 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
     }
 
     private fun storeDataAndRestartApp() {
+        val propertiesAws = listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL, propertiesAws)
         mPreferenceManager.setValue(
             KEY_CLOUD_FORMATION_STATUS,
             AuthEnum.AWS_CONNECTED.name

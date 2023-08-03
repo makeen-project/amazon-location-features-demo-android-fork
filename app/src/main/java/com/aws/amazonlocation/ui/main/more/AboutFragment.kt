@@ -70,7 +70,7 @@ class AboutFragment : BaseFragment() {
             val properties = listOf(
                 Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ATTRIBUTION)
             )
-            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
         }
     }
 
@@ -99,7 +99,7 @@ class AboutFragment : BaseFragment() {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ATTRIBUTION)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clVersion.setOnClickListener {
                 if (isTablet) {
@@ -124,7 +124,7 @@ class AboutFragment : BaseFragment() {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.VERSION)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clTermsConditions.setOnClickListener {
                 if (isTablet) {
@@ -149,7 +149,7 @@ class AboutFragment : BaseFragment() {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TERMS_CONDITIONS)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
             clHelp.setOnClickListener {
                 startActivity(
@@ -164,7 +164,7 @@ class AboutFragment : BaseFragment() {
                 val properties = listOf(
                     Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.HELP)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN, properties)
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
             }
         }
     }

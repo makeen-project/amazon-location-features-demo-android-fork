@@ -274,14 +274,10 @@ val notificationData = arrayListOf(
 )
 
 const val ANALYTICS_APP_ID = "7d089e59e6a54f22b7bd65fc1c633fde"
-object EventType {
-    // Session
-    const val SESSION_START = "_session.start"
-    const val SESSION_STOP = "_session.stop"
 
-    const val SCREEN = "SCREEN"
-    const val VIEW_PAGE = "VIEW_PAGE"
-    const val LEAVE_PAGE = "LEAVE_PAGE"
+object EventType {
+    const val SCREEN_OPEN = "SCREEN_OPEN"
+    const val SCREEN_CLOSE = "SCREEN_CLOSE"
 
     const val APPLICATION_ERROR = "APPLICATION_ERROR"
 
