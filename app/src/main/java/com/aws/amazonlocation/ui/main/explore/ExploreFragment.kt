@@ -17,8 +17,8 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.util.TypedValue
 import android.view.*
-import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.view.inputmethod.EditorInfo
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -3216,15 +3216,21 @@ class ExploreFragment :
     fun showSimulationTop() {
         mBinding.apply {
             cardSimulationPopup.show()
-            // Create the blink animation
-            val blinkAnimation: Animation = AlphaAnimation(0.0f, 1.0f).apply {
-                duration = 500 // Set the duration of the blink (500 milliseconds)
-                repeatMode = Animation.REVERSE
+            val insideOutAnimation: Animation = ScaleAnimation(
+                0.0f,
+                1.0f, // Initial and final scaleX value
+                0.0f,
+                1.0f, // Initial and final scaleY value
+                Animation.RELATIVE_TO_SELF,
+                0.5f, // Pivot X (0.5 means the middle of the view)
+                Animation.RELATIVE_TO_SELF,
+                0.5f // Pivot Y (0.5 means the middle of the view)
+            ).apply {
+                duration = 3000
+                repeatMode = Animation.ABSOLUTE
                 repeatCount = Animation.INFINITE
             }
-
-            // Apply the blink animation to the ImageView
-            ivOvalExternal.startAnimation(blinkAnimation)
+            ivOvalExternal.startAnimation(insideOutAnimation)
         }
     }
 
