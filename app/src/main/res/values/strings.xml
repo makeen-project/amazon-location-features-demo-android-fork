@@ -187,6 +187,7 @@
     <string name="label_required_permission">Distance can\'t be calculated if location permission is not granted. Please enable location permission for Amazon Location from Settings</string>
     <string name="label_attribution">Attribution</string>
     <string name="label_disconnect">Disconnect</string>
+    <string name="label_esri_here">Esri, HERE, Garmin, FAO, NOAA, USGS, © OpenStreetMap contributors, and the GIS User Community</string>
     <string name="btn_learn_more">Learn More</string>
     <string name="label_welcome_amazon">Welcome to\nAmazon Location Demo</string>
     <string name="label_continue">Continue</string>
@@ -202,6 +203,7 @@
     <string name="distance_is_greater_than_400_km">Distance is greater than 400 km</string>
     <string name="distance_is_greater_than_248_mi">Distance is greater than %s mi</string>
     <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">Can\'t calculate via Esri, kindly switch to \nHERE provider.</string>
+    <string name="label_here_attribution_text">© 2022 HERE</string>
     <string name="label_partner_attribution">Partner Attribution</string>
     <string name="label_software_attribution">Software Attribution</string>
     <string name="label_click_learn_more_for_software_attribution">Click learn more for software attribution</string>

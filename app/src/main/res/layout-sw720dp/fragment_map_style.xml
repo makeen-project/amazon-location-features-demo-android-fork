@@ -329,8 +329,7 @@
                             android:text="@string/label_provider"
                             android:textDirection="locale"
                             android:gravity="start"
-            android:textDirection="locale"
-            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <View
@@ -428,10 +427,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/dp_16"
                             android:text="@string/label_type"
-                            android:textDirection="locale"
                             android:gravity="start"
-            android:textDirection="locale"
-            app:layout_constraintStart_toStartOf="parent"
+                            android:textDirection="locale"
+                            app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <View
