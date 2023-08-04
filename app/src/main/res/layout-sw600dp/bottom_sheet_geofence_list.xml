@@ -292,7 +292,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/sheet_geofence_list_tv_add_geofence_description"
-            style="@style/SP13HintInterRegularTextStyle"
+            style="@style/SP13HintRegularTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_24"
@@ -346,6 +346,7 @@
             android:layout_marginTop="@dimen/dp_8"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/dp_8"
+            app:cardElevation="@dimen/dp_0"
             app:cardUseCompatPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -369,7 +370,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_require_connection"
-            style="@style/SP13HintInterRegularTextStyle"
+            style="@style/SP13HintRegularTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_24"
