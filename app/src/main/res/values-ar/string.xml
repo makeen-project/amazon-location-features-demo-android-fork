@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">قم بالاتصال ك الخدمات اللاسلكية المتقدمة اعتبار إلى تمكين الأسوار الجغرافية و أجهزة التتبع. هذه سوف ضمان ك تتبع و السياج الجغرافي البيانات هو فقط المخزنة في ك الحساب. بعد أنت خشبة في، جميع المميزات من ال نسخة تجريبية التطبيق سوف يركض باستخدام الموارد أنت نشر في ك الخدمات اللاسلكية المتقدمة الحساب. سجل خارج لو أنت يرغب إلى يستمر تشغيل ال نسخة تجريبية التطبيق باستخدام الموارد في خدمات أمازون ويب تجريبي التطبيق الحساب.</string>
   <string name="connect">قم بالاتصال</string>
   <string name="how_to_connect">كيف إلى الاتصال إلى</string>
-  <string name="how_to_connect_1_1">انقر هنا إلى يركض أ تشكيل السحابة قالب إلى آمن ينشئ مطلوب الموارد.</string>
+  <string name="how_to_connect_1_1">**انقر هنا** إلى يركض أ تشكيل السحابة قالب إلى آمن ينشئ مطلوب الموارد.</string>
   <string name="how_to_connect_1_2">إنها سوف آمن ينشئ جميع مطلوب الموارد.</string>
   <string name="how_to_connect_1_3">أنت يستطيعون حذف هؤلاء الموارد خلال ال كومة حذف اختيار أو «إدارة» الموارد» صفحات في ال قائمة طعام في ال يسار.</string>
   <string name="how_to_connect_2_1">قم بالاتصال ال تجريبي التطبيق مع ال حديثا تم إنشاؤه الخدمات اللاسلكية المتقدمة الموارد بواسطة نسخ في مدخل الحقول.</string>
-  <string name="how_to_connect_2_2">من ك تشكيل السحابة انتاج الجزء نسخ ال موافق اسمه يقيم كما انعكست في ال حق الجزء نموذج (معرف تجمع الهوية) إلخ.). تعلم المزيد.</string>
+  <string name="how_to_connect_2_2">من ك تشكيل السحابة انتاج الجزء نسخ ال موافق اسمه يقيم كما انعكست في ال حق الجزء نموذج (معرف تجمع الهوية) إلخ.). **تعلم المزيد**.</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">مجموعة الهوية المحدودة</string>
   <string name="user_pool_client_id">معرف عميل تجمع المستخدمين</string>
   <string name="user_pool_ld">معرف تجمع المستخدم</string>
-  <string name="by_connecting_i_agree_to_amazon">بواسطة توصيل أنا يوافق إلى Amazon شروط\ nالموقع &amp; الشروط</string>
+  <string name="by_connecting_i_agree_to_amazon">بواسطة توصيل أنا يوافق إلى Amazon شروط الموقع\n** &amp; الشروط**</string>
   <string name="terms_condition">الشروط &amp; الشروط</string>
   <string name="help">المساعدة</string>
   <string name="click_here">انقر هنا</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">أنت يكونوا متصل</string>
   <string name="label_connected_description">قم بالاتصال ك الخدمات اللاسلكية المتقدمة اعتبار إلى تمكين الأسوار الجغرافية و أجهزة التتبع. هذه سوف ضمان ك تتبع و السياج الجغرافي البيانات هو فقط المخزنة في ك الحساب. بعد أنت خشبة في، جميع المميزات من ال نسخة تجريبية التطبيق سوف يركض باستخدام الموارد أنت نشر في ك الخدمات اللاسلكية المتقدمة الحساب. سجل خارج لو أنت يرغب إلى يستمر تشغيل ال نسخة تجريبية التطبيق باستخدام الموارد في خدمات أمازون ويب تجريبي التطبيق الحساب.</string>
   <string name="label_how_to_remove">كيف إلى إزالة:</string>
-  <string name="label_connected_title_1">انقر هنا إلى إزالة أ تشكيل السحابة قالب</string>
+  <string name="label_connected_title_1">**انقر هنا** إلى إزالة أ تشكيل السحابة قالب</string>
   <string name="label_connected_title_2">إنها سوف آمن ينشئ جميع مطلوب الموارد.</string>
   <string name="label_connected_title_3">قم بالاتصال ال Amazon الموقع التطبيق مع ال تم إنشاؤه الموارد</string>
   <string name="label_connected_title_4">رجاء يدخل ال التالي مطلوب الحقول إلى ال الموقع.</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">أهلا بك to\nAmazon الموقع نسخة تجريبية</string>
   <string name="label_continue">استمر</string>
   <string name="label_right_aws">© 2023، Amazon الويب خدمات، شركة أو لها الشركات التابعة. جميع حقوق محجوز.</string>
-  <string name="label_terms_desc">بواسطة تنزيل، تثبيت، أو باستخدام ال Amazon الموقع نسخة تجريبية التطبيق، أنت يوافق إلى ال التطبيقات الشروط &amp; الشروط من أجل استخدم.</string>
-  <string name="label_terms_desc_terms_page">بواسطة تنزيل، تثبيت، أو باستخدام ال Amazon الموقع نسخة تجريبية التطبيق، أنت يوافق إلى ال التطبيقات الشروط &amp; الشروط من أجل استخدم.</string>
+  <string name="label_terms_desc">بواسطة تنزيل، تثبيت، أو باستخدام ال Amazon الموقع نسخة تجريبية التطبيق، أنت يوافق إلى ال التطبيقات **الشروط &amp; الشروط** من أجل استخدم.</string>
+  <string name="label_terms_desc_terms_page">بواسطة تنزيل، تثبيت، أو باستخدام ال Amazon الموقع نسخة تجريبية التطبيق، أنت يوافق إلى ال التطبيقات **الشروط &amp; الشروط** من أجل استخدم.</string>
   <string name="text_terms_desc_coloured_1">الشروط &amp; الشروط</string>
   <string name="text_terms_desc_coloured_2">الخدمات اللاسلكية المتقدمة مقبول استخدم السياسة</string>
   <string name="text_terms_desc_coloured_3">الخدمات اللاسلكية المتقدمة الخصوصية تنويه</string>

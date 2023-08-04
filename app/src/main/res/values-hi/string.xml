@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">कनेक्ट करें तुम्हारा एडब्ल्यूएस लेखा को सक्षम जियोफेंस और ट्रैकर्स। यह होगा सुनिश्चित तुम्हारा नज़र रखना और जियोफेंसिंग डेटा है मात्र संग्रहित में तुम्हारा खाता। के बाद आप लॉग इन करें में, सभी विशेषताएं का यह डेमो ऐप होगा दौड़ना इस्तेमाल करते हुए साधनों आप तैनात में तुम्हारा एडब्ल्यूएस खाता। लॉग इन करें बाहर अगर आप इच्छा को जारी रखें दौड़ना यह डेमो ऐप इस्तेमाल करते हुए साधनों में एडब्ल्यूएस प्रदर्शन ऐप खाता।</string>
   <string name="connect">कनेक्ट करें</string>
   <string name="how_to_connect">कैसे को कनेक्ट करें को</string>
-  <string name="how_to_connect_1_1">क्लिक करें इधर को दौड़ना एक क्लाउड फ़ॉर्मेशन टेम्पलेट को सुरक्षित रूप से बनाना आवश्यक है संसाधन।</string>
+  <string name="how_to_connect_1_1">**क्लिक करें यहाँ** को दौड़ना एक क्लाउड फ़ॉर्मेशन टेम्पलेट को सुरक्षित रूप से बनाना आवश्यक है संसाधन।</string>
   <string name="how_to_connect_1_2">यह होगा सुरक्षित रूप से बनाना सभी आवश्यक है संसाधन।</string>
   <string name="how_to_connect_1_3">आप कर सकते हैं हटाना ये साधनों से यह ढेर विलोपन विकल्प या \'मैनेज करें संसाधन\' पृष्ठों में यह मेन्यू के ऊपर यह छोड़ दिया है।</string>
   <string name="how_to_connect_2_1">कनेक्ट करें यह प्रदर्शन ऐप साथ यह हाल ही में बनाया था एडब्ल्यूएस साधनों द्वारा नकल में इनपुट फ़ील्ड।</string>
-  <string name="how_to_connect_2_2">से तुम्हारा क्लाउड फ़ॉर्मेशन आउटपुट अनुभाग कॉपी करें यह इसी नामित मान जैसा परिलक्षित होता है में यह दाएँ अनुभाग प्रपत्र (आइडेंटिटीपूलिड आदि)। सीखें अधिक।</string>
+  <string name="how_to_connect_2_2">से तुम्हारा क्लाउड फ़ॉर्मेशन आउटपुट अनुभाग कॉपी करें यह इसी नामित मान जैसा परिलक्षित होता है में यह दाएँ अनुभाग प्रपत्र (आइडेंटिटीपूलिड आदि)। **सीखें अधिक**।</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">आइडेंटिटी पूल एलडी</string>
   <string name="user_pool_client_id">पूल क्लाइंट आईडी का उपयोग करें</string>
   <string name="user_pool_ld">यूज़र पूल एलडी</string>
-  <string name="by_connecting_i_agree_to_amazon">द्वारा जोड़ने मैं सहमत हैं को Amazon स्थान की\ nशर्तें &amp; शर्तेँ</string>
+  <string name="by_connecting_i_agree_to_amazon">द्वारा जोड़ने मैं सहमत हैं को Amazon स्थान की\n**शर्तें &amp; शर्तें**</string>
   <string name="terms_condition">शर्तें &amp; शर्तेँ</string>
   <string name="help">मदद</string>
   <string name="click_here">क्लिक करें इधर</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">आप हैं जुड़े हुए</string>
   <string name="label_connected_description">कनेक्ट करें तुम्हारा एडब्ल्यूएस लेखा को सक्षम जियोफेंस और ट्रैकर्स। यह होगा सुनिश्चित तुम्हारा नज़र रखना और जियोफेंसिंग डेटा है मात्र संग्रहित में तुम्हारा खाता। के बाद आप लॉग इन करें में, सभी विशेषताएं का यह डेमो ऐप होगा दौड़ना इस्तेमाल करते हुए साधनों आप तैनात में तुम्हारा एडब्ल्यूएस खाता। लॉग इन करें बाहर अगर आप इच्छा को जारी रखें दौड़ना यह डेमो ऐप इस्तेमाल करते हुए साधनों में एडब्ल्यूएस प्रदर्शन ऐप खाता।</string>
   <string name="label_how_to_remove">कैसे को निकालें:</string>
-  <string name="label_connected_title_1">क्लिक करें इधर को हटाना एक क्लाउड फ़ॉर्मेशन टेम्पलेट</string>
+  <string name="label_connected_title_1">**क्लिक करें यहाँ** को हटाना एक क्लाउड फ़ॉर्मेशन टेम्पलेट</string>
   <string name="label_connected_title_2">यह होगा सुरक्षित रूप से बनाना सभी आवश्यक है संसाधन।</string>
   <string name="label_connected_title_3">कनेक्ट करें यह Amazon लोकेशन ऐप साथ यह बनाया था साधनों</string>
   <string name="label_connected_title_4">कृपया दर्ज करें यह निम्नलिखित आवश्यक है क्षेत्र इसमें यह लोकेशन।</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">वेलकम to\nAmazon लोकेशन डेमो</string>
   <string name="label_continue">जारी रखें</string>
   <string name="label_right_aws">© 2023, Amazon वेब सेवाएँ, निगमित या इसके सहयोगी कंपनियों। सभी अधिकार आरक्षित।</string>
-  <string name="label_terms_desc">द्वारा डाउनलोड कर रहा है, स्थापित कर रहा है, या इस्तेमाल करते हुए यह Amazon लोकेशन डेमो ऐप, आप सहमत हैं को यह ऐप्लिकेशन\'s शर्तें &amp; शर्तेँ के लिए उपयोग करें।</string>
-  <string name="label_terms_desc_terms_page">द्वारा डाउनलोड कर रहा है, स्थापित कर रहा है, या इस्तेमाल करते हुए यह Amazon लोकेशन डेमो ऐप, आप सहमत हैं को यह ऐप्लिकेशन\'s शर्तें &amp; शर्तेँ के लिए उपयोग करें।</string>
+  <string name="label_terms_desc">द्वारा डाउनलोड कर रहा है, स्थापित कर रहा है, या इस्तेमाल करते हुए यह Amazon लोकेशन डेमो ऐप, आप सहमत हैं को यह ऐप्लिकेशन\'s **शर्तें &amp; शर्तें** के लिए उपयोग करें।</string>
+  <string name="label_terms_desc_terms_page">द्वारा डाउनलोड कर रहा है, स्थापित कर रहा है, या इस्तेमाल करते हुए यह Amazon लोकेशन डेमो ऐप, आप सहमत हैं को यह ऐप्लिकेशन\'s **शर्तें &amp; शर्तें** के लिए उपयोग करें।</string>
   <string name="text_terms_desc_coloured_1">शर्तें &amp; शर्तेँ</string>
   <string name="text_terms_desc_coloured_2">एडब्ल्यूएस स्वीकार्य उपयोग करें पॉलिसी</string>
   <string name="text_terms_desc_coloured_3">एडब्ल्यूएस प्राइवेसी नोटिस</string>

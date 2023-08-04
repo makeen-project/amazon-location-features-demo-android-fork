@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">接続 きみの AWS アカウント に 有効にします ジオフェンス そして トラッカー。 これ だろう 確保 きみの 追跡 そして ジオフェンシング データ です のみ 保存された に きみの アカウント。 後 あなた ログ で、 すべて 特徴 の その デモ アプリ だろう 走る を使用します リソース あなた 配備する に きみの AWS アカウント。 ログ アウト もし あなた 願い に 続行します 実行しています その デモ アプリ を使用します リソース に AWS デモ アプリ アカウント。</string>
   <string name="connect">接続</string>
   <string name="how_to_connect">どうやって に 接続 に</string>
-  <string name="how_to_connect_1_1">クリック ここに に 走る ある クラウド形成 テンプレート に 安全に 作成 必須 資源。</string>
+  <string name="how_to_connect_1_1">**クリック ここ** に 走る ある クラウド形成 テンプレート に 安全に 作成 必須 資源。</string>
   <string name="how_to_connect_1_2">それ だろう 安全に 作成 すべて 必須 資源。</string>
   <string name="how_to_connect_1_3">あなた できます 削除する これら リソース を通して その スタック 削除 オプション または \'管理 リソース \' ページ数 に その メニュー オン その 左。</string>
   <string name="how_to_connect_2_1">接続 その デモ アプリ と その 最近です 作成した AWS リソース によって コピー に 入力 畑。</string>
-  <string name="how_to_connect_2_2">から きみの クラウド形成 出力 セクション コピーします その 対応する 名前付き 値 なので 反映 に その 右 セクション フォーム (ID プール ID など)。 学ぶ もっと。</string>
+  <string name="how_to_connect_2_2">から きみの クラウド形成 出力 セクション コピーします その 対応する 名前付き 値 なので 反映 に その 右 セクション フォーム (ID プール ID など)。 **学習 もっと**。</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">アイデンティティプール LD</string>
   <string name="user_pool_client_id">ユーザープールクライアント ID</string>
   <string name="user_pool_ld">ユーザープール LD</string>
-  <string name="by_connecting_i_agree_to_amazon">によって 接続する 私 同意する に Amazon ロケーションの\ n規約 &amp; 条件</string>
+  <string name="by_connecting_i_agree_to_amazon">によって 接続する 私 同意する に Amazon 場所の\n**規約 &amp; 条件**</string>
   <string name="terms_condition">規約 &amp; 条件</string>
   <string name="help">ヘルプ</string>
   <string name="click_here">クリック ここに</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">あなた です 接続されています</string>
   <string name="label_connected_description">接続 きみの AWS アカウント に 有効にします ジオフェンス そして トラッカー。 これ だろう 確保 きみの 追跡 そして ジオフェンシング データ です のみ 保存された に きみの アカウント。 後 あなた ログ で、 すべて 特徴 の その デモ アプリ だろう 走る を使用します リソース あなた 配備する に きみの AWS アカウント。 ログ アウト もし あなた 願い に 続行します 実行しています その デモ アプリ を使用します リソース に AWS デモ アプリ アカウント。</string>
   <string name="label_how_to_remove">どうやって に 削除:</string>
-  <string name="label_connected_title_1">クリック ここに に 削除する ある クラウド形成 テンプレート</string>
+  <string name="label_connected_title_1">**クリック ここ** に 削除する ある クラウド形成 テンプレート</string>
   <string name="label_connected_title_2">それ だろう 安全に 作成 すべて 必須 資源。</string>
   <string name="label_connected_title_3">接続 その Amazon ロケーション アプリ と その 作成した リソース</string>
   <string name="label_connected_title_4">お願いします 入る その 以下 必須 畑 に その ロケーション。</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">ウェルカム to\nAmazon ロケーション デモ</string>
   <string name="label_continue">続行</string>
   <string name="label_right_aws">© 2023, Amazon ウェブ サービス、 インコーポレイテッド または その アフィリエイト。 [すべて] 権利 予約済み。</string>
-  <string name="label_terms_desc">によって ダウンロード中、 インストール、 または を使用します その Amazon ロケーション デモ アプリ、 あなた 同意する に その アプリ 規約 &amp; 条件 にとって 使用。</string>
-  <string name="label_terms_desc_terms_page">によって ダウンロード中、 インストール、 または を使用します その Amazon ロケーション デモ アプリ、 あなた 同意する に その アプリ 規約 &amp; 条件 にとって 使用。</string>
+  <string name="label_terms_desc">によって ダウンロード中、 インストール、 または を使用します その Amazon ロケーション デモ アプリ、 あなた 同意する に その アプリ **規約 &amp; 条件** にとって 使用。</string>
+  <string name="label_terms_desc_terms_page">によって ダウンロード中、 インストール、 または を使用します その Amazon ロケーション デモ アプリ、 あなた 同意する に その アプリ **規約 &amp; 条件** にとって 使用。</string>
   <string name="text_terms_desc_coloured_1">規約 &amp; 条件</string>
   <string name="text_terms_desc_coloured_2">AWS 許容範囲内 使用 ポリシー</string>
   <string name="text_terms_desc_coloured_3">AWS プライバシー 通知</string>

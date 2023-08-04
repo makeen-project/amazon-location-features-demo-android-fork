@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">Connecter votre AWS compte pour activer Géofences et Traceurs. Ce volonté veiller à ce que votre suivi et géofencing données est seulement conservé dans votre compte. Après vous bûche dans, tous fonctionnalités de le Démo Appli volonté courir en utilisant ressources vous déployer dans votre AWS compte. Journal en dehors si vous souhait pour continuer course le Démo Appli en utilisant ressources dans d\'AWS démo appli compte.</string>
   <string name="connect">Connecter</string>
   <string name="how_to_connect">Comment pour relier pour</string>
-  <string name="how_to_connect_1_1">Cliquez ici pour courir un Formation dans le cloud modèle pour en toute sécurité créer requis ressources.</string>
+  <string name="how_to_connect_1_1">**Cliquez ici** pour courir un Formation dans le cloud modèle pour en toute sécurité créer requis ressources.</string>
   <string name="how_to_connect_1_2">C\'est volonté en toute sécurité créer tous requis ressources.</string>
   <string name="how_to_connect_1_3">Vous peut supprimer celles-ci ressources à travers le empiler suppression option ou « Gérer ressources » pages dans le menu sur le gauche.</string>
   <string name="how_to_connect_2_1">Connecter le démo appli avec le récemment créé AWS ressources par copier dans entrée champs.</string>
-  <string name="how_to_connect_2_2">À partir de votre Formation dans le cloud sortie section copie le correspondant nommé valeurs comme reflété dans le droit section formulaire (Identité : Oolid etc.). Apprenez plus.</string>
+  <string name="how_to_connect_2_2">À partir de votre Formation dans le cloud sortie section copie le correspondant nommé valeurs comme reflété dans le droit section formulaire (Identité : Oolid etc.). **En savoir plus Plus**.</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">Pool d\'identités LD</string>
   <string name="user_pool_client_id">ID client du pool d\'utilisateurs</string>
   <string name="user_pool_ld">Pool d\'utilisateurs LD</string>
-  <string name="by_connecting_i_agree_to_amazon">Par reliant I d\'accord pour Amazon \ nTermes de l\'emplacement et Conditions</string>
+  <string name="by_connecting_i_agree_to_amazon">Par reliant I d\'accord pour Amazon \n**Termes de l\'emplacement et Conditions**</string>
   <string name="terms_condition">Termes et Conditions</string>
   <string name="help">Aide</string>
   <string name="click_here">Cliquez ici</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">Vous sont connecté</string>
   <string name="label_connected_description">Connecter votre AWS compte pour activer Géofences et Traceurs. Ce volonté veiller à ce que votre suivi et géofencing données est seulement conservé dans votre compte. Après vous bûche dans, tous fonctionnalités de le Démo Appli volonté courir en utilisant ressources vous déployer dans votre AWS compte. Journal en dehors si vous souhait pour continuer course le Démo Appli en utilisant ressources dans d\'AWS démo appli compte.</string>
   <string name="label_how_to_remove">Comment pour supprimer :</string>
-  <string name="label_connected_title_1">Cliquez ici pour supprimer un Formation dans le cloud modèle</string>
+  <string name="label_connected_title_1">**Cliquez ici** pour supprimer un Formation dans le cloud modèle</string>
   <string name="label_connected_title_2">C\'est volonté en toute sécurité créer tous requis ressources.</string>
   <string name="label_connected_title_3">Connecter le Amazon Emplacement appli avec le créé ressources</string>
   <string name="label_connected_title_4">Veuillez entrer le suivant requis champs dans le Endroit.</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">Bienvenue to\nAmazon Emplacement Démo</string>
   <string name="label_continue">Poursuivre</string>
   <string name="label_right_aws">© 2023, Amazon Web Des services, Inc. ou ses affiliés. Tous droits réservé.</string>
-  <string name="label_terms_desc">Par téléchargement, installation, ou en utilisant le Amazon Emplacement Démo Application, vous d\'accord pour le Applis Termes et Conditions pour utiliser.</string>
-  <string name="label_terms_desc_terms_page">Par téléchargement, installation, ou en utilisant le Amazon Emplacement Démo Application, vous d\'accord pour le Applis Termes et Conditions pour utiliser.</string>
+  <string name="label_terms_desc">Par téléchargement, installation, ou en utilisant le Amazon Emplacement Démo Application, vous d\'accord pour le Applis **Termes et Conditions** pour utiliser.</string>
+  <string name="label_terms_desc_terms_page">Par téléchargement, installation, ou en utilisant le Amazon Emplacement Démo Application, vous d\'accord pour le Applis **Termes et Conditions** pour utiliser.</string>
   <string name="text_terms_desc_coloured_1">Termes et Conditions</string>
   <string name="text_terms_desc_coloured_2">AWS Acceptable Utiliser Politique</string>
   <string name="text_terms_desc_coloured_3">AWS Confidentialité Notice</string>

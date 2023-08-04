@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">Connetti tuo AWS conto a abilitare Geofence e Localizzatori. Questo volontà garantire tuo tracciamento e geofencing dato è solo immagazzinato nel tuo conto. Dopo voi tronco nel, tutti caratteristiche di lo Dimostrazione App volontà correre utilizzando risorse voi dispiegare nel tuo AWS conto. Registro fuori se voi desiderio a continua correre lo Dimostrazione App utilizzando risorse nel di AWS manifestazione app conto.</string>
   <string name="connect">Connetti</string>
   <string name="how_to_connect">Come a connettersi a</string>
-  <string name="how_to_connect_1_1">Fare clic qui a correre un Formazione sul cloud modello a fermamente creare necessario risorse.</string>
+  <string name="how_to_connect_1_1">**Fare clic qui** a correre un Formazione sul cloud modello a fermamente creare necessario risorse.</string>
   <string name="how_to_connect_1_2">È volontà fermamente creare tutti necessario risorse.</string>
   <string name="how_to_connect_1_3">Tu lattina eliminare questi risorse attraverso lo pila cancellazione opzione o \'Gestisci risorse» pagine nel lo menù sul lo sinistra.</string>
   <string name="how_to_connect_2_1">Connetti lo manifestazione app con lo recentemente creato AWS risorse da copiando nel ingresso campi.</string>
-  <string name="how_to_connect_2_2">Da tuo Formazione sul cloud produzione sezione copia lo corrispondenti denominato valori come riflessa nel lo destra sezione modulo (ID del pool di identità) ecc.). Impara altro.</string>
+  <string name="how_to_connect_2_2">Da tuo Formazione sul cloud produzione sezione copia lo corrispondenti denominato valori come riflessa nel lo destra sezione modulo (ID del pool di identità) ecc.). **Impara altro**.</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">Pool di identità LD</string>
   <string name="user_pool_client_id">UserPool Client ID</string>
   <string name="user_pool_ld">UserPool LD</string>
-  <string name="by_connecting_i_agree_to_amazon">Di collegando IO concordare a Amazon \ nTermini della località &amp; Condizioni</string>
+  <string name="by_connecting_i_agree_to_amazon">Di collegando IO concordare a Amazon \n**Termini della sede &amp; Condizioni**</string>
   <string name="terms_condition">Termini &amp; Condizioni</string>
   <string name="help">Aiuto</string>
   <string name="click_here">Fare clic qui</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">Tu siamo connesso</string>
   <string name="label_connected_description">Connetti tuo AWS conto a abilitare Geofence e Localizzatori. Questo volontà garantire tuo tracciamento e geofencing dato è solo immagazzinato nel tuo conto. Dopo voi tronco nel, tutti caratteristiche di lo Dimostrazione App volontà correre utilizzando risorse voi dispiegare nel tuo AWS conto. Registro fuori se voi desiderio a continua correre lo Dimostrazione App utilizzando risorse nel di AWS manifestazione app conto.</string>
   <string name="label_how_to_remove">Come a rimuovere:</string>
-  <string name="label_connected_title_1">Fare clic qui a rimuovere un Formazione sul cloud modello</string>
+  <string name="label_connected_title_1">**Fare clic qui** a rimuovere un Formazione sul cloud modello</string>
   <string name="label_connected_title_2">È volontà fermamente creare tutti necessario risorse.</string>
   <string name="label_connected_title_3">Connetti lo Amazon Posizione app con lo creato risorse</string>
   <string name="label_connected_title_4">Per favore inserire lo seguenti necessario campi dentro lo Ubicazione.</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">Benvenuto to\nAmazon Posizione Dimostrazione</string>
   <string name="label_continue">Continua</string>
   <string name="label_right_aws">© 2023, Amazon Web Servizi, Inc. o la sua affiliati. Tutti diritti riservato.</string>
-  <string name="label_terms_desc">Di scaricamento, installazione, o utilizzando lo Amazon Posizione Dimostrazione App, voi concordare a lo App Termini &amp; Condizioni per uso.</string>
-  <string name="label_terms_desc_terms_page">Di scaricamento, installazione, o utilizzando lo Amazon Posizione Dimostrazione App, voi concordare a lo App Termini &amp; Condizioni per uso.</string>
+  <string name="label_terms_desc">Di scaricamento, installazione, o utilizzando lo Amazon Posizione Dimostrazione App, voi concordare a lo App **Termini &amp; Condizioni** per uso.</string>
+  <string name="label_terms_desc_terms_page">Di scaricamento, installazione, o utilizzando lo Amazon Posizione Dimostrazione App, voi concordare a lo App **Termini &amp; Condizioni** per uso.</string>
   <string name="text_terms_desc_coloured_1">Termini &amp; Condizioni</string>
   <string name="text_terms_desc_coloured_2">AWS Accettabile Usa Politica</string>
   <string name="text_terms_desc_coloured_3">AWS Privacy Avviso</string>

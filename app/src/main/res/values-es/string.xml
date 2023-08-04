@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">Conéctate vuestro AWS cuenta a habilitar Geofences y Rastreadores. Esto voluntad garantizar vuestro rastreo y geofencing dato es solamente almacenada en vuestro cuenta. Después tú registro en, todo características de la Demo aplicación voluntad correr usando recursos tú desplegar en vuestro AWS cuenta. Registro fuera si tú deseo a continuar corriendo la Demo aplicación usando recursos en de AWS muestra app cuenta.</string>
   <string name="connect">Conéctate</string>
   <string name="how_to_connect">Cómo a conectar a</string>
-  <string name="how_to_connect_1_1">Haga clic aquí a correr un Formación en la nube modelo a de forma segura crear requerido recursos.</string>
+  <string name="how_to_connect_1_1">**Haga clic aquí** a correr un Formación en la nube modelo a de forma segura crear requerido recursos.</string>
   <string name="how_to_connect_1_2">Es voluntad de forma segura crear todo requerido recursos.</string>
   <string name="how_to_connect_1_3">Tú poder eliminar estos recursos por la pila eliminación opción o «Gestionar recursos\' páginas en la menú en la izquierda.</string>
   <string name="how_to_connect_2_1">Conéctate la muestra app con la recientemente creado AWS recursos por copiado en entrada campos.</string>
-  <string name="how_to_connect_2_2">De vuestro Formación en la nube salida sección copiar la correspondiente llamado valora tan reflejada en la derecha sección formulario (ID de grupo de identidad) etc.). Aprenda más.</string>
+  <string name="how_to_connect_2_2">De vuestro Formación en la nube salida sección copiar la correspondiente llamado valora tan reflejada en la derecha sección formulario (ID de grupo de identidad) etc.). **Aprenda más**.</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">Identity Poolld</string>
   <string name="user_pool_client_id">ID de cliente del grupo de usuarios</string>
   <string name="user_pool_ld">Grupo de usuarios LD</string>
-  <string name="by_connecting_i_agree_to_amazon">Por conectando YO acordar a Amazon \ nTérminos de la ubicación y Condiciones</string>
+  <string name="by_connecting_i_agree_to_amazon">Por conectando YO acordar a Amazon \n**Términos de la ubicación y Condiciones**</string>
   <string name="terms_condition">Términos y Condiciones</string>
   <string name="help">Ayuda</string>
   <string name="click_here">Haga clic aquí</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">Tú somos conectada</string>
   <string name="label_connected_description">Conéctate vuestro AWS cuenta a habilitar Geofences y Rastreadores. Esto voluntad garantizar vuestro rastreo y geofencing dato es solamente almacenada en vuestro cuenta. Después tú registro en, todo características de la Demo aplicación voluntad correr usando recursos tú desplegar en vuestro AWS cuenta. Registro fuera si tú deseo a continuar corriendo la Demo aplicación usando recursos en de AWS muestra app cuenta.</string>
   <string name="label_how_to_remove">Cómo a eliminar:</string>
-  <string name="label_connected_title_1">Haga clic aquí a retirar un Formación en la nube modelo</string>
+  <string name="label_connected_title_1">**Haga clic aquí** a retirar un Formación en la nube modelo</string>
   <string name="label_connected_title_2">Es voluntad de forma segura crear todo requerido recursos.</string>
   <string name="label_connected_title_3">Conéctate la Amazon Ubicación app con la creado recursos</string>
   <string name="label_connected_title_4">Por favor entrar la siguiendo requerido campos en la Ubicación.</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">Bienvenido to\nAmazon Ubicación Demo</string>
   <string name="label_continue">Continuar</string>
   <string name="label_right_aws">© 2023, Amazon Web Servicios, Cía. o sus afiliados. Todos derechos reservado.</string>
-  <string name="label_terms_desc">Por descargando, instalar, o usando la Amazon Ubicación Demo Aplicación, tú acordar a la Apps\'s Términos y Condiciones por usar.</string>
-  <string name="label_terms_desc_terms_page">Por descargando, instalar, o usando la Amazon Ubicación Demo Aplicación, tú acordar a la Apps\'s Términos y Condiciones por usar.</string>
+  <string name="label_terms_desc">Por descargando, instalar, o usando la Amazon Ubicación Demo Aplicación, tú acordar a la Apps\'s **Términos y Condiciones** por usar.</string>
+  <string name="label_terms_desc_terms_page">Por descargando, instalar, o usando la Amazon Ubicación Demo Aplicación, tú acordar a la Apps\'s **Términos y Condiciones** por usar.</string>
   <string name="text_terms_desc_coloured_1">Términos y Condiciones</string>
   <string name="text_terms_desc_coloured_2">AWS Aceptable Uso Política</string>
   <string name="text_terms_desc_coloured_3">AWS Privacidad Aviso</string>

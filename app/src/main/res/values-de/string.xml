@@ -27,11 +27,11 @@
   <string name="geofencing_and_tracking_features">Verbinden dein AWS Konto zu ermöglichen Geofences und Tracker. Das Testament sicherstellen dein Verfolgung und Geofencing Daten ist nur gelagert in dein Konto. Nach Sie Log in, alles Eigenschaften von die Demoversion App Testament Lauf unter Verwendung von Ressourcen Sie bereitstellen in dein AWS Konto. Loggen aus wenn Sie wünschen zu fortsetzen laufend die Demoversion App unter Verwendung von Ressourcen in AWSs Demo App Konto.</string>
   <string name="connect">Verbinden</string>
   <string name="how_to_connect">Wie zu verbinden zu</string>
-  <string name="how_to_connect_1_1">Klick hier zu Lauf ein Wolkenbildung Muster zu sicher erstellen erforderlich Ressourcen.</string>
+  <string name="how_to_connect_1_1">**Klicken hier** zu Lauf ein Wolkenbildung Muster zu sicher erstellen erforderlich Ressourcen.</string>
   <string name="how_to_connect_1_2">Es Testament sicher erstellen alles erforderlich Ressourcen.</string>
   <string name="how_to_connect_1_3">Du Dose löschen diese Ressourcen durch die stapeln Löschung Option oder \'Verwalten Ressourcen“ Seiten in die Speisekarte auf die links.</string>
   <string name="how_to_connect_2_1">Verbinden die Demo App mit die vor kurzem erstellt AWS Ressourcen von Kopieren in Eingang Felder.</string>
-  <string name="how_to_connect_2_2">Von dein Wolkenbildung Ausgang Abschnitt Kopie die entsprechende genannt Werte als reflektiert in die Recht Abschnitt bilden (Identity) Oolid usw.). Lernen mehr.</string>
+  <string name="how_to_connect_2_2">Von dein Wolkenbildung Ausgang Abschnitt Kopie die entsprechende genannt Werte als reflektiert in die Recht Abschnitt bilden (Identity) Oolid usw.). **Lernen mehr**.</string>
   <string name="learn_more">
     <b>Learn more</b>
   </string>
@@ -43,7 +43,7 @@
   <string name="identityPoolId">Identitätspool LD</string>
   <string name="user_pool_client_id">Benutzerpool-Client-ID</string>
   <string name="user_pool_ld">Benutzerpool LD</string>
-  <string name="by_connecting_i_agree_to_amazon">Von verbindend ICH zustimmen zu Amazon Standort\ nNutzungsbedingungen &amp; Bedingungen</string>
+  <string name="by_connecting_i_agree_to_amazon">Von verbindend ICH zustimmen zu Amazon Standort\n**Nutzungsbedingungen &amp; Bedingungen**</string>
   <string name="terms_condition">Bedingungen &amp; Bedingungen</string>
   <string name="help">Hilfe</string>
   <string name="click_here">Klick hier</string>
@@ -128,7 +128,7 @@
   <string name="label_connected">Du sind verbunden</string>
   <string name="label_connected_description">Verbinden dein AWS Konto zu ermöglichen Geofences und Tracker. Das Testament sicherstellen dein Verfolgung und Geofencing Daten ist nur gelagert in dein Konto. Nach Sie Log in, alles Eigenschaften von die Demoversion App Testament Lauf unter Verwendung von Ressourcen Sie bereitstellen in dein AWS Konto. Loggen aus wenn Sie wünschen zu fortsetzen laufend die Demoversion App unter Verwendung von Ressourcen in AWSs Demo App Konto.</string>
   <string name="label_how_to_remove">Wie zu entfernen:</string>
-  <string name="label_connected_title_1">Klick hier zu entfernen ein Wolkenbildung Muster</string>
+  <string name="label_connected_title_1">**Klicken hier** zu entfernen ein Wolkenbildung Muster</string>
   <string name="label_connected_title_2">Es Testament sicher erstellen alles erforderlich Ressourcen.</string>
   <string name="label_connected_title_3">Verbinden die Amazon Standort App mit die erstellt Ressourcen</string>
   <string name="label_connected_title_4">Bitte eintragen die folgend erforderlich Felder in die Standort.</string>
@@ -180,8 +180,8 @@
   <string name="label_welcome_amazon">Willkommen to\nAmazon Standort Demoversion</string>
   <string name="label_continue">Weiter</string>
   <string name="label_right_aws">© 2023, Amazon Web Dienstleistungen, Inc. oder seine verbundene Unternehmen. Alles Rechte reserviert.</string>
-  <string name="label_terms_desc">Von wird heruntergeladen, installieren, oder unter Verwendung von die Amazon Standort Demoversion App, Sie zustimmen zu die Apps\'s Bedingungen &amp; Bedingungen zum verwenden.</string>
-  <string name="label_terms_desc_terms_page">Von wird heruntergeladen, installieren, oder unter Verwendung von die Amazon Standort Demoversion App, Sie zustimmen zu die Apps\'s Bedingungen &amp; Bedingungen zum verwenden.</string>
+  <string name="label_terms_desc">Von wird heruntergeladen, installieren, oder unter Verwendung von die Amazon Standort Demoversion App, Sie zustimmen zu die Apps\'s **Bedingungen &amp; Bedingungen** zum verwenden.</string>
+  <string name="label_terms_desc_terms_page">Von wird heruntergeladen, installieren, oder unter Verwendung von die Amazon Standort Demoversion App, Sie zustimmen zu die Apps\'s **Bedingungen &amp; Bedingungen** zum verwenden.</string>
   <string name="text_terms_desc_coloured_1">Bedingungen &amp; Bedingungen</string>
   <string name="text_terms_desc_coloured_2">AWS Annehmbar Benutzen Politik</string>
   <string name="text_terms_desc_coloured_3">AWS Datenschutz Hinweis</string>
