@@ -55,6 +55,7 @@ const val ENTER = "ENTER"
 const val CHANNEL_ID = "my_channel_simulation"
 const val CHANNEL_NAME = "simulation Notification Channel"
 const val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
+const val STRING_REPLACE_KEY = "**"
 
 const val KEY_ID_TOKEN = "key_id_token"
 const val KEY_ACCESS_TOKEN = "key_access_token"

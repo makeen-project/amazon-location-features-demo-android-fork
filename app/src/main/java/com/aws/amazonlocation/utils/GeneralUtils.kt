@@ -296,12 +296,13 @@ fun getRegion(region: String?, subRegion: String?, country: String?): String {
 
 fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
     val context = termsOfUse.context
-    val spannableString = SpannableString(termsOfUse.text.toString())
+    val spannableString = SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = termsOfUse.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.text_terms_desc_coloured_1).lowercase(Locale.ROOT)
+            text.lowercase()
         )
-    val clickHere = condition.matcher(termsOfUse.text.toString().lowercase(Locale.ROOT))
+    val clickHere = condition.matcher(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (clickHere.find()) {
         spannableString.setSpan(
             object : ClickableSpan() {
@@ -350,13 +351,14 @@ fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
 
 fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString())
+    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.terms_condition).lowercase(Locale.ROOT)
+            text.lowercase()
         )
     val termsAndCondition =
-        condition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
+        condition.matcher(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (termsAndCondition.find()) {
         spannableString.setSpan(
             FontSpan(
@@ -412,12 +414,13 @@ fun changeClickHereColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString())
+    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.click_here).lowercase(Locale.ROOT)
+            text.lowercase()
         )
-    val clickHere = condition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
+    val clickHere = condition.matcher(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (clickHere.find()) {
         spannableString.setSpan(
             object : ClickableSpan() {
@@ -465,12 +468,13 @@ fun changeLearnMoreColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = learnMore.context
-    val spannableString = SpannableString(learnMore.text.toString())
+    val spannableString = SpannableString(learnMore.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = learnMore.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.learn_more).lowercase(Locale.ROOT)
+            text.lowercase()
         )
-    val clickHere = condition.matcher(learnMore.text.toString().lowercase(Locale.ROOT))
+    val clickHere = condition.matcher(learnMore.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (clickHere.find()) {
         spannableString.setSpan(
             object : ClickableSpan() {

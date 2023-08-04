@@ -29,11 +29,11 @@
     <string name="geofencing_and_tracking_features">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="connect">Connect</string>
     <string name="how_to_connect">How to connect to</string>
-    <string name="how_to_connect_1_1">Click here to run a CloudFormation template to securely create required resources.</string>
+    <string name="how_to_connect_1_1">**Click here** to run a CloudFormation template to securely create required resources.</string>
     <string name="how_to_connect_1_2">It will securely create all required resources.</string>
     <string name="how_to_connect_1_3">You can delete these resources through the stack deletion option or ‘Manage resources’ pages in the menu on the left.</string>
     <string name="how_to_connect_2_1">Connect the demo app with the recently created AWS resources by copying in input fields.</string>
-    <string name="how_to_connect_2_2">From your CloudFormation output section copy the corresponding named values as reflected in the right section form (IdentityPoolId etc.). Learn more.</string>
+    <string name="how_to_connect_2_2">From your CloudFormation output section copy the corresponding named values as reflected in the right section form (IdentityPoolId etc.). **Learn more**.</string>
     <string name="learn_more"><b>Learn more</b></string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -43,7 +43,7 @@
     <string name="identityPoolId">IdentityPoolld</string>
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">UserPoolld</string>
-    <string name="by_connecting_i_agree_to_amazon">By connecting I agree to Amazon Location’s\nTerms &amp; Conditions</string>
+    <string name="by_connecting_i_agree_to_amazon">By connecting I agree to Amazon Location’s\n**Terms &amp; Conditions**</string>
     <string name="terms_condition">Terms &amp; Conditions</string>
     <string name="help">Help</string>
     <string name="click_here">Click here</string>
@@ -140,7 +140,7 @@
     <string name="label_connected">You are connected</string>
     <string name="label_connected_description">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="label_how_to_remove">How to remove:</string>
-    <string name="label_connected_title_1">Click here to remove a CloudFormation template</string>
+    <string name="label_connected_title_1">**Click here** to remove a CloudFormation template</string>
     <string name="label_connected_title_2">It will securely create all required resources.</string>
     <string name="label_connected_title_3">Connect the Amazon Location app with the created resources</string>
     <string name="label_connected_title_4">Please enter the following required fields into the Location.</string>
@@ -191,8 +191,8 @@
     <string name="label_welcome_amazon">Welcome to\nAmazon Location Demo</string>
     <string name="label_continue">Continue</string>
     <string name="label_right_aws">© 2023, Amazon Web Services, Inc. or its affiliates. All rights reserved.</string>
-    <string name="label_terms_desc">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s Terms &amp; Conditions for use.</string>
-    <string name="label_terms_desc_terms_page">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s Terms &amp; Conditions for use.</string>
+    <string name="label_terms_desc">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s **Terms &amp; Conditions** for use.</string>
+    <string name="label_terms_desc_terms_page">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s **Terms &amp; Conditions** for use.</string>
     <string name="text_terms_desc_coloured_1">Terms &amp; Conditions</string>
     <string name="text_terms_desc_coloured_2">AWS Acceptable Use Policy</string>
     <string name="text_terms_desc_coloured_3">AWS Privacy Notice</string>
