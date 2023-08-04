@@ -395,12 +395,24 @@ class TrackingUtils(
                     val type = jsonObject.get("trackerEventType").asString
                     val geofenceName = jsonObject.get("geofenceId").asString
                     val subTitle = if (type.equals("ENTER", true)) {
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                            Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
+                            Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.ENTER)
+                        )
+                        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
                         "${mFragmentActivity?.getString(R.string.label_tracker_entered)} $geofenceName"
                     } else {
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                            Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
+                            Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.EXIT)
+                        )
+                        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
                         "${mFragmentActivity?.getString(R.string.label_tracker_exited)} $geofenceName"
                     }
                     runOnUiThread {
-                        activity?.messageDialog(
+                        activity.messageDialog(
                             title = geofenceName,
                             subTitle = subTitle,
                             false,

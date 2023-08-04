@@ -290,12 +290,20 @@ class MainActivity : BaseActivity() {
                         AuthEnum.SIGNED_IN.name
                     )
                     getTokenAndAttachPolicy(it)
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+                    )
+                    analyticsHelper?.recordEvent(EventType.SIGN_IN_SUCCESSFUL, propertiesAws)
                 }.onError { it ->
                     setBottomBar()
                     hideProgress()
                     it.messageResource?.let {
                         showError(it.toString())
                     }
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+                    )
+                    analyticsHelper?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
                 }
             }
         }
@@ -661,6 +669,10 @@ class MainActivity : BaseActivity() {
         if (requestCode == AuthClient.CUSTOM_TABS_ACTIVITY_CODE &&
             resultCode == RESULT_CANCELED
         ) {
+            val propertiesAws = listOf(
+                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+            )
+            analyticsHelper?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
             hideProgress()
         }
     }
@@ -743,6 +755,10 @@ class MainActivity : BaseActivity() {
         SignInConnectInterface {
         override fun signIn(dialog: Dialog?) {
             mBottomSheetDialog = dialog
+            val propertiesAws = listOf(
+                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+            )
+            analyticsHelper?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
             mSignInViewModel.signInWithAmazon(this@MainActivity)
         }
 
@@ -755,6 +771,10 @@ class MainActivity : BaseActivity() {
     private val mSignInRequiredInterface = object : SignInRequiredInterface {
         override fun signInClick(dialog: Dialog?) {
             mBottomSheetDialog = dialog
+            val propertiesAws = listOf(
+                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+            )
+            analyticsHelper?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
             mSignInViewModel.signInWithAmazon(this@MainActivity)
         }
 

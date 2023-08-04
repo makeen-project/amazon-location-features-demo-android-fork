@@ -216,6 +216,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             mSignInViewModel.mSignOutResponse.collect { handleResult ->
                 handleResult.onLoading {
                 }.onSuccess {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
                     mBaseActivity?.clearUserInFo()
                     mBaseActivity?.mPreferenceManager?.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
@@ -228,6 +232,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
                     activity?.restartApplication()
                 }.onError { it ->
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_FAILED, propertiesAws)
                     it.messageResource?.let {
                         showError(it.toString())
                     }

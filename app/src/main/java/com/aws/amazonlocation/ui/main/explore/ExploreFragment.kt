@@ -385,12 +385,20 @@ class ExploreFragment :
                             rvGeofence.hide()
                             clSearchLoaderGeofenceList.root.show()
                         }.onSuccess {
+                            val propertiesAws = listOf(
+                                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                            )
+                            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GET_GEOFENCES_LIST_SUCCESSFUL, propertiesAws)
                             clSearchLoaderGeofenceList.root.hide()
                             rvGeofence.show()
                             lifecycleScope.launch(Dispatchers.Main) {
                                 mBaseActivity?.mGeofenceUtils?.manageGeofenceListUI(it)
                             }
                         }.onError {
+                            val propertiesAws = listOf(
+                                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                            )
+                            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GET_GEOFENCES_LIST_FAILED, propertiesAws)
                             clSearchLoaderGeofenceList.root.hide()
                             rvGeofence.hide()
                         }
@@ -480,6 +488,10 @@ class ExploreFragment :
             mGeofenceViewModel.mAddGeofence.collect { handleResult ->
                 handleResult.onLoading {
                 }.onSuccess {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_CREATION_SUCCESSFUL, propertiesAws)
                     lifecycleScope.launch(Dispatchers.Main) {
                         mBaseActivity?.mGeofenceUtils?.mangeAddGeofenceUI(requireActivity())
                         mBaseActivity?.bottomNavigationVisibility(true)
@@ -487,6 +499,10 @@ class ExploreFragment :
                         activity?.hideKeyboard()
                     }
                 }.onError {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_CREATION_FAILED, propertiesAws)
                     if (it.messageResource.toString()
                         .contains(resources.getString(R.string.unable_to_execute_request))
                     ) {
@@ -500,6 +516,10 @@ class ExploreFragment :
             mGeofenceViewModel.mDeleteGeofence.collect { handleResult ->
                 handleResult.onLoading {
                 }.onSuccess {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_DELETION_SUCCESSFUL, propertiesAws)
                     lifecycleScope.launch(Dispatchers.Main) {
                         mGeofenceInterface.hideShowBottomNavigationBar(
                             false,
@@ -513,6 +533,10 @@ class ExploreFragment :
                         }
                     }
                 }.onError {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_DELETION_FAILED, propertiesAws)
                 }
             }
         }
@@ -1027,6 +1051,10 @@ class ExploreFragment :
         lifecycleScope.launchWhenStarted {
             mSignInViewModel.mSignOutResponse.collect { handleResult ->
                 handleResult.onLoading {}.onSuccess {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
                     mBaseActivity?.clearUserInFo()
                     showError(it.message.toString())
                     mBaseActivity?.mPreferenceManager?.setValue(
@@ -1039,6 +1067,10 @@ class ExploreFragment :
                     delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
                     activity?.restartApplication()
                 }.onError { it ->
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_FAILED, propertiesAws)
                     it.messageResource?.let {
                         showError(it.toString())
                     }

@@ -336,6 +336,8 @@ object AnalyticsAttribute {
     const val ACTION = "action"
     const val AVOID_FERRIES = "AvoidFerries"
     const val AVOID_TOLLS = "AvoidTolls"
+    const val GEOFENCE_ID = "geofenceId"
+    const val EVENT_TYPE = "eventType"
 }
 object AnalyticsAttributeValue {
     const val EXPLORER = "Explorer"
@@ -361,4 +363,6 @@ object AnalyticsAttributeValue {
     const val ROUTE_MODULE = "ROUTE_MODULE"
     const val TO_SEARCH_AUTOCOMPLETE = "To search autocomplete"
     const val FROM_SEARCH_AUTOCOMPLETE = "From search autocomplete"
+    const val ENTER = "Enter"
+    const val EXIT = "Exit"
 }
