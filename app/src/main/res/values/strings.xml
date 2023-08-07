@@ -270,6 +270,7 @@
     <string name="label_entered">Entered</string>
     <string name="label_exited">Exited</string>
     <string name="label_geofence">geofence</string>
+    <string name="simulation_notification_permission">For smooth simulation experience please allow notification permission from settings.</string>
     <string name="label_language">Language</string>
     <string name="label_tracker_entered">Tracker entered</string>
     <string name="label_tracker_exited">Tracker exited</string>

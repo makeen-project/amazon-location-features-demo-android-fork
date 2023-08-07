@@ -59,10 +59,11 @@
                         android:layout_height="wrap_content"
                         android:text="@string/label_simulation"
                         android:textAlignment="center"
+                        android:layout_marginTop="@dimen/dp_290"
                         android:textColor="@color/color_hint_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/iv_simulation_bg" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_welcome_app"
@@ -239,7 +240,7 @@
                 android:layout_height="@dimen/dp_48"
                 android:layout_marginHorizontal="@dimen/dp_24"
                 android:layout_marginTop="@dimen/dp_8"
-                android:layout_marginBottom="@dimen/dp_14"
+                android:layout_marginBottom="@dimen/dp_4"
                 android:background="@drawable/sign_in_bg_1"
                 android:text="@string/label_start_simulation"
                 android:textAllCaps="false"
@@ -254,10 +255,11 @@
                 android:id="@+id/tv_maybe_later"
                 style="@style/SP20BoldMediumBlackTextStyle"
                 android:layout_width="@dimen/dp_0"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_48"
                 android:layout_marginTop="@dimen/dp_4"
                 android:layout_marginBottom="@dimen/dp_8"
                 android:text="@string/maybe_later"
+                android:gravity="center"
                 android:textAlignment="center"
                 android:textSize="@dimen/sp_16"
                 app:layout_constraintBottom_toBottomOf="parent"

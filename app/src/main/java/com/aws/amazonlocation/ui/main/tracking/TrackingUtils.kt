@@ -116,15 +116,16 @@ class TrackingUtils(
         mBottomSheetTrackingBehavior?.isHideable = false
         when (enableTracking) {
             TrackingEnum.ENABLE_TRACKING -> {
-                mBottomSheetTrackingBehavior?.isDraggable = false
+                mBottomSheetTrackingBehavior?.isDraggable = true
+                mBottomSheetTrackingBehavior?.isFitToContents = false
+                mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_460)
-                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
                     } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
-                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_110)
                     }
+                    mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                 }
                 mBindingTracking?.apply {
                     clPersistentBottomSheet.show()
@@ -256,9 +257,6 @@ class TrackingUtils(
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                if (clEnableTracking.isVisible) {
-                                    mBottomSheetTrackingBehavior?.isDraggable = false
-                                }
                                 imgAmazonLogoTrackingSheet?.alpha = 1f
                                 ivAmazonInfoTrackingSheet?.alpha = 1f
                             }

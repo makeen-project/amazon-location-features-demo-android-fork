@@ -141,7 +141,7 @@ class BottomSheetHelper {
     }
 
     // set map style bottom sheet
-    fun setMapStyleBottomSheet(activity: FragmentActivity?, view: BottomSheetMapStyleBinding) {
+    fun setMapStyleBottomSheet(activity: FragmentActivity?, view: BottomSheetMapStyleBinding, mBaseActivity: BaseActivity?) {
         mBottomSheetMapStyle =
             BottomSheetBehavior.from(view.clMapStyleBottomSheet)
         mBottomSheetMapStyle.isHideable = true
@@ -188,7 +188,11 @@ class BottomSheetHelper {
                                                             }
                                                         }
                                                     }
+                                            } else {
+                                                mBaseActivity?.bottomNavigationVisibility(true)
                                             }
+                                        } else {
+                                            mBaseActivity?.bottomNavigationVisibility(true)
                                         }
                                     }
                             } else {
