@@ -148,16 +148,16 @@ dependencies {
     // pref
     implementation "androidx.preference:preference-ktx:1.2.0"
     // Amplify core dependency
-    implementation 'com.amplifyframework:core:2.2.0'
-    implementation 'com.amplifyframework:aws-auth-cognito:2.2.0'
-    implementation 'com.amplifyframework:aws-geo-location:2.2.0'
-    implementation 'com.amplifyframework:maplibre-adapter:2.2.0'
+    implementation 'com.amplifyframework:core:2.11.1'
+    implementation 'com.amplifyframework:aws-auth-cognito:2.11.1'
+    implementation 'com.amplifyframework:aws-geo-location:2.11.1'
+    implementation 'com.amplifyframework:maplibre-adapter:2.11.1'
     // noinspection GradleDependency
-    implementation 'com.amazonaws:aws-android-sdk-core:2.59.0'
-    implementation('com.amazonaws:aws-android-sdk-cognitoauth:2.55.0@aar')
-    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.55.0'
-    implementation 'com.amazonaws:aws-android-sdk-location:2.59.0'
-    implementation 'com.amazonaws:aws-android-sdk-iot:2.63.0'
+    implementation 'com.amazonaws:aws-android-sdk-core:2.72.0'
+    implementation('com.amazonaws:aws-android-sdk-cognitoauth:2.72.0@aar')
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'
+    implementation 'com.amazonaws:aws-android-sdk-location:2.72.0'
+    implementation 'com.amazonaws:aws-android-sdk-iot:2.72.0'
     implementation "androidx.navigation:navigation-fragment-ktx:2.0.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.0.0"
     implementation "androidx.fragment:fragment-ktx:1.5.6"
