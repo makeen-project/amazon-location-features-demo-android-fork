@@ -273,8 +273,6 @@ val notificationData = arrayListOf(
     NotificationData("Bus 05 UBC", false)
 )
 
-const val ANALYTICS_APP_ID = "79c66ff618aa43508bbfbcdfa326e048"
-
 object EventType {
     const val SCREEN_OPEN = "SCREEN_OPEN"
     const val SCREEN_CLOSE = "SCREEN_CLOSE"
@@ -286,8 +284,6 @@ object EventType {
     const val PLACE_SEARCH = "PLACES_SEARCH"
     const val ROUTE_SEARCH = "ROUTE_SEARCH"
     const val ROUTE_OPTION_CHANGED = "ROUTE_OPTION_CHANGED"
-
-    const val MAP_UNIT_CHANGE = "MAP_UNIT_CHANGE"
 
     // User
     const val SIGN_IN_STARTED = "SIGN_IN_STARTED"
@@ -311,11 +307,14 @@ object EventType {
     const val GEO_EVENT_TRIGGERED = "GEO_EVENT_TRIGGERED"
     const val GEOFENCE_ITEM_SELECTED = "GEOFENCE_ITEM_SELECTED"
     const val TRACKER_SAVED = "TRACKER_SAVED"
+    const val START_TRACKING = "START_TRACKING"
+    const val STOP_TRACKING = "STOP_TRACKING"
+    const val CHANGE_BUS_TRACKING_HISTORY = "CHANGE_BUS_TRACKING_HISTORY"
+    const val ENABLE_NOTIFICATION = "ENABLE_NOTIFICATION"
+    const val DISABLE_NOTIFICATION = "DISABLE_NOTIFICATION"
 
     // General
-    const val CONTINUE_TO_DEMO_CLICKED = "CONTINUE_TO_DEMO_CLICKED"
     const val LANGUAGE_CHANGED = "LANGUAGE_CHANGED"
-    const val HELP_SEARCH = "HELP_SEARCH"
 }
 
 object AnalyticsAttribute {
@@ -338,6 +337,9 @@ object AnalyticsAttribute {
     const val AVOID_TOLLS = "AvoidTolls"
     const val GEOFENCE_ID = "geofenceId"
     const val EVENT_TYPE = "eventType"
+    const val ERROR = "error"
+    const val NUMBER_OF_TRACKER_POINTS = "numberOfTrackerPoints"
+    const val BUS_NAME = "busName"
 }
 object AnalyticsAttributeValue {
     const val EXPLORER = "Explorer"

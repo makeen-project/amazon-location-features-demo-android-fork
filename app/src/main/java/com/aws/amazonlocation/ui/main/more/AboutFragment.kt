@@ -67,10 +67,7 @@ class AboutFragment : BaseFragment() {
                     )
                 )
             }
-            val properties = listOf(
-                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ATTRIBUTION)
-            )
-            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+            (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.ATTRIBUTION)
         }
     }
 
@@ -96,10 +93,8 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.attribution_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ATTRIBUTION)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.ATTRIBUTION)
             }
             clVersion.setOnClickListener {
                 if (isTablet) {
@@ -121,10 +116,8 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.version_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.VERSION)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.VERSION)
             }
             clTermsConditions.setOnClickListener {
                 if (isTablet) {
@@ -146,10 +139,8 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.terms_conditions_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TERMS_CONDITIONS)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.TERMS_CONDITIONS)
             }
             clHelp.setOnClickListener {
                 startActivity(
@@ -161,10 +152,8 @@ class AboutFragment : BaseFragment() {
                         BuildConfig.BASE_DOMAIN + BuildConfig.CLOUD_FORMATION_READ_MORE_URL
                     )
                 )
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.HELP)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.HELP)
             }
         }
     }

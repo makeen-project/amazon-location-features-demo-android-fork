@@ -5,6 +5,7 @@ import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.pinpoint.model.ChannelType
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.data.enum.AuthEnum
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class AnalyticsHelper(
         val provider = mAWSLocationHelper.getAnalyticsCredentialProvider()
         val pinpointConfig = PinpointConfiguration(
             context,
-            ANALYTICS_APP_ID,
+            BuildConfig.ANALYTICS_APP_ID,
             Regions.US_EAST_1,
             ChannelType.GCM,
             provider

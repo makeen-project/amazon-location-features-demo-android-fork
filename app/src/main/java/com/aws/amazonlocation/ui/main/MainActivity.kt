@@ -28,6 +28,7 @@ import com.amazonaws.mobileconnectors.cognitoauth.AuthClient
 import com.amazonaws.regions.Region
 import com.amazonaws.services.iot.AWSIotClient
 import com.amazonaws.services.iot.model.AttachPolicyRequest
+import com.aws.amazonlocation.AmazonLocationApp
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.common.onError
@@ -56,7 +57,7 @@ import kotlinx.coroutines.launch
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), CrashListener {
 
     var analyticsHelper: AnalyticsHelper? = null
     private var isAppNotFirstOpened: Boolean = false
@@ -69,6 +70,7 @@ class MainActivity : BaseActivity() {
     private val mSignInViewModel: SignInViewModel by viewModels()
     private var mBottomSheetDialog: Dialog? = null
     private var alertDialog: Dialog? = null
+    private var currentPage: String? = null
     var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             checkMap()
@@ -87,6 +89,7 @@ class MainActivity : BaseActivity() {
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         )
+        (application as AmazonLocationApp).setCrashListener(this)
         isTablet = resources.getBoolean(R.bool.is_tablet)
         if (!isTablet) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -151,35 +154,23 @@ class MainActivity : BaseActivity() {
                                 }
                             }
                         }
-                        val properties = listOf(
-                            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
-                        )
-                        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                        setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
                     }
                     TabEnum.TAB_TRACKING.name -> {
                         mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_tracking
-                        val properties = listOf(
-                            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
-                        )
-                        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                        setSelectedScreen(AnalyticsAttributeValue.TRACKERS)
                     }
                     TabEnum.TAB_GEOFENCE.name -> {
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_geofence
-                        val properties = listOf(
-                            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.GEOFENCES)
-                        )
-                        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                        setSelectedScreen(AnalyticsAttributeValue.GEOFENCES)
                     }
                 }
             }
         } else {
-            val properties = listOf(
-                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
-            )
-            analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+            setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
         }
         initClick()
         KeyBoardUtils.attachKeyboardListeners(
@@ -210,7 +201,8 @@ class MainActivity : BaseActivity() {
                 }
             }
         )
-        analyticsHelper = AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
+        analyticsHelper =
+            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
         analyticsHelper?.initAnalytics()
         analyticsHelper?.startSession()
         lifecycleScope.launch {
@@ -255,6 +247,23 @@ class MainActivity : BaseActivity() {
                     constraintSet.applyTo(clMain)
                 }
             }
+        }
+    }
+
+    fun setSelectedScreen(screen: String) {
+        currentPage = screen
+        val properties = listOf(
+            Pair(AnalyticsAttribute.SCREEN_NAME, screen)
+        )
+        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+    }
+
+    fun exitScreen() {
+        currentPage?.let {
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, it)
+            )
+            analyticsHelper?.recordEvent(EventType.SCREEN_CLOSE, properties)
         }
     }
 
@@ -402,10 +411,8 @@ class MainActivity : BaseActivity() {
                 R.id.menu_explore -> {
                     setExplorer()
                     showAmazonLogo()
-                    val properties = listOf(
-                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.EXPLORER)
-                    )
-                    analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                    exitScreen()
+                    setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
                 }
                 R.id.menu_tracking -> {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
@@ -499,10 +506,8 @@ class MainActivity : BaseActivity() {
                     mTrackingUtils?.hideTrackingBottomSheet()
                     mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
-                    val properties = listOf(
-                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SETTINGS)
-                    )
-                    analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                    exitScreen()
+                    setSelectedScreen(AnalyticsAttributeValue.SETTINGS)
                 }
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
@@ -511,10 +516,8 @@ class MainActivity : BaseActivity() {
                     mTrackingUtils?.hideTrackingBottomSheet()
                     mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
-                    val properties = listOf(
-                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.ABOUT)
-                    )
-                    analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                    exitScreen()
+                    setSelectedScreen(AnalyticsAttributeValue.ABOUT)
                 }
             }
             true
@@ -691,10 +694,8 @@ class MainActivity : BaseActivity() {
             }
             mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
         }
-        val properties = listOf(
-            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.GEOFENCES)
-        )
-        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+        exitScreen()
+        setSelectedScreen(AnalyticsAttributeValue.GEOFENCES)
     }
 
     private fun showTracking() {
@@ -708,10 +709,8 @@ class MainActivity : BaseActivity() {
             mBottomSheetHelper.hideMapStyleSheet()
         }
         showTrackingBottomSheet()
-        val properties = listOf(
-            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
-        )
-        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+        exitScreen()
+        setSelectedScreen(AnalyticsAttributeValue.TRACKERS)
     }
 
     private fun checkMap(): Boolean {
@@ -902,5 +901,16 @@ class MainActivity : BaseActivity() {
 
     fun isAppNotFirstOpened(): Boolean {
         return isAppNotFirstOpened
+    }
+
+    override fun notifyAppCrash(message: String?) {
+        if (!isDestroyed) {
+            message?.let {
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.ERROR, it)
+                )
+                analyticsHelper?.recordEvent(EventType.APPLICATION_ERROR, properties)
+            }
+        }
     }
 }

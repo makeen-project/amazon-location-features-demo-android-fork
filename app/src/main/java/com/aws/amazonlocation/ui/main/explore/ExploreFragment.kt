@@ -66,6 +66,7 @@ import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
 import com.aws.amazonlocation.utils.EventType.PLACE_SEARCH
+import com.aws.amazonlocation.utils.EventType.ROUTE_OPTION_CHANGED
 import com.aws.amazonlocation.utils.EventType.ROUTE_SEARCH
 import com.aws.amazonlocation.utils.MapNames.ESRI_LIGHT
 import com.aws.amazonlocation.utils.MapStyles.VECTOR_ESRI_TOPOGRAPHIC
@@ -3153,7 +3154,7 @@ class ExploreFragment :
             Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE)
         )
-        (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, properties)
+        (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_OPTION_CHANGED, properties)
     }
 
     private fun BottomSheetMapStyleBinding.showNoDataFoundFilter() {

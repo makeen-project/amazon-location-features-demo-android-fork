@@ -294,6 +294,10 @@ class TrackingUtils(
         } catch (_: Exception) {
         }
         mqttManager = null
+        val properties = listOf(
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.STOP_TRACKING, properties)
     }
 
     private fun startMqttManager() {
@@ -376,6 +380,10 @@ class TrackingUtils(
         val latLng = mMapHelper?.getLiveLocation()
         latLng?.let { updateLatLngOnMap(it) }
         mTrackingInterface?.updateBatch()
+        val properties = listOf(
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.START_TRACKING, properties)
     }
 
     fun updateLatLngOnMap(latLng: LatLng) {
@@ -520,6 +528,11 @@ class TrackingUtils(
     fun manageGeofenceListUI(list: ArrayList<ListGeofenceResponseEntry>) {
         mGeofenceList.clear()
         mGeofenceList.addAll(list)
+        val properties = listOf(
+            Pair(AnalyticsAttribute.NUMBER_OF_TRACKER_POINTS, mGeofenceList.size.toString()),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.TRACKER_SAVED, properties)
         if (mGeofenceList.isNotEmpty()) {
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEachIndexed { index, data ->

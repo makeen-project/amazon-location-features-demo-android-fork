@@ -30,10 +30,13 @@ import com.aws.amazonlocation.domain.`interface`.SimulationInterface
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.DELAY_1000
 import com.aws.amazonlocation.utils.ENTER
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.LABEL_PRE_DRAW
 import com.aws.amazonlocation.utils.LAYER
@@ -613,6 +616,11 @@ class SimulationUtils(
                         }
                     }
                     val selectedData = notificationData[selectedTrackerIndex].name
+                    val properties = listOf(
+                        Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
+                        Pair(AnalyticsAttribute.BUS_NAME, selectedData)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.CHANGE_BUS_TRACKING_HISTORY, properties)
                     tvChangeRoute.text =
                         buildString {
                             append(selectedData.split(" ")[0])
@@ -753,6 +761,10 @@ class SimulationUtils(
         } catch (_: Exception) {
         }
         mqttManager = null
+        val properties = listOf(
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.STOP_TRACKING, properties)
     }
 
     private fun startMqttManager() {
@@ -843,6 +855,10 @@ class SimulationUtils(
                     zoomCamera()
                 }
             }
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.START_TRACKING, properties)
         }
     }
 
@@ -958,6 +974,11 @@ class SimulationUtils(
                                 val data = getFirstCoordinates(position)
                                 addMarkerSimulation(activity, position, data)
                             }
+                            val properties = listOf(
+                                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
+                                Pair(AnalyticsAttribute.BUS_NAME, notificationData[position].name)
+                            )
+                            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.ENABLE_NOTIFICATION, properties)
                         } else {
                             val needToStart = mIsLocationUpdateEnable
                             mIsLocationUpdateEnable = false
@@ -972,6 +993,11 @@ class SimulationUtils(
                                     mIsLocationUpdateEnable = true
                                 }
                             }
+                            val properties = listOf(
+                                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
+                                Pair(AnalyticsAttribute.BUS_NAME, notificationData[position].name)
+                            )
+                            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.DISABLE_NOTIFICATION, properties)
                         }
                         zoomCamera()
                     }

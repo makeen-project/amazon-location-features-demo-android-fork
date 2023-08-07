@@ -111,10 +111,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
                 ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
             }
-            val properties = listOf(
-                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.UNITS)
-            )
-            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+            (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.UNITS)
         }
     }
 
@@ -262,10 +259,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.unit_system_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.UNITS)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.UNITS)
             }
             clDataProvider.setOnClickListener {
                 if (isTablet) {
@@ -283,10 +278,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.data_provider_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.DATA_PROVIDER)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.DATA_PROVIDER)
             }
             clMapStyle.setOnClickListener {
                 if (isTablet) {
@@ -304,10 +297,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.map_style_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.MAP_STYLE)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.MAP_STYLE)
             }
             clRouteOption.setOnClickListener {
                 if (isTablet) {
@@ -325,10 +316,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.route_option_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS)
             }
             clAwsCloudformation.setOnClickListener {
                 if (isTablet) {
@@ -347,13 +336,11 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.aws_cloud_information_fragment)
                 }
-                val properties = listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
-                )
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
                 val propertiesAws = listOf(
                     Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
                 )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
                 (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
             }
             clLanguage.setOnClickListener {
