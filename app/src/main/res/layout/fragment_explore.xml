@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/cl_main_explorer"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,6 +59,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/color_medium_black"
                     android:textSize="@dimen/sp_20"
+                    android:textDirection="locale"
                     android:gravity="center"
                     tools:text="300 m" />
 
@@ -67,6 +69,7 @@
                     android:layout_width="match_parent"
                     android:textColor="@color/color_medium_black"
                     android:textSize="@dimen/sp_13"
+                    android:textDirection="locale"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"

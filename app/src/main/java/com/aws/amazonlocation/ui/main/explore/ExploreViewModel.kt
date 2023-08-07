@@ -397,7 +397,7 @@ class ExploreViewModel @Inject constructor(
         )
     }
 
-    fun calculateNavigationLine(data: CalculateRouteResult) {
+    fun calculateNavigationLine(context: Context, data: CalculateRouteResult) {
         _navigationData.trySend(HandleResult.Loading)
         data.legs?.get(0).let { legs ->
             mNavigationListModel.clear()
@@ -412,7 +412,7 @@ class ExploreViewModel @Inject constructor(
                 address.await()
                 mNavigationResponse = NavigationResponse()
                 legs?.let { leg ->
-                    mNavigationResponse?.duration = Units.getTime(leg.durationSeconds)
+                    mNavigationResponse?.duration = Units.getTime(context, leg.durationSeconds)
                     mNavigationResponse?.distance = leg.distance!!
                     mNavigationResponse?.startLat = leg.startPosition[0]
                     mNavigationResponse?.startLng = leg.startPosition[1]

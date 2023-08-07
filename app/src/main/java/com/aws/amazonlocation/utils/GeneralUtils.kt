@@ -3,6 +3,7 @@ package com.aws.amazonlocation.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
@@ -27,6 +28,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -294,12 +296,13 @@ fun getRegion(region: String?, subRegion: String?, country: String?): String {
 
 fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
     val context = termsOfUse.context
-    val spannableString = SpannableString(termsOfUse.text.toString())
+    val spannableString = SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = termsOfUse.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.text_terms_desc_coloured_1).lowercase(Locale.ROOT)
+            text.lowercase()
         )
-    val clickHere = condition.matcher(termsOfUse.text.toString().lowercase(Locale.ROOT))
+    val clickHere = condition.matcher(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (clickHere.find()) {
         spannableString.setSpan(
             object : ClickableSpan() {
@@ -348,13 +351,14 @@ fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
 
 fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString())
+    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.terms_condition).lowercase(Locale.ROOT)
+            text.lowercase()
         )
     val termsAndCondition =
-        condition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
+        condition.matcher(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (termsAndCondition.find()) {
         spannableString.setSpan(
             FontSpan(
@@ -410,12 +414,13 @@ fun changeClickHereColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString())
+    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.click_here).lowercase(Locale.ROOT)
+            text.lowercase()
         )
-    val clickHere = condition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
+    val clickHere = condition.matcher(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (clickHere.find()) {
         spannableString.setSpan(
             object : ClickableSpan() {
@@ -463,12 +468,13 @@ fun changeLearnMoreColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = learnMore.context
-    val spannableString = SpannableString(learnMore.text.toString())
+    val spannableString = SpannableString(learnMore.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val text = learnMore.text.split(STRING_REPLACE_KEY)[1]
     val condition =
         Pattern.compile(
-            context.resources.getString(R.string.learn_more).lowercase(Locale.ROOT)
+            text.lowercase()
         )
-    val clickHere = condition.matcher(learnMore.text.toString().lowercase(Locale.ROOT))
+    val clickHere = condition.matcher(learnMore.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT))
     while (clickHere.find()) {
         spannableString.setSpan(
             object : ClickableSpan() {
@@ -605,6 +611,22 @@ fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): 
         isGrabMapEnable = true
     }
     return isGrabMapEnable
+}
+
+fun setLocale(languageCode: String, context: Context) {
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+    val config: Configuration = context.resources.configuration
+    config.setLocale(locale)
+    config.setLayoutDirection(locale)
+}
+
+fun getLanguageCode(): String? {
+    val appLanguage = AppCompatDelegate.getApplicationLocales()
+    val languageCode = appLanguage.toLanguageTags().ifEmpty {
+        Locale.getDefault().language
+    }
+    return languageCode
 }
 
 fun checkGeofenceInsideGrab(

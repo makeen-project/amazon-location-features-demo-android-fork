@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_route_unit_system"
@@ -24,6 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_55"
         android:gravity="center"
+        android:textDirection="locale"
         android:text="@string/units"
         android:textColor="@color/color_medium_black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,6 +63,8 @@
                 style="@style/SP16RegularWhiteTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:text="@string/automatic"
                 android:textColor="@color/color_medium_black" />
 
@@ -70,6 +72,8 @@
                 android:id="@+id/tv_automatic_sub_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:text="@string/label_automatic_sub_title_mile" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -106,6 +110,8 @@
                 style="@style/SP16RegularWhiteTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:text="@string/imperial"
                 android:textColor="@color/color_medium_black" />
 
@@ -113,6 +119,8 @@
                 android:id="@+id/tv_imperial_sublabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:text="@string/subtitle_imperial" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -148,6 +156,8 @@
                 style="@style/SP16RegularWhiteTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:text="@string/metric"
                 android:textColor="@color/color_medium_black" />
 
@@ -155,6 +165,8 @@
                 android:id="@+id/tv_metric_sublabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:text="@string/subtitle_metric" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

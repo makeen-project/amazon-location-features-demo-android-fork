@@ -51,7 +51,6 @@ import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.Units.meterToFeet
 import com.mapbox.mapboxsdk.geometry.LatLng
 import java.util.Date
-import java.util.Locale
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -145,14 +144,14 @@ class AWSLocationHelper(
             if (isGrabMapSelected) {
                 return mClient?.searchPlaceIndexForSuggestions(
                     SearchPlaceIndexForSuggestionsRequest()
-                        .withText(text).withLanguage(Locale.getDefault().language)
+                        .withText(text).withLanguage(getLanguageCode())
                         .withIndexName(indexName)
                         .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT)
                 )
             } else {
                 return mClient?.searchPlaceIndexForSuggestions(
                     SearchPlaceIndexForSuggestionsRequest().withBiasPosition(arrayListOf(lng, lat))
-                        .withText(text).withLanguage(Locale.getDefault().language)
+                        .withText(text).withLanguage(getLanguageCode())
                         .withIndexName(indexName)
                         .withMaxResults(SEARCH_MAX_SUGGESTION_RESULT)
                 )
@@ -369,7 +368,7 @@ class AWSLocationHelper(
             val response = mClient?.searchPlaceIndexForText(
                 SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat))
                     .withIndexName(indexName).withText(text)
-                    .withLanguage(Locale.getDefault().language)
+                    .withLanguage(getLanguageCode())
                     .withMaxResults(SEARCH_MAX_RESULT)
             )
             val searchSuggestionResponse = SearchSuggestionResponse(
@@ -423,7 +422,7 @@ class AWSLocationHelper(
             }
             mClient?.getPlace(
                 GetPlaceRequest().withIndexName(indexName).withPlaceId(placeId)
-                    .withLanguage(Locale.getDefault().language)
+                    .withLanguage(getLanguageCode())
             )
         } catch (e: Exception) {
             mBaseActivity?.handleException(e)
@@ -450,7 +449,7 @@ class AWSLocationHelper(
             }
             val indexResponse = mClient?.searchPlaceIndexForPosition(
                 SearchPlaceIndexForPositionRequest().withIndexName(indexName)
-                    .withLanguage(Locale.getDefault().language).withPosition(
+                    .withLanguage(getLanguageCode()).withPosition(
                         arrayListOf(lng, lat)
                     ).withMaxResults(
                         SEARCH_MAX_SUGGESTION_RESULT
@@ -500,7 +499,7 @@ class AWSLocationHelper(
             }
             return mClient?.searchPlaceIndexForPosition(
                 SearchPlaceIndexForPositionRequest().withIndexName(indexName)
-                    .withLanguage(Locale.getDefault().language).withPosition(arrayListOf(lat, lng))
+                    .withLanguage(getLanguageCode()).withPosition(arrayListOf(lat, lng))
                     .withMaxResults(1)
             )
         } catch (e: Exception) {

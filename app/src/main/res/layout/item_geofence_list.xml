@@ -44,6 +44,8 @@
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dp_16"
+        android:gravity="start"
+        android:textDirection="locale"
         android:textColor="@color/color_medium_black"
         app:layout_constraintBottom_toBottomOf="@id/iv_geofence_icon"
         app:layout_constraintEnd_toStartOf="@id/iv_delete_geofence"

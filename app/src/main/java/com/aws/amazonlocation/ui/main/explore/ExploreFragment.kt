@@ -25,6 +25,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -209,6 +210,25 @@ class ExploreFragment :
         return mBinding.root
     }
 
+    private fun checkRtl() {
+        if ((activity as MainActivity).isTablet) {
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBinding.apply {
+                    ViewCompat.setLayoutDirection(clMainExplorer, ViewCompat.LAYOUT_DIRECTION_LTR)
+                    ViewCompat.setLayoutDirection(bottomSheetSearch.clSearchSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetDirection.clPersistentBottomSheetDirection, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetDirectionSearch.clDirectionSearchSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetNavigation.clNavigationParent, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetMapStyle.clMapStyleBottomSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                    ViewCompat.setLayoutDirection(bottomSheetAttribution.clMain, ViewCompat.LAYOUT_DIRECTION_RTL)
+                }
+            }
+        }
+    }
     fun showKeyBoard() {
         mBaseActivity?.mGeofenceUtils?.let {
             if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -267,6 +287,7 @@ class ExploreFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setMap(savedInstanceState)
+        checkRtl()
         mBottomSheetHelper.setSearchBottomSheet(
             activity,
             mBinding.bottomSheetSearch,
@@ -927,6 +948,7 @@ class ExploreFragment :
                                 )
                             }?.let { it2 ->
                                 getMetricsNew(
+                                    requireContext(),
                                     it2,
                                     isMetric(
                                         mPreferenceManager.getValue(
@@ -1215,13 +1237,13 @@ class ExploreFragment :
                                                     ""
                                                 ).let { unitSystem ->
                                                     val isMetric = isMetric(unitSystem)
-                                                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                                                    getMetricsNew(requireContext(), convertToLowerUnit(distance, isMetric), isMetric)
                                                 }
                                             }
                                             groupDistance.show()
                                             tvDirectionDot.show()
                                             tvDirectionTime.show()
-                                            tvDirectionTime.text = getTime(firstLeg.durationSeconds)
+                                            tvDirectionTime.text = getTime(requireContext(), firstLeg.durationSeconds)
                                         }
                                     }
                                     mBinding.bottomSheetDirectionSearch.apply {
@@ -1258,9 +1280,9 @@ class ExploreFragment :
                                                 ""
                                             ).let { unitSystem ->
                                                 val isMetric = isMetric(unitSystem)
-                                                getMetricsNew(convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
+                                                getMetricsNew(requireContext(), convertToLowerUnit(firstLeg.distance, isMetric), isMetric)
                                             }
-                                            tvDriveMinute.text = getTime(firstLeg.durationSeconds)
+                                            tvDriveMinute.text = getTime(requireContext(), firstLeg.durationSeconds)
                                         }
                                     }
                                 }
@@ -1280,9 +1302,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(walkingData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(walkingData[0].distance, isMetric), isMetric)
                                     }
-                                    tvWalkMinute.text = getTime(walkingData[0].durationSeconds)
+                                    tvWalkMinute.text = getTime(requireContext(), walkingData[0].durationSeconds)
                                     if (mTravelMode == TravelMode.Walking.value) {
                                         tvWalkSelected.show()
                                         hideViews(tvTruckSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
@@ -1313,9 +1335,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(truckData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(truckData[0].distance, isMetric), isMetric)
                                     }
-                                    tvTruckMinute.text = getTime(truckData[0].durationSeconds)
+                                    tvTruckMinute.text = getTime(requireContext(), truckData[0].durationSeconds)
                                     if (mTravelMode == TravelMode.Truck.value) {
                                         tvTruckSelected.show()
                                         hideViews(tvWalkSelected, tvDriveSelected, tvBicycleSelected, tvMotorcycleSelected)
@@ -1345,9 +1367,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(bicycleData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(bicycleData[0].distance, isMetric), isMetric)
                                     }
-                                    tvBicycleMinute.text = getTime(bicycleData[0].durationSeconds)
+                                    tvBicycleMinute.text = getTime(requireContext(), bicycleData[0].durationSeconds)
                                     if (mTravelMode == TRAVEL_MODE_BICYCLE) {
                                         tvBicycleSelected.show()
                                         hideViews(tvWalkSelected, tvDriveSelected, tvTruckSelected, tvMotorcycleSelected)
@@ -1378,9 +1400,9 @@ class ExploreFragment :
                                         ""
                                     ).let { unitSystem ->
                                         val isMetric = isMetric(unitSystem)
-                                        getMetricsNew(convertToLowerUnit(motorcycleData[0].distance, isMetric), isMetric)
+                                        getMetricsNew(requireContext(), convertToLowerUnit(motorcycleData[0].distance, isMetric), isMetric)
                                     }
-                                    tvMotorcycleMinute.text = getTime(motorcycleData[0].durationSeconds)
+                                    tvMotorcycleMinute.text = getTime(requireContext(), motorcycleData[0].durationSeconds)
                                     if (mTravelMode == TRAVEL_MODE_MOTORCYCLE) {
                                         tvMotorcycleSelected.show()
                                         hideViews(tvWalkSelected, tvDriveSelected, tvTruckSelected, tvBicycleSelected)
@@ -1525,6 +1547,7 @@ class ExploreFragment :
                             tvNavigationTime.text =
                                 it.calculateRouteResult?.legs?.get(0)?.durationSeconds?.let { it1 ->
                                     getTime(
+                                        requireContext(),
                                         it1
                                     )
                                 }
@@ -1532,7 +1555,7 @@ class ExploreFragment :
                             tvNavigationDistance.text =
                                 it.calculateRouteResult?.legs?.get(0)?.distance?.let { it1 ->
                                     convertToLowerUnit(it1, isMetric)
-                                }?.let { it2 -> getMetricsNew(it2, isMetric) }
+                                }?.let { it2 -> getMetricsNew(requireContext(), it2, isMetric) }
                         }
                     }
                     CoroutineScope(Dispatchers.IO).launch {
@@ -1877,7 +1900,7 @@ class ExploreFragment :
                     ""
                 ).let { unitSystem ->
                     val isMetric = isMetric(unitSystem)
-                    getMetricsNew(convertToLowerUnit(distance, isMetric), isMetric)
+                    getMetricsNew(requireContext(), convertToLowerUnit(distance, isMetric), isMetric)
                 }
                 tvNavigationName.text = region
                 hideViews(cardDirection, cardMap, cardGeofenceMap)
@@ -3385,7 +3408,7 @@ class ExploreFragment :
                                     getString(R.string.error_route)
                             } else {
                                 mBinding.bottomSheetDirection.tvDirectionDistance.text =
-                                    getMetricsNew(distance, isMetric)
+                                    getMetricsNew(requireContext(), distance, isMetric)
                                 if (isMetric) {
                                     mBinding.bottomSheetDirection.tvDirectionError.text =
                                         getString(R.string.error_switch_to_here)
@@ -4105,7 +4128,7 @@ class ExploreFragment :
     private fun fetchAddressFromLatLng(it: CalculateRouteResult) {
         mRouteFinish = false
         activity?.hideKeyboard()
-        mViewModel.calculateNavigationLine(it)
+        mViewModel.calculateNavigationLine(requireContext(), it)
         mBottomSheetHelper.showNavigationSheet()
         mBottomSheetHelper.hideDirectionSearch(this@ExploreFragment)
         mBaseActivity?.isTablet?.let {
@@ -4782,7 +4805,7 @@ class ExploreFragment :
                         it > 248.5
                     }
                     if (showDistance) {
-                        tvDirectionDistance.text = getMetricsNew(it, isMetric)
+                        tvDirectionDistance.text = getMetricsNew(requireContext(), it, isMetric)
                     }
                 }
                 notifyAdapters()
@@ -5039,7 +5062,7 @@ class ExploreFragment :
                 val layoutParams: ViewGroup.MarginLayoutParams =
                     mBinding.cardDirection.layoutParams as ViewGroup.MarginLayoutParams
                 layoutParams.setMargins(
-                    0,
+                    resources.getDimension(R.dimen.dp_16).toInt(),
                     0,
                     resources.getDimension(R.dimen.dp_16).toInt(),
                     marginBottom
@@ -5117,7 +5140,7 @@ class ExploreFragment :
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mBinding.mapView.onSaveInstanceState(outState)
+        if (this::mBinding.isInitialized) { mBinding.mapView.onSaveInstanceState(outState) }
     }
 
     override fun onLowMemory() {
@@ -5128,7 +5151,7 @@ class ExploreFragment :
     override fun onDestroy() {
         super.onDestroy()
         gpsActivityResult.unregister()
-        mBinding.mapView.onDestroy()
+        if (this::mBinding.isInitialized) { mBinding.mapView.onDestroy() }
     }
 
     @SuppressLint("NotifyDataSetChanged")
