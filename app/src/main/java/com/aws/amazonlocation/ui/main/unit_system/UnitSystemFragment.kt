@@ -20,7 +20,7 @@ class UnitSystemFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentUnitSystemBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -65,40 +65,40 @@ class UnitSystemFragment : BaseFragment() {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.icon_checkmark,
-                        ),
+                            R.drawable.icon_checkmark
+                        )
                     )
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                 }
                 resources.getString(R.string.imperial) -> {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.icon_checkmark,
-                        ),
+                            R.drawable.icon_checkmark
+                        )
                     )
                 }
                 else -> {
@@ -106,20 +106,20 @@ class UnitSystemFragment : BaseFragment() {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.icon_checkmark,
-                        ),
+                            R.drawable.icon_checkmark
+                        )
                     )
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                 }
             }

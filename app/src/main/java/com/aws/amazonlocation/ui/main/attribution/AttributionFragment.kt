@@ -16,6 +16,7 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_URL
+import com.aws.amazonlocation.utils.MAP_STYLE_ATTRIBUTION
 
 class AttributionFragment : BaseFragment() {
 
@@ -45,13 +46,7 @@ class AttributionFragment : BaseFragment() {
 
     private fun init() {
         mBinding.apply {
-            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
-            if (mapName == getString(R.string.map_esri)) {
-                tvAttribution.text =
-                    getString(R.string.label_esri_here)
-            } else {
-                tvAttribution.text = getString(R.string.label_here_attribution_text)
-            }
+            tvAttribution.text = mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
         }
     }
 

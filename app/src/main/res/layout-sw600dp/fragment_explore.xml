@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/cl_main_explorer"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,6 +60,7 @@
                     android:textColor="@color/color_medium_black"
                     android:textSize="@dimen/sp_20"
                     android:gravity="center"
+                    android:textDirection="locale"
                     tools:text="300 m" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -70,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
+                    android:textDirection="locale"
                     android:maxLines="1"
                     tools:text="Victoria st" />
 

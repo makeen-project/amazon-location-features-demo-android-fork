@@ -71,7 +71,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
             android:text="@string/add_geofence"
-            android:textAlignment="viewStart"
+            android:gravity="start"
+            android:textDirection="locale"
             app:layout_constraintBottom_toBottomOf="@id/iv_add_geofence_close"
             app:layout_constraintEnd_toStartOf="@id/iv_add_geofence_close"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,9 +116,9 @@
                     android:hint="@string/search"
                     android:imeOptions="actionSearch"
                     android:maxLength="200"
+                    android:textDirection="locale"
                     android:paddingHorizontal="@dimen/dp_16"
                     android:singleLine="true"
-                    android:textAlignment="viewStart"
                     android:textColorHint="@color/color_hint_text"
                     app:layout_constraintBottom_toBottomOf="@id/iv_search_sheet_add_geofence"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -141,6 +142,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_16"
                     android:layout_marginTop="@dimen/dp_10"
+                    android:gravity="start"
+                    android:textDirection="locale"
                     android:text="@string/radius"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_add_geofence_1" />
@@ -169,6 +172,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_10"
                     android:layout_marginEnd="@dimen/dp_16"
+                    android:gravity="start"
+                    android:textDirection="locale"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_add_geofence_1" />
 
@@ -190,6 +195,8 @@
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_28"
             android:text="@string/name"
+            android:gravity="start"
+            android:textDirection="locale"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_add_geofence_search" />
 
@@ -215,10 +222,10 @@
                 android:ellipsize="end"
                 android:hint="@string/type_geofence_name"
                 android:imeOptions="actionDone"
+                android:textDirection="locale"
                 android:maxLength="100"
                 android:paddingHorizontal="@dimen/dp_16"
                 android:singleLine="true"
-                android:textAlignment="viewStart"
                 android:textColorHint="@color/color_hint_text" />
 
         </com.google.android.material.card.MaterialCardView>
@@ -242,6 +249,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/save"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -271,6 +280,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/delete"
+                android:gravity="start"
+                android:textDirection="locale"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

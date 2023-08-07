@@ -79,4 +79,10 @@
         android:label="UnitSystemFragment"
         tools:layout="@layout/fragment_unit_system"/>
 
+    <fragment
+        android:id="@+id/language_fragment"
+        android:name="com.aws.amazonlocation.ui.main.language.LanguageFragment"
+        android:label="LanguageFragment"
+        tools:layout="@layout/fragment_language"/>
+
 </navigation>

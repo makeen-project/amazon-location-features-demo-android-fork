@@ -1,0 +1,277 @@
+<?xml version="1.0"?>
+<resources>
+  <string name="app_name">Amazon Standort</string>
+  <string name="menu_explore">Erkunden</string>
+  <string name="menu_tracking">Tracker</string>
+  <string name="menu_geofence">Geofences</string>
+  <string name="menu_setting">Einstellungen</string>
+  <string name="menu_more">Über</string>
+  <string name="sign_in">Schild in</string>
+  <string name="email_or_phone_number">E-Mail oder Telefon Nummer</string>
+  <string name="password">Passwort</string>
+  <string name="amazon_password">Amazon Passwort</string>
+  <string name="forgot_password">Ich habe vergessen Passwort?</string>
+  <string name="show_password">Zeigen Passwort</string>
+  <string name="privacy_policy">Von fortlaufend, Sie zustimmen zu Amazon\'s Bedingungen von Benutzen und Datenschutz Hinweis.</string>
+  <string name="condition_of_use">Bedingungen von Benutzen</string>
+  <string name="privacy_notice">Datenschutz Hinweis</string>
+  <string name="login_success">Schild in Erfolgreich</string>
+  <string name="sign_out_successfully">Schild aus erfolgreich</string>
+  <string name="sign_out_failed">Schild aus gescheitert, bitte versuchen schon wieder...</string>
+  <string name="sign_in_to_access_tracking">Schild in zu Zugriff Nachverfolgung und Geofence Eigenschaften oder fortfahren zu Erkunden die Karte</string>
+  <string name="sign_in_required">Schild in erforderlich</string>
+  <string name="maybe_later">Vielleicht später</string>
+  <string name="you_are_connected">Du sind verbunden</string>
+  <string name="continue_to_explore">Weiter zu Erkunden</string>
+  <string name="aws_cloudformation_required">Verbinden AWS Konto</string>
+  <string name="geofencing_and_tracking_features">Verbinden dein AWS Konto zu ermöglichen Geofences und Tracker. Das Testament sicherstellen dein Verfolgung und Geofencing Daten ist nur gelagert in dein Konto. Nach Sie Log in, alles Eigenschaften von die Demoversion App Testament Lauf unter Verwendung von Ressourcen Sie bereitstellen in dein AWS Konto. Loggen aus wenn Sie wünschen zu fortsetzen laufend die Demoversion App unter Verwendung von Ressourcen in AWSs Demo App Konto.</string>
+  <string name="connect">Verbinden</string>
+  <string name="how_to_connect">Wie zu verbinden zu</string>
+  <string name="how_to_connect_1_1">**Klicken hier** zu Lauf ein Wolkenbildung Muster zu sicher erstellen erforderlich Ressourcen.</string>
+  <string name="how_to_connect_1_2">Es Testament sicher erstellen alles erforderlich Ressourcen.</string>
+  <string name="how_to_connect_1_3">Du Dose löschen diese Ressourcen durch die stapeln Löschung Option oder \'Verwalten Ressourcen“ Seiten in die Speisekarte auf die links.</string>
+  <string name="how_to_connect_2_1">Verbinden die Demo App mit die vor kurzem erstellt AWS Ressourcen von Kopieren in Eingang Felder.</string>
+  <string name="how_to_connect_2_2">Von dein Wolkenbildung Ausgang Abschnitt Kopie die entsprechende genannt Werte als reflektiert in die Recht Abschnitt bilden (Identity) Oolid usw.). **Lernen mehr**.</string>
+  <string name="learn_more">
+    <b>Learn more</b>
+  </string>
+  <string name="one">1</string>
+  <string name="two">2</string>
+  <string name="how_to_connect_3_1">Einloggen unter Verwendung von die generiert Benutzer Referenzen.</string>
+  <string name="how_to_connect_3_2">Jetzt Sie sollte Sein in der Lage zu benutzen die Tracker und Geofences Eigenschaften unter Verwendung von Daten gelagert in dein Konto.</string>
+  <string name="three">3</string>
+  <string name="identityPoolId">Identitätspool LD</string>
+  <string name="user_pool_client_id">Benutzerpool-Client-ID</string>
+  <string name="user_pool_ld">Benutzerpool LD</string>
+  <string name="by_connecting_i_agree_to_amazon">Von verbindend ICH zustimmen zu Amazon Standort\n**Nutzungsbedingungen &amp; Bedingungen**</string>
+  <string name="terms_condition">Bedingungen &amp; Bedingungen</string>
+  <string name="help">Hilfe</string>
+  <string name="click_here">Klick hier</string>
+  <string name="user_domain">Benutzerdomäne</string>
+  <string name="enter_user_domain">Geben Sie ein Benutzerdomäne</string>
+  <string name="enter_identity_pool_id">Geben Sie ein Identity Oolid</string>
+  <string name="enter_user_pool_client_id">Geben Sie ein Benutzerpool-Client-ID</string>
+  <string name="enter_user_pool_id">Geben Sie ein BenutzerpoolID</string>
+  <string name="location_permission_is_required">Standort Genehmigung ist Erforderlich</string>
+  <string name="ok">OK</string>
+  <string name="permission">Erlaubnis</string>
+  <string name="logout">Loggen aus</string>
+  <string name="are_you_sure_you_want_to_sign_out">Sind Sie sicher Sie wollen zu unterschreiben raus? \nGeofence und Nachverfolgung Informationen ist nicht verfügbar ohne unterschreiben in</string>
+  <string name="cancel">Stornieren</string>
+  <string name="disconnect_aws">Verbindung trennen von AWS</string>
+  <string name="directions">Anfahrt</string>
+  <string name="search">Suche</string>
+  <string name="no_matching_places_found">Nein übereinstimmende Orte gefunden</string>
+  <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">Machen sicher dein Suche ist buchstabiert richtig. Versuche ergänzend ein stadt, postleitzahl, oder Land.</string>
+  <string name="search_nearby">Suche in der Nähe</string>
+  <string name="text_switch_avoid_tools">Vermeiden Mautgebühren</string>
+  <string name="text_switch_avoid_highways">Vermeiden Autobahnen</string>
+  <string name="text_switch_avoid_ferries">Vermeiden Fähren</string>
+  <string name="_2_min">2 Min.</string>
+  <string name="label_search_destination">Suche Reiseziel</string>
+  <string name="label_my_location">Mein Standort</string>
+  <string name="label_directions">Anfahrt</string>
+  <string name="label_route_options">Route Optionen</string>
+  <string name="label_default_route_options">Standard Route Optionen</string>
+  <string name="label_selected">• Ausgewählt</string>
+  <string name="btn_go">Geh</string>
+  <string name="label_walk">Gehen</string>
+  <string name="label_drive">Fahren</string>
+  <string name="label_truck">Lastwagen</string>
+  <string name="label_bicycle">Fahrrad</string>
+  <string name="label_motorcycle">Motorrad</string>
+  <string name="label_search_starting_point">Suche beginnend Punkt</string>
+  <string name="exit">Ausfahrt</string>
+  <string name="log_out">Loggen aus</string>
+  <string name="add_geo_fence_1">Hinzufügen ein Geofence zu erhalten benachrichtigt wenn dein Gerät Eingaben oder Ausgänge es</string>
+  <string name="add_geofence">Hinzufügen Geofence</string>
+  <string name="add">Hinzufügen</string>
+  <string name="radius">Radius</string>
+  <string name="name">Nome</string>
+  <string name="type_geofence_name">Typ Geofence Nome</string>
+  <string name="save">Speichern</string>
+  <string name="cloudformation_template_resources">CloudFormation\nVorlage Ressourcen</string>
+  <string name="cloud_formation_1">Kognito Identität Schwimmbad, Kognito Benutzer Schwimmbad, ICH BIN rolle, Amazon Standort Ressourcen, Landkarten, Orte, Routen, Geofence, und Verfolgung</string>
+  <string name="geofence_name_exists">Geofence Name bereits existiert</string>
+  <string name="please_enter_geofence_name">Bitte eintragen Geofence Name</string>
+  <string name="invalid_name">Enthalten nur Zeichen (A—Z, a—z,0—9), Bindestriche (-), Punkte ( . ), &amp; Unterstriche (_)</string>
+  <string name="are_you_sure_want_to_delete_geofence">Sind Sie sicher Sie wollen zu löschen Geofence?</string>
+  <string name="delete">Löschen</string>
+  <string name="edit_geofence">Bearbeiten Geofence</string>
+  <string name="label_map_style">Karte Stil</string>
+  <string name="label_map_style_description">Ändern Daten Anbieter ebenfalls wirkt Orte &amp; Routen API</string>
+  <string name="map_light" translatable="false">Light</string>
+  <string name="map_streets" translatable="false">Streets</string>
+  <string name="map_navigation" translatable="false">Navigation</string>
+  <string name="map_dark_gray" translatable="false">Dark Gray</string>
+  <string name="map_light_gray" translatable="false">Light Gray</string>
+  <string name="map_imagery" translatable="false">Imagery</string>
+  <string name="map_esri" translatable="false">Esri</string>
+  <string name="map_contrast" translatable="false">Contrast</string>
+  <string name="map_explore" translatable="false">Explore</string>
+  <string name="map_explore_truck" translatable="false">Explore Truck</string>
+  <string name="map_hybrid" translatable="false">Hybrid</string>
+  <string name="map_raster" translatable="false">Imagery</string>
+  <string name="map_grab_light" translatable="false">Light</string>
+  <string name="map_grab_dark" translatable="false">Dark</string>
+  <string name="label_enter_identity_pool_id">Bitte eintragen richtig Identität bündeln id</string>
+  <string name="label_enter_domain">Eingetragen Benutzer Domäne ist falsch</string>
+  <string name="label_enter_user_pool_client_id">Eingetragen Benutzer bündeln Auftraggeber id ist falsch</string>
+  <string name="label_enter_user_pool_id">Eingetragen Benutzer bündeln id ist falsch</string>
+  <string name="label_enter_web_socket_url">Eingetragen Netz Steckdose url ist falsch</string>
+  <string name="data_provider">Daten Anbieter</string>
+  <string name="map_style">Karte Stil</string>
+  <string name="aws_cloudformation">Verbinden dein AWS Konto</string>
+  <string name="esri" translatable="false">Esri</string>
+  <string name="here" translatable="false">HERE</string>
+  <string name="grab" translatable="false">GrabMaps</string>
+  <string name="label_connected">Du sind verbunden</string>
+  <string name="label_connected_description">Verbinden dein AWS Konto zu ermöglichen Geofences und Tracker. Das Testament sicherstellen dein Verfolgung und Geofencing Daten ist nur gelagert in dein Konto. Nach Sie Log in, alles Eigenschaften von die Demoversion App Testament Lauf unter Verwendung von Ressourcen Sie bereitstellen in dein AWS Konto. Loggen aus wenn Sie wünschen zu fortsetzen laufend die Demoversion App unter Verwendung von Ressourcen in AWSs Demo App Konto.</string>
+  <string name="label_how_to_remove">Wie zu entfernen:</string>
+  <string name="label_connected_title_1">**Klicken hier** zu entfernen ein Wolkenbildung Muster</string>
+  <string name="label_connected_title_2">Es Testament sicher erstellen alles erforderlich Ressourcen.</string>
+  <string name="label_connected_title_3">Verbinden die Amazon Standort App mit die erstellt Ressourcen</string>
+  <string name="label_connected_title_4">Bitte eintragen die folgend erforderlich Felder in die Standort.</string>
+  <string name="label_tracking_history">Nachverfolgung Geschichte</string>
+  <string name="label_tracking_your_activity">Nachverfolgung dein Gerät Standort</string>
+  <string name="label_enable_tracking">Aktiviere Lebe Tracker</string>
+  <string name="label_enable_tracker">Aktiviere Tracker</string>
+  <string name="label_enable_tracker_description">Du Dose benutzen irgendein Daten Anbieter außer Esri zum dein Vermögenswert Verwaltung oder Verfolgung benutzen Fälle. Wenn Sie wollen zu benutzen Esri zum dein Vermögenswert Verwaltung oder Verfolgung benutzen Fall, bitte lesen Begriffe und Bedingungen</string>
+  <string name="label_enable_tracker_view_terms">Ansicht Bedingungen und Bedingungen</string>
+  <string name="label_enable_tracker_continue_to_tracker">Weiter</string>
+  <string name="label_enable_tracking_detail">Aktivieren die Merkmal Testament ermöglichen Sie zu Spur dein Gerät und erhalten benachrichtigt wenn die Gerät Eingaben oder Ausgänge irgendein von dein Geofences.</string>
+  <string name="label_check_your_internet_connection_and_try_again">überprüfen dein Internet Verbindung und versuchen nochmal</string>
+  <string name="label_not_tracking_your_activity">Nicht Verfolgung dein Gerät Standort</string>
+  <string name="label_start_tracking">Starte Nachverfolgung</string>
+  <string name="label_stop_tracking">Stopp Nachverfolgung</string>
+  <string name="label_today">Heute</string>
+  <string name="label_tracking_data_storage">Nachverfolgung Daten Aufbewahrung</string>
+  <string name="label_delete_tracking_data">Löschen Nachverfolgung Daten</string>
+  <string name="tv_tracking_data_storage_1">Wir nur Anzeige Daten zum die zuletzt 3 Pfade Das Sie Spur mit Amazon Standort.</string>
+  <string name="label_position_start">Start</string>
+  <string name="label_position_end">Ende</string>
+  <string name="label_position_data">Daten</string>
+  <string name="amazon_location_can_t_reach_the_internet">Amazon Standort kann\nicht erreichen die Internet</string>
+  <string name="check_your_internet_connection_and_try_again">überprüfen dein Internet Verbindung und versuchen nochmal</string>
+  <string name="unable_to_execute_request">Unfähig zu ausführen HTTP Anfrage:</string>
+  <string name="label_position_loader">Lader</string>
+  <string name="label_web_socket_url">WebSocket-URL</string>
+  <string name="label_enter_web_socket_url_1">Geben Sie ein WebSocket-URL</string>
+  <string name="label_are_you_sure_delete_data">Sind Sie sicher Sie wollen zu löschen Verfolgung Daten?</string>
+  <string name="are_you_sure_you_want_to_disconnect_aws">Sind Sie sicher Sie wollen zu Verbindung trennen AWS?</string>
+  <string name="aws_cloud_formation">AWS Wolkenbildung</string>
+  <string name="no_tracking_history_found">Nein Verfolgung Geschichte verfügbar</string>
+  <string name="reconnect_with_aws_account">Stapel ist beschädigt, umschalten zurück zu Standard stapeln</string>
+  <string name="error_route">Route nicht gefunden.</string>
+  <string name="no_route_found">Nein Route gefunden</string>
+  <string name="error_switch_to_here">Entfernung ist größer als 400 km, kann\nicht berechnen über Esri, freundlich Schalter zu HIER Anbieter</string>
+  <string name="error_switch_to_here_miles">Entfernung ist größer als %s mi, kann\nicht berechnen über Esri, freundlich Schalter zu HIER Anbieter</string>
+  <string name="error_distance_400">In Datenquelle Esri, alles Wegpunkte Muss Sein innerhalb 400 km.</string>
+  <string name="error_distance_248_miles">In Datenquelle Esri, alles Wegpunkte Muss Sein innerhalb %smi.</string>
+  <string name="connect_to_aws_account">Verbinden AWS Konto</string>
+  <string name="label_preview">Vorschau</string>
+  <string name="label_location_permission_denied">Standort Genehmigung verweigert</string>
+  <string name="label_give_permission">Schenken Genehmigung</string>
+  <string name="label_required_permission">Entfernung kann\nicht Sein berechnete wenn Standort Genehmigung ist nicht gewährt. Bitte ermöglichen Standort Genehmigung zum Amazon Standort von Einstellungen</string>
+  <string name="label_attribution">Namensnennung</string>
+  <string name="label_disconnect">Verbindung trennen</string>
+  <string name="label_esri_here">Esri, HIER, Garmin, VOR, NOAA, USGS, © OpenStreetMap Mitwirkende, und die GIS Nutzer Gemeinschaft</string>
+  <string name="btn_learn_more">Lernen Mehr</string>
+  <string name="label_welcome_amazon">Willkommen to\nAmazon Standort Demoversion</string>
+  <string name="label_continue">Weiter</string>
+  <string name="label_right_aws">© 2023, Amazon Web Dienstleistungen, Inc. oder seine verbundene Unternehmen. Alles Rechte reserviert.</string>
+  <string name="label_terms_desc">Von wird heruntergeladen, installieren, oder unter Verwendung von die Amazon Standort Demoversion App, Sie zustimmen zu die Apps\'s **Bedingungen &amp; Bedingungen** zum verwenden.</string>
+  <string name="label_terms_desc_terms_page">Von wird heruntergeladen, installieren, oder unter Verwendung von die Amazon Standort Demoversion App, Sie zustimmen zu die Apps\'s **Bedingungen &amp; Bedingungen** zum verwenden.</string>
+  <string name="text_terms_desc_coloured_1">Bedingungen &amp; Bedingungen</string>
+  <string name="text_terms_desc_coloured_2">AWS Annehmbar Benutzen Politik</string>
+  <string name="text_terms_desc_coloured_3">AWS Datenschutz Hinweis</string>
+  <string name="label_legal_and_privacy">Rechtlich und Datenschutz</string>
+  <string name="label_version">Version</string>
+  <string name="label_sign_out">Schild aus</string>
+  <string name="distance_is_greater_than_400_km">Entfernung ist größer als 400 km</string>
+  <string name="distance_is_greater_than_248_mi">Entfernung ist größer als %s mi</string>
+  <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">Kann nicht berechnen über Esri, freundlich Schalter zu \nHier Anbieter.</string>
+  <string name="label_here_attribution_text">© 2022 HIER</string>
+  <string name="label_partner_attribution">Partnerin Namensnennung</string>
+  <string name="label_software_attribution">Software Namensnennung</string>
+  <string name="label_click_learn_more_for_software_attribution">Klick lernen mehr zum Software Zuordnung</string>
+  <string name="label_app_version">App Ausführung:</string>
+  <string name="label_warning">Warnung</string>
+  <string name="label_session_expired">Die Sitzung hat abgelaufen. Bitte unterschreiben in nochmal zu Zugriff alles Funktionen.</string>
+  <string name="units">Einheiten</string>
+  <string name="metric">Metrisch</string>
+  <string name="subtitle_metric">Kilometer, Kilogramm</string>
+  <string name="imperial">Kaiserlich</string>
+  <string name="subtitle_imperial">Meilen, Pfund</string>
+  <string name="automatic">Automatisch</string>
+  <string name="label_restart_app_title">Aktiviere Grab</string>
+  <string name="label_restart_app_description">Grab bietet Landkarten, Routen und Ort Suche in Malaysien, Philippinen, Thailand, Singapur, Vietnam, Indonesien, Birma, und Kambodscha. \n\nWährend Auto und Motorrad Routen sind verfügbar quer die über Länder, die Fahrrad und Gehen Routen sind unterstützt in nur Schlüssel Städte solche als Singapur, Jakarta, Manila, Klang Tal, Bangkok, Ho Chi Minh Stadt, und Hanoi. </string>
+  <string name="enable_grab">Aktiviere Grab</string>
+  <string name="dont_ask_again">Nicht fragen nochmal</string>
+  <string name="your_location_not_supported_by_grab">Dein aktuelle Standort ist außen Länder unterstützt von Grab. Gegenwärtig Grab unterstützt Malaysien, Philippinen, Thailand, Singapur, Vietnam, Indonesien, Birma, Kambodscha.</string>
+  <string name="label_current_location_disabled">Aktuell Standort Behinderte</string>
+  <string name="label_grab_limitation">Entfernung kann\nicht Sein berechnet, seit dein aktuelle Standort hat gewesen Behinderte fällig zu grab Beschränkung</string>
+  <string name="label_automatic_sub_title_mile">Basiert auf dein Browser Einstellungen (Meilen, Pfund)</string>
+  <string name="label_automatic_sub_title_km">Basiert auf dein Browser Einstellungen (Kilometer, Kilogramm)</string>
+  <string name="label_sec">Sekunde</string>
+  <string name="label_min">Min.</string>
+  <string name="label_hr">Std.</string>
+  <string name="label_m">m</string>
+  <string name="label_km">km</string>
+  <string name="label_ft">ft</string>
+  <string name="label_mi">mi</string>
+  <string name="label_provider">Anbieter</string>
+  <string name="label_attribute">Attribut</string>
+  <string name="label_type">Typ</string>
+  <string name="label_apply_filters">Bewerben Filter</string>
+  <string name="label_clear_selection">Klar Auswahl</string>
+  <string name="label_style_search_error_title">Nein übereinstimmende Arten gefunden</string>
+  <string name="label_style_search_error_des">Machen sicher dein Suche ist buchstabiert richtig und versuchen wieder machen sicher Sie haben angewandt die aneignen Filter oder entfernen die Filter und versuchen nochmal</string>
+  <string name="label_geofence_disable_error">Ausgewählt Geofence ist nicht verfügbar in die Grab Karte Anbieter. Bitte Schalter zu andere Karte Anbieter zu anzeigen und gelingen ausgewählt Geofence.</string>
+  <string name="label_clear_filters">Klar Filter</string>
+  <string name="label_try_trackers_amp_geofences_simulation">Versuche Tracker &amp; Geofences Simulation</string>
+  <string name="label_requires_connection_to_aws_cloudformation">Erfordert Verbindung zu AWS Wolkenbildung</string>
+  <string name="label_enable_live_geofences">Aktiviere Lebe Geofences</string>
+  <string name="label_trackers_amp_geofences_simulation">Tracker &amp; Geofences Simulation</string>
+  <string name="label_explore_the_power_of_trackers_amp_geofences">Erkunden die Leistung von Tracker &amp; Geofences</string>
+  <string name="label_simulation">Simulation</string>
+  <string name="label_trackers_and_geofences">Tracker und Geofences</string>
+  <string name="label_des">Geben Sie ein die Verfolgung Simulation zu anzeigen die Pfad quer Vancouver Straßen Das Kreuze Geofences</string>
+  <string name="label_trackers_simulation">Tracker</string>
+  <string name="label_visualize_your_location_history_on_the_map">Visualisieren dein Standort Geschichte auf die Karte</string>
+  <string name="label_geofences_simulation">Geofences</string>
+  <string name="label_define_virtual_boundaries_around_a_specific_area_to_detect_entry_and_exit_events">Definiere virtuell Grenzen rund um ein spezifische Bereich zu ermittelt Eintrag und aussteigen Veranstaltungen</string>
+  <string name="label_notifications">Benachrichtigungen</string>
+  <string name="label_get_geofence_messages_when_you_enter_and_leave_locations">Holen Geofence Nachrichten wenn Sie eintragen und verlassen Standorte</string>
+  <string name="label_start_simulation">Starte Simulation</string>
+  <string name="label_tracking_and_geofence_simulation">Nachverfolgung und Geofence Simulation</string>
+  <string name="change">Veränderung</string>
+  <string name="label_macdonald">Macdonald</string>
+  <string name="label_bus_01">Bus 01</string>
+  <string name="routes_notifications">Routen Benachrichtigungen</string>
+  <string name="routes_active">Routen aktiv</string>
+  <string name="route_active">Route aktiv</string>
+  <string name="simulation_exit_title">Sind Sie sicher Sie wollen zu aussteigen Simulation?</string>
+  <string name="label_tracking_active">Gerät Verfolgung ist aktiv</string>
+  <string name="label_tracking_in_active">Gerät Verfolgung inaktiv</string>
+  <string name="label_bus">Bus</string>
+  <string name="label_entered">Eingetragen</string>
+  <string name="label_exited">Beendet</string>
+  <string name="label_geofence">Geofence</string>
+  <string name="label_language">Sprache</string>
+  <string name="label_tracker_entered">Tracker eingegeben</string>
+  <string name="label_tracker_exited">Tracker hinausgegangen</string>
+  <string name="label_deutsch" translatable="false">Deutsch</string>
+  <string name="label_espa_ol" translatable="false">Español</string>
+  <string name="label_english" translatable="false">English</string>
+  <string name="label_fran_ais" translatable="false">Français</string>
+  <string name="label_italiano" translatable="false">Italiano</string>
+  <string name="label_portugu_s_brasileiro" translatable="false">Português Brasileiro</string>
+  <string name="label_simplified_chinese" translatable="false">Simplified Chinese</string>
+  <string name="label_traditional_chinese" translatable="false">Traditional Chinese</string>
+  <string name="label_japanese" translatable="false">日本語</string>
+  <string name="label_korean" translatable="false">한국어</string>
+  <string name="label_arabic" translatable="false">العربية</string>
+  <string name="label_hebrew" translatable="false">עברית</string>
+  <string name="label_hindi" translatable="false">हिन्दी</string>
+</resources>

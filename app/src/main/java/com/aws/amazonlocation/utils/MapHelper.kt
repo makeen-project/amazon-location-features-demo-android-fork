@@ -64,9 +64,11 @@ import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
+import com.mapbox.mapboxsdk.style.expressions.Expression
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
+import com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import com.mapbox.mapboxsdk.utils.BitmapUtils
@@ -145,6 +147,7 @@ class MapHelper(private val appContext: Context) {
                 isMapLoadedInterface.mapLoadedSuccess()
                 mapStyleChangedListener.onMapStyleChanged(mapStyle)
                 mapStyleChangeListener = mapStyleChangedListener
+                mPreferenceManager.setValue(MAP_STYLE_ATTRIBUTION, style.sources.first().attribution)
             }
         }
     }
@@ -152,6 +155,15 @@ class MapHelper(private val appContext: Context) {
     fun updateStyle(mapView: MapLibreView, mapStyle: String, style: String) {
         mapView.setStyle(MapStyle(mapStyle, style)) {
             mapStyleChangeListener?.onMapStyleChanged(mapStyle)
+            mPreferenceManager?.setValue(MAP_STYLE_ATTRIBUTION, it.sources.first().attribution)
+            updateZoomRange(it)
+        }
+    }
+
+    fun updateMapStyle(mapStyle: String, style: String) {
+        mMapLibreView?.setStyle(MapStyle(mapStyle, style)) {
+            mapStyleChangeListener?.onMapStyleChanged(mapStyle)
+            mPreferenceManager?.setValue(MAP_STYLE_ATTRIBUTION, it.sources.first().attribution)
             updateZoomRange(it)
         }
     }
@@ -1352,8 +1364,39 @@ class MapHelper(private val appContext: Context) {
         fun mapLoadedSuccess()
     }
 
+    private fun setStyleLanguage(style: Style) {
+        val r = this.appContext.resources
+        val mapName = mPreferenceManager?.getValue(KEY_MAP_NAME, r.getString(R.string.esri))
+        var expression: Expression? = null
+        val languageCode = getLanguageCode()
+
+        if (mapName == r.getString(R.string.here) || mapName == r.getString(R.string.grab)) {
+            expression = Expression.coalesce(
+                Expression.get("name:$languageCode"),
+                Expression.get("name")
+            )
+        } else {
+            if (mapName == r.getString(R.string.esri)) {
+                expression = Expression.coalesce(
+                    Expression.coalesce(
+                        Expression.get("_name_$languageCode"),
+                        Expression.get("_name_global")
+                    ),
+                    Expression.get("_name")
+                )
+            }
+        }
+        for (layer in style.layers) {
+            if (layer is SymbolLayer) {
+                val textField = textField(expression)
+                layer?.setProperties(textField)
+            }
+        }
+    }
+
     fun updateZoomRange(style: Style) {
         mMapboxMap?.getStyle {
+            setStyleLanguage(style)
             val cameraPosition = mMapboxMap?.cameraPosition
             val zoom = cameraPosition?.zoom
             val minZoom = minZoomLevel(style)

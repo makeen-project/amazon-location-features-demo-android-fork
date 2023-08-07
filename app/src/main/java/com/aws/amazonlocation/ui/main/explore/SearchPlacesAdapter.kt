@@ -40,10 +40,13 @@ class SearchPlacesAdapter(
                 if (data.distance != null && preferenceManager != null) {
                     tvDistance.text = preferenceManager.getValue(KEY_UNIT_SYSTEM, "").let { unitSystem ->
                         val isMetric = Units.isMetric(unitSystem)
-                        Units.getMetricsNew(
-                            data.distance!!,
-                            isMetric,
-                        )
+                        data.distance?.let {
+                            Units.getMetricsNew(
+                                tvDistance.context,
+                                it,
+                                isMetric,
+                            )
+                        }
                     }
                     groupDistance.show()
                 } else {

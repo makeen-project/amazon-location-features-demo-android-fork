@@ -23,6 +23,7 @@
         android:layout_marginTop="@dimen/dp_32"
         android:text="@string/no_matching_places_found"
         android:textAlignment="center"
+        android:textDirection="locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_search_no_data_found" />
@@ -36,6 +37,7 @@
         android:layout_marginTop="@dimen/dp_8"
         android:text="@string/make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode"
         android:textAlignment="center"
+        android:textDirection="locale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_no_matching_found" />

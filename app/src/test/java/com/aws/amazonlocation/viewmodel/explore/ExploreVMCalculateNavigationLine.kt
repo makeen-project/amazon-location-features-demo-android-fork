@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.viewmodel.explore
 
+import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import app.cash.turbine.test
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
@@ -24,12 +25,15 @@ import org.mockito.Mockito
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.RuntimeEnvironment
 
 @RunWith(RobolectricTestRunner::class)
 class ExploreVMCalculateNavigationLine : BaseTest() {
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
+
+    private val context: Context = RuntimeEnvironment.getApplication().applicationContext
 
     @Mock
     private lateinit var mRemoteDataSourceImpl: RemoteDataSourceImpl
@@ -70,7 +74,7 @@ class ExploreVMCalculateNavigationLine : BaseTest() {
         mExploreVM.mSearchDirectionDestinationData?.isDestination = true
 
         mExploreVM.mNavigationData.test {
-            mExploreVM.calculateNavigationLine(param)
+            mExploreVM.calculateNavigationLine(context, param)
             var result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
             result = awaitItem()
