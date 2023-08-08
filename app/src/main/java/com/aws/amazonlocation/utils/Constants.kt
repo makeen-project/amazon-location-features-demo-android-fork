@@ -340,6 +340,7 @@ object AnalyticsAttribute {
     const val ERROR = "error"
     const val NUMBER_OF_TRACKER_POINTS = "numberOfTrackerPoints"
     const val BUS_NAME = "busName"
+    const val LANGUAGE = "language"
 }
 object AnalyticsAttributeValue {
     const val EXPLORER = "Explorer"

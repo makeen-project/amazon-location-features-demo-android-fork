@@ -201,15 +201,16 @@ class MainActivity : BaseActivity(), CrashListener {
                 }
             }
         )
-        analyticsHelper =
-            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
-        analyticsHelper?.initAnalytics()
-        analyticsHelper?.startSession()
         lifecycleScope.launch {
             delay(DELAY_LANGUAGE_3000)
             val languageCode = getLanguageCode()
             languageCode?.let { setLocale(it, applicationContext) }
         }
+
+        analyticsHelper =
+            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
+        analyticsHelper?.initAnalytics()
+        analyticsHelper?.startSession()
     }
 
     private fun checkRtl() {
