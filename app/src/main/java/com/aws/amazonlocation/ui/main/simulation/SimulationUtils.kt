@@ -751,20 +751,25 @@ class SimulationUtils(
 
     private fun stopMqttManager() {
         mIsLocationUpdateEnable = false
-        try {
-            mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/$TRACKER")
-        } catch (_: Exception) {
-        }
+        if (mqttManager != null) {
+            try {
+                mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/$TRACKER")
+            } catch (_: Exception) {
+            }
 
-        try {
-            mqttManager?.disconnect()
-        } catch (_: Exception) {
+            try {
+                mqttManager?.disconnect()
+            } catch (_: Exception) {
+            }
+            mqttManager = null
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(
+                EventType.STOP_TRACKING,
+                properties
+            )
         }
-        mqttManager = null
-        val properties = listOf(
-            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION)
-        )
-        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.STOP_TRACKING, properties)
     }
 
     private fun startMqttManager() {
