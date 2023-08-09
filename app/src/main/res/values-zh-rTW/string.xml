@@ -274,4 +274,5 @@
   <string name="label_arabic" translatable="false">العربية</string>
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
+  <string name="simulation_notification_permission">對於 順利 模擬 經驗 請 允許 通知 允許 從 設置。</string>
 </resources>

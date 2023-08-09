@@ -274,4 +274,5 @@
   <string name="label_arabic" translatable="false">العربية</string>
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
+  <string name="simulation_notification_permission">Para suave simulación experiencia por favor permitir notificación permiso de ajustes.</string>
 </resources>

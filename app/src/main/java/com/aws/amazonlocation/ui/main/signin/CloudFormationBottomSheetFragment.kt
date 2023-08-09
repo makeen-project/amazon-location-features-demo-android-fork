@@ -20,7 +20,11 @@ import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
 import com.aws.amazonlocation.databinding.BottomSheetCloudFormationBinding
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
+import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -84,6 +88,32 @@ class CloudFormationBottomSheetFragment(
         setStyle(
             STYLE_NORMAL,
             R.style.CustomBottomSheetDialogTheme
+        )
+
+        val propertiesAws = getPairValue()
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val propertiesAws = getPairValue()
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STOPPED, propertiesAws)
+    }
+
+    private fun getPairValue(): List<Pair<String, String>> {
+        val analyticsValue = when (mTabEnum) {
+            TabEnum.TAB_GEOFENCE -> {
+                AnalyticsAttributeValue.GEOFENCES
+            }
+            TabEnum.TAB_TRACKING -> {
+                AnalyticsAttributeValue.TRACKERS
+            }
+            else -> {
+                AnalyticsAttributeValue.SETTINGS
+            }
+        }
+        return listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, analyticsValue)
         )
     }
 
@@ -260,6 +290,8 @@ class CloudFormationBottomSheetFragment(
                 KEY_CLOUD_FORMATION_STATUS,
                 AuthEnum.AWS_CONNECTED.name
             )
+            val propertiesAws = getPairValue()
+            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL, propertiesAws)
             storeDataInPreference()
             if (!isRunningTest) {
                 delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting

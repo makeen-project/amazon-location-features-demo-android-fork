@@ -25,7 +25,10 @@ import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -108,6 +111,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
                 ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
             }
+            (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.UNITS)
         }
     }
 
@@ -209,6 +213,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             mSignInViewModel.mSignOutResponse.collect { handleResult ->
                 handleResult.onLoading {
                 }.onSuccess {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
                     mBaseActivity?.clearUserInFo()
                     mBaseActivity?.mPreferenceManager?.setValue(
                         KEY_CLOUD_FORMATION_STATUS,
@@ -221,6 +229,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
                     activity?.restartApplication()
                 }.onError { it ->
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_FAILED, propertiesAws)
                     it.messageResource?.let {
                         showError(it.toString())
                     }
@@ -247,6 +259,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.unit_system_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.UNITS)
             }
             clDataProvider.setOnClickListener {
                 if (isTablet) {
@@ -264,6 +278,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.data_provider_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.DATA_PROVIDER)
             }
             clMapStyle.setOnClickListener {
                 if (isTablet) {
@@ -281,6 +297,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.map_style_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.MAP_STYLE)
             }
             clRouteOption.setOnClickListener {
                 if (isTablet) {
@@ -298,6 +316,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.route_option_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS)
             }
             clAwsCloudformation.setOnClickListener {
                 if (isTablet) {
@@ -316,6 +336,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 } else {
                     findNavController().navigate(R.id.aws_cloud_information_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
+                val propertiesAws = listOf(
+                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
             }
             clLanguage.setOnClickListener {
                 if (isTablet) {
