@@ -17,6 +17,7 @@ import com.amazonaws.services.geo.model.InternalServerException
 import com.amazonaws.services.geo.model.ResourceNotFoundException
 import com.amazonaws.services.geo.model.ThrottlingException
 import com.amazonaws.services.geo.model.ValidationException
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.response.LoginResponse
@@ -30,9 +31,12 @@ import com.aws.amazonlocation.utils.AmplifyHelper
 import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_LOCATION_PERMISSION
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_USER_DETAILS
+import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -74,6 +78,22 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (mPreferenceManager.getValue(KEY_NEAREST_REGION, "") == "") {
+            val latencyChecker = LatencyChecker()
+            val urls = arrayListOf<String>()
+            regionList.forEach {
+                urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
+            }
+
+            val (fastestUrl, _) = latencyChecker.checkLatencyForUrls(urls)
+            regionList.forEach {
+                if (fastestUrl != null) {
+                    if (fastestUrl.contains(it)) {
+                        mPreferenceManager.setValue(KEY_NEAREST_REGION, it)
+                    }
+                }
+            }
+        }
         try {
             amplifyHelper.initAmplify()
         } catch (_: Exception) {}

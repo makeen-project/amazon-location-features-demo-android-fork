@@ -33,19 +33,6 @@
         android:theme="@style/Theme.AmazonLocation"
         tools:targetApi="31">
         <activity
-            android:name=".ui.splash.SplashActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme.Splash">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.main.web_view.WebViewActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
@@ -65,13 +52,13 @@
         <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="screenSize|orientation"
-            android:exported="false"
+            android:exported="true"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
