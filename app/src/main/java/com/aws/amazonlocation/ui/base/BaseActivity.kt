@@ -17,7 +17,6 @@ import com.amazonaws.services.geo.model.InternalServerException
 import com.amazonaws.services.geo.model.ResourceNotFoundException
 import com.amazonaws.services.geo.model.ThrottlingException
 import com.amazonaws.services.geo.model.ValidationException
-import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.response.LoginResponse
@@ -75,12 +74,9 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        if (BuildConfig.DEBUG) {
-            try {
-                amplifyHelper.initAmplify()
-            } catch (_: Exception) {}
-        }
+        try {
+            amplifyHelper.initAmplify()
+        } catch (_: Exception) {}
 
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
