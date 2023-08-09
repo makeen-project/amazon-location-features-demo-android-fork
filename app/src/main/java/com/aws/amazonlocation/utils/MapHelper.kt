@@ -65,6 +65,7 @@ import com.mapbox.mapboxsdk.plugins.annotation.Symbol
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions
 import com.mapbox.mapboxsdk.style.expressions.Expression
+import com.mapbox.mapboxsdk.style.layers.CircleLayer
 import com.mapbox.mapboxsdk.style.layers.LineLayer
 import com.mapbox.mapboxsdk.style.layers.Property
 import com.mapbox.mapboxsdk.style.layers.PropertyFactory
@@ -671,38 +672,94 @@ class MapHelper(private val appContext: Context) {
         mSourceId: String,
         color: Int
     ) {
+        val rColor = ContextCompat.getColor(
+            appContext,
+            color
+        )
         mMapboxMap?.getStyle { style ->
             style.removeLayer(mLayerId)
             style.removeSource(mSourceId)
-            val lineString: LineString = LineString.fromLngLats(coordinates)
-            val feature: Feature = Feature.fromGeometry(lineString)
 
-            val featureCollection = FeatureCollection.fromFeature(feature)
+            val features: MutableList<Feature> = mutableListOf()
+            for (point in coordinates) {
+                val feature: Feature = Feature.fromGeometry(point)
+                features.add(feature)
+            }
+
+            val featureCollection = FeatureCollection.fromFeatures(features)
             val geoJsonSource = GeoJsonSource(mSourceId, featureCollection)
             style.addSource(geoJsonSource)
 
+            // Add larger circles with green outline and white inner color
             mSymbolManagerTracker?.layerId?.let {
                 style.addLayerBelow(
-                    LineLayer(mLayerId, mSourceId).withProperties(
-                        PropertyFactory.lineCap(Property.LINE_CAP_ROUND),
-                        PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
-                        if (isWalk) {
-                            PropertyFactory.lineDasharray(arrayOf(0f, 2f))
-                        } else {
-                            PropertyFactory.lineDasharray(arrayOf())
-                        },
-                        PropertyFactory.lineWidth(5f),
-                        PropertyFactory.lineColor(
-                            ContextCompat.getColor(
-                                appContext,
-                                color
-                            )
-                        )
+                    CircleLayer(mLayerId, mSourceId).withProperties(
+                        PropertyFactory.circleRadius(6f),
+                        PropertyFactory.circleColor(Color.WHITE),
+                        PropertyFactory.circleStrokeColor(rColor),
+                        PropertyFactory.circleStrokeWidth(3f)
+                    ),
+                    it
+                )
+            }
+
+            // Add smaller green circles in between the larger circles
+            val inBetweenPoints = getInBetweenPoints(coordinates)
+            val inBetweenFeatures: MutableList<Feature> = mutableListOf()
+            for (point in inBetweenPoints) {
+                val feature: Feature = Feature.fromGeometry(point)
+                inBetweenFeatures.add(feature)
+            }
+            val sourceIDInBetween = mSourceId + "inBetween"
+            val layerIDInBetween = mLayerId + "inBetween"
+
+            style.removeLayer(layerIDInBetween)
+            style.removeSource(sourceIDInBetween)
+
+            val inBetweenFeatureCollection = FeatureCollection.fromFeatures(inBetweenFeatures)
+            val inBetweenGeoJsonSource = GeoJsonSource(sourceIDInBetween, inBetweenFeatureCollection)
+            style.addSource(inBetweenGeoJsonSource)
+
+            mSymbolManagerTracker?.layerId?.let {
+                style.addLayerBelow(
+                    CircleLayer(mLayerId + "inBetween", mSourceId + "inBetween").withProperties(
+                        PropertyFactory.circleRadius(3f),
+                        PropertyFactory.circleColor(rColor)
                     ),
                     it
                 )
             }
         }
+    }
+    private fun getInBetweenPoints(coordinates: List<Point>): List<Point> {
+        val inBetweenPoints: MutableList<Point> = mutableListOf()
+        for (i in 0 until coordinates.size - 1) {
+            val start = coordinates[i]
+            val end = coordinates[i + 1]
+            val distance = calculateDistance(start, end) // in meters
+            val numPoints = (distance / 80).toInt() // add a point every 10 meters
+            for (j in 0 until numPoints) {
+                val fraction = (j + 1).toDouble() / (numPoints + 1)
+                val lng = start.longitude() + fraction * (end.longitude() - start.longitude())
+                val lat = start.latitude() + fraction * (end.latitude() - start.latitude())
+                val midPoint = Point.fromLngLat(lng, lat)
+                inBetweenPoints.add(midPoint)
+            }
+        }
+        return inBetweenPoints
+    }
+
+    private fun calculateDistance(start: Point, end: Point): Double {
+        val R = 6371e3 // radius of the Earth in meters
+        val lat1 = Math.toRadians(start.latitude())
+        val lat2 = Math.toRadians(end.latitude())
+        val dLat = Math.toRadians(end.latitude() - start.latitude())
+        val dLng = Math.toRadians(end.longitude() - start.longitude())
+        val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1) * Math.cos(lat2) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2)
+        val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        return R * c
     }
 
     fun updateLine(coordinates: List<Point>) {
