@@ -284,16 +284,25 @@ class TrackingUtils(
 
     private fun stopMqttManager() {
         mIsLocationUpdateEnable = false
-        try {
-            mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
-        } catch (_: Exception) {
-        }
+        if (mqttManager != null) {
+            try {
+                mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
+            } catch (_: Exception) {
+            }
 
-        try {
-            mqttManager?.disconnect()
-        } catch (_: Exception) {
+            try {
+                mqttManager?.disconnect()
+            } catch (_: Exception) {
+            }
+            mqttManager = null
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(
+                EventType.STOP_TRACKING,
+                properties
+            )
         }
-        mqttManager = null
     }
 
     private fun startMqttManager() {
@@ -376,6 +385,10 @@ class TrackingUtils(
         val latLng = mMapHelper?.getLiveLocation()
         latLng?.let { updateLatLngOnMap(it) }
         mTrackingInterface?.updateBatch()
+        val properties = listOf(
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.START_TRACKING, properties)
     }
 
     fun updateLatLngOnMap(latLng: LatLng) {
@@ -395,12 +408,24 @@ class TrackingUtils(
                     val type = jsonObject.get("trackerEventType").asString
                     val geofenceName = jsonObject.get("geofenceId").asString
                     val subTitle = if (type.equals("ENTER", true)) {
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                            Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
+                            Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.ENTER)
+                        )
+                        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
                         "${mFragmentActivity?.getString(R.string.label_tracker_entered)} $geofenceName"
                     } else {
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                            Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
+                            Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.EXIT)
+                        )
+                        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
                         "${mFragmentActivity?.getString(R.string.label_tracker_exited)} $geofenceName"
                     }
                     runOnUiThread {
-                        activity?.messageDialog(
+                        activity.messageDialog(
                             title = geofenceName,
                             subTitle = subTitle,
                             false,
@@ -508,6 +533,11 @@ class TrackingUtils(
     fun manageGeofenceListUI(list: ArrayList<ListGeofenceResponseEntry>) {
         mGeofenceList.clear()
         mGeofenceList.addAll(list)
+        val properties = listOf(
+            Pair(AnalyticsAttribute.NUMBER_OF_TRACKER_POINTS, mGeofenceList.size.toString()),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.TRACKER_SAVED, properties)
         if (mGeofenceList.isNotEmpty()) {
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEachIndexed { index, data ->

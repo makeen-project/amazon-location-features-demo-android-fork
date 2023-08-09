@@ -43,6 +43,7 @@ android {
         buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL',"\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL")}\""
         buildConfigField 'String', 'USER_LOGIN_NAME',"\"${customConfig.getProperty("USER_LOGIN_NAME")}\""
         buildConfigField 'String', 'USER_LOGIN_PASSWORD',"\"${customConfig.getProperty("USER_LOGIN_PASSWORD")}\""
+        buildConfigField 'String', 'ANALYTICS_APP_ID',"\"${customConfig.getProperty("ANALYTICS_APP_ID")}\""
     }
     signingConfigs {
         release {
@@ -158,6 +159,8 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'
     implementation 'com.amazonaws:aws-android-sdk-location:2.72.0'
     implementation 'com.amazonaws:aws-android-sdk-iot:2.72.0'
+    implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.72.0'
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'
     implementation "androidx.navigation:navigation-fragment-ktx:2.0.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.0.0"
     implementation "androidx.fragment:fragment-ktx:1.5.6"

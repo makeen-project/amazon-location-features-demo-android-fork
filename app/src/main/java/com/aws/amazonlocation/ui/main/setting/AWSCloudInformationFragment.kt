@@ -27,7 +27,10 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.signin.CustomSpinnerAdapter
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -98,6 +101,13 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
         clickListener()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val propertiesAws = listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STOPPED, propertiesAws)
+    }
     private fun init() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         mBinding.apply {
@@ -148,11 +158,19 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
                     )
                     (activity as MainActivity).getTokenAndAttachPolicy(it)
                     init()
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_IN_SUCCESSFUL, propertiesAws)
                 }.onError { it ->
                     (activity as MainActivity).hideProgress()
                     it.messageResource?.let {
                         showError(it.toString())
                     }
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
                 }
             }
         }
@@ -162,6 +180,10 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
                 handleResult.onLoading {
                 }.onSuccess {
                     mBaseActivity?.clearUserInFo()
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
                     if (it.isDisconnectFromAWSRequired) {
                         mPreferenceManager.setValue(KEY_RE_START_APP, true)
                         mPreferenceManager.setValue(KEY_RE_START_APP_WITH_AWS_DISCONNECT, true)
@@ -181,6 +203,10 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
                         activity?.restartApplication()
                     }
                 }.onError { it ->
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                    )
+                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_FAILED, propertiesAws)
                     it.messageResource?.let {
                         showError(it.toString())
                     }
@@ -289,6 +315,10 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             }
 
             btnSignIn.setOnClickListener {
+                val propertiesAws = listOf(
+                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
                 mSignInViewModel.signInWithAmazon(requireActivity())
             }
 
@@ -335,6 +365,10 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
     }
 
     private fun storeDataAndRestartApp() {
+        val propertiesAws = listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL, propertiesAws)
         mPreferenceManager.setValue(
             KEY_CLOUD_FORMATION_STATUS,
             AuthEnum.AWS_CONNECTED.name
