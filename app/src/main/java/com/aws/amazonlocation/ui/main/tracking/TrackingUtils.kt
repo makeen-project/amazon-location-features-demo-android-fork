@@ -118,7 +118,7 @@ class TrackingUtils(
             TrackingEnum.ENABLE_TRACKING -> {
                 mBottomSheetTrackingBehavior?.isDraggable = true
                 mBottomSheetTrackingBehavior?.isFitToContents = false
-                mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
+                mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.58f
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
                         mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
@@ -177,7 +177,7 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isDraggable = true
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetTrackingBehavior?.isFitToContents = false
-            mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
+            mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.58f
             btnEnableTracking.setOnClickListener {
                 (activity as MainActivity).openCloudFormation()
             }

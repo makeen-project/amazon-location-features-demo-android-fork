@@ -346,7 +346,7 @@ class GeofenceUtils {
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetGeofenceListBehavior?.isFitToContents = false
             if (isTablet) {
-                mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.6f
+                mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.58f
             } else {
                 mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
             }
@@ -539,7 +539,7 @@ class GeofenceUtils {
         mBottomSheetGeofenceListBehavior?.isHideable = false
         mBottomSheetGeofenceListBehavior?.isDraggable = true
         mBottomSheetGeofenceListBehavior?.isFitToContents = false
-        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.6f
+        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.58f
         mBindingGeofenceList?.clGeofenceList?.context?.let {
             if ((mActivity as MainActivity).isTablet) {
                 mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
