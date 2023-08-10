@@ -22,6 +22,7 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
 import com.aws.amazonlocation.ui.main.language.LanguageFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
+import com.aws.amazonlocation.ui.main.region.RegionFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
@@ -358,6 +359,23 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     }
                 } else {
                     findNavController().navigate(R.id.language_fragment)
+                }
+            }
+            clRegion.setOnClickListener {
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        RegionFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clRegion.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivRegion.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.region_fragment)
                 }
             }
             clDisconnect.setOnClickListener {

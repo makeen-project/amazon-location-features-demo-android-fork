@@ -85,4 +85,10 @@
         android:label="LanguageFragment"
         tools:layout="@layout/fragment_language"/>
 
+    <fragment
+        android:id="@+id/region_fragment"
+        android:name="com.aws.amazonlocation.ui.main.region.RegionFragment"
+        android:label="RegionFragment"
+        tools:layout="@layout/fragment_region"/>
+
 </navigation>

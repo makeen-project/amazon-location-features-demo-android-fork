@@ -270,7 +270,7 @@
                 android:id="@+id/iv_language"
                 android:layout_width="@dimen/dp_20"
                 android:layout_height="@dimen/dp_20"
-                android:src="@drawable/ic_language"
+                android:src="@drawable/icon_language"
                 android:tint="@color/color_img_tint"
                 app:layout_constraintBottom_toBottomOf="@id/tv_language_name"
                 app:layout_constraintStart_toStartOf="parent"
@@ -384,7 +384,75 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_region"
+            android:layout_width="@dimen/dp_0"
+            android:paddingStart="@dimen/dp_24"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_route_option">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_region"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:src="@drawable/ic_language"
+                android:tint="@color/color_img_tint"
+                app:layout_constraintBottom_toBottomOf="@id/tv_region_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_back_arrow_region"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:rotation="180"
+                android:layout_marginEnd="@dimen/dp_15"
+                android:src="@drawable/ic_back"
+                android:tint="@color/color_img_tint"
+                app:layout_constraintBottom_toBottomOf="@id/tv_region_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_region" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_region"
+                style="@style/SP16RegularWhiteTextStyle"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_24"
+                android:gravity="start"
+                android:paddingTop="@dimen/dp_14"
+                android:text="@string/region"
+                android:textColor="@color/color_medium_black"
+                android:textDirection="locale"
+                app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_region"
+                app:layout_constraintStart_toEndOf="@id/iv_region"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_region_name"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_24"
+                android:gravity="start"
+                android:paddingBottom="@dimen/dp_14"
+                android:textDirection="locale"
+                app:layout_constraintEnd_toStartOf="@id/iv_back_arrow_region"
+                app:layout_constraintStart_toEndOf="@id/iv_region"
+                app:layout_constraintTop_toBottomOf="@id/tv_region"
+                tools:text="English" />
+
+            <View
+                android:id="@+id/view_region"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/color_view_line"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_region_name" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_aws_cloudformation"
             android:layout_width="@dimen/dp_0"
@@ -392,7 +460,7 @@
             android:paddingStart="@dimen/dp_24"
             app:layout_constraintEnd_toEndOf="@id/end_guideline"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_route_option">
+            app:layout_constraintTop_toBottomOf="@id/cl_region">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_aws_cloud_formation"

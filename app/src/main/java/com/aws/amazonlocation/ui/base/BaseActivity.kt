@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.Settings
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,7 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -85,7 +87,7 @@ open class BaseActivity : AppCompatActivity() {
                 urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
             }
 
-            val (fastestUrl, _) = latencyChecker.checkLatencyForUrls(urls)
+            val (fastestUrl, _) = runBlocking { latencyChecker.checkLatencyForUrls(urls) }
             regionList.forEach {
                 if (fastestUrl != null) {
                     if (fastestUrl.contains(it)) {

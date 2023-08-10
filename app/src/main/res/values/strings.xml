@@ -290,4 +290,5 @@
     <string name="label_change_data_provider">Change Data Provider</string>
     <string name="label_change_data_provider_des">GrabMaps doesn\'t support simulation, please change data provider to Esri or HERE to use Geofence or Tracker features.</string>
     <string name="label_switch_to_esri">Switch to Esri</string>
+    <string name="region">Region</string>
 </resources>
