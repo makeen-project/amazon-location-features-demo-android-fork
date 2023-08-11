@@ -2,6 +2,8 @@ package com.aws.amazonlocation.ui.main
 
 import android.app.ActivityManager
 import android.content.Context
+import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -33,7 +35,7 @@ import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.scrollForView
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.PreferenceManager
-import dagger.hilt.android.testing.HiltAndroidRule
+import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
@@ -56,11 +58,21 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
         val tracking = uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
         tracking.click()
 
-        Thread.sleep(DELAY_1000)
         uiDevice.wait(
-            Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/tv_sign_in_required")),
-            DELAY_10000,
+            Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracking))),
+            DELAY_1000
         )
+
+        val clEnableTracking =
+            mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
+        if (clEnableTracking.visibility == View.VISIBLE) {
+            val btnTryTracker =
+                mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
+            mActivityRule.activity.runOnUiThread {
+                btnTryTracker.performClick()
+            }
+        }
+        Thread.sleep(DELAY_1000)
         val appViews = UiScrollable(UiSelector().scrollable(true))
 
         val edtIdentityPoolId = scrollForView(allOf(withId(R.id.edt_identity_pool_id), isCompletelyDisplayed())){
