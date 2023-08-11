@@ -74,13 +74,6 @@ class SimulationStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
             val rvTrackingSimulation =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_tracking_simulation)
             val itemCount = rvTrackingSimulation.adapter?.itemCount ?: 0
-            uiDevice.wait(
-                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking))),
-                DELAY_1000
-            )
-            val labelStartTracking =
-                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking)))
-            labelStartTracking?.click()
             Thread.sleep(DELAY_5000)
             val ivBackArrowChangeRoute =
                 mActivityRule.activity.findViewById<AppCompatImageView>(R.id.iv_back_arrow_change_route)

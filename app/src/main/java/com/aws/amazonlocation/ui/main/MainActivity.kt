@@ -89,7 +89,9 @@ class MainActivity : BaseActivity(), CrashListener {
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         )
-        (application as AmazonLocationApp).setCrashListener(this)
+        if (!isRunningTest) {
+            (application as AmazonLocationApp).setCrashListener(this)
+        }
         isTablet = resources.getBoolean(R.bool.is_tablet)
         if (!isTablet) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

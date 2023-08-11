@@ -16,6 +16,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
+import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
@@ -75,7 +76,7 @@ class CheckGrabGoButtonTest : BaseTestMainActivity() {
             val destinationEdt = waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
             destinationEdt?.perform(click(), replaceText(TEST_WORD_11))
 
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_10000)
 
             suggestionListRv?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
@@ -83,7 +84,7 @@ class CheckGrabGoButtonTest : BaseTestMainActivity() {
                     click()
                 )
             )
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_10000)
 
             val bottomSheetDirectionSearch =
                 mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_direction_search)

@@ -19,10 +19,10 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
-import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE
@@ -55,11 +55,7 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_WORD_4))
             closeSoftKeyboard()
-            uiDevice.wait(
-                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_search_places_suggestion")),
-                DELAY_20000,
-            )
-            Thread.sleep(DELAY_5000)
+            Thread.sleep(DELAY_10000)
             getInstrumentation().waitForIdleSync()
             val rvSearchPlaceSuggestion =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
