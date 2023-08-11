@@ -31,6 +31,7 @@ Create *`custom.properties`* file inside the project root folder and add the det
 | DEFAULT_REGION                       | Take region from IdentityPoolId (Character before ':')                |
 | DEFAULT_GRAB_IDENTITY_POOL_ID        | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
 | DEFAULT_GRAB_REGION                  | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
+| ANALYTICS_APP_ID                     | AnalyticsAppId                                                        |
 | IDENTITY_POOL_ID                     | IdentityPoolId                                                        |
 | USER_DOMAIN                          | UserDomain                                                            |
 | USER_POOL_CLIENT_ID                  | UserPoolClientId                                                      |
