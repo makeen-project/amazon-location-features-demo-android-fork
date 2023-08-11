@@ -2,6 +2,7 @@ DEFAULT_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_REGION=xx-xxxx-x
 DEFAULT_GRAB_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_GRAB_REGION=xx-xxxx-x
+ANALYTICS_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # Here are some optional values for running tests
 IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 USER_DOMAIN=https://xxxxxxxxxxxx.xxxx.xx-xxxx-x.amazoncognito.com

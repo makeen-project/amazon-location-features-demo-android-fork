@@ -123,6 +123,20 @@ class AWSLocationHelper(
         return mCognitoCredentialsProvider
     }
 
+    fun getAnalyticsCredentialProvider(): CognitoCredentialsProvider {
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
+        var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        var defaultRegion = BuildConfig.DEFAULT_REGION
+        if (mapName == mapGrabMaps) {
+            defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
+            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
+        }
+        return CognitoCredentialsProvider(
+            defaultIdentityPoolId,
+            Regions.fromName(defaultRegion)
+        )
+    }
+
     private fun searchPlaceIndexForSuggestions(
         lat: Double?,
         lng: Double?,

@@ -17,6 +17,7 @@ import com.aws.amazonlocation.ui.main.about.VersionFragment
 import com.aws.amazonlocation.ui.main.attribution.AttributionFragment
 import com.aws.amazonlocation.ui.main.terms_condition.TermsAndConditionFragment
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.KEY_URL
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -64,6 +65,7 @@ class AboutFragment : BaseFragment() {
                     )
                 )
             }
+            (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.ATTRIBUTION)
         }
     }
 
@@ -89,6 +91,8 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.attribution_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.ATTRIBUTION)
             }
             clVersion.setOnClickListener {
                 if (isTablet) {
@@ -110,6 +114,8 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.version_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.VERSION)
             }
             clTermsConditions.setOnClickListener {
                 if (isTablet) {
@@ -131,6 +137,8 @@ class AboutFragment : BaseFragment() {
                 } else {
                     findNavController().navigate(R.id.terms_conditions_fragment)
                 }
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.TERMS_CONDITIONS)
             }
             clHelp.setOnClickListener {
                 startActivity(
@@ -142,6 +150,8 @@ class AboutFragment : BaseFragment() {
                         BuildConfig.BASE_DOMAIN + BuildConfig.CLOUD_FORMATION_READ_MORE_URL
                     )
                 )
+                (activity as MainActivity).exitScreen()
+                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.HELP)
             }
         }
     }
