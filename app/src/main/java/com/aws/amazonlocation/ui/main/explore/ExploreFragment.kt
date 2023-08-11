@@ -3148,13 +3148,18 @@ class ExploreFragment :
     }
 
     private fun recordTravelModeChange() {
-        val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
-        val properties = listOf(
-            Pair(AnalyticsAttribute.TRAVEL_MODE, mTravelMode),
-            Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE)
-        )
-        (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_OPTION_CHANGED, properties)
+        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+            val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
+            val properties = listOf(
+                Pair(AnalyticsAttribute.TRAVEL_MODE, mTravelMode),
+                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
+                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(
+                ROUTE_OPTION_CHANGED,
+                properties
+            )
+        }
     }
 
     private fun BottomSheetMapStyleBinding.showNoDataFoundFilter() {

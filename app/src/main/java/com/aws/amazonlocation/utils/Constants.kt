@@ -284,11 +284,12 @@ object EventType {
     const val PLACE_SEARCH = "PLACES_SEARCH"
     const val ROUTE_SEARCH = "ROUTE_SEARCH"
     const val ROUTE_OPTION_CHANGED = "ROUTE_OPTION_CHANGED"
+    const val MAP_UNIT_CHANGE = "MAP_UNIT_CHANGE"
 
     // User
     const val SIGN_IN_STARTED = "SIGN_IN_STARTED"
-    const val SIGN_IN_SUCCESSFUL = "_userauth.sign_in"
-    const val SIGN_IN_FAILED = "_userauth.auth_fail"
+    const val SIGN_IN_SUCCESSFUL = "SIGN_IN_SUCCESSFUL"
+    const val SIGN_IN_FAILED = "SIGN_IN_FAILED"
     const val SIGN_OUT_SUCCESSFUL = "SIGN_OUT_SUCCESSFUL"
     const val SIGN_OUT_FAILED = "SIGN_OUT_FAILED"
     const val AWS_ACCOUNT_CONNECTION_STARTED = "AWS_ACCOUNT_CONNECTION_STARTED"
@@ -312,6 +313,7 @@ object EventType {
     const val CHANGE_BUS_TRACKING_HISTORY = "CHANGE_BUS_TRACKING_HISTORY"
     const val ENABLE_NOTIFICATION = "ENABLE_NOTIFICATION"
     const val DISABLE_NOTIFICATION = "DISABLE_NOTIFICATION"
+    const val START_SIMULATION = "START_SIMULATION"
 
     // General
     const val LANGUAGE_CHANGED = "LANGUAGE_CHANGED"
