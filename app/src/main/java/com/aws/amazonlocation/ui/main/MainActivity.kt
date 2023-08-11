@@ -96,6 +96,10 @@ class MainActivity : BaseActivity(), CrashListener {
         }
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+        analyticsHelper =
+            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
+        analyticsHelper?.initAnalytics()
+        analyticsHelper?.startSession()
         checkRtl()
         makeTransparentStatusBar()
         reStartApp = mPreferenceManager.getBooleanValue(KEY_RE_START_APP, false)
@@ -168,6 +172,8 @@ class MainActivity : BaseActivity(), CrashListener {
                         setSelectedScreen(AnalyticsAttributeValue.GEOFENCES)
                     }
                 }
+            } else {
+                setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
             }
         } else {
             setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
@@ -206,11 +212,6 @@ class MainActivity : BaseActivity(), CrashListener {
             val languageCode = getLanguageCode()
             languageCode?.let { setLocale(it, applicationContext) }
         }
-
-        analyticsHelper =
-            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
-        analyticsHelper?.initAnalytics()
-        analyticsHelper?.startSession()
     }
 
     private fun checkRtl() {
