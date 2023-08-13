@@ -33,6 +33,7 @@
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_55"
             android:gravity="start"
+            android:textDirection="locale"
             android:text="@string/map_style"
             android:textColor="@color/color_medium_black"
             app:layout_constraintEnd_toEndOf="parent"
@@ -256,6 +257,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_0"
             android:visibility="gone"
+            android:gravity="start"
+            android:textDirection="locale"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/scroll_map_style" />
@@ -325,6 +328,7 @@
                             android:layout_marginHorizontal="@dimen/dp_16"
                             android:text="@string/label_provider"
                             android:textDirection="locale"
+                            android:gravity="start"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
@@ -424,6 +428,7 @@
                             android:layout_marginHorizontal="@dimen/dp_16"
                             android:text="@string/label_type"
                             android:textDirection="locale"
+                            android:gravity="start"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 

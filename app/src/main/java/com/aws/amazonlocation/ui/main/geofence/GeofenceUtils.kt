@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,8 @@ import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
+import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
+import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Durations.DEFAULT_RADIUS
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
@@ -35,14 +38,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
-import java.text.DecimalFormat
-import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
+import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -343,20 +346,36 @@ class GeofenceUtils {
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetGeofenceListBehavior?.isFitToContents = false
             if (isTablet) {
-                mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.6f
+                mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.58f
             } else {
                 mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.5f
             }
             btnAddGeofence.setOnClickListener {
-                mGeofenceInterface?.hideShowBottomNavigationBar(
-                    true,
-                    GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
-                )
+                if (tvEnableGeofence.text.toString() == mActivity?.getString(R.string.add_geofence)) {
+                    val propertiesAws = listOf(
+                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                    )
+                    (mActivity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_CREATION_STARTED, propertiesAws)
+                    mGeofenceInterface?.hideShowBottomNavigationBar(
+                        true,
+                        GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
+                    )
+                } else {
+                    (mActivity as MainActivity).showGeofenceCloudFormation()
+                }
+            }
+            cardTrackerGeofenceSimulation.hide()
+            btnTryGeofence.setOnClickListener {
+                openSimulationWelcome()
             }
 
             clAddGeofence.setOnClickListener {
                 if (checkInternetConnection()) {
                     if (mIsBtnEnable) {
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
+                        )
+                        (mActivity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_CREATION_STARTED, propertiesAws)
                         mGeofenceInterface?.hideShowBottomNavigationBar(
                             true,
                             GeofenceBottomSheetEnum.NONE
@@ -405,6 +424,13 @@ class GeofenceUtils {
         }
     }
 
+    private fun openSimulationWelcome() {
+        val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+        (mActivity as MainActivity).supportFragmentManager.let {
+            simulationBottomSheetFragment.show(it, WelcomeBottomSheetFragment::javaClass.name)
+        }
+    }
+
     private fun setLatLngOnTextView() {
         mBindingAddGeofence?.edtAddGeofenceSearch?.setText(
             mGeofenceHelper?.mDefaultLatLng?.let { it1 ->
@@ -450,6 +476,11 @@ class GeofenceUtils {
     fun editGeofenceBottomSheet(position: Int, data: ListGeofenceResponseEntry) {
         clearAddGeofenceSearch()
         removeGeofenceMarker()
+        val propertiesAws = listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES),
+            Pair(AnalyticsAttribute.GEOFENCE_ID, data.geofenceId)
+        )
+        (mActivity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_ITEM_SELECTED, propertiesAws)
         mGeofenceInterface?.hideShowBottomNavigationBar(true, GeofenceBottomSheetEnum.NONE)
         val latLng = LatLng(data.geometry.circle.center[1], data.geometry.circle.center[0])
         mBindingAddGeofence?.tvAddGeofenceSheet?.text =
@@ -480,6 +511,7 @@ class GeofenceUtils {
         mBindingAddGeofence?.btnDeleteGeofence?.show()
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
+        checkRtl()
         mBindingAddGeofence?.btnDeleteGeofence?.setOnClickListener {
             mBindingAddGeofence?.edtAddGeofenceSearch?.clearFocus()
             mBindingAddGeofence?.edtEnterGeofenceName?.clearFocus()
@@ -500,10 +532,43 @@ class GeofenceUtils {
         }
     }
 
-    fun showGeofenceListBottomSheet(context: Activity) {
-        if (isTablet) {
-            (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
+    fun showGeofenceBeforeLogin() {
+        mBindingGeofenceList?.clNoInternetConnectionGeofenceList?.hide()
+        mBindingGeofenceList?.rvGeofence?.hide()
+        mBindingGeofenceList?.clEmptyGeofenceList?.show()
+        mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.isDraggable = true
+        mBottomSheetGeofenceListBehavior?.isFitToContents = false
+        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.58f
+        mBindingGeofenceList?.clGeofenceList?.context?.let {
+            if ((mActivity as MainActivity).isTablet) {
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
+            } else {
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_110)
+            }
+            mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
+    }
+
+    fun showGeofenceListBottomSheet(context: Activity) {
+        if ((mActivity as MainActivity).isTablet) {
+            (mActivity as MainActivity).showDirectionAndCurrentLocationIcon()
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBindingGeofenceList?.clGeofenceListMain?.let {
+                    ViewCompat.setLayoutDirection(
+                        it,
+                        ViewCompat.LAYOUT_DIRECTION_RTL
+                    )
+                }
+            }
+        }
+        mBindingGeofenceList?.btnTryGeofence?.hide()
+        mBindingGeofenceList?.tvEnableGeofence?.text = mActivity?.getString(R.string.add_geofence)
+        mBindingGeofenceList?.btnAddGeofence?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.color_primary_green))
+        mBindingGeofenceList?.tvEnableGeofence?.setTextColor(ContextCompat.getColor(context, R.color.white))
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -530,6 +595,7 @@ class GeofenceUtils {
         enableAddGeofenceButton(false)
         mIsBtnEnable = false
         mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
@@ -565,8 +631,23 @@ class GeofenceUtils {
         mBottomSheetAddGeofenceBehavior?.isHideable = false
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
-        if (isTablet) {
+        checkRtl()
+    }
+
+    private fun checkRtl() {
+        if ((mActivity as MainActivity).isTablet) {
             mBindingAddGeofence?.cardGeofenceLiveLocation?.hide()
+            val languageCode = getLanguageCode()
+            val isRtl =
+                languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+            if (isRtl) {
+                mBindingAddGeofence?.clPersistentBottomSheetAddGeofence?.let {
+                    ViewCompat.setLayoutDirection(
+                        it,
+                        ViewCompat.LAYOUT_DIRECTION_RTL
+                    )
+                }
+            }
         }
     }
 

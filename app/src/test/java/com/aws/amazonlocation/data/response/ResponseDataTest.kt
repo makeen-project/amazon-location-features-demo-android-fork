@@ -30,6 +30,7 @@ import com.aws.amazonlocation.mock.TEST_FAILED_SIGN_OUT_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_TRACKING_HISTORY_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_UPDATE_BATCH_DATA
 import com.aws.amazonlocation.mock.VECTOR
+import java.util.Date
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -249,5 +250,60 @@ class ResponseDataTest {
         navigationResponse.startLng = navigationResponse.startLng
         navigationResponse.destinationAddress = navigationResponse.destinationAddress
         Assert.assertTrue(TEST_FAILED_NAVIGATION_DATA, navigationResponse.duration == TEST_DATA_6)
+    }
+
+    @Test
+    fun notificationResponseTest() {
+        val navigationResponse = NotificationSimulationData(
+            coordinates = listOf(),
+            eventTime = "01/01/22",
+            geofenceCollection = "test",
+            geofenceId = "1",
+            source = "test",
+            stopName = "test",
+            trackerEventType = "test"
+        )
+        navigationResponse.coordinates = navigationResponse.coordinates
+        navigationResponse.eventTime = navigationResponse.eventTime
+        navigationResponse.geofenceCollection = navigationResponse.geofenceCollection
+        navigationResponse.geofenceId = navigationResponse.geofenceId
+        navigationResponse.source = navigationResponse.source
+        navigationResponse.stopName = navigationResponse.stopName
+        navigationResponse.trackerEventType = navigationResponse.trackerEventType
+        navigationResponse.coordinates?.let { Assert.assertTrue(TEST_FAILED_NAVIGATION_DATA, it.isEmpty()) }
+    }
+
+    @Test
+    fun simulationHistoryResponseTest() {
+        val navigationResponse = SimulationHistoryData(
+            headerData = "test",
+            isBusStopData = false,
+            busStopCount = 0,
+            devicePositionData = SimulationHistoryInnerData(
+                latitude = 0.0,
+                longitude = 0.0,
+                receivedTime = Date()
+            )
+        )
+        navigationResponse.headerData = navigationResponse.headerData
+        navigationResponse.isBusStopData = navigationResponse.isBusStopData
+        navigationResponse.busStopCount = navigationResponse.busStopCount
+        navigationResponse.devicePositionData = navigationResponse.devicePositionData
+        Assert.assertTrue(TEST_FAILED_NAVIGATION_DATA, navigationResponse.headerData == "test")
+    }
+
+    @Test
+    fun busRouteResponseTest() {
+        val navigationResponse = BusRouteCoordinates(
+            id = "1",
+            geofenceCollection = "test",
+            coordinates = listOf(),
+            isUpdateNeeded = false
+        )
+        navigationResponse.id = navigationResponse.id
+        navigationResponse.geofenceCollection = navigationResponse.geofenceCollection
+        navigationResponse.coordinates = navigationResponse.coordinates
+        navigationResponse.isUpdateNeeded = navigationResponse.isUpdateNeeded
+        Assert.assertTrue(TEST_FAILED_NAVIGATION_DATA, navigationResponse.id == "1")
     }
 }

@@ -3,6 +3,7 @@ package com.aws.amazonlocation.utils
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
@@ -27,6 +28,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.CheckResult
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -294,115 +296,126 @@ fun getRegion(region: String?, subRegion: String?, country: String?): String {
 
 fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
     val context = termsOfUse.context
-    val spannableString = SpannableString(termsOfUse.text.toString())
-    val condition =
-        Pattern.compile(
-            context.resources.getString(R.string.text_terms_desc_coloured_1).lowercase(Locale.ROOT)
+    val spannableString = SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
+    if (termsOfUse.text.contains(STRING_REPLACE_KEY)) {
+        val text = termsOfUse.text.split(STRING_REPLACE_KEY)[1]
+        val condition =
+            Pattern.compile(
+                text.lowercase()
+            )
+        val clickHere = condition.matcher(
+            termsOfUse.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT)
         )
-    val clickHere = condition.matcher(termsOfUse.text.toString().lowercase(Locale.ROOT))
-    while (clickHere.find()) {
-        spannableString.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            WebViewActivity::class.java
-                        ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_TERMS_URL)
-                    )
-                }
+        while (clickHere.find()) {
+            spannableString.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                WebViewActivity::class.java
+                            ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_TERMS_URL)
+                        )
+                    }
 
-                override fun updateDrawState(ds: TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = false
-                }
-            },
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = false
+                    }
+                },
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannableString.setSpan(
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.color_primary_green
+                    )
+                ),
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannableString.setSpan(
+                StyleSpan(Typeface.BOLD),
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        termsOfUse.setText(
+            spannableString,
+            TextView.BufferType.SPANNABLE
         )
-        spannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    context,
-                    R.color.color_primary_green
-                )
-            ),
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            StyleSpan(Typeface.BOLD),
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        termsOfUse.movementMethod = LinkMovementMethod.getInstance()
     }
-    termsOfUse.setText(
-        spannableString,
-        TextView.BufferType.SPANNABLE
-    )
-    termsOfUse.movementMethod = LinkMovementMethod.getInstance()
 }
 
 fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString())
-    val condition =
-        Pattern.compile(
-            context.resources.getString(R.string.terms_condition).lowercase(Locale.ROOT)
-        )
-    val termsAndCondition =
-        condition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
-    while (termsAndCondition.find()) {
-        spannableString.setSpan(
-            FontSpan(
-                "",
-                ResourcesCompat.getFont(context, R.font.amazon_ember_bold)!!
-            ),
-            termsAndCondition.start(),
-            termsAndCondition.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
+        val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
+        val condition =
+            Pattern.compile(
+                text.lowercase()
+            )
+        val termsAndCondition =
+            condition.matcher(
+                conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "")
+                    .lowercase(Locale.ROOT)
+            )
+        while (termsAndCondition.find()) {
+            spannableString.setSpan(
+                FontSpan(
+                    "",
+                    ResourcesCompat.getFont(context, R.font.amazon_ember_bold)!!
+                ),
+                termsAndCondition.start(),
+                termsAndCondition.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
 
-        spannableString.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    context.startActivity(
-                        Intent(
-                            context,
-                            WebViewActivity::class.java
-                        ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_TERMS_URL)
+            spannableString.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        context.startActivity(
+                            Intent(
+                                context,
+                                WebViewActivity::class.java
+                            ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_TERMS_URL)
+                        )
+                    }
+
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = false
+                    }
+                },
+                termsAndCondition.start(),
+                termsAndCondition.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannableString.setSpan(
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.color_primary_green
                     )
-                }
-
-                override fun updateDrawState(ds: TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = false
-                }
-            },
-            termsAndCondition.start(),
-            termsAndCondition.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                ),
+                termsAndCondition.start(),
+                termsAndCondition.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        conditionPrivacy.setText(
+            spannableString,
+            TextView.BufferType.SPANNABLE
         )
-        spannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    context,
-                    R.color.color_primary_green
-                )
-            ),
-            termsAndCondition.start(),
-            termsAndCondition.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
     }
-    conditionPrivacy.setText(
-        spannableString,
-        TextView.BufferType.SPANNABLE
-    )
-    conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
 }
 
 fun changeClickHereColor(
@@ -410,52 +423,57 @@ fun changeClickHereColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString())
-    val condition =
-        Pattern.compile(
-            context.resources.getString(R.string.click_here).lowercase(Locale.ROOT)
+    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
+        val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
+        val condition =
+            Pattern.compile(
+                text.lowercase()
+            )
+        val clickHere = condition.matcher(
+            conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT)
         )
-    val clickHere = condition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
-    while (clickHere.find()) {
-        spannableString.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    when (conditionPrivacy.text.toString()) {
-                        context.resources.getString(R.string.how_to_connect_1_1) -> {
-                            mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
-                        }
-                        context.resources.getString(R.string.label_connected_title_1) -> {
-                            mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
+        while (clickHere.find()) {
+            spannableString.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        when (conditionPrivacy.text.toString()) {
+                            context.resources.getString(R.string.how_to_connect_1_1) -> {
+                                mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
+                            }
+                            context.resources.getString(R.string.label_connected_title_1) -> {
+                                mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
+                            }
                         }
                     }
-                }
 
-                override fun updateDrawState(ds: TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = false
-                }
-            },
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = false
+                    }
+                },
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannableString.setSpan(
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.color_primary_green
+                    )
+                ),
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        conditionPrivacy.setText(
+            spannableString,
+            TextView.BufferType.SPANNABLE
         )
-        spannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    context,
-                    R.color.color_primary_green
-                )
-            ),
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
     }
-    conditionPrivacy.setText(
-        spannableString,
-        TextView.BufferType.SPANNABLE
-    )
-    conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
 }
 
 fun changeLearnMoreColor(
@@ -463,51 +481,56 @@ fun changeLearnMoreColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = learnMore.context
-    val spannableString = SpannableString(learnMore.text.toString())
-    val condition =
-        Pattern.compile(
-            context.resources.getString(R.string.learn_more).lowercase(Locale.ROOT)
+    val spannableString = SpannableString(learnMore.text.toString().replace(STRING_REPLACE_KEY, ""))
+    if (learnMore.text.contains(STRING_REPLACE_KEY)) {
+        val text = learnMore.text.split(STRING_REPLACE_KEY)[1]
+        val condition =
+            Pattern.compile(
+                text.lowercase()
+            )
+        val clickHere = condition.matcher(
+            learnMore.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT)
         )
-    val clickHere = condition.matcher(learnMore.text.toString().lowercase(Locale.ROOT))
-    while (clickHere.find()) {
-        spannableString.setSpan(
-            object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_INFORMATION_LEARN_MORE)
-                }
+        while (clickHere.find()) {
+            spannableString.setSpan(
+                object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_INFORMATION_LEARN_MORE)
+                    }
 
-                override fun updateDrawState(ds: TextPaint) {
-                    super.updateDrawState(ds)
-                    ds.isUnderlineText = true
-                }
-            },
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    override fun updateDrawState(ds: TextPaint) {
+                        super.updateDrawState(ds)
+                        ds.isUnderlineText = true
+                    }
+                },
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannableString.setSpan(
+                ForegroundColorSpan(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.color_primary_green
+                    )
+                ),
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            spannableString.setSpan(
+                StyleSpan(Typeface.BOLD),
+                clickHere.start(),
+                clickHere.end(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+        learnMore.setText(
+            spannableString,
+            TextView.BufferType.SPANNABLE
         )
-        spannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    context,
-                    R.color.color_primary_green
-                )
-            ),
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        spannableString.setSpan(
-            StyleSpan(Typeface.BOLD),
-            clickHere.start(),
-            clickHere.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
+        learnMore.movementMethod = LinkMovementMethod.getInstance()
     }
-    learnMore.setText(
-        spannableString,
-        TextView.BufferType.SPANNABLE
-    )
-    learnMore.movementMethod = LinkMovementMethod.getInstance()
 }
 
 fun Activity.restartApplication() {
@@ -605,6 +628,22 @@ fun isGrabMapSelected(mPreferenceManager: PreferenceManager, context: Context): 
         isGrabMapEnable = true
     }
     return isGrabMapEnable
+}
+
+fun setLocale(languageCode: String, context: Context) {
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+    val config: Configuration = context.resources.configuration
+    config.setLocale(locale)
+    config.setLayoutDirection(locale)
+}
+
+fun getLanguageCode(): String? {
+    val appLanguage = AppCompatDelegate.getApplicationLocales()
+    val languageCode = appLanguage.toLanguageTags().ifEmpty {
+        Locale.getDefault().language
+    }
+    return languageCode
 }
 
 fun checkGeofenceInsideGrab(

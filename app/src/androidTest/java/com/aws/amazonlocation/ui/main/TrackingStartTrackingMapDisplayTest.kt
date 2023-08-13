@@ -1,20 +1,14 @@
 package com.aws.amazonlocation.ui.main
 
 import android.location.Location
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.amplifyframework.geo.maplibre.view.MapLibreView
-import com.aws.amazonlocation.ACCESS_COARSE_LOCATION
-import com.aws.amazonlocation.ACCESS_FINE_LOCATION
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.DELAY_1000
@@ -28,20 +22,17 @@ import com.aws.amazonlocation.TEST_FAILED_IMAGE_NULL
 import com.aws.amazonlocation.TEST_FAILED_NO_TRACKING_HISTORY
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.mockLocationsExit
 import com.aws.amazonlocation.failTest
-import com.google.android.material.card.MaterialCardView
+import com.aws.amazonlocation.mockLocationsExit
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.location.LocationComponent
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
@@ -71,21 +62,6 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
             val labelContinue =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker)))
             labelContinue?.click()
-
-            uiDevice.wait(
-                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracking))),
-                DELAY_1000
-            )
-
-            val clEnableTracking =
-                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
-            if (clEnableTracking.visibility == View.VISIBLE) {
-                val btnEnableTracking =
-                    mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
-                mActivityRule.activity.runOnUiThread {
-                    btnEnableTracking.performClick()
-                }
-            }
             Thread.sleep(DELAY_5000)
             val rvTracking =
                 mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_tracking)

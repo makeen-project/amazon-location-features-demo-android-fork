@@ -62,21 +62,6 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
             val labelContinue =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracker_continue_to_tracker)))
             labelContinue?.click()
-
-            uiDevice.wait(
-                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracking))),
-                DELAY_1000
-            )
-
-            val clEnableTracking =
-                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
-            if (clEnableTracking.visibility == View.VISIBLE) {
-                val btnEnableTracking =
-                    mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
-                mActivityRule.activity.runOnUiThread {
-                    btnEnableTracking.performClick()
-                }
-            }
             Thread.sleep(DELAY_5000)
             uiDevice.wait(
                 Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking))),

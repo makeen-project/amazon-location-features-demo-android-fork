@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.ui.main.simulation.NotificationData
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -28,12 +29,14 @@ const val HTTPS = "https://"
 const val KEY_URL = "KEY_URL"
 const val KEY_MAP_NAME = "key_map_name"
 const val KEY_MAP_STYLE_NAME = "key_map_style_name"
+const val KEY_GRAB_DONT_ASK = "key_grab_dont_ask"
 const val CLICK_DEBOUNCE = 1000L
 const val CLICK_DEBOUNCE_ENABLE = 1200L
 const val RESTART_DELAY = 800L
 const val DELAY_500 = 500L
 const val DELAY_300 = 300L
 const val DELAY_1000 = 1000L
+const val DELAY_LANGUAGE_3000 = 3000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"
@@ -42,12 +45,24 @@ const val ABOUT_FRAGMENT = "AboutFragment"
 const val VERSION_FRAGMENT = "VersionFragment"
 const val IS_LOCATION_TRACKING_ENABLE = "is_location_tracking_enable"
 const val IS_APP_FIRST_TIME_OPENED = "is_app_first_time_opened"
+const val LABEL_PRE_DRAW = "_pre_draw"
+const val SOURCE_SIMULATION_ICON = "source_simulation_icon"
+const val LAYER_SIMULATION_ICON = "layer_simulation_icon"
+const val LAYER = "layer"
+const val SOURCE = "source"
+const val TRACKER = "tracker"
+const val ENTER = "ENTER"
+const val CHANNEL_ID = "my_channel_simulation"
+const val CHANNEL_NAME = "simulation Notification Channel"
+const val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
+const val STRING_REPLACE_KEY = "**"
 
 const val KEY_ID_TOKEN = "key_id_token"
 const val KEY_ACCESS_TOKEN = "key_access_token"
 const val KEY_REFRESH_TOKEN = "key_refresh_token"
 const val KEY_PROVIDER = "key_provider"
 const val IOT_POLICY = "AmazonLocationIotPolicy"
+const val IOT_POLICY_UN_AUTH = "AmazonLocationIotPolicyUnauth"
 
 const val STRING_FORMAT = "%.2f, %.2f"
 
@@ -57,6 +72,7 @@ const val JSON_KEY_STYLE_HERE = "omv"
 const val JSON_KEY_STYLE_RASTER = "raster-tiles"
 const val JSON_KEY_STYLE_MINZOOM = "minzoom"
 const val JSON_KEY_STYLE_MAXZOOM = "maxzoom"
+const val TRAVEL_MODE_CAR = "Car"
 const val TRAVEL_MODE_BICYCLE = "Bicycle"
 const val TRAVEL_MODE_MOTORCYCLE = "Motorcycle"
 const val ATTRIBUTE_LIGHT = "Light"
@@ -71,12 +87,36 @@ const val HERE = "Here"
 const val DESCRIPTION_TAG_ESRI = "ESRI_"
 const val DESCRIPTION_TAG_HERE = "HERE_"
 
+const val MAP_STYLE_ATTRIBUTION = "MapStyleAttribution"
+
 val SE_REGION_LIST = arrayListOf("ap-southeast-1")
 
 const val latNorth = 31.952162238024968
 const val lonEast = 146.25
 const val latSouth = -21.943045533438166
 const val lonWest = 90.0
+
+const val simulationLatNorth = 49.295509609061924
+const val simulationLonEast = -123.04870086158795
+const val simulationLatSouth = 49.25908827302493
+const val simulationLonWest = -123.17226119977276
+const val vancouverLat = 49.2827
+const val vancouverLng = -123.1207
+
+const val LANGUAGE_CODE_GERMAN = "de"
+const val LANGUAGE_CODE_SPANISH = "es"
+const val LANGUAGE_CODE_ENGLISH = "en"
+const val LANGUAGE_CODE_FRENCH = "fr"
+const val LANGUAGE_CODE_ITALIAN = "it"
+const val LANGUAGE_CODE_BR_PT = "pt-BR"
+const val LANGUAGE_CODE_CH_CN = "zh-CN"
+const val LANGUAGE_CODE_CH_TW = "zh-TW"
+const val LANGUAGE_CODE_JAPANESE = "ja"
+const val LANGUAGE_CODE_KOREAN = "ko"
+const val LANGUAGE_CODE_ARABIC = "ar"
+const val LANGUAGE_CODE_HEBREW = "iw"
+const val LANGUAGE_CODE_HINDI = "hi"
+const val LANGUAGE_CODE_HEBREW_1 = "he"
 
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
@@ -131,6 +171,8 @@ object Distance {
 }
 
 object MapCameraZoom {
+    const val SIMULATION_CAMERA_ZOOM = 9.0
+    const val SIMULATION_CAMERA_ZOOM_1 = 10.0
     const val NAVIGATION_CAMERA_ZOOM = 14.0
     const val DEFAULT_CAMERA_ZOOM = 14.0
     const val TRACKING_CAMERA_ZOOM = 14.0
@@ -213,4 +255,119 @@ object MapStyles {
 object DateFormat {
     const val MMM_DD_YYYY = "MMM dd, yyyy"
     const val HH_MM_AA = "HH:mm aa"
+}
+
+val simulationCollectionName = arrayListOf(
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection01",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection02",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection03",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection04",
+    LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "BusStopsCollection05"
+)
+
+val notificationData = arrayListOf(
+    NotificationData("Bus 01 Robson", false),
+    NotificationData("Bus 02 Davie", false),
+    NotificationData("Bus 03 Victoria", false),
+    NotificationData("Bus 04 Knight", false),
+    NotificationData("Bus 05 UBC", false)
+)
+
+object EventType {
+    const val SCREEN_OPEN = "SCREEN_OPEN"
+    const val SCREEN_CLOSE = "SCREEN_CLOSE"
+
+    const val APPLICATION_ERROR = "APPLICATION_ERROR"
+
+    const val MAP_STYLE_CHANGE = "MAP_STYLE_CHANGE"
+    const val MAP_PROVIDER_CHANGE = "MAP_PROVIDER_CHANGE"
+    const val PLACE_SEARCH = "PLACES_SEARCH"
+    const val ROUTE_SEARCH = "ROUTE_SEARCH"
+    const val ROUTE_OPTION_CHANGED = "ROUTE_OPTION_CHANGED"
+    const val MAP_UNIT_CHANGE = "MAP_UNIT_CHANGE"
+
+    // User
+    const val SIGN_IN_STARTED = "SIGN_IN_STARTED"
+    const val SIGN_IN_SUCCESSFUL = "SIGN_IN_SUCCESSFUL"
+    const val SIGN_IN_FAILED = "SIGN_IN_FAILED"
+    const val SIGN_OUT_SUCCESSFUL = "SIGN_OUT_SUCCESSFUL"
+    const val SIGN_OUT_FAILED = "SIGN_OUT_FAILED"
+    const val AWS_ACCOUNT_CONNECTION_STARTED = "AWS_ACCOUNT_CONNECTION_STARTED"
+    const val AWS_ACCOUNT_CONNECTION_SUCCESSFUL = "AWS_ACCOUNT_CONNECTION_SUCCESSFUL"
+    const val AWS_ACCOUNT_CONNECTION_FAILED = "AWS_ACCOUNT_CONNECTION_FAILED"
+    const val AWS_ACCOUNT_CONNECTION_STOPPED = "AWS_ACCOUNT_CONNECTION_STOPPED"
+
+    // Tracker and Geofence
+    const val GEOFENCE_CREATION_STARTED = "GEOFENCE_CREATION_STARTED"
+    const val GEOFENCE_CREATION_SUCCESSFUL = "GEOFENCE_CREATION_SUCCESSFUL"
+    const val GEOFENCE_CREATION_FAILED = "GEOFENCE_CREATION_FAILED"
+    const val GEOFENCE_DELETION_SUCCESSFUL = "GEOFENCE_DELETION_SUCCESSFUL"
+    const val GEOFENCE_DELETION_FAILED = "GEOFENCE_DELETION_FAILED"
+    const val GET_GEOFENCES_LIST_SUCCESSFUL = "GET_GEOFENCES_LIST_SUCCESSFUL"
+    const val GET_GEOFENCES_LIST_FAILED = "GET_GEOFENCES_LIST_FAILED"
+    const val GEO_EVENT_TRIGGERED = "GEO_EVENT_TRIGGERED"
+    const val GEOFENCE_ITEM_SELECTED = "GEOFENCE_ITEM_SELECTED"
+    const val TRACKER_SAVED = "TRACKER_SAVED"
+    const val START_TRACKING = "START_TRACKING"
+    const val STOP_TRACKING = "STOP_TRACKING"
+    const val CHANGE_BUS_TRACKING_HISTORY = "CHANGE_BUS_TRACKING_HISTORY"
+    const val ENABLE_NOTIFICATION = "ENABLE_NOTIFICATION"
+    const val DISABLE_NOTIFICATION = "DISABLE_NOTIFICATION"
+    const val START_SIMULATION = "START_SIMULATION"
+
+    // General
+    const val LANGUAGE_CHANGED = "LANGUAGE_CHANGED"
+}
+
+object AnalyticsAttribute {
+    const val USER_AWS_ACCOUNT_CONNECTION_STATUS = "userAWSAccountConnectionStatus"
+    const val USER_AUTHENTICATION_STATUS = "userAuthenticationStatus"
+    const val USER_AWS_ACCOUNT_CONNECTION_STATUS_NOT_CONNECTED = "Not connected"
+    const val USER_AWS_ACCOUNT_CONNECTION_STATUS_CONNECTED = "Connected"
+    const val USER_AWS_ACCOUNT_CONNECTION_STATUS_UNAUTHENTICATED = "Unauthenticated"
+    const val USER_AWS_ACCOUNT_CONNECTION_STATUS_AUTHENTICATED = "Authenticated"
+    const val SCREEN_NAME = "screenName"
+    const val TRAVEL_MODE = "travelMode"
+    const val DISTANCE_UNIT = "distanceUnit"
+    const val TRIGGERED_BY = "triggeredBy"
+    const val ID = "id"
+    const val PROVIDER = "provider"
+    const val VALUE = "value"
+    const val TYPE = "type"
+    const val ACTION = "action"
+    const val AVOID_FERRIES = "AvoidFerries"
+    const val AVOID_TOLLS = "AvoidTolls"
+    const val GEOFENCE_ID = "geofenceId"
+    const val EVENT_TYPE = "eventType"
+    const val ERROR = "error"
+    const val NUMBER_OF_TRACKER_POINTS = "numberOfTrackerPoints"
+    const val BUS_NAME = "busName"
+    const val LANGUAGE = "language"
+}
+object AnalyticsAttributeValue {
+    const val EXPLORER = "Explorer"
+    const val TRACKERS = "Trackers"
+    const val GEOFENCES = "Geofences"
+    const val SETTINGS = "Settings"
+    const val ABOUT = "About"
+    const val SIMULATION = "Simulation"
+    const val UNITS = "Units"
+    const val DATA_PROVIDER = "Data provider"
+    const val MAP_STYLE = "Map style"
+    const val LANGUAGES = "Languages"
+    const val DEFAULT_ROUTE_OPTIONS = "Default route options"
+    const val CONNECT_YOUR_AWS_ACCOUNT = "Connect your AWS account"
+    const val ATTRIBUTION = "Attribution"
+    const val VERSION = "Version"
+    const val TERMS_CONDITIONS = "Terms & Conditions"
+    const val HELP = "Help"
+    const val PLACES_POPUP = "PLACES_POPUP"
+    const val COORDINATES = "Coordinates"
+    const val TEXT = "Text"
+    const val AUTOCOMPLETE = "Autocomplete"
+    const val ROUTE_MODULE = "ROUTE_MODULE"
+    const val TO_SEARCH_AUTOCOMPLETE = "To search autocomplete"
+    const val FROM_SEARCH_AUTOCOMPLETE = "From search autocomplete"
+    const val ENTER = "Enter"
+    const val EXIT = "Exit"
 }

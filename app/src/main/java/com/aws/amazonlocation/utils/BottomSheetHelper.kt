@@ -141,7 +141,7 @@ class BottomSheetHelper {
     }
 
     // set map style bottom sheet
-    fun setMapStyleBottomSheet(activity: FragmentActivity?, view: BottomSheetMapStyleBinding) {
+    fun setMapStyleBottomSheet(activity: FragmentActivity?, view: BottomSheetMapStyleBinding, mBaseActivity: BaseActivity?) {
         mBottomSheetMapStyle =
             BottomSheetBehavior.from(view.clMapStyleBottomSheet)
         mBottomSheetMapStyle.isHideable = true
@@ -181,14 +181,26 @@ class BottomSheetHelper {
                                                 exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed()
                                                     ?.let { it1 ->
                                                         if (!it1) {
-                                                            hideSearchBottomSheet(false)
+                                                            if (exportFragment?.mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                                                                hideSearchBottomSheet(false)
+                                                            } else {
+                                                                exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationDraggable()
+                                                            }
                                                         }
                                                     }
+                                            } else {
+                                                mBaseActivity?.bottomNavigationVisibility(true)
                                             }
+                                        } else {
+                                            mBaseActivity?.bottomNavigationVisibility(true)
                                         }
                                     }
                             } else {
-                                hideSearchBottomSheet(false)
+                                if (exportFragment?.mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                                    hideSearchBottomSheet(false)
+                                } else {
+                                    exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationDraggable()
+                                }
                             }
                         }
                         BottomSheetBehavior.STATE_SETTLING -> {

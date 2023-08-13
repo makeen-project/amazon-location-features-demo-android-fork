@@ -15,6 +15,11 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentDataProviderBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
+import com.aws.amazonlocation.utils.EventType
+import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
@@ -102,6 +107,12 @@ class DataProviderFragment : BaseFragment() {
     }
 
     private fun changeDataProviderEsri() {
+        val properties = listOf(
+            Pair(AnalyticsAttribute.PROVIDER, resources.getString(R.string.esri)),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(
+            EventType.MAP_PROVIDER_CHANGE, properties)
         changeDataProvider(isEsri = true, isGrab = false)
         val mapStyle = mPreferenceManager.getValue(
             KEY_MAP_STYLE_NAME,
@@ -124,6 +135,12 @@ class DataProviderFragment : BaseFragment() {
     }
 
     private fun changeDataProviderHere() {
+        val properties = listOf(
+            Pair(AnalyticsAttribute.PROVIDER, resources.getString(R.string.here)),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(
+            EventType.MAP_PROVIDER_CHANGE, properties)
         changeDataProvider(isEsri = false, isGrab = false)
         val mapStyle = mPreferenceManager.getValue(
             KEY_MAP_STYLE_NAME,
@@ -145,26 +162,38 @@ class DataProviderFragment : BaseFragment() {
 
     private fun showRestartDialog(isHere: Boolean, isGrab: Boolean) {
         if (isGrab) {
-            activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
-                override fun onOkClick(dialog: DialogInterface) {
-                    changeDataProviderGrab()
-                    lifecycleScope.launch {
-                        if (!isRunningTest) {
-                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                            activity?.restartApplication()
+            val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
+            if (shouldShowGrabDialog) {
+                activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
+                        changeDataProviderGrab()
+                        lifecycleScope.launch {
+                            if (!isRunningTest) {
+                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                activity?.restartApplication()
+                            }
                         }
                     }
-                }
 
-                override fun onLearnMoreClick(dialog: DialogInterface) {
-                    startActivity(
-                        Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                    override fun onLearnMoreClick(dialog: DialogInterface) {
+                        startActivity(
+                            Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(BuildConfig.GRAB_LEARN_MORE)
+                            )
                         )
-                    )
+                    }
+                })
+            } else {
+                changeDataProviderGrab()
+                lifecycleScope.launch {
+                    if (!isRunningTest) {
+                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                        activity?.restartApplication()
+                    }
                 }
-            })
+            }
         } else {
             if (isHere) {
                 changeDataProviderHere()
@@ -180,6 +209,12 @@ class DataProviderFragment : BaseFragment() {
         }
     }
     private fun changeDataProviderGrab() {
+        val properties = listOf(
+            Pair(AnalyticsAttribute.PROVIDER, resources.getString(R.string.grab)),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(
+            EventType.MAP_PROVIDER_CHANGE, properties)
         changeDataProvider(isEsri = false, isGrab = true)
         val mapStyle = mPreferenceManager.getValue(
             KEY_MAP_STYLE_NAME,

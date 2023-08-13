@@ -44,6 +44,7 @@
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_20"
             android:gravity="center"
+            android:textDirection="locale"
             android:text="@string/label_tracking_history"
             android:textColor="@color/color_medium_black"
             android:textSize="@dimen/sp_20"
@@ -60,6 +61,7 @@
             android:text="@string/label_not_tracking_your_activity"
             android:textColor="@color/color_hint_text"
             android:lines="2"
+            android:textDirection="locale"
             android:textSize="@dimen/sp_13"
             app:layout_constraintEnd_toStartOf="@+id/card_start_tracking"
             app:layout_constraintStart_toStartOf="parent"
@@ -82,6 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:textDirection="locale"
                 android:text="@string/label_start_tracking"
                 android:textColor="@color/white" />
 
@@ -96,6 +99,71 @@
                 android:visibility="gone" />
         </com.google.android.material.card.MaterialCardView>
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_tracker_geofence_simulation"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_80"
+            android:layout_marginTop="@dimen/dp_16"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_8"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            app:cardUseCompatPadding="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_tracking_your_activity">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_simulation"
+                    android:layout_width="@dimen/dp_64"
+                    android:layout_height="@dimen/dp_64"
+                    android:src="@drawable/ic_simulation_banner"
+                    android:layout_marginStart="@dimen/dp_4"
+                    android:layout_marginTop="@dimen/dp_6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_simulation_title"
+                    style="@style/SearchText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:text="@string/label_trackers_amp_geofences_simulation"
+                    android:textSize="@dimen/sp_13"
+                    android:textAllCaps="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/iv_simulation"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/SearchText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_12"
+                    android:text="@string/label_explore_the_power_of_trackers_amp_geofences"
+                    android:textSize="@dimen/sp_12"
+                    android:textColor="@color/color_hint_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_simulation_title"
+                    app:layout_constraintStart_toEndOf="@+id/iv_simulation" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_close"
+                    android:layout_width="@dimen/dp_16"
+                    android:layout_height="@dimen/dp_16"
+                    android:src="@drawable/ic_close_search"
+                    android:visibility="visible"
+                    android:layout_margin="@dimen/dp_8"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_list"
@@ -105,7 +173,7 @@
             app:layout_constraintBottom_toTopOf="@+id/cl_database"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_tracking_your_activity">
+            app:layout_constraintTop_toBottomOf="@+id/card_tracker_geofence_simulation">
 
             <include
                 android:id="@+id/layout_no_data_found"
@@ -185,6 +253,7 @@
                             android:layout_marginHorizontal="@dimen/dp_16"
                             android:layout_marginTop="@dimen/dp_36"
                             android:gravity="center"
+                            android:textDirection="locale"
                             android:text="@string/amazon_location_can_t_reach_the_internet"
                             android:textColor="@color/color_medium_black"
                             android:textSize="@dimen/sp_16"
@@ -201,6 +270,7 @@
                             android:layout_marginTop="@dimen/dp_8"
                             android:layout_marginBottom="@dimen/dp_35"
                             android:gravity="center"
+                            android:textDirection="locale"
                             android:text="@string/label_check_your_internet_connection_and_try_again"
                             android:textColor="@color/color_hint_text"
                             android:textSize="@dimen/sp_13"
@@ -248,6 +318,7 @@
                 android:text="@string/label_tracking_data_storage"
                 android:textColor="@color/color_medium_black"
                 android:textSize="@dimen/sp_16"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_database" />
@@ -263,6 +334,7 @@
                 android:text="@string/tv_tracking_data_storage_1"
                 android:textColor="@color/color_hint_text"
                 android:textSize="@dimen/sp_13"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_tracking_data_storage" />
@@ -278,6 +350,7 @@
                 android:textColor="@color/color_red"
                 android:textSize="@dimen/sp_13"
                 android:visibility="gone"
+                android:textDirection="locale"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_tracking_data_storage_1" />
@@ -326,7 +399,8 @@
                 android:layout_width="@dimen/dp_36"
                 android:layout_height="@dimen/dp_36"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_navigation" />
+                android:tint="@color/color_medium_black_1"
+                android:src="@drawable/ic_tracking" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -335,33 +409,35 @@
             style="@style/SP20InterRegularMediumBlack1TextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_semi_bold"
             android:layout_marginTop="@dimen/dp_16"
             android:gravity="center"
-            android:text="@string/label_enable_tracking"
+            android:fontFamily="@font/inter_semi_bold"
+            android:text="@string/menu_tracking"
+            android:textDirection="locale"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/sheet_tracking_card_geo_fence" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_add_geofence_description"
-            style="@style/SP13HintInterRegularTextStyle"
+            style="@style/SP13HintRegularTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_24"
             android:layout_marginTop="@dimen/dp_16"
             android:gravity="center"
+            android:textDirection="locale"
             android:text="@string/label_enable_tracking_detail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_add_geofence_empty" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/btn_enable_tracking"
+            android:id="@+id/btn_try_tracker"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_48"
             android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_16"
             app:cardBackgroundColor="@color/color_primary_green"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
@@ -374,8 +450,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/label_enable_tracking"
+                android:text="@string/label_try_trackers_amp_geofences_simulation"
+                android:textDirection="locale"
                 android:textAllCaps="false"
+                android:gravity="center"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -384,13 +462,47 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <View
-            android:layout_width="@dimen/dp_36"
-            android:layout_height="@dimen/dp_50"
-            android:layout_gravity="bottom|center"
-            android:layout_marginTop="@dimen/dp_10"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_enable_tracking"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="@dimen/dp_48"
+            android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_8"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/dp_8"
+            app:cardElevation="@dimen/dp_0"
+            app:cardUseCompatPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_enable_tracking" />
+            app:layout_constraintTop_toBottomOf="@id/btn_try_tracker">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/SP16BoldMediumBlackTextStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/label_enable_tracking"
+                android:textAllCaps="false"
+                android:textColor="@color/color_medium_black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_direction"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_require_connection"
+            style="@style/SP13HintRegularTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_24"
+            android:layout_marginTop="@dimen/dp_4"
+            android:gravity="center"
+            android:textSize="@dimen/sp_10"
+            android:text="@string/label_requires_connection_to_aws_cloudformation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_enable_tracking" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentUnitSystemBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.Units
 
@@ -20,7 +23,7 @@ class UnitSystemFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentUnitSystemBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -44,16 +47,28 @@ class UnitSystemFragment : BaseFragment() {
             llAutomatic.setOnClickListener {
                 mPreferenceManager.setValue(KEY_UNIT_SYSTEM, resources.getString(R.string.automatic))
                 changeDataProvider(resources.getString(R.string.automatic))
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.TYPE, resources.getString(R.string.automatic))
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.MAP_UNIT_CHANGE, properties)
             }
 
             llMetric.setOnClickListener {
                 changeDataProvider(resources.getString(R.string.metric))
                 mPreferenceManager.setValue(KEY_UNIT_SYSTEM, resources.getString(R.string.metric))
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.TYPE, resources.getString(R.string.metric))
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.MAP_UNIT_CHANGE, properties)
             }
 
             llImperial.setOnClickListener {
                 changeDataProvider(resources.getString(R.string.imperial))
                 mPreferenceManager.setValue(KEY_UNIT_SYSTEM, resources.getString(R.string.imperial))
+                val properties = listOf(
+                    Pair(AnalyticsAttribute.TYPE, resources.getString(R.string.imperial))
+                )
+                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.MAP_UNIT_CHANGE, properties)
             }
         }
     }
@@ -65,40 +80,40 @@ class UnitSystemFragment : BaseFragment() {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.icon_checkmark,
-                        ),
+                            R.drawable.icon_checkmark
+                        )
                     )
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                 }
                 resources.getString(R.string.imperial) -> {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.icon_checkmark,
-                        ),
+                            R.drawable.icon_checkmark
+                        )
                     )
                 }
                 else -> {
@@ -106,20 +121,20 @@ class UnitSystemFragment : BaseFragment() {
                     ivAutomatic.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.icon_checkmark,
-                        ),
+                            R.drawable.icon_checkmark
+                        )
                     )
                     ivMetric.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                     ivImperial.setImageDrawable(
                         ContextCompat.getDrawable(
                             requireContext(),
-                            R.drawable.ic_radio_button_unchecked,
-                        ),
+                            R.drawable.ic_radio_button_unchecked
+                        )
                     )
                 }
             }

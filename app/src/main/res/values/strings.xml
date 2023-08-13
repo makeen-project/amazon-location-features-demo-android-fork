@@ -29,11 +29,11 @@
     <string name="geofencing_and_tracking_features">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="connect">Connect</string>
     <string name="how_to_connect">How to connect to</string>
-    <string name="how_to_connect_1_1">Click here to run a CloudFormation template to securely create required resources.</string>
+    <string name="how_to_connect_1_1">**Click here** to run a CloudFormation template to securely create required resources.</string>
     <string name="how_to_connect_1_2">It will securely create all required resources.</string>
     <string name="how_to_connect_1_3">You can delete these resources through the stack deletion option or ‘Manage resources’ pages in the menu on the left.</string>
     <string name="how_to_connect_2_1">Connect the demo app with the recently created AWS resources by copying in input fields.</string>
-    <string name="how_to_connect_2_2">From your CloudFormation output section copy the corresponding named values as reflected in the right section form (IdentityPoolId etc.). Learn more.</string>
+    <string name="how_to_connect_2_2">From your CloudFormation output section copy the corresponding named values as reflected in the right section form (IdentityPoolId etc.). **Learn more**.</string>
     <string name="learn_more"><b>Learn more</b></string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -43,7 +43,7 @@
     <string name="identityPoolId">IdentityPoolld</string>
     <string name="user_pool_client_id">UserPoolClientid</string>
     <string name="user_pool_ld">UserPoolld</string>
-    <string name="by_connecting_i_agree_to_amazon">By connecting I agree to Amazon Location’s\nTerms &amp; Conditions</string>
+    <string name="by_connecting_i_agree_to_amazon">By connecting I agree to Amazon Location’s\n**Terms &amp; Conditions**</string>
     <string name="terms_condition">Terms &amp; Conditions</string>
     <string name="help">Help</string>
     <string name="click_here">Click here</string>
@@ -112,20 +112,20 @@
     <string name="edit_geofence">Edit Geofence</string>
     <string name="label_map_style">Map Style</string>
     <string name="label_map_style_description"><![CDATA[Changing data provider also affects Places & Routes API]]></string>
-    <string name="map_light">Light</string>
-    <string name="map_streets">Streets</string>
-    <string name="map_navigation">Navigation</string>
-    <string name="map_dark_gray">Dark Gray</string>
-    <string name="map_light_gray">Light Gray</string>
-    <string name="map_imagery">Imagery</string>
-    <string name="map_esri">Esri</string>
-    <string name="map_contrast">Contrast</string>
-    <string name="map_explore">Explore</string>
-    <string name="map_explore_truck">Explore Truck</string>
-    <string name="map_hybrid">Hybrid</string>
-    <string name="map_raster">Imagery</string>
-    <string name="map_grab_light">Light</string>
-    <string name="map_grab_dark">Dark</string>
+    <string name="map_light" translatable="false">Light</string>
+    <string name="map_streets" translatable="false">Streets</string>
+    <string name="map_navigation" translatable="false">Navigation</string>
+    <string name="map_dark_gray" translatable="false">Dark Gray</string>
+    <string name="map_light_gray" translatable="false">Light Gray</string>
+    <string name="map_imagery" translatable="false">Imagery</string>
+    <string name="map_esri" translatable="false">Esri</string>
+    <string name="map_contrast" translatable="false">Contrast</string>
+    <string name="map_explore" translatable="false">Explore</string>
+    <string name="map_explore_truck" translatable="false">Explore Truck</string>
+    <string name="map_hybrid" translatable="false">Hybrid</string>
+    <string name="map_raster" translatable="false">Imagery</string>
+    <string name="map_grab_light" translatable="false">Light</string>
+    <string name="map_grab_dark" translatable="false">Dark</string>
     <string name="label_enter_identity_pool_id">Please enter proper identity pool id</string>
     <string name="label_enter_domain">Entered user domain is wrong</string>
     <string name="label_enter_user_pool_client_id">Entered user pool client id is wrong</string>
@@ -134,19 +134,19 @@
     <string name="data_provider">Data provider</string>
     <string name="map_style">Map style</string>
     <string name="aws_cloudformation">Connect your AWS Account</string>
-    <string name="esri">Esri</string>
-    <string name="here">HERE</string>
-    <string name="grab">GrabMaps</string>
+    <string name="esri" translatable="false">Esri</string>
+    <string name="here" translatable="false">HERE</string>
+    <string name="grab" translatable="false">GrabMaps</string>
     <string name="label_connected">You are connected</string>
     <string name="label_connected_description">Connect your AWS account to enable Geofences and Trackers. This will ensure your tracking and geofencing data is only stored in your account. After you log in, all features of the Demo App will run using resources you deploy in your AWS account. Log out if you wish to continue running the Demo App using resources in AWS’s demo app account.</string>
     <string name="label_how_to_remove">How to remove:</string>
-    <string name="label_connected_title_1">Click here to remove a CloudFormation template</string>
+    <string name="label_connected_title_1">**Click here** to remove a CloudFormation template</string>
     <string name="label_connected_title_2">It will securely create all required resources.</string>
     <string name="label_connected_title_3">Connect the Amazon Location app with the created resources</string>
     <string name="label_connected_title_4">Please enter the following required fields into the Location.</string>
     <string name="label_tracking_history">Tracking History</string>
     <string name="label_tracking_your_activity">Tracking your device location</string>
-    <string name="label_enable_tracking">Enable Tracking</string>
+    <string name="label_enable_tracking">Enable Live Trackers</string>
     <string name="label_enable_tracker">Enable Tracker</string>
     <string name="label_enable_tracker_description">You can use any data provider except Esri for your asset management or tracking use cases. If you want to use Esri for your asset management or tracking use case, please read terms and conditions</string>
     <string name="label_enable_tracker_view_terms">View Terms and Conditions</string>
@@ -177,9 +177,9 @@
     <string name="error_route">Route not found.</string>
     <string name="no_route_found">No route found</string>
     <string name="error_switch_to_here">Distance is greater than 400 km, can\'t calculate via Esri, kindly switch to HERE provider</string>
-    <string name="error_switch_to_here_miles">Distance is greater than 248.5 mi, can\'t calculate via Esri, kindly switch to HERE provider</string>
+    <string name="error_switch_to_here_miles">Distance is greater than %s mi, can\'t calculate via Esri, kindly switch to HERE provider</string>
     <string name="error_distance_400">In DataSource Esri, all waypoints must be within 400km.</string>
-    <string name="error_distance_248_miles">In DataSource Esri, all waypoints must be within 248.5mi.</string>
+    <string name="error_distance_248_miles">In DataSource Esri, all waypoints must be within %smi.</string>
     <string name="connect_to_aws_account">Connect AWS Account</string>
     <string name="label_preview">Preview</string>
     <string name="label_location_permission_denied">Location permission denied</string>
@@ -192,8 +192,8 @@
     <string name="label_welcome_amazon">Welcome to\nAmazon Location Demo</string>
     <string name="label_continue">Continue</string>
     <string name="label_right_aws">© 2023, Amazon Web Services, Inc. or its affiliates. All rights reserved.</string>
-    <string name="label_terms_desc">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s Terms &amp; Conditions for use.</string>
-    <string name="label_terms_desc_terms_page">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s Terms &amp; Conditions for use.</string>
+    <string name="label_terms_desc">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s **Terms &amp; Conditions** for use.</string>
+    <string name="label_terms_desc_terms_page">By downloading, installing, or using the Amazon Location Demo App, you agree to the App\'s **Terms &amp; Conditions** for use.</string>
     <string name="text_terms_desc_coloured_1">Terms &amp; Conditions</string>
     <string name="text_terms_desc_coloured_2">AWS Acceptable Use Policy</string>
     <string name="text_terms_desc_coloured_3">AWS Privacy Notice</string>
@@ -201,7 +201,7 @@
     <string name="label_version">Version</string>
     <string name="label_sign_out">Sign out</string>
     <string name="distance_is_greater_than_400_km">Distance is greater than 400 km</string>
-    <string name="distance_is_greater_than_248_mi">Distance is greater than 248.5 mi</string>
+    <string name="distance_is_greater_than_248_mi">Distance is greater than %s mi</string>
     <string name="can_t_calculate_via_esri_kindly_switch_to_here_provider">Can\'t calculate via Esri, kindly switch to \nHERE provider.</string>
     <string name="label_here_attribution_text">© 2022 HERE</string>
     <string name="label_partner_attribution">Partner Attribution</string>
@@ -219,6 +219,7 @@
     <string name="label_restart_app_title">Enable Grab</string>
     <string name="label_restart_app_description">Grab provides Maps, Routes and Place search in Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, and Cambodia.\n\nWhile car and motorcycle routes are available across the above countries, the bicycle and walking routes are supported in only key cities such as Singapore, Jakarta, Manila, Klang Valley, Bangkok, Ho Chi Minh City, and Hanoi. </string>
     <string name="enable_grab">Enable Grab</string>
+    <string name="dont_ask_again">Don\'t ask again</string>
     <string name="your_location_not_supported_by_grab">Your current location is outside countries supported by Grab. Currently, Grab supports Malaysia, Philippines, Thailand, Singapore, Vietnam, Indonesia, Myanmar, Cambodia.</string>
     <string name="label_current_location_disabled">Current location disabled</string>
     <string name="label_grab_limitation">Distance can\'t be calculated, since your current location has been disabled due to grab limitation</string>
@@ -240,4 +241,50 @@
     <string name="label_style_search_error_des">Make sure your search is spelled correctly and try again, make sure you have applied the appropriate filter or remove the filter and try again</string>
     <string name="label_geofence_disable_error">Selected geofence is not available in the Grab map provider. Please switch to another map provider to view and manage selected geofence.</string>
     <string name="label_clear_filters">Clear filters</string>
+    <string name="label_try_trackers_amp_geofences_simulation"><![CDATA[Try Trackers & Geofences simulation]]></string>
+    <string name="label_requires_connection_to_aws_cloudformation">Requires connection to AWS CloudFormation</string>
+    <string name="label_enable_live_geofences">Enable Live Geofences</string>
+    <string name="label_trackers_amp_geofences_simulation"><![CDATA[Trackers & Geofences simulation]]></string>
+    <string name="label_explore_the_power_of_trackers_amp_geofences"><![CDATA[Explore the power of Trackers & Geofences]]></string>
+    <string name="label_simulation">Simulation</string>
+    <string name="label_trackers_and_geofences">Trackers and Geofences</string>
+    <string name="label_des">Enter the tracking simulation to view the path across Vancouver streets that crosses geofences</string>
+    <string name="label_trackers_simulation">Trackers</string>
+    <string name="label_visualize_your_location_history_on_the_map">Visualize your location history on the map</string>
+    <string name="label_geofences_simulation">Geofences</string>
+    <string name="label_define_virtual_boundaries_around_a_specific_area_to_detect_entry_and_exit_events">Define virtual boundaries around a specific area to detect entry and exit events</string>
+    <string name="label_notifications">Notifications</string>
+    <string name="label_get_geofence_messages_when_you_enter_and_leave_locations">Get geofence messages when you enter and leave locations</string>
+    <string name="label_start_simulation">Start simulation</string>
+    <string name="label_tracking_and_geofence_simulation">Tracking and Geofence simulation</string>
+    <string name="change">Change</string>
+    <string name="label_macdonald">Macdonald</string>
+    <string name="label_bus_01">Bus 01</string>
+    <string name="routes_notifications">Routes notifications</string>
+    <string name="routes_active">routes active</string>
+    <string name="route_active">route active</string>
+    <string name="simulation_exit_title">Are you sure you want to exit simulation?</string>
+    <string name="label_tracking_active">Device tracking is active</string>
+    <string name="label_tracking_in_active">Device tracking inactive</string>
+    <string name="label_bus">Bus</string>
+    <string name="label_entered">Entered</string>
+    <string name="label_exited">Exited</string>
+    <string name="label_geofence">geofence</string>
+    <string name="simulation_notification_permission">For smooth simulation experience please allow notification permission from settings.</string>
+    <string name="label_language">Language</string>
+    <string name="label_tracker_entered">Tracker entered</string>
+    <string name="label_tracker_exited">Tracker exited</string>
+    <string name="label_deutsch" translatable="false">Deutsch</string>
+    <string name="label_espa_ol" translatable="false">Español</string>
+    <string name="label_english" translatable="false">English</string>
+    <string name="label_fran_ais" translatable="false">Français</string>
+    <string name="label_italiano" translatable="false">Italiano</string>
+    <string name="label_portugu_s_brasileiro" translatable="false">Português Brasileiro</string>
+    <string name="label_simplified_chinese" translatable="false">Simplified Chinese</string>
+    <string name="label_traditional_chinese" translatable="false">Traditional Chinese</string>
+    <string name="label_japanese" translatable="false">日本語</string>
+    <string name="label_korean" translatable="false">한국어</string>
+    <string name="label_arabic" translatable="false">العربية</string>
+    <string name="label_hebrew" translatable="false">עברית</string>
+    <string name="label_hindi" translatable="false">हिन्दी</string>
 </resources>

@@ -9,6 +9,7 @@ import android.text.format.DateUtils
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +31,8 @@ import com.aws.amazonlocation.databinding.BottomSheetTrackingBinding
 import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.TrackingInterface
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
+import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -113,15 +116,16 @@ class TrackingUtils(
         mBottomSheetTrackingBehavior?.isHideable = false
         when (enableTracking) {
             TrackingEnum.ENABLE_TRACKING -> {
-                mBottomSheetTrackingBehavior?.isDraggable = false
+                mBottomSheetTrackingBehavior?.isDraggable = true
+                mBottomSheetTrackingBehavior?.isFitToContents = false
+                mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.58f
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_430)
-                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
                     } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_390)
-                        mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_110)
                     }
+                    mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                 }
                 mBindingTracking?.apply {
                     clPersistentBottomSheet.show()
@@ -173,11 +177,22 @@ class TrackingUtils(
             mBottomSheetTrackingBehavior?.isDraggable = true
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetTrackingBehavior?.isFitToContents = false
-            mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.6f
+            mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.58f
             btnEnableTracking.setOnClickListener {
-                mTrackingInterface?.getCheckPermission()
+                (activity as MainActivity).openCloudFormation()
             }
-
+            cardTrackerGeofenceSimulation.hide()
+            btnTryTracker.setOnClickListener {
+                openSimulationWelcome()
+            }
+            if ((activity as MainActivity).isTablet) {
+                val languageCode = getLanguageCode()
+                val isRtl =
+                    languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+                if (isRtl) {
+                    ViewCompat.setLayoutDirection(clPersistentBottomSheet, ViewCompat.LAYOUT_DIRECTION_RTL)
+                }
+            }
             tvDeleteTrackingData.setOnClickListener {
                 mActivity?.deleteTrackingDataDialog(object : DeleteTrackingDataInterface {
                     override fun deleteData(dialog: DialogInterface) {
@@ -242,9 +257,6 @@ class TrackingUtils(
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                if (clEnableTracking.isVisible) {
-                                    mBottomSheetTrackingBehavior?.isDraggable = false
-                                }
                                 imgAmazonLogoTrackingSheet?.alpha = 1f
                                 ivAmazonInfoTrackingSheet?.alpha = 1f
                             }
@@ -260,18 +272,37 @@ class TrackingUtils(
         }
     }
 
+    private fun openSimulationWelcome() {
+        val simulationBottomSheetFragment = SimulationBottomSheetFragment()
+        (activity as MainActivity).supportFragmentManager.let {
+            simulationBottomSheetFragment.show(
+                it,
+                WelcomeBottomSheetFragment::javaClass.name
+            )
+        }
+    }
+
     private fun stopMqttManager() {
         mIsLocationUpdateEnable = false
-        try {
-            mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
-        } catch (_: Exception) {
-        }
+        if (mqttManager != null) {
+            try {
+                mqttManager?.unsubscribeTopic("${mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId}/tracker")
+            } catch (_: Exception) {
+            }
 
-        try {
-            mqttManager?.disconnect()
-        } catch (_: Exception) {
+            try {
+                mqttManager?.disconnect()
+            } catch (_: Exception) {
+            }
+            mqttManager = null
+            val properties = listOf(
+                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
+            )
+            (activity as MainActivity).analyticsHelper?.recordEvent(
+                EventType.STOP_TRACKING,
+                properties
+            )
         }
-        mqttManager = null
     }
 
     private fun startMqttManager() {
@@ -354,6 +385,10 @@ class TrackingUtils(
         val latLng = mMapHelper?.getLiveLocation()
         latLng?.let { updateLatLngOnMap(it) }
         mTrackingInterface?.updateBatch()
+        val properties = listOf(
+            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.START_TRACKING, properties)
     }
 
     fun updateLatLngOnMap(latLng: LatLng) {
@@ -373,12 +408,24 @@ class TrackingUtils(
                     val type = jsonObject.get("trackerEventType").asString
                     val geofenceName = jsonObject.get("geofenceId").asString
                     val subTitle = if (type.equals("ENTER", true)) {
-                        "Tracker entered $geofenceName"
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                            Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
+                            Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.ENTER)
+                        )
+                        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
+                        "${mFragmentActivity?.getString(R.string.label_tracker_entered)} $geofenceName"
                     } else {
-                        "Tracker exited $geofenceName"
+                        val propertiesAws = listOf(
+                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                            Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
+                            Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.EXIT)
+                        )
+                        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
+                        "${mFragmentActivity?.getString(R.string.label_tracker_exited)} $geofenceName"
                     }
                     runOnUiThread {
-                        activity?.messageDialog(
+                        activity.messageDialog(
                             title = geofenceName,
                             subTitle = subTitle,
                             false,
@@ -486,6 +533,11 @@ class TrackingUtils(
     fun manageGeofenceListUI(list: ArrayList<ListGeofenceResponseEntry>) {
         mGeofenceList.clear()
         mGeofenceList.addAll(list)
+        val properties = listOf(
+            Pair(AnalyticsAttribute.NUMBER_OF_TRACKER_POINTS, mGeofenceList.size.toString()),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.TRACKER_SAVED, properties)
         if (mGeofenceList.isNotEmpty()) {
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEachIndexed { index, data ->
@@ -617,14 +669,10 @@ class TrackingUtils(
                             coordinates,
                             true,
                             "layerId$headerId",
-                            "sourceId$headerId"
+                            "sourceId$headerId",
+                            R.color.color_primary_green
                         )
-                        mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                            mMapHelper?.adjustMapBounds(
-                                latLngList,
-                                it
-                            )
-                        }
+                        setCameraZoomLevel()
                         coordinates.clear()
                         latLngList.clear()
                     }
@@ -650,14 +698,10 @@ class TrackingUtils(
                             coordinates,
                             true,
                             "layerId$headerId",
-                            "sourceId$headerId"
+                            "sourceId$headerId",
+                            R.color.color_primary_green
                         )
-                        mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                            mMapHelper?.adjustMapBounds(
-                                latLngList,
-                                it
-                            )
-                        }
+                        setCameraZoomLevel()
                         coordinates.clear()
                         latLngList.clear()
                     }
@@ -844,13 +888,8 @@ class TrackingUtils(
             } else {
                 headerIdsToRemove.add("layerId1")
                 sourceIdsToRemove.add("sourceId1")
-                mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1")
-                mActivity?.resources?.getDimension(R.dimen.dp_50)?.toInt()?.let {
-                    mMapHelper?.adjustMapBounds(
-                        latLngList,
-                        it
-                    )
-                }
+                mMapHelper?.addTrackerLine(coordinates, true, "layerId1", "sourceId1", R.color.color_primary_green)
+                setCameraZoomLevel()
             }
 
             mBindingTracking?.apply {
@@ -868,6 +907,18 @@ class TrackingUtils(
             trackingHistoryData.addAll(trackingData)
             trackingHistoryData.addAll(existingData)
             submitList()
+        }
+    }
+
+    private fun setCameraZoomLevel() {
+        val liveLocation = mMapHelper?.getLiveLocation()
+        liveLocation?.let {
+            mMapHelper?.moveCameraToLocationTracker(
+                LatLng(
+                    it.latitude,
+                    it.longitude
+                )
+            )
         }
     }
 

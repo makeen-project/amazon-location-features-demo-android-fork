@@ -39,6 +39,7 @@ ext.excludes = [
         '**/*StickyHeader*',
         '**/*GeofenceHelper*',
         '**/*TrackingUtils*',
+        '**/*SimulationUtils*',
         '**/*OutLineTextView*',
         '**/*DotLineView*',
         '**/*FontSpan*',
