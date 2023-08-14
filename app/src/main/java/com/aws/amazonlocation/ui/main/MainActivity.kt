@@ -50,7 +50,7 @@ import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
-import com.aws.amazonlocation.utils.Durations.DELAY_FOR_GEOFENCE
+import com.aws.amazonlocation.utils.Durations.DELAY_FOR_FRAGMENT_LOAD
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -531,7 +531,7 @@ class MainActivity : BaseActivity(), CrashListener {
     private fun showTrackingPreview(fragment: Fragment?) {
         lifecycleScope.launch {
             if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
             mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
         }
@@ -541,7 +541,7 @@ class MainActivity : BaseActivity(), CrashListener {
         mBottomSheetHelper.hideSearchBottomSheet(true)
         lifecycleScope.launch {
             if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
             mGeofenceUtils?.showGeofenceBeforeLogin()
         }
@@ -708,7 +708,7 @@ class MainActivity : BaseActivity(), CrashListener {
         mBottomSheetHelper.hideSearchBottomSheet(true)
         lifecycleScope.launch {
             if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
             mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
         }
@@ -728,7 +728,7 @@ class MainActivity : BaseActivity(), CrashListener {
         }
         lifecycleScope.launch {
             if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
             showTrackingBottomSheet()
         }
