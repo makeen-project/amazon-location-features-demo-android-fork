@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread
 import com.amazonaws.mobile.client.AWSMobileClient
@@ -53,6 +54,8 @@ import com.mapbox.mapboxsdk.style.layers.PropertyFactory
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -183,7 +186,34 @@ class TrackingUtils(
             }
             cardTrackerGeofenceSimulation.hide()
             btnTryTracker.setOnClickListener {
-                openSimulationWelcome()
+                mPreferenceManager?.let {
+                    if (isGrabMapSelected(it, btnTryTracker.context)) {
+                        mActivity?.changeDataProviderDialog(object : ChangeDataProviderInterface {
+                            override fun changeDataProvider(dialog: DialogInterface) {
+                                mActivity?.getString(R.string.map_light)?.let { it1 ->
+                                    mPreferenceManager.setValue(
+                                        KEY_MAP_STYLE_NAME,
+                                        it1
+                                    )
+                                }
+                                mActivity?.getString(R.string.esri)?.let { it1 ->
+                                    mPreferenceManager.setValue(
+                                        KEY_MAP_NAME,
+                                        it1
+                                    )
+                                }
+                                (activity as MainActivity).lifecycleScope.launch {
+                                    if (!isRunningTest) {
+                                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                        activity.restartApplication()
+                                    }
+                                }
+                            }
+                        })
+                    } else {
+                        openSimulationWelcome()
+                    }
+                }
             }
             if ((activity as MainActivity).isTablet) {
                 val languageCode = getLanguageCode()

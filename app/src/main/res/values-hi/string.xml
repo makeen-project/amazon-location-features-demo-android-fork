@@ -275,4 +275,7 @@
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
   <string name="simulation_notification_permission">के लिए चिकनी अनुकरण अनुभव कृपया अनुमति देना अधिसूचना अनुमति से सेटिंग्स।</string>
+  <string name="label_change_data_provider">बदलें डेटा प्रोवाइडर</string>
+  <string name="label_change_data_provider_des">GrabMaps नहीं करता है समर्थन करते हैं सिमुलेशन, कृपया परिवर्तन डेटा प्रदाता को Esri या यहां को उपयोग करें जियोफेंस या ट्रैकर विशेषताएं।</string>
+  <string name="label_switch_to_esri">स्विच को Esri</string>
 </resources>

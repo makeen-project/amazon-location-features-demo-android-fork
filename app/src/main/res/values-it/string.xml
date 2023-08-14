@@ -275,4 +275,7 @@
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
   <string name="simulation_notification_permission">Per liscia simulazione esperienza per favore permettere notifica autorizzazione da impostazioni.</string>
+  <string name="label_change_data_provider">Cambia Dati Fornitore</string>
+  <string name="label_change_data_provider_des">GrabMaps non fa supportare simulazione, per favore cambiare dato fornitore a Esri o QUI a uso Geofence o Localizzatore caratteristiche.</string>
+  <string name="label_switch_to_esri">Interruttore a Esri</string>
 </resources>
