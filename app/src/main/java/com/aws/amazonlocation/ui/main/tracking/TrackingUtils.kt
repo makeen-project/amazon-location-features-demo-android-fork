@@ -104,7 +104,7 @@ class TrackingUtils(
     }
 
     fun isTrackingSheetHidden(): Boolean {
-        return mBottomSheetTrackingBehavior?.state == BottomSheetBehavior.STATE_HIDDEN
+        return mBottomSheetTrackingBehavior?.state == BottomSheetBehavior.STATE_HIDDEN || mBottomSheetTrackingBehavior?.state == BottomSheetBehavior.STATE_SETTLING
     }
 
     fun collapseTracking() {

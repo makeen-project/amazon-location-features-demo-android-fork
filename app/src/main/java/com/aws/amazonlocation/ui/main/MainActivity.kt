@@ -433,7 +433,7 @@ class MainActivity : BaseActivity(), CrashListener {
                         AuthEnum.DEFAULT.name -> {
                             hideSearchSheet(fragment)
                             if (mTrackingUtils?.isTrackingSheetHidden() == true) {
-                                mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
+                                showTrackingPreview(fragment)
                             }
                         }
                         AuthEnum.AWS_CONNECTED.name -> {
@@ -460,7 +460,7 @@ class MainActivity : BaseActivity(), CrashListener {
                         else -> {
                             hideSearchSheet(fragment)
                             if (mTrackingUtils?.isTrackingSheetHidden() == true) {
-                                mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
+                                showTrackingPreview(fragment)
                             }
                         }
                     }
@@ -476,7 +476,7 @@ class MainActivity : BaseActivity(), CrashListener {
                     if (!mAuthStatus.isNullOrEmpty()) {
                         when (mAuthStatus) {
                             AuthEnum.DEFAULT.name -> {
-                                hideSearchAndShowGeofence()
+                                hideSearchAndShowGeofence(fragment)
                             }
                             AuthEnum.AWS_CONNECTED.name -> {
                                 if (reStartApp) {
@@ -495,11 +495,11 @@ class MainActivity : BaseActivity(), CrashListener {
                                 showGeofence()
                             }
                             else -> {
-                                hideSearchAndShowGeofence()
+                                hideSearchAndShowGeofence(fragment)
                             }
                         }
                     } else {
-                        hideSearchAndShowGeofence()
+                        hideSearchAndShowGeofence(fragment)
                     }
                     showAmazonLogo()
                 }
@@ -528,9 +528,23 @@ class MainActivity : BaseActivity(), CrashListener {
         }
     }
 
-    private fun hideSearchAndShowGeofence() {
+    private fun showTrackingPreview(fragment: Fragment?) {
+        lifecycleScope.launch {
+            if (fragment !is ExploreFragment) {
+                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+            }
+            mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
+        }
+    }
+
+    private fun hideSearchAndShowGeofence(fragment: Fragment) {
         mBottomSheetHelper.hideSearchBottomSheet(true)
-        mGeofenceUtils?.showGeofenceBeforeLogin()
+        lifecycleScope.launch {
+            if (fragment !is ExploreFragment) {
+                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+            }
+            mGeofenceUtils?.showGeofenceBeforeLogin()
+        }
     }
 
     private fun hideSearchSheet(fragment: Fragment?) {
@@ -712,7 +726,12 @@ class MainActivity : BaseActivity(), CrashListener {
         if (!isTablet) {
             mBottomSheetHelper.hideMapStyleSheet()
         }
-        showTrackingBottomSheet()
+        lifecycleScope.launch {
+            if (fragment !is ExploreFragment) {
+                delay(DELAY_FOR_GEOFENCE) // Need delay for showing bottomsheet after fragment load
+            }
+            showTrackingBottomSheet()
+        }
         exitScreen()
         setSelectedScreen(AnalyticsAttributeValue.TRACKERS)
     }
