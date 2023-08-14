@@ -274,5 +274,8 @@
   <string name="label_arabic" translatable="false">العربية</string>
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
-  <string name="simulation_notification_permission">에 대해 부드러운 시뮬레이션 경험 제발 허용 알림 허가 ...에서 설정.</string>
+  <string name="simulation_notification_permission">에 대해 부드러운 시뮬레이션 경험 제발 허용 알림 허가 …에서 설정.</string>
+  <string name="label_change_data_provider">변경 데이터 제공자</string>
+  <string name="label_change_data_provider_des">GrabMaps 하지\ \'하지 않습니다 지원하다 시뮬레이션, 제발 변화 데이터 공급자 에 에스리 또는 여기 에 용도 지오펜스 또는 트래커 특징.</string>
+  <string name="label_switch_to_esri">스위치 에 에스리</string>
 </resources>

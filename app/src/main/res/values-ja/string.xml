@@ -275,4 +275,7 @@
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
   <string name="simulation_notification_permission">にとって スムーズ シミュレーション 経験 お願い 許す 通知 許可 から 設定。</string>
+  <string name="label_change_data_provider">変更 [データ] プロバイダー</string>
+  <string name="label_change_data_provider_des">GrabMaps しない サポート シミュレーション、 お願い 変化する データ プロバイダー に Esri または ここ に つかいます ジオフェンス または トラッカー 機能。</string>
+  <string name="label_switch_to_esri">[スイッチ] に Esri</string>
 </resources>

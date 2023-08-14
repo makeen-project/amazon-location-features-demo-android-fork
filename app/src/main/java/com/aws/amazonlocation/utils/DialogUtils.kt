@@ -240,6 +240,26 @@ fun Context.notificationPermission(notificationDialogInterface: NotificationDial
     mDialog.show()
 }
 
+fun Context.changeDataProviderDialog(
+    changeDataProviderInterface: ChangeDataProviderInterface
+) {
+    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
+    mDialog.setTitle(resources.getString(R.string.label_change_data_provider))
+    mDialog.setMessage(resources.getString(R.string.label_change_data_provider_des))
+    mDialog.setPositiveButton(
+        this.resources.getString(R.string.label_switch_to_esri)
+    ) { dialog, _ ->
+        changeDataProviderInterface.changeDataProvider(dialog)
+        dialog.dismiss()
+    }
+    mDialog.setNegativeButton(
+        this.resources.getString(R.string.cancel)
+    ) { dialog, _ ->
+        dialog.dismiss()
+    }
+    mDialog.show()
+}
+
 interface EnableTrackerInterface {
     fun continueToTracker(dialog: DialogInterface)
     fun cancel()
@@ -257,6 +277,10 @@ interface SignOutInterface {
 
 interface GeofenceDeleteInterface {
     fun deleteGeofence(position: Int, data: ListGeofenceResponseEntry, dialog: DialogInterface)
+}
+
+interface ChangeDataProviderInterface {
+    fun changeDataProvider(dialog: DialogInterface)
 }
 
 interface DeleteTrackingDataInterface {

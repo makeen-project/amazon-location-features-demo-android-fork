@@ -275,4 +275,7 @@
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
   <string name="simulation_notification_permission">من أجل ناعم محاكاة تجربة من فضلك سمح إعلام تصريح من عند إعدادات.</string>
+  <string name="label_change_data_provider">تغيير البيانات الموفر</string>
+  <string name="label_change_data_provider_des">GrabMaps لا دعم محاكاة، من فضلك تغيير البيانات مزود إلى إسري أو هنا إلى استخدام السياج الجغرافي أو متعقب الميزات.</string>
+  <string name="label_switch_to_esri">سويتش إلى إسري</string>
 </resources>

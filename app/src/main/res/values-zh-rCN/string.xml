@@ -275,4 +275,7 @@
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
   <string name="simulation_notification_permission">对于 光滑 模拟 经历 拜托 允许 通知 许可 从 设置。</string>
+  <string name="label_change_data_provider">改变 数据 提供商</string>
+  <string name="label_change_data_provider_des">GrabMaps 不是 支撑 模拟， 拜托 改变 数据 提供者 到 Esri 要么 这里 到 使用 Geofence 要么 追踪器 功能。</string>
+  <string name="label_switch_to_esri">交换机 到 Esri</string>
 </resources>

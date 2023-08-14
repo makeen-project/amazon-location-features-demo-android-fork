@@ -366,7 +366,34 @@ class GeofenceUtils {
             }
             cardTrackerGeofenceSimulation.hide()
             btnTryGeofence.setOnClickListener {
-                openSimulationWelcome()
+                preferenceManager?.let {
+                    if (isGrabMapSelected(it, btnTryGeofence.context)) {
+                        mActivity?.changeDataProviderDialog(object : ChangeDataProviderInterface {
+                            override fun changeDataProvider(dialog: DialogInterface) {
+                                mActivity?.getString(R.string.map_light)?.let { it1 ->
+                                    it.setValue(
+                                        KEY_MAP_STYLE_NAME,
+                                        it1
+                                    )
+                                }
+                                mActivity?.getString(R.string.esri)?.let { it1 ->
+                                    it.setValue(
+                                        KEY_MAP_NAME,
+                                        it1
+                                    )
+                                }
+                                (mActivity as MainActivity).lifecycleScope.launch {
+                                    if (!isRunningTest) {
+                                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                        mFragmentActivity?.restartApplication()
+                                    }
+                                }
+                            }
+                        })
+                    } else {
+                        openSimulationWelcome()
+                    }
+                }
             }
 
             clAddGeofence.setOnClickListener {
