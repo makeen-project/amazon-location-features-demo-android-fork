@@ -275,4 +275,7 @@
   <string name="label_hebrew" translatable="false">עברית</string>
   <string name="label_hindi" translatable="false">हिन्दी</string>
   <string name="simulation_notification_permission">עבור חלק הדמייה חוויה בבקשה להתיר הודעה רשות מ הגדרות.</string>
+  <string name="label_change_data_provider">שינוי נתונים ספק</string>
+  <string name="label_change_data_provider_des">GrabMaps לא\ לא תמיכה סימולציה, בבקשה עודף פרטים ספק כדי Esri או כאן כדי שימוש גיאופנס או גשש תכונות.</string>
+  <string name="label_switch_to_esri">מתג כדי Esri</string>
 </resources>

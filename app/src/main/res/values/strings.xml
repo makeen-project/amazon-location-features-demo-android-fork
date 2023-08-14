@@ -287,4 +287,7 @@
     <string name="label_arabic" translatable="false">العربية</string>
     <string name="label_hebrew" translatable="false">עברית</string>
     <string name="label_hindi" translatable="false">हिन्दी</string>
+    <string name="label_change_data_provider">Change Data Provider</string>
+    <string name="label_change_data_provider_des">GrabMaps doesn\'t support simulation, please change data provider to Esri or HERE to use Geofence or Tracker features.</string>
+    <string name="label_switch_to_esri">Switch to Esri</string>
 </resources>
