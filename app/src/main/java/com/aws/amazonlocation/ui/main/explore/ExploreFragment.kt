@@ -2051,27 +2051,25 @@ class ExploreFragment :
 
     // Based on list user able to see UI on screen
     private fun showNoPlaceFoundDirectionUI(searchPlaceIndexText: SearchApiEnum) {
-        if (!mIsDirectionSheetHalfExpanded) {
-            mBinding.bottomSheetDirectionSearch.apply {
-                if (mPlaceList.isNotEmpty()) {
-                    clNoInternetConnectionDirectionSearch.hide()
-                    nsDirectionSearchPlaces.show()
-                    layoutNoDataFound.groupNoSearchFound.hide()
-                    layoutCardError.groupCardErrorNoSearchFound.hide()
-                    when (searchPlaceIndexText) {
-                        SearchApiEnum.SEARCH_PLACE_INDEX_TEXT -> {
-                            rvSearchPlacesDirection.show()
-                            rvSearchPlacesSuggestionDirection.hide()
-                        }
-                        SearchApiEnum.SEARCH_PLACE_SUGGESTION -> {
-                            rvSearchPlacesSuggestionDirection.show()
-                            rvSearchPlacesDirection.hide()
-                        }
+        mBinding.bottomSheetDirectionSearch.apply {
+            if (mPlaceList.isNotEmpty()) {
+                clNoInternetConnectionDirectionSearch.hide()
+                nsDirectionSearchPlaces.show()
+                layoutNoDataFound.groupNoSearchFound.hide()
+                layoutCardError.groupCardErrorNoSearchFound.hide()
+                when (searchPlaceIndexText) {
+                    SearchApiEnum.SEARCH_PLACE_INDEX_TEXT -> {
+                        rvSearchPlacesDirection.show()
+                        rvSearchPlacesSuggestionDirection.hide()
                     }
-                } else {
-                    hideViews(rvSearchPlacesDirection, nsDirectionSearchPlaces)
-                    layoutNoDataFound.groupNoSearchFound.show()
+                    SearchApiEnum.SEARCH_PLACE_SUGGESTION -> {
+                        rvSearchPlacesSuggestionDirection.show()
+                        rvSearchPlacesDirection.hide()
+                    }
                 }
+            } else {
+                hideViews(rvSearchPlacesDirection, nsDirectionSearchPlaces)
+                layoutNoDataFound.groupNoSearchFound.show()
             }
         }
     }
