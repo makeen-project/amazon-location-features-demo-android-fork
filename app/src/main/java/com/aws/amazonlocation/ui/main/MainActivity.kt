@@ -217,6 +217,7 @@ class MainActivity : BaseActivity(), CrashListener {
         }
     }
 
+    // check rtl layout
     private fun checkRtl() {
         if (isTablet) {
             val languageCode = getLanguageCode()
