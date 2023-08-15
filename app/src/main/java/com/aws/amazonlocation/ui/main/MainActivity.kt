@@ -163,7 +163,6 @@ class MainActivity : BaseActivity(), CrashListener {
                         setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
                     }
                     TabEnum.TAB_TRACKING.name -> {
-                        mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_tracking
                         setSelectedScreen(AnalyticsAttributeValue.TRACKERS)

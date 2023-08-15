@@ -26,6 +26,7 @@ import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.HTTPS
+import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -348,7 +349,7 @@ class CloudFormationBottomSheetFragment(
 
     private fun storeDataInPreference() {
         mPreferenceManager.setValue(KEY_TAB_ENUM, mTabEnum.name)
-
+        mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
         mPreferenceManager.setValue(
             KEY_RE_START_APP,
             true

@@ -32,6 +32,7 @@ import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.HTTPS
+import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -369,6 +370,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
         (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL, propertiesAws)
+        mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
         mPreferenceManager.setValue(
             KEY_CLOUD_FORMATION_STATUS,
             AuthEnum.AWS_CONNECTED.name
