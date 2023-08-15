@@ -186,7 +186,9 @@ class MainActivity : BaseActivity(), CrashListener {
                 override fun showKeyBoard() {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
                     if (fragment is ExploreFragment) {
-                        fragment.showKeyBoard()
+                        if (!mGeofenceBottomSheetHelper.isCloudFormationBottomSheetVisible()) {
+                            fragment.showKeyBoard()
+                        }
                     }
                 }
 
