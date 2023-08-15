@@ -4456,6 +4456,12 @@ class ExploreFragment :
             mMapHelper.getLiveLocation()?.let { it1 ->
                 mMapHelper.moveCameraToLocation(it1)
             }
+            mBaseActivity?.isTablet?.let {
+                if (it) {
+                    mBinding.cardNavigation.show()
+                    mBinding.cardDirection.show()
+                }
+            }
         }
     }
 
@@ -5711,6 +5717,12 @@ class ExploreFragment :
         }
         if (activity is MainActivity) {
             (activity as MainActivity).changeAmazonLogo(logoResId)
+        }
+        mBaseActivity?.isTablet?.let {
+            if (it) {
+                mBinding.cardNavigation.show()
+                mBinding.cardDirection.show()
+            }
         }
         mBinding.bottomSheetSearch.imgAmazonLogoSearchSheet.setImageResource(logoResId)
         mBinding.bottomSheetDirection.imgAmazonLogoDirection?.setImageResource(logoResId)
