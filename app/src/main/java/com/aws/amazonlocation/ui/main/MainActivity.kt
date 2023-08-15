@@ -163,7 +163,6 @@ class MainActivity : BaseActivity(), CrashListener {
                         setSelectedScreen(AnalyticsAttributeValue.EXPLORER)
                     }
                     TabEnum.TAB_TRACKING.name -> {
-                        mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
                         mBinding.bottomNavigationMain.selectedItemId =
                             R.id.menu_tracking
                         setSelectedScreen(AnalyticsAttributeValue.TRACKERS)
@@ -187,7 +186,9 @@ class MainActivity : BaseActivity(), CrashListener {
                 override fun showKeyBoard() {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
                     if (fragment is ExploreFragment) {
-                        fragment.showKeyBoard()
+                        if (!mGeofenceBottomSheetHelper.isCloudFormationBottomSheetVisible()) {
+                            fragment.showKeyBoard()
+                        }
                     }
                 }
 
@@ -216,6 +217,7 @@ class MainActivity : BaseActivity(), CrashListener {
         }
     }
 
+    // check rtl layout
     private fun checkRtl() {
         if (isTablet) {
             val languageCode = getLanguageCode()
