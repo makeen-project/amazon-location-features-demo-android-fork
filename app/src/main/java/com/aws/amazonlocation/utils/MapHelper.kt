@@ -710,8 +710,8 @@ class MapHelper(private val appContext: Context) {
                 val feature: Feature = Feature.fromGeometry(point)
                 inBetweenFeatures.add(feature)
             }
-            val sourceIDInBetween = mSourceId + "inBetween"
-            val layerIDInBetween = mLayerId + "inBetween"
+            val sourceIDInBetween = mSourceId + LABEL_IN_BETWEEN
+            val layerIDInBetween = mLayerId + LABEL_IN_BETWEEN
 
             style.removeLayer(layerIDInBetween)
             style.removeSource(sourceIDInBetween)
@@ -722,7 +722,7 @@ class MapHelper(private val appContext: Context) {
 
             mSymbolManagerTracker?.layerId?.let {
                 style.addLayerBelow(
-                    CircleLayer(mLayerId + "inBetween", mSourceId + "inBetween").withProperties(
+                    CircleLayer(mLayerId + LABEL_IN_BETWEEN, mSourceId + LABEL_IN_BETWEEN).withProperties(
                         PropertyFactory.circleRadius(3f),
                         PropertyFactory.circleColor(rColor)
                     ),
