@@ -38,6 +38,7 @@ import com.aws.amazonlocation.utils.DELAY_1000
 import com.aws.amazonlocation.utils.ENTER
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.GeofenceCons
+import com.aws.amazonlocation.utils.LABEL_IN_BETWEEN
 import com.aws.amazonlocation.utils.LABEL_PRE_DRAW
 import com.aws.amazonlocation.utils.LAYER
 import com.aws.amazonlocation.utils.LAYER_SIMULATION_ICON
@@ -319,9 +320,13 @@ class SimulationUtils(
             mMapHelper?.removeSource("$SOURCE_SIMULATION_ICON${it.id}")
             mMapHelper?.removeLayer("$LAYER_SIMULATION_ICON${it.id}")
             mMapHelper?.removeLayer("$LAYER${it.id}")
-            mMapHelper?.removeLayer("$SOURCE${it.id}")
+            mMapHelper?.removeSource("$SOURCE${it.id}")
+            mMapHelper?.removeLayer("$LAYER${it.id}$LABEL_IN_BETWEEN")
+            mMapHelper?.removeSource("$SOURCE${it.id}$LABEL_IN_BETWEEN")
+            mMapHelper?.removeLayer("$LAYER${route[index].id}$LABEL_PRE_DRAW$LABEL_IN_BETWEEN")
+            mMapHelper?.removeSource("$LAYER${route[index].id}$LABEL_PRE_DRAW$LABEL_IN_BETWEEN")
             mMapHelper?.removeLayer("$LAYER${it.id}$LABEL_PRE_DRAW")
-            mMapHelper?.removeLayer("$SOURCE${it.id}$LABEL_PRE_DRAW")
+            mMapHelper?.removeSource("$SOURCE${it.id}$LABEL_PRE_DRAW")
         }
     }
 
@@ -1117,6 +1122,10 @@ class SimulationUtils(
                     mMapHelper?.removeLayer("$SOURCE$it1")
                     mMapHelper?.removeLayer("$LAYER$it1$LABEL_PRE_DRAW")
                     mMapHelper?.removeLayer("$SOURCE$it1$LABEL_PRE_DRAW")
+                    mMapHelper?.removeLayer("$LAYER${it1}$LABEL_IN_BETWEEN")
+                    mMapHelper?.removeSource("$SOURCE${it1}$LABEL_IN_BETWEEN")
+                    mMapHelper?.removeLayer("$LAYER${it1}$LABEL_PRE_DRAW$LABEL_IN_BETWEEN")
+                    mMapHelper?.removeSource("$LAYER${it1}$LABEL_PRE_DRAW$LABEL_IN_BETWEEN")
                 }
             }
             mMapHelper?.clearMarker()
