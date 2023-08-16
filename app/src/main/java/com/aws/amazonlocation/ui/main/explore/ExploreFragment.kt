@@ -4457,6 +4457,9 @@ class ExploreFragment :
                 mMapHelper.moveCameraToLocation(it1)
             }
             mBaseActivity?.isTablet?.let {
+                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                    return@let
+                }
                 if (it) {
                     mBinding.cardNavigation.show()
                     mBinding.cardDirection.show()
@@ -5719,6 +5722,9 @@ class ExploreFragment :
             (activity as MainActivity).changeAmazonLogo(logoResId)
         }
         mBaseActivity?.isTablet?.let {
+            if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                return@let
+            }
             if (it) {
                 mBinding.cardNavigation.show()
                 mBinding.cardDirection.show()
