@@ -70,7 +70,37 @@ class AWSLocationHelper(
     fun initAWSMobileClient(baseActivity: BaseActivity) {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
-        var defaultRegion = BuildConfig.DEFAULT_REGION
+        val defaultIdentityPoolId: String = when (mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])) {
+            regionDisplayName[0] -> {
+                when (mPreferenceManager.getValue(KEY_NEAREST_REGION, "")) {
+                    regionList[0] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                    }
+                    regionList[1] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+                    }
+                    regionList[2] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+                    }
+                    else -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                    }
+                }
+            }
+            regionDisplayName[1] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+            }
+            regionDisplayName[2] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+            }
+            regionDisplayName[3] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            }
+            else -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            }
+        }
+        var defaultRegion = defaultIdentityPoolId.split(":")[0]
         if (mapName == mapGrabMaps) {
             defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
         }
@@ -88,8 +118,37 @@ class AWSLocationHelper(
         val provider = mPreferenceManager.getValue(KEY_PROVIDER, "")
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
-        var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
-        var defaultRegion = BuildConfig.DEFAULT_REGION
+        var defaultIdentityPoolId: String = when (mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])) {
+            regionDisplayName[0] -> {
+                when (mPreferenceManager.getValue(KEY_NEAREST_REGION, "")) {
+                    regionList[0] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                    }
+                    regionList[1] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+                    }
+                    regionList[2] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+                    }
+                    else -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                    }
+                }
+            }
+            regionDisplayName[1] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+            }
+            regionDisplayName[2] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+            }
+            regionDisplayName[3] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            }
+            else -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            }
+        }
+        var defaultRegion = defaultIdentityPoolId.split(":")[0]
         if (mapName == mapGrabMaps) {
             defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
             defaultRegion = BuildConfig.DEFAULT_GRAB_REGION

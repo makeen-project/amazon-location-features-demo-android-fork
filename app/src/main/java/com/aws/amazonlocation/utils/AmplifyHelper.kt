@@ -45,39 +45,38 @@ class AmplifyHelper(
         val mAppClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
         val mDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
         val mRegion = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, "")
+        val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])
         val mapName = mContext.getString(R.string.map_esri)
             .let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
         var defaultIdentityPoolId: String
-        if (selectedRegion == "" || selectedRegion == regionDisplayName[0]) {
-            defaultIdentityPoolId = when (mPreferenceManager.getValue(KEY_NEAREST_REGION, "")) {
-                regionList[0] -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                }
-                regionList[1] -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
-                }
-                regionList[2] -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
-                }
-                else -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        defaultIdentityPoolId = when (selectedRegion) {
+            regionDisplayName[0] -> {
+                when (mPreferenceManager.getValue(KEY_NEAREST_REGION, "")) {
+                    regionList[0] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                    }
+                    regionList[1] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+                    }
+                    regionList[2] -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+                    }
+                    else -> {
+                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                    }
                 }
             }
-        } else {
-            defaultIdentityPoolId = when (selectedRegion) {
-                regionDisplayName[1] -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
-                }
-                regionDisplayName[2] -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
-                }
-                regionDisplayName[3] -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                }
-                else -> {
-                    BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                }
+            regionDisplayName[1] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+            }
+            regionDisplayName[2] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+            }
+            regionDisplayName[3] -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID
+            }
+            else -> {
+                BuildConfig.DEFAULT_IDENTITY_POOL_ID
             }
         }
         var defaultRegion = defaultIdentityPoolId.split(":")[0]
@@ -86,8 +85,6 @@ class AmplifyHelper(
             defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
             defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
         }
-        mPreferenceManager.setValue(KEY_USER_REGION, defaultRegion)
-        mPreferenceManager.setValue(KEY_POOL_ID, defaultIdentityPoolId)
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
             Amplify.addPlugin(AWSLocationGeoPlugin())

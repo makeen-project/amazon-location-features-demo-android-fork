@@ -30,7 +30,9 @@ class RegionAdapter(
                     setRadioButtonIcon(rbRegion, R.drawable.ic_radio_button_unchecked)
                 }
                 rbRegion.setOnClickListener {
-                    mSearchPlaceInterface.click(adapterPosition)
+                    if (!data.isSelected) {
+                        mSearchPlaceInterface.click(adapterPosition)
+                    }
                 }
             }
         }

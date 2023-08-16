@@ -37,6 +37,7 @@ import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_BR_PT
@@ -57,6 +58,7 @@ import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.signOutDialog
@@ -99,6 +101,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         getUnitSystem()
         getDataProvider()
         getMapStyle()
+        getRegion()
         initObserver()
         clickListener()
         if (isTablet) {
@@ -207,6 +210,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                 ?: getString(R.string.map_light)
         mBinding.tvMapStyleName.text = mapStyleNameDisplay
+    }
+    private fun getRegion() {
+        val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])
+        mBinding.tvRegionName.text = selectedRegion
     }
 
     private fun initObserver() {
