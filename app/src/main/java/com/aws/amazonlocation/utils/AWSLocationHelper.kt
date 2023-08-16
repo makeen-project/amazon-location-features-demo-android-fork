@@ -32,6 +32,7 @@ import com.amazonaws.services.geo.model.SearchPlaceIndexForSuggestionsRequest
 import com.amazonaws.services.geo.model.SearchPlaceIndexForSuggestionsResult
 import com.amazonaws.services.geo.model.SearchPlaceIndexForSuggestionsSummary
 import com.amazonaws.services.geo.model.SearchPlaceIndexForTextRequest
+import com.amazonaws.services.geo.model.SearchPlaceIndexForTextResult
 import com.amplifyframework.geo.location.models.AmazonLocationPlace
 import com.amplifyframework.geo.models.Coordinates
 import com.aws.amazonlocation.BuildConfig
@@ -374,12 +375,22 @@ class AWSLocationHelper(
                 else -> ESRI_PLACE_INDEX
             }
             val liveLocation = mMapHelper.getLiveLocation()
-            val response = mClient?.searchPlaceIndexForText(
-                SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat))
-                    .withIndexName(indexName).withText(text)
-                    .withLanguage(getLanguageCode())
-                    .withMaxResults(SEARCH_MAX_RESULT)
-            )
+            var response: SearchPlaceIndexForTextResult? = null
+            if (indexName == GRAB_PLACE_INDEX) {
+               val response = mClient?.searchPlaceIndexForText(
+                   SearchPlaceIndexForTextRequest().withIndexName(indexName).withText(text)
+                        .withLanguage(getLanguageCode())
+                        .withMaxResults(SEARCH_MAX_RESULT)
+                )
+            }
+            else {
+               val response = mClient?.searchPlaceIndexForText(
+                    SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat))
+                        .withIndexName(indexName).withText(text)
+                        .withLanguage(getLanguageCode())
+                        .withMaxResults(SEARCH_MAX_RESULT)
+                )
+            }
             val searchSuggestionResponse = SearchSuggestionResponse(
                 text = response?.summary?.text,
                 maxResults = response?.summary?.maxResults,
