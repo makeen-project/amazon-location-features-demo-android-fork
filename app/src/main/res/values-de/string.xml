@@ -278,4 +278,5 @@
   <string name="label_change_data_provider">Veränderung Daten Anbieter</string>
   <string name="label_change_data_provider_des">GrabMaps tut nicht Unterstützung Simulation, bitte Veränderung Daten Anbieter zu Esri oder HIER zu benutzen Geofence oder Tracker Funktionen.</string>
   <string name="label_switch_to_esri">Schalter zu Esri</string>
+  <string name="region">Region</string>
 </resources>

@@ -278,4 +278,5 @@
   <string name="label_change_data_provider">變更 數據 供應商</string>
   <string name="label_change_data_provider_des">GrabMaps 不\ 支持 模擬, 請 變化 資料 供應商 至 埃斯里 或者 這裡 至 使用 地理圍欄 或者 追蹤器 功能。</string>
   <string name="label_switch_to_esri">交換器 至 埃斯里</string>
+  <string name="region">地區</string>
 </resources>

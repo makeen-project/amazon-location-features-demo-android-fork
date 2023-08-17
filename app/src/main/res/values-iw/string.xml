@@ -278,4 +278,5 @@
   <string name="label_change_data_provider">שינוי נתונים ספק</string>
   <string name="label_change_data_provider_des">GrabMaps לא\ לא תמיכה סימולציה, בבקשה עודף פרטים ספק כדי Esri או כאן כדי שימוש גיאופנס או גשש תכונות.</string>
   <string name="label_switch_to_esri">מתג כדי Esri</string>
+  <string name="region">אזור</string>
 </resources>
