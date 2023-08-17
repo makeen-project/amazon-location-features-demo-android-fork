@@ -24,6 +24,7 @@ class RegionAdapter(
             binding.apply {
                 rbRegion.text = data.name
                 rbRegion.isChecked = data.isSelected
+                rbRegion.isSelected = data.isSelected
                 if (data.isSelected) {
                     setRadioButtonIcon(rbRegion, R.drawable.icon_checkmark)
                 } else {

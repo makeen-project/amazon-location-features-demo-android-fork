@@ -385,7 +385,9 @@ class MainActivity : BaseActivity(), CrashListener {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
 
         if (region.isNullOrEmpty()) {
-            region = BuildConfig.DEFAULT_REGION
+            if (identityId != null) {
+                region = identityId.split(":")[0]
+            }
         }
         mIotAndroidClient.setRegion(Region.getRegion(region))
         mIotAndroidClient.attachPolicy(attachPolicyReq)
