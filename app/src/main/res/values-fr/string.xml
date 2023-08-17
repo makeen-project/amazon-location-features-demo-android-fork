@@ -278,4 +278,5 @@
   <string name="label_change_data_provider">Changement Données Prestataire</string>
   <string name="label_change_data_provider_des">GrabMaps ne soutenir simulation, s\'il vous plaît changer données fournisseur pour Esri ou ICI pour utiliser Geofence ou Traqueur fonctionnalités.</string>
   <string name="label_switch_to_esri">Interrupteur pour Esri</string>
+  <string name="region">Région</string>
 </resources>

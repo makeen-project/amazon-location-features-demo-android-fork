@@ -30,15 +30,19 @@ import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideSoftKeyboard
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.restartAppMapStyleDialog
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
@@ -228,27 +232,37 @@ class MapStyleFragment : BaseFragment() {
         selectedInnerData: String
     ) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
         val isRestartNeeded =
-            if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
-                selectedProvider == getString(R.string.grab)
+            if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+                false
             } else {
-                selectedProvider != getString(R.string.grab)
+                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                    selectedProvider == getString(R.string.grab)
+                } else {
+                    selectedProvider != getString(R.string.grab)
+                }
             }
-        if (isRestartNeeded) {
+        if (selectedProvider == getString(R.string.grab) && mapName != getString(R.string.grab)) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
-            if (selectedProvider == getString(R.string.grab)  && shouldShowGrabDialog) {
+            if (shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
                     override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
                         mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
-                        changeMapStyle(
-                            isMapClick,
-                            selectedProvider,
-                            selectedInnerData
-                        )
-                        lifecycleScope.launch {
-                            if (!isRunningTest) {
-                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                activity?.restartApplication()
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                        if (isRestartNeeded) {
+                            mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                            lifecycleScope.launch {
+                                if (!isRunningTest) {
+                                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                    activity?.restartApplication()
+                                }
                             }
                         }
                     }
@@ -263,15 +277,14 @@ class MapStyleFragment : BaseFragment() {
                     }
                 })
             } else {
-                changeMapStyle(
-                    isMapClick,
-                    selectedProvider,
-                    selectedInnerData
-                )
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                if (isRestartNeeded) {
+                    mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
             }
@@ -390,7 +403,9 @@ class MapStyleFragment : BaseFragment() {
                                         Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
                                     )
                                     (activity as MainActivity).analyticsHelper?.recordEvent(
-                                        EventType.MAP_STYLE_CHANGE, properties)
+                                        EventType.MAP_STYLE_CHANGE,
+                                        properties
+                                    )
                                     mPreferenceManager.setValue(
                                         KEY_MAP_NAME,
                                         mapName

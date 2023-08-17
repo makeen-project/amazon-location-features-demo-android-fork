@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.res.AssetManager
 import android.location.LocationManager
 import android.provider.Settings
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import java.text.DecimalFormat
 import com.aws.amazonlocation.data.response.RouteSimulationData
 import com.google.gson.Gson
 import java.io.InputStream
@@ -266,5 +266,39 @@ object Units {
         val inputStreamReader = InputStreamReader(inputStream)
 
         return Gson().fromJson(inputStreamReader, RouteSimulationData::class.java)
+    }
+
+    fun getDefaultIdentityPoolId(
+        selectedRegion: String?,
+        nearestRegion: String?
+    ) = when (selectedRegion) {
+        regionDisplayName[0] -> {
+            when (nearestRegion) {
+                regionList[0] -> {
+                    BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                }
+                regionList[1] -> {
+                    BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+                }
+                regionList[2] -> {
+                    BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+                }
+                else -> {
+                    BuildConfig.DEFAULT_IDENTITY_POOL_ID
+                }
+            }
+        }
+        regionDisplayName[1] -> {
+            BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
+        }
+        regionDisplayName[2] -> {
+            BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
+        }
+        regionDisplayName[3] -> {
+            BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        }
+        else -> {
+            BuildConfig.DEFAULT_IDENTITY_POOL_ID
+        }
     }
 }

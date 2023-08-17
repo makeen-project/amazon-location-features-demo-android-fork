@@ -95,14 +95,14 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
+import java.text.NumberFormat
+import java.util.*
+import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
-import java.text.NumberFormat
-import java.util.*
-import kotlin.math.roundToInt
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -3348,7 +3348,6 @@ class ExploreFragment :
 
     private fun setAttributionData() {
         mBinding.apply {
-            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
             bottomSheetAttribution.apply {
                 tvAttribution.text = mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
             }
@@ -5331,26 +5330,41 @@ class ExploreFragment :
         selectedInnerData: String
     ) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
         val isRestartNeeded =
-            if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
-                selectedProvider == getString(R.string.grab)
+            if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+                false
             } else {
-                selectedProvider != getString(R.string.grab)
+                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                    selectedProvider == getString(R.string.grab)
+                } else {
+                    selectedProvider != getString(R.string.grab)
+                }
             }
-        if (isRestartNeeded) {
+        if (selectedProvider == getString(R.string.grab) && mapName != getString(R.string.grab)) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
-            if (selectedProvider == getString(R.string.grab) && shouldShowGrabDialog) {
+            if (shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
                     override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
                         mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
                         changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
-                        lifecycleScope.launch {
-                            if (!isRunningTest) {
-                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                activity?.restartApplication()
+                        if (isRestartNeeded) {
+                            mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                            lifecycleScope.launch {
+                                if (!isRunningTest) {
+                                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                    activity?.restartApplication()
+                                }
                             }
                         }
                     }
+
                     override fun onLearnMoreClick(dialog: DialogInterface) {
                         startActivity(
                             Intent(
@@ -5361,15 +5375,14 @@ class ExploreFragment :
                     }
                 })
             } else {
-                changeMapStyle(
-                    isMapClick,
-                    selectedProvider,
-                    selectedInnerData
-                )
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                if (isRestartNeeded) {
+                    mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
             }
@@ -5712,10 +5725,14 @@ class ExploreFragment :
                 R.drawable.ic_amazon_logo_on_light
             }
         }
-        if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
-            lifecycleScope.launch {
-                delay(DELAY_500)
+        lifecycleScope.launch {
+            delay(DELAY_500)
+            if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
                 checkGrabMapInsideBounds()
+            } else {
+                mMapboxMap?.setLatLngBoundsForCameraTarget(null)
+                mMapboxMap?.style?.let { mMapHelper.updateZoomRange(it) }
+                mMapHelper.checkLocationComponentEnable(mBaseActivity, false)
             }
         }
         if (activity is MainActivity) {

@@ -21,9 +21,6 @@ class AmazonLocationApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        if (!BuildConfig.DEBUG) {
-            amplifyHelper.initAmplify()
-        }
         setupUncaughtExceptionHandler()
     }
     private fun setupUncaughtExceptionHandler() {

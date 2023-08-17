@@ -278,4 +278,5 @@
   <string name="label_change_data_provider">تغيير البيانات الموفر</string>
   <string name="label_change_data_provider_des">GrabMaps لا دعم محاكاة، من فضلك تغيير البيانات مزود إلى إسري أو هنا إلى استخدام السياج الجغرافي أو متعقب الميزات.</string>
   <string name="label_switch_to_esri">سويتش إلى إسري</string>
+  <string name="region">المنطقة</string>
 </resources>

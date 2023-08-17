@@ -278,4 +278,5 @@
   <string name="label_change_data_provider">बदलें डेटा प्रोवाइडर</string>
   <string name="label_change_data_provider_des">GrabMaps नहीं करता है समर्थन करते हैं सिमुलेशन, कृपया परिवर्तन डेटा प्रदाता को Esri या यहां को उपयोग करें जियोफेंस या ट्रैकर विशेषताएं।</string>
   <string name="label_switch_to_esri">स्विच को Esri</string>
+  <string name="region">क्षेत्र</string>
 </resources>
