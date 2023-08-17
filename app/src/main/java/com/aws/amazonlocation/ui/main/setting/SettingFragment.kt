@@ -213,7 +213,9 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
     private fun getRegion() {
         val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])
-        mBinding.tvRegionName.text = selectedRegion
+        if (selectedRegion != null) {
+            mBinding.tvRegionName.text = selectedRegion.split("(")[0].trim()
+        }
     }
 
     private fun initObserver() {

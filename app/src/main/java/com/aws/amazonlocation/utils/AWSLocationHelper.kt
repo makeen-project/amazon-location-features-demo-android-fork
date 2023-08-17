@@ -2,6 +2,7 @@ package com.aws.amazonlocation.utils
 
 import android.location.Location
 import android.os.StrictMode
+import android.util.Log
 import aws.sdk.kotlin.services.location.model.TravelMode
 import com.amazonaws.auth.CognitoCredentialsProvider
 import com.amazonaws.mobile.client.AWSMobileClient
@@ -47,6 +48,7 @@ import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.data.response.UpdateBatchLocationResponse
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
+import com.aws.amazonlocation.utils.Units.getDefaultIdentityPoolId
 import com.aws.amazonlocation.utils.Units.getDistanceUnit
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.Units.meterToFeet
@@ -65,48 +67,21 @@ class AWSLocationHelper(
     private var mCognitoCredentialsProvider: CognitoCredentialsProvider? = null
     private var mBaseActivity: BaseActivity? = null
     private var apiError = "Please try again later"
-    private var mapGrabMaps = "GrabMaps"
 
     fun initAWSMobileClient(baseActivity: BaseActivity) {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
-        val defaultIdentityPoolId: String = when (mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])) {
-            regionDisplayName[0] -> {
-                when (mPreferenceManager.getValue(KEY_NEAREST_REGION, "")) {
-                    regionList[0] -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                    }
-                    regionList[1] -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
-                    }
-                    regionList[2] -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
-                    }
-                    else -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                    }
-                }
-            }
-            regionDisplayName[1] -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
-            }
-            regionDisplayName[2] -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
-            }
-            regionDisplayName[3] -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID
-            }
-            else -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID
-            }
-        }
-        var defaultRegion = defaultIdentityPoolId.split(":")[0]
-        if (mapName == mapGrabMaps) {
-            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
-        }
+        val defaultIdentityPoolId: String = getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
+        val defaultRegion = defaultIdentityPoolId.split(":")[0]
         if (region.isNullOrEmpty()) {
             region = defaultRegion
         }
+        Log.e("TAG", "initAWSMobileClient region $region")
         mClient = AmazonLocationClient(initCognitoCachingCredentialsProvider())
         mClient?.setRegion(Region.getRegion(region))
         mBaseActivity = baseActivity
@@ -117,42 +92,14 @@ class AWSLocationHelper(
         var identityPoolId = mPreferenceManager.getValue(KEY_POOL_ID, "")
         val provider = mPreferenceManager.getValue(KEY_PROVIDER, "")
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
-        var defaultIdentityPoolId: String = when (mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])) {
-            regionDisplayName[0] -> {
-                when (mPreferenceManager.getValue(KEY_NEAREST_REGION, "")) {
-                    regionList[0] -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                    }
-                    regionList[1] -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
-                    }
-                    regionList[2] -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
-                    }
-                    else -> {
-                        BuildConfig.DEFAULT_IDENTITY_POOL_ID
-                    }
-                }
-            }
-            regionDisplayName[1] -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU
-            }
-            regionDisplayName[2] -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP
-            }
-            regionDisplayName[3] -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID
-            }
-            else -> {
-                BuildConfig.DEFAULT_IDENTITY_POOL_ID
-            }
-        }
-        var defaultRegion = defaultIdentityPoolId.split(":")[0]
-        if (mapName == mapGrabMaps) {
-            defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
-            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
-        }
+        val defaultIdentityPoolId: String = getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
+        val defaultRegion = defaultIdentityPoolId.split(":")[0]
         if (region.isNullOrEmpty()) {
             region = defaultRegion
         }
@@ -160,6 +107,8 @@ class AWSLocationHelper(
         if (identityPoolId.isNullOrEmpty()) {
             identityPoolId = defaultIdentityPoolId
         }
+        Log.e("TAG", "initCognitoCachingCredentialsProvider region $region")
+        Log.e("TAG", "initCognitoCachingCredentialsProvider identityPoolId $identityPoolId")
         mCognitoCredentialsProvider = CognitoCredentialsProvider(
             identityPoolId,
             Regions.fromName(region)
