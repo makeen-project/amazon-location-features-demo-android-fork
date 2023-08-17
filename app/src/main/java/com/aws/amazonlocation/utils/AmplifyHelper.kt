@@ -53,8 +53,6 @@ class AmplifyHelper(
             mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
         )
         val defaultRegion = defaultIdentityPoolId.split(":")[0]
-        Log.e("TAG", "initAmplify defaultRegion: $defaultRegion")
-        Log.e("TAG", "initAmplify defaultIdentityPoolId: $defaultIdentityPoolId")
 
         try {
             Amplify.addPlugin(AWSCognitoAuthPlugin())
@@ -65,7 +63,6 @@ class AmplifyHelper(
         val mAwsConfiguration: AWSConfiguration
 
         if (mPoolId.isNullOrEmpty()) { // Guest mode
-            Log.e("TAG", "initAmplify Guest mode")
             mAmplifyConfiguration = AmplifyConfiguration.fromJson(
                 JSONObject(
                     getAmplifyConfigJson(
@@ -83,7 +80,6 @@ class AmplifyHelper(
                 )
             )
         } else { // connected with user's AWS
-            Log.e("TAG", "initAmplify connected with user's AWS $mRegion : $mPoolId")
             mAmplifyConfiguration = AmplifyConfiguration.fromJson(
                 JSONObject(
                     getAmplifyConfigJson(

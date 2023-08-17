@@ -128,14 +128,17 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                         ivDisconnect.setImageDrawable(ContextCompat.getDrawable(ivDisconnect.context, R.drawable.icon_log_out))
                         tvDisconnect.text = getText(R.string.label_sign_out)
                         clDisconnect.show()
+                        clRegion.hide()
                     }
                     AuthEnum.AWS_CONNECTED.name -> {
                         ivDisconnect.setImageDrawable(ContextCompat.getDrawable(ivDisconnect.context, R.drawable.ic_plug))
                         tvDisconnect.text = getString(R.string.label_disconnect)
                         clDisconnect.show()
+                        clRegion.hide()
                     }
                     else -> {
                         clDisconnect.hide()
+                        clRegion.show()
                     }
                 }
             } else {

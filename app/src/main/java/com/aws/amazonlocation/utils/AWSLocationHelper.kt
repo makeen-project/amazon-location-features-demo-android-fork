@@ -81,7 +81,6 @@ class AWSLocationHelper(
         if (region.isNullOrEmpty()) {
             region = defaultRegion
         }
-        Log.e("TAG", "initAWSMobileClient region $region")
         mClient = AmazonLocationClient(initCognitoCachingCredentialsProvider())
         mClient?.setRegion(Region.getRegion(region))
         mBaseActivity = baseActivity
@@ -107,8 +106,6 @@ class AWSLocationHelper(
         if (identityPoolId.isNullOrEmpty()) {
             identityPoolId = defaultIdentityPoolId
         }
-        Log.e("TAG", "initCognitoCachingCredentialsProvider region $region")
-        Log.e("TAG", "initCognitoCachingCredentialsProvider identityPoolId $identityPoolId")
         mCognitoCredentialsProvider = CognitoCredentialsProvider(
             identityPoolId,
             Regions.fromName(region)
