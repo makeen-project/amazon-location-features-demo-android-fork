@@ -203,7 +203,7 @@ class DataProviderFragment : BaseFragment() {
             if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
                 false
             } else {
-                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here) || mapName == getString(R.string.open_data)) {
                     isGrab
                 } else {
                     !isGrab
@@ -257,12 +257,6 @@ class DataProviderFragment : BaseFragment() {
             }
             if (isOpenData) {
                 changeDataProviderOpenData()
-            }
-            lifecycleScope.launch {
-                if (!isRunningTest) {
-                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                    activity?.restartApplication()
-                }
             }
         }
     }
