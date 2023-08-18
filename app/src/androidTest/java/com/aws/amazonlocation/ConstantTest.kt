@@ -2,6 +2,7 @@ package com.aws.amazonlocation
 
 import com.aws.amazonlocation.utils.DESCRIPTION_TAG_ESRI
 import com.aws.amazonlocation.utils.DESCRIPTION_TAG_HERE
+import com.aws.amazonlocation.utils.DESCRIPTION_TAG_OPEN
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -137,3 +138,8 @@ val STYLE_TAG_HERE_1 = DESCRIPTION_TAG_HERE + 1
 val STYLE_TAG_HERE_2 = DESCRIPTION_TAG_HERE + 2
 val STYLE_TAG_HERE_3 = DESCRIPTION_TAG_HERE + 3
 val STYLE_TAG_HERE_4 = DESCRIPTION_TAG_HERE + 4
+
+val STYLE_TAG_OPEN_1 = DESCRIPTION_TAG_OPEN + 1
+val STYLE_TAG_OPEN_2 = DESCRIPTION_TAG_OPEN + 2
+val STYLE_TAG_OPEN_3 = DESCRIPTION_TAG_OPEN + 3
+val STYLE_TAG_OPEN_4 = DESCRIPTION_TAG_OPEN + 4

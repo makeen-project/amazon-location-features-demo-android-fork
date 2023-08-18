@@ -91,6 +91,9 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
             getActivity().getString(R.string.map_raster) -> {
                 mapName = MapNames.HERE_IMAGERY
             }
+            getActivity().getString(R.string.map_standard_dark) -> {
+                mapName = MapNames.OPEN_DATA_STANDARD_DARK
+            }
             else -> {
                 mapName = MapNames.ESRI_LIGHT
             }
@@ -141,6 +144,10 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
             waitForView(allOf(withContentDescription(STYLE_TAG_HERE_3), isDisplayed()))?.perform(click())
             checkLoadedTheme(mapbox)
             waitForView(allOf(withContentDescription(STYLE_TAG_HERE_4), isDisplayed()))?.perform(click())
+            checkLoadedTheme(mapbox)
+
+            swipeUp()
+            waitForView(allOf(withContentDescription(STYLE_TAG_OPEN_1), isDisplayed()))?.perform(click())
             checkLoadedTheme(mapbox)
         } catch (e: Exception) {
             failTest(147, e)
@@ -209,5 +216,22 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
 
         latch.await()
         Thread.sleep(DELAY_2000)
+    }
+
+    private fun swipeUp(): UiDevice? {
+        // Get the screen dimensions
+        val screenHeight = getInstrumentation().targetContext.resources.displayMetrics.heightPixels
+
+        // Set the starting point for the swipe (bottom-center of the screen)
+        val startX = getInstrumentation().targetContext.resources.displayMetrics.widthPixels / 2f
+        val startY = screenHeight - 100 // Offset from the bottom of the screen
+
+        // Set the ending point for the swipe (top-center of the screen)
+        val endY = 100 // Offset from the top of the screen
+
+        // Perform the swipe action
+        val uiDevice = UiDevice.getInstance(getInstrumentation())
+        uiDevice.swipe(startX.toInt(), startY, startX.toInt(), endY, 10)
+        return uiDevice
     }
 }
