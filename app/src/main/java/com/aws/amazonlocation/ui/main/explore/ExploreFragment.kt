@@ -836,25 +836,29 @@ class ExploreFragment :
     private fun BottomSheetMapStyleBinding.setMapTileSelection(
         mapName: String
     ) {
-        when (mapName) {
+        val colorToSet = ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+
+        val selectedCard: MaterialCardView = when (mapName) {
             resources.getString(R.string.esri) -> {
-                cardEsri.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardEsri
             }
             resources.getString(R.string.here) -> {
-                cardHere.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardHere
             }
             resources.getString(R.string.grab) -> {
-                cardGrabMap.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardGrabMap
             }
+            resources.getString(R.string.open_data) -> {
+                cardOpenData
+            }
+            else -> cardEsri
+        }
+
+        val cardList = listOf(cardEsri, cardHere, cardGrabMap, cardOpenData)
+
+        cardList.forEach { card ->
+            card.strokeColor = if (card == selectedCard) colorToSet
+            else ContextCompat.getColor(requireContext(), R.color.white)
         }
     }
 
@@ -3051,6 +3055,16 @@ class ExploreFragment :
                         )
                     }
                 }
+                cardOpenData.setOnClickListener {
+                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                    if (mapName != getString(R.string.open_data)) {
+                        mapStyleChange(
+                            false,
+                            getString(R.string.open_data),
+                            getString(R.string.map_standard_light)
+                        )
+                    }
+                }
                 cardGrabMap.setOnClickListener {
                     val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                     if (mapName != getString(R.string.grab)) {
@@ -5102,6 +5116,22 @@ class ExploreFragment :
                     mapName = MapNames.HERE_IMAGERY
                     mapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
                 }
+                resources.getString(R.string.map_standard_light) -> {
+                    mapName = MapNames.OPEN_DATA_STANDARD_LIGHT
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_STANDARD_LIGHT
+                }
+                resources.getString(R.string.map_standard_dark) -> {
+                    mapName = MapNames.OPEN_DATA_STANDARD_DARK
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_STANDARD_DARK
+                }
+                resources.getString(R.string.map_visualization_light) -> {
+                    mapName = MapNames.OPEN_DATA_VISUALIZATION_LIGHT
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_LIGHT
+                }
+                resources.getString(R.string.map_visualization_dark) -> {
+                    mapName = MapNames.OPEN_DATA_VISUALIZATION_DARK
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_DARK
+                }
                 else -> {
                     mapName = ESRI_LIGHT
                     mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
@@ -5545,6 +5575,38 @@ class ExploreFragment :
                                                 MapStyles.RASTER_HERE_EXPLORE_SATELLITE
                                             )
                                         }
+                                        resources.getString(R.string.map_standard_light) -> {
+                                            selectedId = MapNames.OPEN_DATA_STANDARD_LIGHT
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_STANDARD_LIGHT,
+                                                MapStyles.VECTOR_OPEN_DATA_STANDARD_LIGHT
+                                            )
+                                        }
+                                        resources.getString(R.string.map_standard_dark) -> {
+                                            selectedId = MapNames.OPEN_DATA_STANDARD_DARK
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_STANDARD_DARK,
+                                                MapStyles.VECTOR_OPEN_DATA_STANDARD_DARK
+                                            )
+                                        }
+                                        resources.getString(R.string.map_visualization_light) -> {
+                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_LIGHT
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_VISUALIZATION_LIGHT,
+                                                MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_LIGHT
+                                            )
+                                        }
+                                        resources.getString(R.string.map_visualization_dark) -> {
+                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_DARK
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_VISUALIZATION_DARK,
+                                                MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_DARK
+                                            )
+                                        }
                                     }
                                 } else {
                                     when (innerData.mapName) {
@@ -5711,14 +5773,18 @@ class ExploreFragment :
             MapNames.HERE_CONTRAST,
             MapNames.HERE_EXPLORE,
             MapNames.HERE_EXPLORE_TRUCK,
-            MapNames.GRAB_LIGHT
+            MapNames.GRAB_LIGHT,
+            MapNames.OPEN_DATA_STANDARD_LIGHT,
+            MapNames.OPEN_DATA_VISUALIZATION_LIGHT
             -> R.drawable.ic_amazon_logo_on_light
 
             MapNames.ESRI_DARK_GRAY_CANVAS,
             MapNames.ESRI_IMAGERY,
             MapNames.HERE_IMAGERY,
             MapNames.HERE_HYBRID,
-            MapNames.GRAB_DARK
+            MapNames.GRAB_DARK,
+            MapNames.OPEN_DATA_STANDARD_DARK,
+            MapNames.OPEN_DATA_VISUALIZATION_DARK
             -> R.drawable.ic_amazon_logo_on_dark
 
             else -> {

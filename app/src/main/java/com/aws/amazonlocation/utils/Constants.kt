@@ -240,6 +240,10 @@ object MapNames {
     const val HERE_IMAGERY = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "HERE.Imagery"
     const val GRAB_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardLight"
     const val GRAB_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "Grab.StandardDark"
+    const val OPEN_DATA_STANDARD_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "OpenData.StandardLight"
+    const val OPEN_DATA_STANDARD_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "OpenData.StandardDark"
+    const val OPEN_DATA_VISUALIZATION_LIGHT = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "OpenData.VisualizationLight"
+    const val OPEN_DATA_VISUALIZATION_DARK = LOCATION_AWS_PREFIX + LOCATION_MAPS_PREFIX + "OpenData.VisualizationDark"
 }
 
 object MapStyles {
@@ -256,6 +260,10 @@ object MapStyles {
     const val RASTER_HERE_EXPLORE_SATELLITE = "RasterHereExploreSatellite"
     const val GRAB_LIGHT = "VectorGrabStandardLight"
     const val GRAB_DARK = "VectorGrabStandardDark"
+    const val VECTOR_OPEN_DATA_STANDARD_LIGHT = "VectorOpenDataStandardLight"
+    const val VECTOR_OPEN_DATA_STANDARD_DARK = "VectorOpenDataStandardDark"
+    const val VECTOR_OPEN_DATA_VISUALIZATION_LIGHT = "VectorOpenDataVisualizationLight"
+    const val VECTOR_OPEN_DATA_VISUALIZATION_DARK = "VectorOpenDataVisualizationDark"
 }
 
 object DateFormat {

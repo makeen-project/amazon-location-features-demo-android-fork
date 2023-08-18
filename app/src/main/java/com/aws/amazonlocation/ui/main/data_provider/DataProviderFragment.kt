@@ -78,6 +78,9 @@ class DataProviderFragment : BaseFragment() {
                 resources.getString(R.string.grab) -> {
                     changeDataProvider(isGrab = true)
                 }
+                resources.getString(R.string.open_data) -> {
+                    changeDataProvider(isOpenData = true)
+                }
             }
 
             ivRouteDataProvider.setOnClickListener {
@@ -94,6 +97,10 @@ class DataProviderFragment : BaseFragment() {
 
             llGrab.setOnClickListener {
                 showRestartDialog(isGrab = true)
+            }
+
+            llOpenData.setOnClickListener {
+                showRestartDialog(isOpenData = true)
             }
         }
     }
@@ -156,7 +163,34 @@ class DataProviderFragment : BaseFragment() {
         mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.here))
     }
 
-    private fun showRestartDialog(isEsri: Boolean = false, isGrab: Boolean = false, isHere: Boolean = false) {
+    private fun changeDataProviderOpenData() {
+        val properties = listOf(
+            Pair(AnalyticsAttribute.PROVIDER, resources.getString(R.string.open_data)),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(
+            EventType.MAP_PROVIDER_CHANGE,
+            properties
+        )
+        changeDataProvider(isOpenData = true)
+        val mapStyle = mPreferenceManager.getValue(
+            KEY_MAP_STYLE_NAME,
+            resources.getString(R.string.map_light)
+        )
+        if (mapStyle != getString(R.string.map_standard_light) ||
+            mapStyle != getString(R.string.map_standard_dark) ||
+            mapStyle != getString(R.string.map_visualization_light) ||
+            mapStyle != getString(R.string.map_visualization_dark)
+        ) {
+            mPreferenceManager.setValue(
+                KEY_MAP_STYLE_NAME,
+                resources.getString(R.string.map_standard_light)
+            )
+        }
+        mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.open_data))
+    }
+
+    private fun showRestartDialog(isEsri: Boolean = false, isGrab: Boolean = false, isHere: Boolean = false, isOpenData: Boolean = false) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
         val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
             mPreferenceManager.getValue(
@@ -221,6 +255,15 @@ class DataProviderFragment : BaseFragment() {
             if (isHere) {
                 changeDataProviderHere()
             }
+            if (isOpenData) {
+                changeDataProviderOpenData()
+            }
+            lifecycleScope.launch {
+                if (!isRunningTest) {
+                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                    activity?.restartApplication()
+                }
+            }
         }
     }
     private fun changeDataProviderGrab() {
@@ -247,7 +290,7 @@ class DataProviderFragment : BaseFragment() {
         }
         mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.grab))
     }
-    private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false, isHere: Boolean = false) {
+    private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false, isHere: Boolean = false, isOpenData: Boolean = false) {
         mBinding.apply {
             ivEsri.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -265,6 +308,12 @@ class DataProviderFragment : BaseFragment() {
                 ContextCompat.getDrawable(
                     requireContext(),
                     if (isGrab) R.drawable.icon_checkmark else R.drawable.ic_radio_button_unchecked
+                )
+            )
+            ivOpenData.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (isOpenData) R.drawable.icon_checkmark else R.drawable.ic_radio_button_unchecked
                 )
             )
         }
