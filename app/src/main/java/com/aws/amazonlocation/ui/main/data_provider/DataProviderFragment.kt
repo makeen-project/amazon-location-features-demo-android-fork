@@ -22,11 +22,15 @@ import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.restartAppMapStyleDialog
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
@@ -66,13 +70,13 @@ class DataProviderFragment : BaseFragment() {
         mBinding.apply {
             when (dataProvider) {
                 resources.getString(R.string.esri) -> {
-                    changeDataProvider(isEsri = true, isGrab = false)
+                    changeDataProvider(isEsri = true)
                 }
                 resources.getString(R.string.here) -> {
-                    changeDataProvider(isEsri = false, isGrab = false)
+                    changeDataProvider(isHere = true)
                 }
                 resources.getString(R.string.grab) -> {
-                    changeDataProvider(isEsri = false, isGrab = true)
+                    changeDataProvider(isGrab = true)
                 }
             }
 
@@ -81,27 +85,15 @@ class DataProviderFragment : BaseFragment() {
             }
 
             llEsri.setOnClickListener {
-                if (dataProvider == resources.getString(R.string.grab)) {
-                    showRestartDialog(isHere = false, isGrab = false)
-                } else {
-                    changeDataProviderEsri()
-                }
+                showRestartDialog(isEsri = true)
             }
 
             llHere.setOnClickListener {
-                if (dataProvider == resources.getString(R.string.grab)) {
-                    showRestartDialog(isHere = true, isGrab = false)
-                } else {
-                    changeDataProviderHere()
-                }
+                showRestartDialog(isHere = true)
             }
 
-            llGrab?.setOnClickListener {
-                if (dataProvider == resources.getString(R.string.esri) || dataProvider == resources.getString(R.string.here)) {
-                    showRestartDialog(isHere = false, isGrab = true)
-                } else {
-                    changeDataProviderGrab()
-                }
+            llGrab.setOnClickListener {
+                showRestartDialog(isGrab = true)
             }
         }
     }
@@ -112,8 +104,10 @@ class DataProviderFragment : BaseFragment() {
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
         (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.MAP_PROVIDER_CHANGE, properties)
-        changeDataProvider(isEsri = true, isGrab = false)
+            EventType.MAP_PROVIDER_CHANGE,
+            properties
+        )
+        changeDataProvider(isEsri = true)
         val mapStyle = mPreferenceManager.getValue(
             KEY_MAP_STYLE_NAME,
             resources.getString(R.string.map_light)
@@ -140,8 +134,10 @@ class DataProviderFragment : BaseFragment() {
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
         (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.MAP_PROVIDER_CHANGE, properties)
-        changeDataProvider(isEsri = false, isGrab = false)
+            EventType.MAP_PROVIDER_CHANGE,
+            properties
+        )
+        changeDataProvider(isHere = true)
         val mapStyle = mPreferenceManager.getValue(
             KEY_MAP_STYLE_NAME,
             resources.getString(R.string.map_light)
@@ -160,7 +156,25 @@ class DataProviderFragment : BaseFragment() {
         mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.here))
     }
 
-    private fun showRestartDialog(isHere: Boolean, isGrab: Boolean) {
+    private fun showRestartDialog(isEsri: Boolean = false, isGrab: Boolean = false, isHere: Boolean = false) {
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
+        val isRestartNeeded =
+            if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+                false
+            } else {
+                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                    isGrab
+                } else {
+                    !isGrab
+                }
+            }
         if (isGrab) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
             if (shouldShowGrabDialog) {
@@ -168,10 +182,13 @@ class DataProviderFragment : BaseFragment() {
                     override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
                         mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
                         changeDataProviderGrab()
-                        lifecycleScope.launch {
-                            if (!isRunningTest) {
-                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                activity?.restartApplication()
+                        if (isRestartNeeded) {
+                            mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                            lifecycleScope.launch {
+                                if (!isRunningTest) {
+                                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                    activity?.restartApplication()
+                                }
                             }
                         }
                     }
@@ -187,24 +204,22 @@ class DataProviderFragment : BaseFragment() {
                 })
             } else {
                 changeDataProviderGrab()
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
+                if (isRestartNeeded) {
+                    mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
             }
         } else {
-            if (isHere) {
-                changeDataProviderHere()
-            } else {
+            if (isEsri) {
                 changeDataProviderEsri()
             }
-            lifecycleScope.launch {
-                if (!isRunningTest) {
-                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                    activity?.restartApplication()
-                }
+            if (isHere) {
+                changeDataProviderHere()
             }
         }
     }
@@ -214,8 +229,10 @@ class DataProviderFragment : BaseFragment() {
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
         (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.MAP_PROVIDER_CHANGE, properties)
-        changeDataProvider(isEsri = false, isGrab = true)
+            EventType.MAP_PROVIDER_CHANGE,
+            properties
+        )
+        changeDataProvider(isGrab = true)
         val mapStyle = mPreferenceManager.getValue(
             KEY_MAP_STYLE_NAME,
             resources.getString(R.string.map_light)
@@ -230,69 +247,26 @@ class DataProviderFragment : BaseFragment() {
         }
         mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.grab))
     }
-
-    private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false) {
+    private fun changeDataProvider(isEsri: Boolean = false, isGrab: Boolean = false, isHere: Boolean = false) {
         mBinding.apply {
-            if (isGrab) {
-                ivGrab.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.icon_checkmark
-                    )
+            ivEsri.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (isEsri) R.drawable.icon_checkmark else R.drawable.ic_radio_button_unchecked
                 )
-                ivHere.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_radio_button_unchecked
-                    )
+            )
+            ivHere.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (isHere) R.drawable.icon_checkmark else R.drawable.ic_radio_button_unchecked
                 )
-                ivEsri.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_radio_button_unchecked
-                    )
+            )
+            ivGrab.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    if (isGrab) R.drawable.icon_checkmark else R.drawable.ic_radio_button_unchecked
                 )
-                return
-            }
-            if (isEsri) {
-                ivEsri.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.icon_checkmark
-                    )
-                )
-                ivHere.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_radio_button_unchecked
-                    )
-                )
-                ivGrab?.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_radio_button_unchecked
-                    )
-                )
-            } else {
-                ivEsri.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_radio_button_unchecked
-                    )
-                )
-                ivHere.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.icon_checkmark
-                    )
-                )
-                ivGrab?.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_radio_button_unchecked
-                    )
-                )
-            }
+            )
         }
     }
 
