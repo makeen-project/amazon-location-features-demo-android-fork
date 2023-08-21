@@ -465,6 +465,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
         clLanguage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         ivLanguage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
+        clRegion.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivRegion.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
         clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         ivDataProvider.setColorFilter(
             ContextCompat.getColor(
