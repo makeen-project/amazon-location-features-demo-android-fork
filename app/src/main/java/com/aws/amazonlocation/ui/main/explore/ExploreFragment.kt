@@ -31,6 +31,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import aws.sdk.kotlin.services.location.model.TravelMode
+import com.amazonaws.auth.CognitoCredentialsProvider
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.services.geo.model.CalculateRouteResult
 import com.amazonaws.services.geo.model.Leg
@@ -95,14 +96,14 @@ import com.mapbox.mapboxsdk.geometry.LatLngBounds
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
 import com.mapbox.mapboxsdk.module.http.HttpRequestUtil
-import java.text.NumberFormat
-import java.util.*
-import kotlin.math.roundToInt
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import okhttp3.OkHttpClient
+import java.text.NumberFormat
+import java.util.*
+import kotlin.math.roundToInt
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -5040,19 +5041,17 @@ class ExploreFragment :
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         mapboxMap.addOnMapClickListener(this)
-        mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
-            HttpRequestUtil.setOkHttpClient(
-                OkHttpClient.Builder()
-                    .addInterceptor(SigV4Interceptor(it, mServiceName))
-                    .build()
-            )
-        }
         val mapStyleNameDisplay =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                 ?: getString(R.string.map_light)
         val mapNameSelected = mBaseActivity?.getString(R.string.map_esri)
             ?.let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
             ?: mBaseActivity?.getString(R.string.map_esri)
+        mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
+            if (mapNameSelected == getString(R.string.here) && mapStyleNameDisplay == getString(R.string.map_hybrid)) {
+                addInterceptor(it)
+            }
+        }
         val mapName: String
         val mapStyleName: String
         if (mapNameSelected == getString(R.string.grab)) {
@@ -5165,6 +5164,18 @@ class ExploreFragment :
             }
         }
         setMapBoxInSimulation()
+    }
+
+    private fun addInterceptor(it: CognitoCredentialsProvider) {
+        HttpRequestUtil.setOkHttpClient(
+            OkHttpClient.Builder()
+                .addInterceptor(SigV4Interceptor(it, mServiceName))
+                .build()
+        )
+    }
+
+    private fun removeInterceptor() {
+        HttpRequestUtil.setOkHttpClient(null)
     }
 
     fun setMapBoxInSimulation() {
@@ -5441,28 +5452,47 @@ class ExploreFragment :
         selectedProvider: String,
         selectedInnerData: String
     ) {
-        if (isMapClick) {
-            repeat(mViewModel.mStyleList.size) {
-                mViewModel.mStyleList[it].isSelected = false
-            }
-            repeat(mViewModel.mStyleListForFilter.size) {
-                mViewModel.mStyleListForFilter[it].isSelected = false
-            }
-            changeStyle(selectedProvider, selectedInnerData)
-            for (data in mViewModel.mStyleListForFilter) {
-                if (data.styleNameDisplay.equals(selectedProvider)) {
-                    data.isSelected = !data.isSelected
-                }
-            }
-            mBaseActivity?.isTablet?.let {
-                if (it) {
-                    mapStyleBottomSheetFragment.notifyAdapter()
+        lifecycleScope.launch {
+            mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
+                val mapStyleNameDisplay =
+                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
+                        ?: getString(R.string.map_light)
+                val mapNameSelected = mBaseActivity?.getString(R.string.map_esri)
+                    ?.let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
+                    ?: mBaseActivity?.getString(R.string.map_esri)
+                if (selectedProvider == getString(R.string.here) && selectedInnerData == getString(R.string.map_hybrid)) {
+                    addInterceptor(it)
+                    delay(DELAY_500)
                 } else {
-                    mMapStyleAdapter?.notifyDataSetChanged()
+                    if (mapNameSelected == getString(R.string.here) && mapStyleNameDisplay == getString(R.string.map_hybrid)) {
+                        removeInterceptor()
+                        delay(DELAY_500)
+                    }
                 }
             }
-        } else {
-            changeStyle(selectedProvider, selectedInnerData)
+            if (isMapClick) {
+                repeat(mViewModel.mStyleList.size) {
+                    mViewModel.mStyleList[it].isSelected = false
+                }
+                repeat(mViewModel.mStyleListForFilter.size) {
+                    mViewModel.mStyleListForFilter[it].isSelected = false
+                }
+                changeStyle(selectedProvider, selectedInnerData)
+                for (data in mViewModel.mStyleListForFilter) {
+                    if (data.styleNameDisplay.equals(selectedProvider)) {
+                        data.isSelected = !data.isSelected
+                    }
+                }
+                mBaseActivity?.isTablet?.let {
+                    if (it) {
+                        mapStyleBottomSheetFragment.notifyAdapter()
+                    } else {
+                        mMapStyleAdapter?.notifyDataSetChanged()
+                    }
+                }
+            } else {
+                changeStyle(selectedProvider, selectedInnerData)
+            }
         }
     }
 
