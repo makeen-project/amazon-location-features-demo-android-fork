@@ -33,6 +33,6 @@ class MapStyleVMSetEsriAndHereListData : BaseTest() {
     @Test
     fun setEsriAndHereSuccess() = runTest {
         mMapStyleViewModel.setMapListData(context, false)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, mMapStyleViewModel.mStyleList.size == 2)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, mMapStyleViewModel.mStyleList.size == 3)
     }
 }

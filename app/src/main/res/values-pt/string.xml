@@ -279,4 +279,6 @@
   <string name="label_change_data_provider_des">GrabMaps não\ não apoio simulação, por favor mudar dados fornecedor para Esri ou AQUI para usa Geofence ou Rastreador características.</string>
   <string name="label_switch_to_esri">Interruptor para Esri</string>
   <string name="region">Região</string>
+  <string name="label_enable_open_data">Habilitar Dados abertos</string>
+  <string name="label_enable_open_data_des">Dados abertos usa Esri pelo Rotas e Locais procurar funcionalidade para aumentar seu experiência.</string>
 </resources>

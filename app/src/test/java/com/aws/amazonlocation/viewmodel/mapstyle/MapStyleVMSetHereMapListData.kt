@@ -33,6 +33,6 @@ class MapStyleVMSetGrabMapListData : BaseTest() {
     @Test
     fun setGrabMapListDataSuccess() = runTest {
         mMapStyleViewModel.setMapListData(context, true)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE, mMapStyleViewModel.mStyleList.size == 3)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_HERE, mMapStyleViewModel.mStyleList.size == 4)
     }
 }

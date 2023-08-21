@@ -53,7 +53,7 @@ class ExploreVMSetMapListData : BaseTest() {
 
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED,
-            mExploreVM.mStyleList.size == 3
+            mExploreVM.mStyleList.size == 4
         )
 
         Assert.assertTrue(

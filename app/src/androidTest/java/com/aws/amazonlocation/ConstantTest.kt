@@ -2,6 +2,7 @@ package com.aws.amazonlocation
 
 import com.aws.amazonlocation.utils.DESCRIPTION_TAG_ESRI
 import com.aws.amazonlocation.utils.DESCRIPTION_TAG_HERE
+import com.aws.amazonlocation.utils.DESCRIPTION_TAG_OPEN
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -80,6 +81,7 @@ const val JSON_KEY_ESRI = "esri"
 const val JSON_KEY_HERE = "omv"
 const val JSON_KEY_RASTER_TILES = "raster-tiles"
 const val MAP_STYLE_GRAB = "GrabMaps"
+const val JSON_KEY_AWS = "aws"
 
 const val TEST_FAILED_NO_TRACKING_HISTORY_NULL = "Test failed due to no tracking history itemCount is null"
 const val TEST_FAILED_NO_TRACKING_HISTORY = "Test failed due to no tracking history"
@@ -137,3 +139,5 @@ val STYLE_TAG_HERE_1 = DESCRIPTION_TAG_HERE + 1
 val STYLE_TAG_HERE_2 = DESCRIPTION_TAG_HERE + 2
 val STYLE_TAG_HERE_3 = DESCRIPTION_TAG_HERE + 3
 val STYLE_TAG_HERE_4 = DESCRIPTION_TAG_HERE + 4
+
+val STYLE_TAG_OPEN_1 = DESCRIPTION_TAG_OPEN + 1

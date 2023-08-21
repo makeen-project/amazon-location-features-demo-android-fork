@@ -9,7 +9,9 @@ import com.aws.amazonlocation.data.response.MapStyleInnerData
 import com.aws.amazonlocation.databinding.ItemMapNameBinding
 import com.aws.amazonlocation.utils.DESCRIPTION_TAG_ESRI
 import com.aws.amazonlocation.utils.DESCRIPTION_TAG_HERE
+import com.aws.amazonlocation.utils.DESCRIPTION_TAG_OPEN
 import com.aws.amazonlocation.utils.HERE
+import com.aws.amazonlocation.utils.OPEN
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -57,6 +59,8 @@ class MapStyleInnerAdapter(
     private fun getDescription(innerStyle: MapStyleInnerData, position: Int): String {
         return if (innerStyle.mMapStyleName?.contains(HERE) == true) {
             DESCRIPTION_TAG_HERE + position
+        } else if (innerStyle.mMapStyleName?.contains(OPEN) == true) {
+            DESCRIPTION_TAG_OPEN + position
         } else {
             DESCRIPTION_TAG_ESRI + position
         }
