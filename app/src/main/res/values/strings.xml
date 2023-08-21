@@ -296,4 +296,6 @@
     <string name="label_change_data_provider_des">GrabMaps doesn\'t support simulation, please change data provider to Esri or HERE to use Geofence or Tracker features.</string>
     <string name="label_switch_to_esri">Switch to Esri</string>
     <string name="region">Region</string>
+    <string name="label_enable_open_data">Enable OpenData</string>
+    <string name="label_enable_open_data_des">OpenData uses Esri for Routes and Places search functionality to enhance your experience.</string>
 </resources>

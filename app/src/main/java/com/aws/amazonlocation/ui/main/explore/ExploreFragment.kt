@@ -5416,6 +5416,20 @@ class ExploreFragment :
                     }
                 }
             }
+        } else if (selectedProvider == getString(R.string.open_data) && mapName != getString(R.string.open_data)) {
+            val shouldShowOpenDataDialog = !mPreferenceManager.getValue(KEY_OPEN_DATA_DONT_ASK, false)
+            if (shouldShowOpenDataDialog) {
+                activity?.enableOpenData(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                        mPreferenceManager.setValue(KEY_OPEN_DATA_DONT_ASK, dontAskAgain)
+                    }
+
+                    override fun onLearnMoreClick(dialog: DialogInterface) {}
+                })
+            } else {
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+            }
         } else {
             changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
         }

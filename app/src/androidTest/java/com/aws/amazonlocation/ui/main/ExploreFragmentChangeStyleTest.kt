@@ -148,6 +148,14 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
 
             swipeUp()
             waitForView(allOf(withContentDescription(STYLE_TAG_OPEN_1), isDisplayed()))?.perform(click())
+            uiDevice.wait(
+                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_open_data))),
+                DELAY_2000
+            )
+
+            val labelOk =
+                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_enable_open_data)))
+            labelOk?.click()
             checkLoadedTheme(mapbox)
         } catch (e: Exception) {
             failTest(147, e)

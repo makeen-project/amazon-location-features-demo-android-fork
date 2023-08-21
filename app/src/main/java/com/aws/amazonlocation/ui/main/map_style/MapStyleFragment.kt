@@ -31,11 +31,13 @@ import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
+import com.aws.amazonlocation.utils.KEY_OPEN_DATA_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.enableOpenData
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideSoftKeyboard
 import com.aws.amazonlocation.utils.hideViews
@@ -288,6 +290,20 @@ class MapStyleFragment : BaseFragment() {
                         }
                     }
                 }
+            }
+        } else if (selectedProvider == getString(R.string.open_data) && mapName != getString(R.string.open_data)) {
+            val shouldShowOpenDataDialog = !mPreferenceManager.getValue(KEY_OPEN_DATA_DONT_ASK, false)
+            if (shouldShowOpenDataDialog) {
+                activity?.enableOpenData(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                        mPreferenceManager.setValue(KEY_OPEN_DATA_DONT_ASK, dontAskAgain)
+                    }
+
+                    override fun onLearnMoreClick(dialog: DialogInterface) {}
+                })
+            } else {
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
             }
         } else {
             changeMapStyle(isMapClick, selectedProvider, selectedInnerData)

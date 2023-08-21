@@ -279,4 +279,6 @@
   <string name="label_change_data_provider_des">GrabMaps לא\ לא תמיכה סימולציה, בבקשה עודף פרטים ספק כדי Esri או כאן כדי שימוש גיאופנס או גשש תכונות.</string>
   <string name="label_switch_to_esri">מתג כדי Esri</string>
   <string name="region">אזור</string>
+  <string name="label_enable_open_data">הפעל OpenData</string>
+  <string name="label_enable_open_data_des">OpenData משתמש Esri בשביל מסלולים ו מקומות חפש פונקציונליות כדי לשפר שלך ניסיון.</string>
 </resources>
