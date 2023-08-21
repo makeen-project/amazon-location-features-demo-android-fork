@@ -189,6 +189,8 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
                         JSON_KEY_HERE
                     } else if (obj.has(JSON_KEY_RASTER_TILES)) {
                         JSON_KEY_RASTER_TILES
+                    } else if (obj.has(JSON_KEY_AWS)) {
+                        JSON_KEY_AWS
                     } else {
                         null
                     }
