@@ -9,6 +9,7 @@
     <dimen name="welcome_screen_width">500dp</dimen>
     <dimen name="welcome_screen_height">480dp</dimen>
     <dimen name="sign_in_required_width">390dp</dimen>
+    <dimen name="simulation_height">520dp</dimen>
     <bool name="is_tablet">true</bool>
     <bool name="is_large_tablet">false</bool>
 </resources>
