@@ -25,27 +25,27 @@ The required values can be found from the `Outputs` tab on your stack page creat
 
 Create *`custom.properties`* file inside the project root folder and add the details as below.
 
-| KEY to be added in custom.properties | Corresponding Key from stack output                                   |
-|--------------------------------------|-----------------------------------------------------------------------|
-| DEFAULT_IDENTITY_POOL_ID             | IdentityPoolId                                                        |
-| DEFAULT_REGION                       | Take region from IdentityPoolId (Character before ':')                |
-| DEFAULT_GRAB_IDENTITY_POOL_ID        | IdentityPoolId form ap-southeast-1 region for GrabMaps support        |
-| DEFAULT_GRAB_REGION                  | Take region from ap-southeast-1 IdentityPoolId (Character before ':') |
-| SIMULATION_WEB_SOCKET_URL            | Simulation WebSocketUrl                                               |
-| ANALYTICS_APP_ID                     | AnalyticsAppId                                                        |
-| IDENTITY_POOL_ID                     | IdentityPoolId                                                        |
-| USER_DOMAIN                          | UserDomain                                                            |
-| USER_POOL_CLIENT_ID                  | UserPoolClientId                                                      |
-| USER_POOL_ID                         | UserPoolId                                                            |
-| WEB_SOCKET_URL                       | WebSocketUrl                                                          |
+| KEY to be added in custom.properties | Corresponding Key from stack output                    |
+|--------------------------------------|--------------------------------------------------------|
+| DEFAULT_IDENTITY_POOL_ID             | IdentityPoolId                                         |
+| DEFAULT_REGION                       | Take region from IdentityPoolId (Character before ':') |
+| DEFAULT_IDENTITY_POOL_ID_EU          | IdentityPoolId form eu-west-1 region                   |
+| DEFAULT_IDENTITY_POOL_ID_AP          | IdentityPoolId form ap-southeast-1 region              |
+| SIMULATION_WEB_SOCKET_URL            | Simulation WebSocketUrl                                |
+| ANALYTICS_APP_ID                     | AnalyticsAppId                                         |
+| IDENTITY_POOL_ID                     | IdentityPoolId                                         |
+| USER_DOMAIN                          | UserDomain                                             |
+| USER_POOL_CLIENT_ID                  | UserPoolClientId                                       |
+| USER_POOL_ID                         | UserPoolId                                             |
+| WEB_SOCKET_URL                       | WebSocketUrl                                           |
 
 #### For Build (Required for building and running the app)
 
 ```
 DEFAULT_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_REGION=xx-xxxx-x
-DEFAULT_GRAB_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
-DEFAULT_GRAB_REGION=xx-xxxx-x
+DEFAULT_IDENTITY_POOL_ID_EU=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+DEFAULT_IDENTITY_POOL_ID_AP=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 ```
 
 #### optional values to add after above if you want to run tests locally. (This can be a different stack only for testing)
