@@ -5452,7 +5452,7 @@ class ExploreFragment :
         selectedProvider: String,
         selectedInnerData: String
     ) {
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.Main) {
             mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
                 val mapStyleNameDisplay =
                     mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
