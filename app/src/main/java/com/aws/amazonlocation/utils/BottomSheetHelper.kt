@@ -157,10 +157,12 @@ class BottomSheetHelper {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             view.imgAmazonLogoMapStyle?.alpha = 1f
                             view.ivAmazonInfoMapStyle?.alpha = 1f
+                            directionSheetDraggable(false)
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             view.imgAmazonLogoMapStyle?.alpha = 0f
                             view.ivAmazonInfoMapStyle?.alpha = 0f
+                            directionSheetDraggable(false)
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
@@ -170,14 +172,16 @@ class BottomSheetHelper {
                             if (isMapStyleExpandedOrHalfExpand() && isDirectionSearchSheetVisible()) {
                                 collapseDirectionSearch()
                             }
+                            directionSheetDraggable(false)
                             activity?.hideKeyboard()
                         }
                         BottomSheetBehavior.STATE_HIDDEN -> {
+                            directionSheetDraggable(true)
                             if (exportFragment?.mBaseActivity?.mTrackingUtils?.isTrackingSheetCollapsed() != null) {
                                 exportFragment?.mBaseActivity?.mTrackingUtils?.isTrackingSheetCollapsed()
                                     ?.let {
-                                        if (!it) {
-                                            if (exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed() != null) {
+                                        if (!isDirectionSearchSheetVisible()) {
+                                            if (!it && exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed() != null) {
                                                 exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed()
                                                     ?.let { it1 ->
                                                         if (!it1) {
@@ -191,8 +195,6 @@ class BottomSheetHelper {
                                             } else {
                                                 mBaseActivity?.bottomNavigationVisibility(true)
                                             }
-                                        } else {
-                                            mBaseActivity?.bottomNavigationVisibility(true)
                                         }
                                     }
                             } else {
@@ -211,6 +213,12 @@ class BottomSheetHelper {
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 }
             })
+    }
+
+    private fun directionSheetDraggable(isDraggable: Boolean) {
+        if (isDirectionSearchSheetVisible()) {
+            mBottomSheetDirectionsSearch.isDraggable = isDraggable
+        }
     }
 
     // set direction bottom sheet
@@ -235,7 +243,7 @@ class BottomSheetHelper {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     when (newState) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
-                            mBaseActivity?.bottomNavigationVisibility(true)
+                            mBaseActivity?.bottomNavigationVisibility(false)
                             setBottomSheetDirectionSearchData(view, mBaseActivity)
                         }
                         BottomSheetBehavior.STATE_EXPANDED -> {
@@ -359,11 +367,13 @@ class BottomSheetHelper {
         exploreFragment.changeDirectionCardMargin(175.px)
         mBottomSheetDirectionsSearch.isHideable = false
         mBottomSheetDirectionsSearch.state = BottomSheetBehavior.STATE_EXPANDED
+        mBottomSheetDirectionsSearch.isDraggable = true
     }
 
     fun halfExpandDirectionSearchBottomSheet() {
         mBottomSheetDirectionsSearch.halfExpandedRatio = 0.5f
         mBottomSheetDirectionsSearch.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        mBottomSheetDirectionsSearch.isDraggable = true
     }
 
     fun expandDirectionSheet() {
