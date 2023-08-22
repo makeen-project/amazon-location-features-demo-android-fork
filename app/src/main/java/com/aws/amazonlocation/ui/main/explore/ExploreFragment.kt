@@ -5742,6 +5742,7 @@ class ExploreFragment :
             if (activity is MainActivity) {
                 (activity as MainActivity).moveToExploreScreen()
                 (activity as MainActivity).mGeofenceUtils?.hideAllGeofenceBottomSheet()
+                (activity as MainActivity).mTrackingUtils?.hideTrackingBottomSheet()
             }
         } catch (e: Exception) {
             e.printStackTrace()
