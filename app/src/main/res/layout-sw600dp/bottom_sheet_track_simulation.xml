@@ -8,7 +8,7 @@
     android:focusable="true"
     android:layout_width="@dimen/screen_size"
     android:paddingTop="@dimen/dp_10"
-    android:visibility="gone"
+    android:visibility="visible"
     app:behavior_hideable="false"
     app:behavior_peekHeight="@dimen/dp_110"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -59,15 +59,16 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_tracking_history"
             style="@style/SP14BoldBlackTextStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dp_0"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_20"
-            android:gravity="center"
+            android:gravity="start"
             android:text="@string/label_trackers_simulation"
             android:textColor="@color/color_medium_black"
             android:textSize="@dimen/sp_20"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/card_start_tracking"
             app:layout_constraintTop_toBottomOf="@id/view_tracking" />
 
         <androidx.appcompat.widget.AppCompatTextView
