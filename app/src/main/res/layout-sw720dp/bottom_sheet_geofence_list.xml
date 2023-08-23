@@ -49,7 +49,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_add_geofence"
-                android:layout_width="@dimen/dp_82"
+                android:layout_width="wrap_content"
+                android:paddingHorizontal="@dimen/dp_16"
                 android:layout_height="match_parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -69,8 +70,9 @@
                     style="@style/SP12WhiteEmberBoldTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_4"
+                    android:layout_marginHorizontal="@dimen/dp_4"
                     android:text="@string/add"
+                    android:textDirection="locale"
                     android:textAllCaps="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -319,6 +321,7 @@
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/dp_48"
             android:layout_marginHorizontal="@dimen/dp_16"
+            android:paddingHorizontal="@dimen/dp_16"
             app:cardBackgroundColor="@color/color_primary_green"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardUseCompatPadding="false"
@@ -350,6 +353,7 @@
             android:layout_marginHorizontal="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_8"
             app:cardBackgroundColor="@color/white"
+            android:paddingHorizontal="@dimen/dp_16"
             app:cardCornerRadius="@dimen/dp_8"
             app:cardElevation="@dimen/dp_0"
             app:cardUseCompatPadding="false"
@@ -365,6 +369,7 @@
                 android:layout_gravity="center"
                 android:text="@string/label_enable_live_geofences"
                 android:textAllCaps="false"
+                android:gravity="center"
                 android:textColor="@color/color_medium_black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
