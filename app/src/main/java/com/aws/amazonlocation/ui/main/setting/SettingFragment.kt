@@ -22,6 +22,7 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.data_provider.DataProviderFragment
 import com.aws.amazonlocation.ui.main.language.LanguageFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
+import com.aws.amazonlocation.ui.main.region.RegionFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
@@ -36,6 +37,7 @@ import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_BR_PT
@@ -56,6 +58,7 @@ import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.signOutDialog
@@ -98,6 +101,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         getUnitSystem()
         getDataProvider()
         getMapStyle()
+        getRegion()
         initObserver()
         clickListener()
         if (isTablet) {
@@ -124,14 +128,17 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                         ivDisconnect.setImageDrawable(ContextCompat.getDrawable(ivDisconnect.context, R.drawable.icon_log_out))
                         tvDisconnect.text = getText(R.string.label_sign_out)
                         clDisconnect.show()
+                        clRegion.hide()
                     }
                     AuthEnum.AWS_CONNECTED.name -> {
                         ivDisconnect.setImageDrawable(ContextCompat.getDrawable(ivDisconnect.context, R.drawable.ic_plug))
                         tvDisconnect.text = getString(R.string.label_disconnect)
                         clDisconnect.show()
+                        clRegion.hide()
                     }
                     else -> {
                         clDisconnect.hide()
+                        clRegion.show()
                     }
                 }
             } else {
@@ -206,6 +213,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                 ?: getString(R.string.map_light)
         mBinding.tvMapStyleName.text = mapStyleNameDisplay
+    }
+    private fun getRegion() {
+        val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])
+        if (selectedRegion != null) {
+            mBinding.tvRegionName.text = selectedRegion.split("(")[0].trim()
+        }
     }
 
     private fun initObserver() {
@@ -360,6 +373,23 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     findNavController().navigate(R.id.language_fragment)
                 }
             }
+            clRegion.setOnClickListener {
+                if (isTablet) {
+                    addReplaceFragment(
+                        R.id.frame_container,
+                        RegionFragment(),
+                        addFragment = false,
+                        addToBackStack = false
+                    )
+                    mBinding.apply {
+                        setDefaultSelection()
+                        clRegion.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
+                        ivRegion.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+                } else {
+                    findNavController().navigate(R.id.region_fragment)
+                }
+            }
             clDisconnect.setOnClickListener {
                 if (tvDisconnect.text.toString().trim() == getText(R.string.label_sign_out)) {
                     requireContext().signOutDialog(this@SettingFragment)
@@ -435,6 +465,8 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
         clLanguage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         ivLanguage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
+        clRegion.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        ivRegion.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_img_tint))
         clDataProvider.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         ivDataProvider.setColorFilter(
             ContextCompat.getColor(

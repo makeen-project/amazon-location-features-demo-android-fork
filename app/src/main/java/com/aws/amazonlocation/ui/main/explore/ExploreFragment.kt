@@ -31,6 +31,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import aws.sdk.kotlin.services.location.model.TravelMode
+import com.amazonaws.auth.CognitoCredentialsProvider
 import com.amazonaws.mobile.client.AWSMobileClient
 import com.amazonaws.services.geo.model.CalculateRouteResult
 import com.amazonaws.services.geo.model.Leg
@@ -836,25 +837,29 @@ class ExploreFragment :
     private fun BottomSheetMapStyleBinding.setMapTileSelection(
         mapName: String
     ) {
-        when (mapName) {
+        val colorToSet = ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+
+        val selectedCard: MaterialCardView = when (mapName) {
             resources.getString(R.string.esri) -> {
-                cardEsri.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardEsri
             }
             resources.getString(R.string.here) -> {
-                cardHere.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardHere
             }
             resources.getString(R.string.grab) -> {
-                cardGrabMap.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardGrabMap
             }
+            resources.getString(R.string.open_data) -> {
+                cardOpenData
+            }
+            else -> cardEsri
+        }
+
+        val cardList = listOf(cardEsri, cardHere, cardGrabMap, cardOpenData)
+
+        cardList.forEach { card ->
+            card.strokeColor = if (card == selectedCard) colorToSet
+            else ContextCompat.getColor(requireContext(), R.color.white)
         }
     }
 
@@ -3051,6 +3056,16 @@ class ExploreFragment :
                         )
                     }
                 }
+                cardOpenData.setOnClickListener {
+                    val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                    if (mapName != getString(R.string.open_data)) {
+                        mapStyleChange(
+                            false,
+                            getString(R.string.open_data),
+                            getString(R.string.map_standard_light)
+                        )
+                    }
+                }
                 cardGrabMap.setOnClickListener {
                     val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                     if (mapName != getString(R.string.grab)) {
@@ -3348,7 +3363,6 @@ class ExploreFragment :
 
     private fun setAttributionData() {
         mBinding.apply {
-            val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
             bottomSheetAttribution.apply {
                 tvAttribution.text = mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
             }
@@ -5027,19 +5041,17 @@ class ExploreFragment :
 
     override fun onMapReady(mapboxMap: MapboxMap) {
         mapboxMap.addOnMapClickListener(this)
-        mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
-            HttpRequestUtil.setOkHttpClient(
-                OkHttpClient.Builder()
-                    .addInterceptor(SigV4Interceptor(it, mServiceName))
-                    .build()
-            )
-        }
         val mapStyleNameDisplay =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
                 ?: getString(R.string.map_light)
         val mapNameSelected = mBaseActivity?.getString(R.string.map_esri)
             ?.let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
             ?: mBaseActivity?.getString(R.string.map_esri)
+        mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
+            if (mapNameSelected == getString(R.string.here) && mapStyleNameDisplay == getString(R.string.map_hybrid)) {
+                addInterceptor(it)
+            }
+        }
         val mapName: String
         val mapStyleName: String
         if (mapNameSelected == getString(R.string.grab)) {
@@ -5103,6 +5115,22 @@ class ExploreFragment :
                     mapName = MapNames.HERE_IMAGERY
                     mapStyleName = MapStyles.RASTER_HERE_EXPLORE_SATELLITE
                 }
+                resources.getString(R.string.map_standard_light) -> {
+                    mapName = MapNames.OPEN_DATA_STANDARD_LIGHT
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_STANDARD_LIGHT
+                }
+                resources.getString(R.string.map_standard_dark) -> {
+                    mapName = MapNames.OPEN_DATA_STANDARD_DARK
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_STANDARD_DARK
+                }
+                resources.getString(R.string.map_visualization_light) -> {
+                    mapName = MapNames.OPEN_DATA_VISUALIZATION_LIGHT
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_LIGHT
+                }
+                resources.getString(R.string.map_visualization_dark) -> {
+                    mapName = MapNames.OPEN_DATA_VISUALIZATION_DARK
+                    mapStyleName = MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_DARK
+                }
                 else -> {
                     mapName = ESRI_LIGHT
                     mapStyleName = VECTOR_ESRI_TOPOGRAPHIC
@@ -5136,6 +5164,18 @@ class ExploreFragment :
             }
         }
         setMapBoxInSimulation()
+    }
+
+    private fun addInterceptor(it: CognitoCredentialsProvider) {
+        HttpRequestUtil.setOkHttpClient(
+            OkHttpClient.Builder()
+                .addInterceptor(SigV4Interceptor(it, mServiceName))
+                .build()
+        )
+    }
+
+    private fun removeInterceptor() {
+        HttpRequestUtil.setOkHttpClient(null)
     }
 
     fun setMapBoxInSimulation() {
@@ -5331,26 +5371,41 @@ class ExploreFragment :
         selectedInnerData: String
     ) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
         val isRestartNeeded =
-            if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
-                selectedProvider == getString(R.string.grab)
+            if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+                false
             } else {
-                selectedProvider != getString(R.string.grab)
+                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                    selectedProvider == getString(R.string.grab)
+                } else {
+                    selectedProvider != getString(R.string.grab)
+                }
             }
-        if (isRestartNeeded) {
+        if (selectedProvider == getString(R.string.grab) && mapName != getString(R.string.grab)) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
-            if (selectedProvider == getString(R.string.grab) && shouldShowGrabDialog) {
+            if (shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
                     override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
                         mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
                         changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
-                        lifecycleScope.launch {
-                            if (!isRunningTest) {
-                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                activity?.restartApplication()
+                        if (isRestartNeeded) {
+                            mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                            lifecycleScope.launch {
+                                if (!isRunningTest) {
+                                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                    activity?.restartApplication()
+                                }
                             }
                         }
                     }
+
                     override fun onLearnMoreClick(dialog: DialogInterface) {
                         startActivity(
                             Intent(
@@ -5361,17 +5416,30 @@ class ExploreFragment :
                     }
                 })
             } else {
-                changeMapStyle(
-                    isMapClick,
-                    selectedProvider,
-                    selectedInnerData
-                )
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                if (isRestartNeeded) {
+                    mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
+            }
+        } else if (selectedProvider == getString(R.string.open_data) && mapName != getString(R.string.open_data)) {
+            val shouldShowOpenDataDialog = !mPreferenceManager.getValue(KEY_OPEN_DATA_DONT_ASK, false)
+            if (shouldShowOpenDataDialog) {
+                activity?.enableOpenData(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                        mPreferenceManager.setValue(KEY_OPEN_DATA_DONT_ASK, dontAskAgain)
+                    }
+
+                    override fun onLearnMoreClick(dialog: DialogInterface) {}
+                })
+            } else {
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
             }
         } else {
             changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
@@ -5384,28 +5452,47 @@ class ExploreFragment :
         selectedProvider: String,
         selectedInnerData: String
     ) {
-        if (isMapClick) {
-            repeat(mViewModel.mStyleList.size) {
-                mViewModel.mStyleList[it].isSelected = false
-            }
-            repeat(mViewModel.mStyleListForFilter.size) {
-                mViewModel.mStyleListForFilter[it].isSelected = false
-            }
-            changeStyle(selectedProvider, selectedInnerData)
-            for (data in mViewModel.mStyleListForFilter) {
-                if (data.styleNameDisplay.equals(selectedProvider)) {
-                    data.isSelected = !data.isSelected
-                }
-            }
-            mBaseActivity?.isTablet?.let {
-                if (it) {
-                    mapStyleBottomSheetFragment.notifyAdapter()
+        lifecycleScope.launch(Dispatchers.Main) {
+            mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.let {
+                val mapStyleNameDisplay =
+                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_light))
+                        ?: getString(R.string.map_light)
+                val mapNameSelected = mBaseActivity?.getString(R.string.map_esri)
+                    ?.let { mPreferenceManager.getValue(KEY_MAP_NAME, it) }
+                    ?: mBaseActivity?.getString(R.string.map_esri)
+                if (selectedProvider == getString(R.string.here) && selectedInnerData == getString(R.string.map_hybrid)) {
+                    addInterceptor(it)
+                    delay(DELAY_500)
                 } else {
-                    mMapStyleAdapter?.notifyDataSetChanged()
+                    if (mapNameSelected == getString(R.string.here) && mapStyleNameDisplay == getString(R.string.map_hybrid)) {
+                        removeInterceptor()
+                        delay(DELAY_500)
+                    }
                 }
             }
-        } else {
-            changeStyle(selectedProvider, selectedInnerData)
+            if (isMapClick) {
+                repeat(mViewModel.mStyleList.size) {
+                    mViewModel.mStyleList[it].isSelected = false
+                }
+                repeat(mViewModel.mStyleListForFilter.size) {
+                    mViewModel.mStyleListForFilter[it].isSelected = false
+                }
+                changeStyle(selectedProvider, selectedInnerData)
+                for (data in mViewModel.mStyleListForFilter) {
+                    if (data.styleNameDisplay.equals(selectedProvider)) {
+                        data.isSelected = !data.isSelected
+                    }
+                }
+                mBaseActivity?.isTablet?.let {
+                    if (it) {
+                        mapStyleBottomSheetFragment.notifyAdapter()
+                    } else {
+                        mMapStyleAdapter?.notifyDataSetChanged()
+                    }
+                }
+            } else {
+                changeStyle(selectedProvider, selectedInnerData)
+            }
         }
     }
 
@@ -5532,6 +5619,38 @@ class ExploreFragment :
                                                 MapStyles.RASTER_HERE_EXPLORE_SATELLITE
                                             )
                                         }
+                                        resources.getString(R.string.map_standard_light) -> {
+                                            selectedId = MapNames.OPEN_DATA_STANDARD_LIGHT
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_STANDARD_LIGHT,
+                                                MapStyles.VECTOR_OPEN_DATA_STANDARD_LIGHT
+                                            )
+                                        }
+                                        resources.getString(R.string.map_standard_dark) -> {
+                                            selectedId = MapNames.OPEN_DATA_STANDARD_DARK
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_STANDARD_DARK,
+                                                MapStyles.VECTOR_OPEN_DATA_STANDARD_DARK
+                                            )
+                                        }
+                                        resources.getString(R.string.map_visualization_light) -> {
+                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_LIGHT
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_VISUALIZATION_LIGHT,
+                                                MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_LIGHT
+                                            )
+                                        }
+                                        resources.getString(R.string.map_visualization_dark) -> {
+                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_DARK
+                                            mMapHelper.updateStyle(
+                                                mBinding.mapView,
+                                                MapNames.OPEN_DATA_VISUALIZATION_DARK,
+                                                MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_DARK
+                                            )
+                                        }
                                     }
                                 } else {
                                     when (innerData.mapName) {
@@ -5623,6 +5742,7 @@ class ExploreFragment :
             if (activity is MainActivity) {
                 (activity as MainActivity).moveToExploreScreen()
                 (activity as MainActivity).mGeofenceUtils?.hideAllGeofenceBottomSheet()
+                (activity as MainActivity).mTrackingUtils?.hideTrackingBottomSheet()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -5698,24 +5818,32 @@ class ExploreFragment :
             MapNames.HERE_CONTRAST,
             MapNames.HERE_EXPLORE,
             MapNames.HERE_EXPLORE_TRUCK,
-            MapNames.GRAB_LIGHT
+            MapNames.GRAB_LIGHT,
+            MapNames.OPEN_DATA_STANDARD_LIGHT,
+            MapNames.OPEN_DATA_VISUALIZATION_LIGHT
             -> R.drawable.ic_amazon_logo_on_light
 
             MapNames.ESRI_DARK_GRAY_CANVAS,
             MapNames.ESRI_IMAGERY,
             MapNames.HERE_IMAGERY,
             MapNames.HERE_HYBRID,
-            MapNames.GRAB_DARK
+            MapNames.GRAB_DARK,
+            MapNames.OPEN_DATA_STANDARD_DARK,
+            MapNames.OPEN_DATA_VISUALIZATION_DARK
             -> R.drawable.ic_amazon_logo_on_dark
 
             else -> {
                 R.drawable.ic_amazon_logo_on_light
             }
         }
-        if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
-            lifecycleScope.launch {
-                delay(DELAY_500)
+        lifecycleScope.launch {
+            delay(DELAY_500)
+            if (mapStyle == MapNames.GRAB_LIGHT || mapStyle == MapNames.GRAB_DARK) {
                 checkGrabMapInsideBounds()
+            } else {
+                mMapboxMap?.setLatLngBoundsForCameraTarget(null)
+                mMapboxMap?.style?.let { mMapHelper.updateZoomRange(it) }
+                mMapHelper.checkLocationComponentEnable(mBaseActivity, false)
             }
         }
         if (activity is MainActivity) {

@@ -1453,7 +1453,11 @@ class MapHelper(private val appContext: Context) {
 
     fun updateZoomRange(style: Style) {
         mMapboxMap?.getStyle {
-            setStyleLanguage(style)
+            val r = this.appContext.resources
+            val mapName = mPreferenceManager?.getValue(KEY_MAP_NAME, r.getString(R.string.esri))
+            if (mapName != r.getString(R.string.open_data)) {
+                setStyleLanguage(style)
+            }
             val cameraPosition = mMapboxMap?.cameraPosition
             val zoom = cameraPosition?.zoom
             val minZoom = minZoomLevel(style)

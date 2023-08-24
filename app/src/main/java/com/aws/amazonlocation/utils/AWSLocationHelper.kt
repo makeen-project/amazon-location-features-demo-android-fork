@@ -2,6 +2,7 @@ package com.aws.amazonlocation.utils
 
 import android.location.Location
 import android.os.StrictMode
+import android.util.Log
 import aws.sdk.kotlin.services.location.model.TravelMode
 import com.amazonaws.auth.CognitoCredentialsProvider
 import com.amazonaws.mobile.client.AWSMobileClient
@@ -47,6 +48,7 @@ import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.data.response.UpdateBatchLocationResponse
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
+import com.aws.amazonlocation.utils.Units.getDefaultIdentityPoolId
 import com.aws.amazonlocation.utils.Units.getDistanceUnit
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.Units.meterToFeet
@@ -65,15 +67,17 @@ class AWSLocationHelper(
     private var mCognitoCredentialsProvider: CognitoCredentialsProvider? = null
     private var mBaseActivity: BaseActivity? = null
     private var apiError = "Please try again later"
-    private var mapGrabMaps = "GrabMaps"
 
     fun initAWSMobileClient(baseActivity: BaseActivity) {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
-        var defaultRegion = BuildConfig.DEFAULT_REGION
-        if (mapName == mapGrabMaps) {
-            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
-        }
+        val defaultIdentityPoolId: String = getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
+        val defaultRegion = defaultIdentityPoolId.split(":")[0]
         if (region.isNullOrEmpty()) {
             region = defaultRegion
         }
@@ -87,13 +91,14 @@ class AWSLocationHelper(
         var identityPoolId = mPreferenceManager.getValue(KEY_POOL_ID, "")
         val provider = mPreferenceManager.getValue(KEY_PROVIDER, "")
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
-        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, "")
-        var defaultIdentityPoolId = BuildConfig.DEFAULT_IDENTITY_POOL_ID
-        var defaultRegion = BuildConfig.DEFAULT_REGION
-        if (mapName == mapGrabMaps) {
-            defaultIdentityPoolId = BuildConfig.DEFAULT_GRAB_IDENTITY_POOL_ID
-            defaultRegion = BuildConfig.DEFAULT_GRAB_REGION
-        }
+        val defaultIdentityPoolId: String = getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
+        val defaultRegion = defaultIdentityPoolId.split(":")[0]
         if (region.isNullOrEmpty()) {
             region = defaultRegion
         }

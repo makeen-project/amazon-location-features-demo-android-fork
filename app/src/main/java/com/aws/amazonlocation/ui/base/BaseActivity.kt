@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.Settings
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -31,9 +32,12 @@ import com.aws.amazonlocation.utils.AmplifyHelper
 import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_LOCATION_PERMISSION
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_USER_DETAILS
+import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
@@ -41,6 +45,7 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -75,12 +80,25 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (mPreferenceManager.getValue(KEY_NEAREST_REGION, "") == "") {
+            val latencyChecker = LatencyChecker()
+            val urls = arrayListOf<String>()
+            regionList.forEach {
+                urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
+            }
 
-        if (BuildConfig.DEBUG) {
-            try {
-                amplifyHelper.initAmplify()
-            } catch (_: Exception) {}
+            val (fastestUrl, _) = runBlocking { latencyChecker.checkLatencyForUrls(urls) }
+            regionList.forEach {
+                if (fastestUrl != null) {
+                    if (fastestUrl.contains(it)) {
+                        mPreferenceManager.setValue(KEY_NEAREST_REGION, it)
+                    }
+                }
+            }
         }
+        try {
+            amplifyHelper.initAmplify()
+        } catch (_: Exception) {}
 
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)

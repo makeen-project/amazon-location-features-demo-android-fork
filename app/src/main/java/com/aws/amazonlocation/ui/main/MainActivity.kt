@@ -385,7 +385,9 @@ class MainActivity : BaseActivity(), CrashListener {
         var region = mPreferenceManager.getValue(KEY_USER_REGION, "")
 
         if (region.isNullOrEmpty()) {
-            region = BuildConfig.DEFAULT_REGION
+            if (identityId != null) {
+                region = identityId.split(":")[0]
+            }
         }
         mIotAndroidClient.setRegion(Region.getRegion(region))
         mIotAndroidClient.attachPolicy(attachPolicyReq)
@@ -535,6 +537,7 @@ class MainActivity : BaseActivity(), CrashListener {
             if (fragment !is ExploreFragment) {
                 delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
+            mBottomSheetHelper.hideSearchBottomSheet(true)
             mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
         }
     }
@@ -724,7 +727,6 @@ class MainActivity : BaseActivity(), CrashListener {
         if (fragment is ExploreFragment) {
             fragment.showDirectionAndCurrentLocationIcon()
         }
-        mBottomSheetHelper.hideSearchBottomSheet(true)
         if (!isTablet) {
             mBottomSheetHelper.hideMapStyleSheet()
         }
@@ -732,6 +734,7 @@ class MainActivity : BaseActivity(), CrashListener {
             if (fragment !is ExploreFragment) {
                 delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
+            mBottomSheetHelper.hideSearchBottomSheet(true)
             showTrackingBottomSheet()
         }
         exitScreen()
@@ -815,7 +818,6 @@ class MainActivity : BaseActivity(), CrashListener {
 
     private val mCloudFormationInterface = object : CloudFormationInterface {
         override fun dialogDismiss(dialog: Dialog?) {
-            moveToExploreScreen()
             dialog?.dismiss()
         }
     }

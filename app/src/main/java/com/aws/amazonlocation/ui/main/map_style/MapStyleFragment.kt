@@ -30,26 +30,33 @@ import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
+import com.aws.amazonlocation.utils.KEY_OPEN_DATA_DONT_ASK
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyleRestartInterface
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.enableOpenData
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideSoftKeyboard
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.isGrabMapEnable
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.restartAppMapStyleDialog
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.textChanges
+import com.google.android.material.card.MaterialCardView
+import kotlin.math.ceil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlin.math.ceil
 
 class MapStyleFragment : BaseFragment() {
 
@@ -228,27 +235,37 @@ class MapStyleFragment : BaseFragment() {
         selectedInnerData: String
     ) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
+            mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
+        )
         val isRestartNeeded =
-            if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
-                selectedProvider == getString(R.string.grab)
+            if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+                false
             } else {
-                selectedProvider != getString(R.string.grab)
+                if (mapName == getString(R.string.esri) || mapName == getString(R.string.here)) {
+                    selectedProvider == getString(R.string.grab)
+                } else {
+                    selectedProvider != getString(R.string.grab)
+                }
             }
-        if (isRestartNeeded) {
+        if (selectedProvider == getString(R.string.grab) && mapName != getString(R.string.grab)) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
-            if (selectedProvider == getString(R.string.grab)  && shouldShowGrabDialog) {
+            if (shouldShowGrabDialog) {
                 activity?.restartAppMapStyleDialog(object : MapStyleRestartInterface {
                     override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
                         mPreferenceManager.setValue(KEY_GRAB_DONT_ASK, dontAskAgain)
-                        changeMapStyle(
-                            isMapClick,
-                            selectedProvider,
-                            selectedInnerData
-                        )
-                        lifecycleScope.launch {
-                            if (!isRunningTest) {
-                                delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                activity?.restartApplication()
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                        if (isRestartNeeded) {
+                            mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                            lifecycleScope.launch {
+                                if (!isRunningTest) {
+                                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                                    activity?.restartApplication()
+                                }
                             }
                         }
                     }
@@ -263,17 +280,30 @@ class MapStyleFragment : BaseFragment() {
                     }
                 })
             } else {
-                changeMapStyle(
-                    isMapClick,
-                    selectedProvider,
-                    selectedInnerData
-                )
-                lifecycleScope.launch {
-                    if (!isRunningTest) {
-                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                        activity?.restartApplication()
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                if (isRestartNeeded) {
+                    mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                    lifecycleScope.launch {
+                        if (!isRunningTest) {
+                            delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
+                            activity?.restartApplication()
+                        }
                     }
                 }
+            }
+        } else if (selectedProvider == getString(R.string.open_data) && mapName != getString(R.string.open_data)) {
+            val shouldShowOpenDataDialog = !mPreferenceManager.getValue(KEY_OPEN_DATA_DONT_ASK, false)
+            if (shouldShowOpenDataDialog) {
+                activity?.enableOpenData(object : MapStyleRestartInterface {
+                    override fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean) {
+                        changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
+                        mPreferenceManager.setValue(KEY_OPEN_DATA_DONT_ASK, dontAskAgain)
+                    }
+
+                    override fun onLearnMoreClick(dialog: DialogInterface) {}
+                })
+            } else {
+                changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
             }
         } else {
             changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
@@ -366,6 +396,18 @@ class MapStyleFragment : BaseFragment() {
                                         resources.getString(R.string.map_raster) -> {
                                             selectedId = MapNames.HERE_IMAGERY
                                         }
+                                        resources.getString(R.string.map_standard_light) -> {
+                                            selectedId = MapNames.OPEN_DATA_STANDARD_LIGHT
+                                        }
+                                        resources.getString(R.string.map_standard_dark) -> {
+                                            selectedId = MapNames.OPEN_DATA_STANDARD_DARK
+                                        }
+                                        resources.getString(R.string.map_visualization_light) -> {
+                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_LIGHT
+                                        }
+                                        resources.getString(R.string.map_visualization_dark) -> {
+                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_DARK
+                                        }
                                     }
                                 } else {
                                     when (innerData.mapName) {
@@ -390,7 +432,9 @@ class MapStyleFragment : BaseFragment() {
                                         Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
                                     )
                                     (activity as MainActivity).analyticsHelper?.recordEvent(
-                                        EventType.MAP_STYLE_CHANGE, properties)
+                                        EventType.MAP_STYLE_CHANGE,
+                                        properties
+                                    )
                                     mPreferenceManager.setValue(
                                         KEY_MAP_NAME,
                                         mapName
@@ -466,25 +510,29 @@ class MapStyleFragment : BaseFragment() {
     private fun FragmentMapStyleBinding.setMapTileSelection(
         mapName: String
     ) {
-        when (mapName) {
+        val colorToSet = ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+
+        val selectedCard: MaterialCardView = when (mapName) {
             resources.getString(R.string.esri) -> {
-                cardEsri.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
+                cardEsri
             }
             resources.getString(R.string.here) -> {
-                cardHere.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
+                cardHere
             }
             resources.getString(R.string.grab) -> {
-                cardGrabMap.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.color_view)
+                cardGrabMap
             }
+            resources.getString(R.string.open_data) -> {
+                cardOpenData
+            }
+            else -> cardEsri
+        }
+
+        val cardList = listOf(cardEsri, cardHere, cardGrabMap, cardOpenData)
+
+        cardList.forEach { card ->
+            card.strokeColor = if (card == selectedCard) colorToSet
+            else ContextCompat.getColor(requireContext(), R.color.white)
         }
     }
 
@@ -729,7 +777,8 @@ class MapStyleFragment : BaseFragment() {
                 }
             }
             cardHere.setOnClickListener {
-                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                val mapName =
+                    mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 if (mapName != getString(R.string.here)) {
                     mapStyleChange(
                         false,
@@ -738,8 +787,20 @@ class MapStyleFragment : BaseFragment() {
                     )
                 }
             }
+            cardOpenData.setOnClickListener {
+                val mapName =
+                    mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.open_data)) {
+                    mapStyleChange(
+                        false,
+                        getString(R.string.open_data),
+                        getString(R.string.map_standard_light)
+                    )
+                }
+            }
             cardGrabMap.setOnClickListener {
-                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                val mapName =
+                    mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 if (mapName != getString(R.string.grab)) {
                     mapStyleChange(
                         false,

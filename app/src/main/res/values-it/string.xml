@@ -278,4 +278,7 @@
   <string name="label_change_data_provider">Cambia Dati Fornitore</string>
   <string name="label_change_data_provider_des">GrabMaps non fa supportare simulazione, per favore cambiare dato fornitore a Esri o QUI a uso Geofence o Localizzatore caratteristiche.</string>
   <string name="label_switch_to_esri">Interruttore a Esri</string>
+  <string name="region">Regione</string>
+  <string name="label_enable_open_data">Abilita Dati aperti</string>
+  <string name="label_enable_open_data_des">Dati aperti utilizza Esri per Percorsi e Luoghi ricerca funzionalità a accrescere tuo esperienza.</string>
 </resources>

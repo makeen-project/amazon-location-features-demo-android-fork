@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.view.LayoutInflater
@@ -199,8 +200,36 @@ fun Context.restartAppMapStyleDialog(
     mDialog.setNegativeButton(
         this.resources.getString(R.string.learn_more)
     ) { dialog, _ ->
-        //dialog.dismiss()
+        // dialog.dismiss()
         restartInterface.onLearnMoreClick(dialog)
+    }
+    mDialog.show()
+}
+
+@SuppressLint("UseSwitchCompatOrMaterialCode")
+fun Context.enableOpenData(
+    restartInterface: MapStyleRestartInterface
+) {
+    val layoutInflater = LayoutInflater.from(applicationContext)
+    val customView = layoutInflater.inflate(R.layout.dialog_custom_layout, null)
+
+    val switchToggle: Switch = customView.findViewById(R.id.switchToggle)
+
+    val mDialog = MaterialAlertDialogBuilder(this, R.style.MyGrabDialogTheme)
+
+    mDialog.setTitle(resources.getString(R.string.label_enable_open_data))
+    mDialog.setMessage(R.string.label_enable_open_data_des)
+    mDialog.setView(customView)
+    mDialog.setPositiveButton(
+        this.resources.getString(R.string.label_enable_open_data)
+    ) { dialog, _ ->
+        restartInterface.onOkClick(dialog, switchToggle.isChecked)
+        dialog.dismiss()
+    }
+    mDialog.setNeutralButton(
+        this.resources.getString(R.string.cancel)
+    ) { dialog, _ ->
+        dialog.dismiss()
     }
     mDialog.show()
 }

@@ -278,4 +278,7 @@
   <string name="label_change_data_provider">改变 数据 提供商</string>
   <string name="label_change_data_provider_des">GrabMaps 不是 支撑 模拟， 拜托 改变 数据 提供者 到 Esri 要么 这里 到 使用 Geofence 要么 追踪器 功能。</string>
   <string name="label_switch_to_esri">交换机 到 Esri</string>
+  <string name="region">区域</string>
+  <string name="label_enable_open_data">启用 开放数据</string>
+  <string name="label_enable_open_data_des">开放数据 使用 Esri 为了 路线 和 地点 搜索 功能 到 提高 您的 经验。</string>
 </resources>

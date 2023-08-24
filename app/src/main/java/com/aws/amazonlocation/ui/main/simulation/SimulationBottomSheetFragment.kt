@@ -40,7 +40,7 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        val height = resources.getDimensionPixelSize(R.dimen.welcome_screen_height)
+        val height = resources.getDimensionPixelSize(R.dimen.simulation_height)
         mBinding.clSimulation?.layoutParams?.height = height
         mBinding.clSimulation?.requestLayout()
     }

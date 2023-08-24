@@ -34,7 +34,7 @@ class MapStyleVMSetFilterData : BaseTest() {
     @Test
     fun setMapStyleVMFilterData() = runTest {
         val result = mMapStyleViewModel.filterAndSortItems(context, LIGHT, null, null, null)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, result.size == 3)
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_ESRI, result.size == 4)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

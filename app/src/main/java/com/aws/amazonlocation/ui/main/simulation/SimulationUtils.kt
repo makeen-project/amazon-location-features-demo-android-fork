@@ -38,6 +38,8 @@ import com.aws.amazonlocation.utils.DELAY_1000
 import com.aws.amazonlocation.utils.ENTER
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.GeofenceCons
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.LABEL_IN_BETWEEN
 import com.aws.amazonlocation.utils.LABEL_PRE_DRAW
 import com.aws.amazonlocation.utils.LAYER
@@ -49,6 +51,7 @@ import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.SOURCE
 import com.aws.amazonlocation.utils.SOURCE_SIMULATION_ICON
 import com.aws.amazonlocation.utils.TRACKER
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.Units.readRouteData
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -56,6 +59,7 @@ import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.notificationData
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.simulationCollectionName
@@ -781,11 +785,17 @@ class SimulationUtils(
         if (mqttManager != null) stopMqttManager()
         val identityId: String? =
             mAWSLocationHelper.getCognitoCachingCredentialsProvider()?.identityId
-
+        val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
+            mPreferenceManager?.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            ),
+            mPreferenceManager?.getValue(KEY_NEAREST_REGION, "")
+        )
         mqttManager =
             AWSIotMqttManager(
                 identityId,
-                BuildConfig.SIMULATION_WEB_SOCKET_URL
+                String.format(BuildConfig.SIMULATION_WEB_SOCKET_URL, defaultIdentityPoolId.split(":")[0])
             )
         mqttManager?.isAutoReconnect =
             false // To be able to display Exceptions and debug the problem.
@@ -1195,6 +1205,6 @@ class SimulationUtils(
         // Set the LatLngBounds for the camera target to null
         setLatLngBoundsForCameraTarget(null)
         style?.let { mMapHelper?.updateZoomRange(it) }
-        mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), true)
+        mMapHelper?.checkLocationComponentEnable((mActivity as BaseActivity), false)
     }
 }

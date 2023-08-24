@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.map_style
+package com.aws.amazonlocation.ui.main.map_style // ktlint-disable package-name
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -154,6 +154,54 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
                 )
             )
         }
+        items.add(
+            MapStyleInnerData(
+                context.resources.getString(R.string.map_standard_light),
+                context.resources.getString(R.string.open_data),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
+                image = R.drawable.standard_light,
+                isSelected = false,
+                mMapName = MapNames.OPEN_DATA_STANDARD_LIGHT,
+                mMapStyleName = MapStyles.VECTOR_OPEN_DATA_STANDARD_LIGHT
+            )
+        )
+        items.add(
+            MapStyleInnerData(
+                context.resources.getString(R.string.map_standard_dark),
+                context.resources.getString(R.string.open_data),
+                listOf(ATTRIBUTE_DARK),
+                listOf(TYPE_VECTOR),
+                image = R.drawable.standard_dark,
+                isSelected = false,
+                mMapName = MapNames.OPEN_DATA_STANDARD_DARK,
+                mMapStyleName = MapStyles.VECTOR_OPEN_DATA_STANDARD_DARK
+            )
+        )
+        items.add(
+            MapStyleInnerData(
+                context.resources.getString(R.string.map_visualization_light),
+                context.resources.getString(R.string.open_data),
+                listOf(ATTRIBUTE_LIGHT),
+                listOf(TYPE_VECTOR),
+                image = R.drawable.visualization_light,
+                isSelected = false,
+                mMapName = MapNames.OPEN_DATA_VISUALIZATION_LIGHT,
+                mMapStyleName = MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_LIGHT
+            )
+        )
+        items.add(
+            MapStyleInnerData(
+                context.resources.getString(R.string.map_visualization_dark),
+                context.resources.getString(R.string.open_data),
+                listOf(ATTRIBUTE_DARK),
+                listOf(TYPE_VECTOR),
+                image = R.drawable.visualization_dark,
+                isSelected = false,
+                mMapName = MapNames.OPEN_DATA_VISUALIZATION_DARK,
+                mMapStyleName = MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_DARK
+            )
+        )
         mStyleList.clear()
 
         mStyleList = items.groupBy { it.provider }
@@ -190,7 +238,8 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
         val providerOrder = listOf(
             context.resources.getString(R.string.map_esri),
             context.resources.getString(R.string.here),
-            context.resources.getString(R.string.grab)
+            context.resources.getString(R.string.grab),
+            context.resources.getString(R.string.open_data)
         )
 
         // Convert the providers to a sequence for more efficient processing
@@ -212,7 +261,7 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
                             }
                         }
                         item.mapName?.contains(sq, ignoreCase = true) == true ||
-                                item.provider.contains(sq, ignoreCase = true) || attributeDataContains || typeDataContains
+                            item.provider.contains(sq, ignoreCase = true) || attributeDataContains || typeDataContains
                     } ?: true
 
                     val hasRequiredAttributes = attributes?.let { attrs ->

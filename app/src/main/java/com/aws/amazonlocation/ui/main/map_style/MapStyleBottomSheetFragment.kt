@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.map_style
+package com.aws.amazonlocation.ui.main.map_style // ktlint-disable package-name
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -31,6 +31,7 @@ import com.aws.amazonlocation.utils.textChanges
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
@@ -430,6 +431,12 @@ class MapStyleBottomSheetFragment(
                     mapInterface.mapStyleClick(1, 0)
                 }
             }
+            cardOpenData.setOnClickListener {
+                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                if (mapName != getString(R.string.open_data)) {
+                    mapInterface.mapStyleClick(3, 0)
+                }
+            }
             cardGrabMap.setOnClickListener {
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
                     return@setOnClickListener
@@ -611,25 +618,29 @@ class MapStyleBottomSheetFragment(
     private fun BottomSheetMapStyleBinding.setMapTileSelection(
         mapName: String
     ) {
-        when (mapName) {
+        val colorToSet = ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+
+        val selectedCard: MaterialCardView = when (mapName) {
             resources.getString(R.string.esri) -> {
-                cardEsri.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardEsri
             }
             resources.getString(R.string.here) -> {
-                cardHere.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardGrabMap.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardHere
             }
             resources.getString(R.string.grab) -> {
-                cardGrabMap.strokeColor =
-                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
-                cardEsri.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
-                cardHere.strokeColor = ContextCompat.getColor(requireContext(), R.color.white)
+                cardGrabMap
             }
+            resources.getString(R.string.open_data) -> {
+                cardOpenData
+            }
+            else -> cardEsri
+        }
+
+        val cardList = listOf(cardEsri, cardHere, cardGrabMap, cardOpenData)
+
+        cardList.forEach { card ->
+            card.strokeColor = if (card == selectedCard) colorToSet
+            else ContextCompat.getColor(requireContext(), R.color.white)
         }
     }
 
