@@ -128,6 +128,7 @@ const val TEST_FAILED_PINCH_IN_FAILED = "Test failed due to pinch in failed"
 const val TEST_FAILED_ENABLE_TRACKING = "Test failed due to enable tracking not visible"
 const val TEST_FAILED_MAP_STYLE_NOT_CHANGED = "Map style not changed"
 const val TEST_FAILED_NO_DATA_FOUND = "No data found"
+const val TEST_FAILED_NO_MESSAGE_FOUND = "Expected message not found"
 
 val STYLE_TAG_ESRI_1 = DESCRIPTION_TAG_ESRI + 1
 val STYLE_TAG_ESRI_2 = DESCRIPTION_TAG_ESRI + 2

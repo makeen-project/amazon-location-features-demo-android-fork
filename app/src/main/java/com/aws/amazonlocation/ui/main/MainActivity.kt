@@ -99,7 +99,7 @@ class MainActivity : BaseActivity(), CrashListener {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         analyticsHelper =
-            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
+            AnalyticsHelper(this@MainActivity, mAWSLocationHelper, mPreferenceManager)
         analyticsHelper?.initAnalytics()
         analyticsHelper?.startSession()
         checkRtl()
