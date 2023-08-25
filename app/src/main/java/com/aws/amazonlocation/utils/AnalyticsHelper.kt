@@ -1,16 +1,17 @@
 package com.aws.amazonlocation.utils
 
-import android.content.Context
+import androidx.core.util.Consumer
 import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager
+import com.amazonaws.mobileconnectors.pinpoint.analytics.AnalyticsEvent
 import com.amazonaws.regions.Regions
 import com.amazonaws.services.pinpoint.model.ChannelType
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.data.enum.AuthEnum
-import javax.inject.Inject
+import com.aws.amazonlocation.ui.main.MainActivity
 
 class AnalyticsHelper(
-    private val context: Context,
+    private val context: MainActivity,
     private val mAWSLocationHelper: AWSLocationHelper,
     private val mPreferenceManager: PreferenceManager
 ) {
@@ -20,7 +21,7 @@ class AnalyticsHelper(
     fun initAnalytics() {
         val provider = mAWSLocationHelper.getAnalyticsCredentialProvider()
         val pinpointConfig = PinpointConfiguration(
-            context,
+            context.applicationContext,
             BuildConfig.ANALYTICS_APP_ID,
             Regions.US_EAST_1,
             ChannelType.GCM,
@@ -59,6 +60,14 @@ class AnalyticsHelper(
             event?.addAttribute(propertyName, propertyValue)
         }
         pinpointManager?.analyticsClient?.recordEvent(event)
-        pinpointManager?.analyticsClient?.submitEvents()
+        val successConsumer = Consumer<List<AnalyticsEvent>> {
+            if (isRunningSettingsFragmentAnalyticsTest) {
+                context.showError(eventName)
+            }
+        }
+
+        val errorConsumer = Consumer<Exception> { }
+
+        pinpointManager?.analyticsClient?.submitEvents(successConsumer, errorConsumer)
     }
 }
