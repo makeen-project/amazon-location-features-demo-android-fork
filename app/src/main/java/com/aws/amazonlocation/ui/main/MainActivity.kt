@@ -688,6 +688,16 @@ class MainActivity : BaseActivity(), CrashListener {
         }
     }
 
+    fun checkMapLoaded(): Boolean {
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                return fragment.checkMapLoaded()
+            }
+        }
+        return false
+    }
+
     @Deprecated("Deprecated in Java")
     @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

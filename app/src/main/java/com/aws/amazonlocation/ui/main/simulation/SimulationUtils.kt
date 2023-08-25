@@ -335,7 +335,6 @@ class SimulationUtils(
     }
 
     private fun getNextCoordinates(): List<BusRouteCoordinates>? {
-        val maxCoordinatesSize = routeData?.maxOfOrNull { it.coordinates?.size ?: 0 } ?: 0
         val nextCoordinates = routeData?.mapIndexedNotNull { index, routeSimulationDataItem ->
             if (isBusTrackerNotificationEnable(index)) {
                 val coordinatesSize = routeSimulationDataItem.coordinates?.size ?: 0
@@ -354,7 +353,7 @@ class SimulationUtils(
                                 }
                             }
                         }
-                        it[index] = (it[index] + 1) % maxCoordinatesSize
+                        it[index] = (it[index] + 1) % coordinatesSize
                         BusRouteCoordinates(
                             routeSimulationDataItem.id,
                             routeSimulationDataItem.geofenceCollection,
@@ -694,14 +693,16 @@ class SimulationUtils(
     private fun initClick() {
         simulationBinding?.apply {
             cardStartTracking.setOnClickListener {
-                if (mIsLocationUpdateEnable) {
-                    stopTracker()
-                    stopMqttManager()
-                } else {
-                    viewLoader.show()
-                    tvStopTracking.hide()
-                    cardStartTracking.isEnabled = false
-                    startMqttManager()
+                if ((activity as MainActivity).checkMapLoaded() && !viewLoader.isVisible) {
+                    if (mIsLocationUpdateEnable) {
+                        stopTracker()
+                        stopMqttManager()
+                    } else {
+                        viewLoader.show()
+                        tvStopTracking.hide()
+                        cardStartTracking.isEnabled = false
+                        startMqttManager()
+                    }
                 }
             }
             ivBackArrowRouteNotifications.setOnClickListener {
