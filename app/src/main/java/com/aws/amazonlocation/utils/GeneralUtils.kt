@@ -447,10 +447,10 @@ fun changeClickHereColor(
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
                         when (conditionPrivacy.text.toString()) {
-                            context.resources.getString(R.string.how_to_connect_1_1) -> {
+                            context.resources.getString(R.string.how_to_connect_1_1).replace(STRING_REPLACE_KEY, "") -> {
                                 mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
                             }
-                            context.resources.getString(R.string.label_connected_title_1) -> {
+                            context.resources.getString(R.string.label_connected_title_1).replace(STRING_REPLACE_KEY, "") -> {
                                 mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
                             }
                         }

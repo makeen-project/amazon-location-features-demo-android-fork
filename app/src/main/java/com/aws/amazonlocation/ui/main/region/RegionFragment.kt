@@ -14,6 +14,7 @@ import com.aws.amazonlocation.databinding.FragmentRegionBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
@@ -22,6 +23,7 @@ import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.regionDisplayName
+import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,6 +54,8 @@ class RegionFragment : BaseFragment() {
             regionDisplayName.forEach {
                 mRegionList.add(RegionResponse(it, selectedRegion == it))
             }
+            val nearestRegion = mPreferenceManager.getValue(KEY_NEAREST_REGION, regionList[0])
+            mRegionList[0].name = mRegionList[0].name + " - " + nearestRegion
             val layoutManager = LinearLayoutManager(requireContext())
             val languageCode = getLanguageCode()
             val isRtl =
@@ -64,7 +68,7 @@ class RegionFragment : BaseFragment() {
                         mRegionList.forEachIndexed { index, _ ->
                             mRegionList[index].isSelected = index == position
                         }
-                        mRegionList[position].name?.let {
+                        regionDisplayName[position].let {
                             mPreferenceManager.setValue(
                                 KEY_SELECTED_REGION,
                                 it

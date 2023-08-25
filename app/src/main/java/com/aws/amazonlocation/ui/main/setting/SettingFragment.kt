@@ -221,17 +221,7 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         if (selectedRegion != null) {
             when (selectedRegion) {
                 regionDisplayName[0] -> {
-                    val nearestRegion = mPreferenceManager.getValue(KEY_NEAREST_REGION, regionList[0])
-                    regionDisplayName.forEach {
-                        if (it.contains(nearestRegion.toString())){
-                            mBinding.tvRegionName.text = buildString {
-                                append(selectedRegion)
-                                append(" (")
-                                append(it.split("(")[0].trim())
-                                append(")")
-                            }
-                        }
-                    }
+                    mBinding.tvRegionName.text = selectedRegion
                 }
                 else -> {
                     mBinding.tvRegionName.text = selectedRegion.split("(")[0].trim()
