@@ -61,7 +61,7 @@ class AnalyticsHelper(
         }
         pinpointManager?.analyticsClient?.recordEvent(event)
         val successConsumer = Consumer<List<AnalyticsEvent>> {
-            if (isRunningSettingsFragmentAnalyticsTest) {
+            if (isRunningAnalyticsTest) {
                 context.showError(eventName)
             }
         }

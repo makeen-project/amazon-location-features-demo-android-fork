@@ -115,9 +115,9 @@ val isRunningRemoteDataSourceImplTest: Boolean by lazy {
     }
 }
 
-val isRunningSettingsFragmentAnalyticsTest: Boolean by lazy {
+val isRunningAnalyticsTest: Boolean by lazy {
     try {
-        Class.forName("com.aws.amazonlocation.ui.main.SettingsFragmentAnalyticsTest")
+        Class.forName("com.aws.amazonlocation.ui.main.AnalyticsTest")
         true
     } catch (e: ClassNotFoundException) {
         false
