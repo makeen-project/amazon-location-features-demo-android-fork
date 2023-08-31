@@ -380,16 +380,14 @@ class AWSLocationHelper(
                 else -> ESRI_PLACE_INDEX
             }
             val liveLocation = mMapHelper.getLiveLocation()
-            var response: SearchPlaceIndexForTextResult? = null
-            if (indexName == GRAB_PLACE_INDEX) {
-               val response = mClient?.searchPlaceIndexForText(
-                   SearchPlaceIndexForTextRequest().withIndexName(indexName).withText(text)
+            val response: SearchPlaceIndexForTextResult? = if (indexName == GRAB_PLACE_INDEX) {
+                mClient?.searchPlaceIndexForText(
+                    SearchPlaceIndexForTextRequest().withIndexName(indexName).withText(text)
                         .withLanguage(getLanguageCode())
                         .withMaxResults(SEARCH_MAX_RESULT)
                 )
-            }
-            else {
-               val response = mClient?.searchPlaceIndexForText(
+            } else {
+                mClient?.searchPlaceIndexForText(
                     SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat))
                         .withIndexName(indexName).withText(text)
                         .withLanguage(getLanguageCode())
