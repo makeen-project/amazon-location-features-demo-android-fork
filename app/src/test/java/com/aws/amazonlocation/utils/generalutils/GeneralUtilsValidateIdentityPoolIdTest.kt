@@ -13,7 +13,7 @@ import org.robolectric.RobolectricTestRunner
 class GeneralUtilsValidateIdentityPoolIdTest : BaseTest() {
 
     @Test
-    fun validateUserPoolIdSuccess() {
+    fun validateIdentityPoolIdSuccess() {
         val result = validateIdentityPoolId(BuildConfig.IDENTITY_POOL_ID, BuildConfig.DEFAULT_REGION)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, !result)
     }
