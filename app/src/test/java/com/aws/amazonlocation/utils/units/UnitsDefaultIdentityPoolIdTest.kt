@@ -18,7 +18,19 @@ class UnitsDefaultIdentityPoolIdTest : BaseTest() {
     fun toDefaultIdentityPoolIdSuccess() {
         var result = Units.getDefaultIdentityPoolId(regionDisplayName[0], "")
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID)
+        result = Units.getDefaultIdentityPoolId(regionDisplayName[0], regionList[0])
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID)
+        result = Units.getDefaultIdentityPoolId(regionDisplayName[0], regionList[1])
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU)
         result = Units.getDefaultIdentityPoolId(regionDisplayName[0], regionList[2])
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP)
+        result = Units.getDefaultIdentityPoolId("", regionList[2])
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID)
+        result = Units.getDefaultIdentityPoolId(regionDisplayName[1], regionList[2])
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU)
+        result = Units.getDefaultIdentityPoolId(regionDisplayName[2], regionList[2])
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP)
+        result = Units.getDefaultIdentityPoolId(regionDisplayName[3], regionList[2])
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.DEFAULT_IDENTITY_POOL_ID)
     }
 }
