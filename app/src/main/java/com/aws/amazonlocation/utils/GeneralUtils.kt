@@ -57,14 +57,14 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.mapbox.mapboxsdk.geometry.LatLng
-import java.util.Locale
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.onStart
+import java.util.Locale
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -109,6 +109,15 @@ val isRunningTest3LiveLocation: Boolean by lazy {
 val isRunningRemoteDataSourceImplTest: Boolean by lazy {
     try {
         Class.forName("com.aws.amazonlocation.data.datasource.RemoteDataSourceImplTest")
+        true
+    } catch (e: ClassNotFoundException) {
+        false
+    }
+}
+
+val isRunningAnalyticsTest: Boolean by lazy {
+    try {
+        Class.forName("com.aws.amazonlocation.ui.main.AnalyticsTest")
         true
     } catch (e: ClassNotFoundException) {
         false
@@ -438,10 +447,10 @@ fun changeClickHereColor(
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
                         when (conditionPrivacy.text.toString()) {
-                            context.resources.getString(R.string.how_to_connect_1_1) -> {
+                            context.resources.getString(R.string.how_to_connect_1_1).replace(STRING_REPLACE_KEY, "") -> {
                                 mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
                             }
-                            context.resources.getString(R.string.label_connected_title_1) -> {
+                            context.resources.getString(R.string.label_connected_title_1).replace(STRING_REPLACE_KEY, "") -> {
                                 mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
                             }
                         }

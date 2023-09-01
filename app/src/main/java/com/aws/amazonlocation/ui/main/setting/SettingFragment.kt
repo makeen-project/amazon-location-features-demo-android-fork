@@ -34,6 +34,7 @@ import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_PROVIDER
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
@@ -59,6 +60,7 @@ import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.regionDisplayName
+import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.signOutDialog
@@ -217,7 +219,14 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     private fun getRegion() {
         val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])
         if (selectedRegion != null) {
-            mBinding.tvRegionName.text = selectedRegion.split("(")[0].trim()
+            when (selectedRegion) {
+                regionDisplayName[0] -> {
+                    mBinding.tvRegionName.text = selectedRegion
+                }
+                else -> {
+                    mBinding.tvRegionName.text = selectedRegion.split("(")[0].trim()
+                }
+            }
         }
     }
 

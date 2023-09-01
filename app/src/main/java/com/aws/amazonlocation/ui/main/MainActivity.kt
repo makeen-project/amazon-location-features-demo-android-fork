@@ -99,7 +99,7 @@ class MainActivity : BaseActivity(), CrashListener {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         analyticsHelper =
-            AnalyticsHelper(applicationContext, mAWSLocationHelper, mPreferenceManager)
+            AnalyticsHelper(this@MainActivity, mAWSLocationHelper, mPreferenceManager)
         analyticsHelper?.initAnalytics()
         analyticsHelper?.startSession()
         checkRtl()
@@ -686,6 +686,16 @@ class MainActivity : BaseActivity(), CrashListener {
                 fragment.hideGeofence()
             }
         }
+    }
+
+    fun checkMapLoaded(): Boolean {
+        if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
+            val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+            if (fragment is ExploreFragment) {
+                return fragment.checkMapLoaded()
+            }
+        }
+        return false
     }
 
     @Deprecated("Deprecated in Java")

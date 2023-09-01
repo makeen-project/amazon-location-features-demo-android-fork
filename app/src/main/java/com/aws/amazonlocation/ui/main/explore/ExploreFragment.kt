@@ -3356,6 +3356,10 @@ class ExploreFragment :
         }
     }
 
+    fun checkMapLoaded(): Boolean {
+        return !mBinding.groupMapLoad.isVisible
+    }
+
     fun setAttributionDataAndExpandSheet() {
         setAttributionData()
         mBottomSheetHelper.expandAttributeSheet()
