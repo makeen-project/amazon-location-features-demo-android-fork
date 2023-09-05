@@ -52,6 +52,7 @@ import com.aws.amazonlocation.utils.SOURCE
 import com.aws.amazonlocation.utils.SOURCE_SIMULATION_ICON
 import com.aws.amazonlocation.utils.TRACKER
 import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.Units.getSimulationWebSocketUrl
 import com.aws.amazonlocation.utils.Units.readRouteData
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
@@ -796,7 +797,7 @@ class SimulationUtils(
         mqttManager =
             AWSIotMqttManager(
                 identityId,
-                String.format(BuildConfig.SIMULATION_WEB_SOCKET_URL, defaultIdentityPoolId.split(":")[0])
+                getSimulationWebSocketUrl(defaultIdentityPoolId)
             )
         mqttManager?.isAutoReconnect =
             false // To be able to display Exceptions and debug the problem.
@@ -1018,7 +1019,7 @@ class SimulationUtils(
                                 Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
                                 Pair(AnalyticsAttribute.BUS_NAME, notificationData[position].name)
                             )
-                            (activity as MainActivity).analyticsHelper?.recordEvent(EventType.DISABLE_NOTIFICATION, properties)
+                            activity.analyticsHelper?.recordEvent(EventType.DISABLE_NOTIFICATION, properties)
                         }
                         zoomCamera()
                     }
