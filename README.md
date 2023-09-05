@@ -32,6 +32,8 @@ Create *`custom.properties`* file inside the project root folder and add the det
 | DEFAULT_IDENTITY_POOL_ID_EU          | IdentityPoolId form eu-west-1 region                   |
 | DEFAULT_IDENTITY_POOL_ID_AP          | IdentityPoolId form ap-southeast-1 region              |
 | SIMULATION_WEB_SOCKET_URL            | Simulation WebSocketUrl                                |
+| SIMULATION_WEB_SOCKET_URL_EU         | Simulation WebSocketUrl form eu-west-1 region          |
+| SIMULATION_WEB_SOCKET_URL_AP         | Simulation WebSocketUrl form ap-southeast-1 region     |
 | ANALYTICS_APP_ID                     | AnalyticsAppId                                         |
 | IDENTITY_POOL_ID                     | IdentityPoolId                                         |
 | USER_DOMAIN                          | UserDomain                                             |

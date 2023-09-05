@@ -301,4 +301,21 @@ object Units {
             BuildConfig.DEFAULT_IDENTITY_POOL_ID
         }
     }
+
+    fun getSimulationWebSocketUrl(
+        defaultIdentityPoolId: String?
+    ) = when (defaultIdentityPoolId) {
+        BuildConfig.DEFAULT_IDENTITY_POOL_ID -> {
+            BuildConfig.SIMULATION_WEB_SOCKET_URL
+        }
+        BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU -> {
+            BuildConfig.SIMULATION_WEB_SOCKET_URL_EU
+        }
+        BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP -> {
+            BuildConfig.SIMULATION_WEB_SOCKET_URL_AP
+        }
+        else -> {
+            BuildConfig.SIMULATION_WEB_SOCKET_URL
+        }
+    }
 }
