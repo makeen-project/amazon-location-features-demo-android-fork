@@ -3,6 +3,8 @@ DEFAULT_REGION=xx-xxxx-x
 DEFAULT_IDENTITY_POOL_ID_EU=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_IDENTITY_POOL_ID_AP=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 SIMULATION_WEB_SOCKET_URL=xxxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxx.xxx
+SIMULATION_WEB_SOCKET_URL_EU=xxxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxx.xxx
+SIMULATION_WEB_SOCKET_URL_AP=xxxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxx.xxx
 ANALYTICS_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 # Here are some optional values for running tests
 IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
