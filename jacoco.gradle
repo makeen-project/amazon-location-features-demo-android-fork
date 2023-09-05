@@ -45,6 +45,7 @@ ext.excludes = [
         '**/*FontSpan*',
         '**/*TextWatcher*',
         '**/*GeofenceUtils*',
+        '**/*AWSLocationHelper*',
         // butterKnife
         '**/*$ViewInjector*.*',
         '**/*$ViewBinder*.*',
