@@ -106,8 +106,6 @@ const val simulationLatNorth = 49.295509609061924
 const val simulationLonEast = -123.04870086158795
 const val simulationLatSouth = 49.25908827302493
 const val simulationLonWest = -123.17226119977276
-const val vancouverLat = 49.2827
-const val vancouverLng = -123.1207
 
 const val LANGUAGE_CODE_GERMAN = "de"
 const val LANGUAGE_CODE_SPANISH = "es"
