@@ -1144,16 +1144,6 @@ class MapHelper(private val appContext: Context) {
         }
     }
 
-    fun simulationZoomCamera(latLng: LatLng) {
-        mMapboxMap?.easeCamera(
-            CameraUpdateFactory.newCameraPosition(
-                CameraPosition.Builder().zoom(SIMULATION_CAMERA_ZOOM).target(latLng)
-                    .build()
-            ),
-            CAMERA_DURATION_1000
-        )
-    }
-
     @SuppressLint("MissingPermission")
     fun enableLocationComponent() {
         mMapboxMap?.style?.let { loadedMapStyle ->
