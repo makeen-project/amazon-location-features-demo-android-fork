@@ -4817,14 +4817,26 @@ class ExploreFragment :
                     MarkerEnum.ORIGIN_ICON,
                     it1
                 )
+                it1.amazonLocationPlace?.coordinates?.latitude?.let { latitude ->
+                    it1.amazonLocationPlace?.coordinates?.longitude?.let { longitude ->
+                        LatLng(
+                            latitude,
+                            longitude
+                        )
+                    }
+                }?.let { latLng ->
+                    liveLocationLatLng?.latitude?.let { latitude ->
+                        mMapHelper.setDirectionMarker(
+                            latLng,
+                            latitude,
+                            liveLocationLatLng.longitude,
+                            requireActivity(),
+                            MarkerEnum.DIRECTION_ICON,
+                            ""
+                        )
+                    }
+                }
             }
-            mMapHelper.setDirectionMarker(
-                liveLocationLatLng?.latitude!!,
-                liveLocationLatLng.longitude,
-                requireActivity(),
-                MarkerEnum.DIRECTION_ICON,
-                ""
-            )
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
             mBaseActivity?.isTablet?.let {
