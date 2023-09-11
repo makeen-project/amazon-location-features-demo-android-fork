@@ -344,6 +344,7 @@ class MapHelper(private val appContext: Context) {
     }
 
     fun setDirectionMarker(
+        originLatLng: LatLng,
         latitude: Double,
         longitude: Double,
         activity: Activity,
@@ -356,10 +357,12 @@ class MapHelper(private val appContext: Context) {
             longitude
         )
         mMapboxMap?.getStyle { style ->
-            style.addImage(
-                name,
-                ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_direction_marker)!!
-            )
+            ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_direction_marker)?.let {
+                style.addImage(
+                    name,
+                    it
+                )
+            }
             mSymbolManager?.textAllowOverlap = false
             mSymbolManager?.iconAllowOverlap = true
             mSymbolManager?.iconIgnorePlacement = false
@@ -376,6 +379,7 @@ class MapHelper(private val appContext: Context) {
                 mSymbolManager?.create(symbolOptions)
             }
 
+            list.add(originLatLng)
             list.add(
                 LatLng(
                     latitude,
@@ -1138,16 +1142,6 @@ class MapHelper(private val appContext: Context) {
                 CAMERA_DURATION_1000
             )
         }
-    }
-
-    fun simulationZoomCamera(latLng: LatLng) {
-        mMapboxMap?.easeCamera(
-            CameraUpdateFactory.newCameraPosition(
-                CameraPosition.Builder().zoom(SIMULATION_CAMERA_ZOOM).target(latLng)
-                    .build()
-            ),
-            CAMERA_DURATION_1000
-        )
     }
 
     @SuppressLint("MissingPermission")

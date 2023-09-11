@@ -68,8 +68,6 @@ import com.aws.amazonlocation.utils.simulationLatNorth
 import com.aws.amazonlocation.utils.simulationLatSouth
 import com.aws.amazonlocation.utils.simulationLonEast
 import com.aws.amazonlocation.utils.simulationLonWest
-import com.aws.amazonlocation.utils.vancouverLat
-import com.aws.amazonlocation.utils.vancouverLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.mapbox.geojson.LineString
@@ -182,10 +180,6 @@ class SimulationUtils(
         // Set the bounds to restrict the visible area on the map
         mMapboxMap?.limitViewToBounds(bounds)
         mMapboxMap?.setMinZoomPreference(SIMULATION_CAMERA_ZOOM_1)
-        (activity as MainActivity).lifecycleScope.launch {
-            delay(CLICK_DEBOUNCE)
-            mMapHelper?.simulationZoomCamera(LatLng(vancouverLat, vancouverLng))
-        }
     }
 
     private fun initData() {

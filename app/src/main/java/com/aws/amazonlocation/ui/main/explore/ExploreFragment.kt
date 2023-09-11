@@ -2505,12 +2505,10 @@ class ExploreFragment :
                 }
 
                 ivSwapLocation.setOnClickListener {
-                    if (checkInternetConnection()) {
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < CLICK_DEBOUNCE_ENABLE) {
-                            return@setOnClickListener
-                        }
+                    if (checkInternetConnection() && !mIsSwapClicked && !checkDirectionLoaderVisible()) {
                         mIsSwapClicked = true
                         mLastClickTime = SystemClock.elapsedRealtime()
+                        showDirectionSearchShimmer()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
@@ -2562,7 +2560,7 @@ class ExploreFragment :
                         }
                         activity?.hideKeyboard()
                         lifecycleScope.launch {
-                            delay(CLICK_DEBOUNCE)
+                            delay(DELAY_500)
                             mIsSwapClicked = false
                         }
                     }
@@ -4817,14 +4815,26 @@ class ExploreFragment :
                     MarkerEnum.ORIGIN_ICON,
                     it1
                 )
+                it1.amazonLocationPlace?.coordinates?.latitude?.let { latitude ->
+                    it1.amazonLocationPlace?.coordinates?.longitude?.let { longitude ->
+                        LatLng(
+                            latitude,
+                            longitude
+                        )
+                    }
+                }?.let { latLng ->
+                    liveLocationLatLng?.latitude?.let { latitude ->
+                        mMapHelper.setDirectionMarker(
+                            latLng,
+                            latitude,
+                            liveLocationLatLng.longitude,
+                            requireActivity(),
+                            MarkerEnum.DIRECTION_ICON,
+                            ""
+                        )
+                    }
+                }
             }
-            mMapHelper.setDirectionMarker(
-                liveLocationLatLng?.latitude!!,
-                liveLocationLatLng.longitude,
-                requireActivity(),
-                MarkerEnum.DIRECTION_ICON,
-                ""
-            )
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
             cardRouteOptionShow()
             mBaseActivity?.isTablet?.let {
@@ -4833,6 +4843,12 @@ class ExploreFragment :
                     mBinding.cardDirection.hide()
                 }
             }
+        }
+    }
+
+    private fun checkDirectionLoaderVisible(): Boolean {
+        mBinding.bottomSheetDirectionSearch.apply {
+            return clDriveLoader.isVisible || clWalkLoader.isVisible || clTruckLoader.isVisible || clBicycleLoader.isVisible || clMotorcycleLoader.isVisible
         }
     }
 
