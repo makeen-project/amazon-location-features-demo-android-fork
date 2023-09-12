@@ -38,6 +38,7 @@ const val RESTART_DELAY = 800L
 const val DELAY_500 = 500L
 const val DELAY_300 = 300L
 const val DELAY_1000 = 1000L
+const val DELAY_SIMULATION_2000 = 2000L
 const val DELAY_LANGUAGE_3000 = 3000L
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
