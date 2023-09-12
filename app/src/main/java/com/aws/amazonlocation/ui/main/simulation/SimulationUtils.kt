@@ -17,7 +17,6 @@ import com.amazonaws.mobileconnectors.iot.AWSIotMqttManager
 import com.amazonaws.mobileconnectors.iot.AWSIotMqttQos
 import com.amazonaws.services.geo.AmazonLocationClient
 import com.amazonaws.services.geo.model.ListGeofenceResponseEntry
-import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.BusRouteCoordinates
 import com.aws.amazonlocation.data.response.NotificationSimulationData
@@ -32,9 +31,9 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
-import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.DELAY_1000
+import com.aws.amazonlocation.utils.DELAY_SIMULATION_2000
 import com.aws.amazonlocation.utils.ENTER
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.GeofenceCons
@@ -229,7 +228,7 @@ class SimulationUtils(
                                 simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
                             }
                         }
-                        delay(DELAY_1000)
+                        delay(DELAY_SIMULATION_2000)
                     }
                 }
                 isCoroutineStarted = true

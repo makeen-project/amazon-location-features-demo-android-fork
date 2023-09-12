@@ -979,7 +979,7 @@ class MapHelper(private val appContext: Context) {
 
             animators[index] = ObjectAnimator
                 .ofObject(latLngEvaluators[index], currentPositions[index], point)
-                .setDuration(DELAY_1000)
+                .setDuration(DELAY_SIMULATION_2000)
             animators[index]?.addUpdateListener { valueAnimator ->
                 val animatedPosition = valueAnimator.animatedValue as LatLng
                 geoJsonSources[index]?.setGeoJson(Point.fromLngLat(animatedPosition.longitude, animatedPosition.latitude))
