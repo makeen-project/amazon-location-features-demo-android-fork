@@ -125,6 +125,7 @@ class AWSLocationHelper(
         mClient =
             AmazonLocationClient(mCognitoCredentialsProvider) // update client based on details
         mClient?.setRegion(Region.getRegion(region))
+        mCognitoCredentialsProvider?.refresh()
         return mCognitoCredentialsProvider
     }
 

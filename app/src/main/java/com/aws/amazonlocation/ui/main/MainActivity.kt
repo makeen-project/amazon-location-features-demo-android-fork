@@ -51,6 +51,7 @@ import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_FRAGMENT_LOAD
+import java.util.Date
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -81,6 +82,20 @@ class MainActivity : BaseActivity(), CrashListener {
         val width = resources.getDimensionPixelSize(R.dimen.screen_size)
         mBinding.bottomNavigationMain.layoutParams.width = width
         mBinding.bottomNavigationMain.requestLayout()
+    }
+    override fun onResume() {
+        super.onResume()
+        // check session expired
+        val credentialsProvider = mAWSLocationHelper.getCognitoCachingCredentialsProvider()
+        val sessionExpiration: Date? = credentialsProvider?.sessionCredentialsExpiration
+
+        if (sessionExpiration != null) {
+            val currentDate = Date()
+            if (currentDate.after(sessionExpiration)) {
+                // Session has expired
+                credentialsProvider.refresh()
+            }
+        }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
