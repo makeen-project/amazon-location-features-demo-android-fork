@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.webkit.URLUtil
 import android.widget.AdapterView
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
@@ -306,7 +305,7 @@ class CloudFormationBottomSheetFragment(
     private fun validateAWSAccountData() {
         if (!validateIdentityPoolId(mIdentityPoolId, regionData)) {
             showError(getString(R.string.label_enter_identity_pool_id))
-        } else if (!URLUtil.isValidUrl(mUserDomain)) {
+        } else if (mUserDomain.isNullOrEmpty()) {
             showError(getString(R.string.label_enter_domain))
         } else if (!validateUserPoolClientId(mUserPoolClientId)) {
             showError(getString(R.string.label_enter_user_pool_client_id))
