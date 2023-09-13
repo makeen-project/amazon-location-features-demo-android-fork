@@ -166,7 +166,7 @@ class TrackingUtils(
             if ((activity as MainActivity).isTablet) {
                 mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_150)
             } else {
-                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_110)
+                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_127)
             }
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
