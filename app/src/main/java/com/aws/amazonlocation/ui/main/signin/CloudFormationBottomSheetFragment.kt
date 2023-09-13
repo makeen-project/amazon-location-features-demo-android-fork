@@ -41,6 +41,7 @@ import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SE_REGION_LIST
+import com.aws.amazonlocation.utils.Units.sanitizeUrl
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
 import com.aws.amazonlocation.utils.changeLearnMoreColor
@@ -392,10 +393,7 @@ class CloudFormationBottomSheetFragment(
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
-            var webSocketUrlToSave = webSocketUrl
-            if (webSocketUrl.endsWith("/", true)) {
-                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
-            }
+            val webSocketUrlToSave = sanitizeUrl(webSocketUrl)
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
                 webSocketUrlToSave
