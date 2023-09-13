@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.URLUtil
 import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -352,7 +351,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
     private fun validateAWSAccountData() {
         if (!validateIdentityPoolId(mIdentityPoolId, regionData)) {
             (activity as MainActivity).showError(getString(R.string.label_enter_identity_pool_id))
-        } else if (!URLUtil.isValidUrl(mUserDomain)) {
+        } else if (mUserDomain.isNullOrEmpty()) {
             (activity as MainActivity).showError(getString(R.string.label_enter_domain))
         } else if (!validateUserPoolClientId(mUserPoolClientId)) {
             (activity as MainActivity).showError(getString(R.string.label_enter_user_pool_client_id))
