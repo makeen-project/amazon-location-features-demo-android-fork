@@ -116,7 +116,7 @@ class RemoteDataSourceImpl(var mContext: Context, var mAWSLocationHelper: AWSLoc
                     override fun onResult(result: UserStateDetails) {
                         val mLoginResponse = LoginResponse()
                         mLoginResponse.success =
-                            mContext.resources.getString(R.string.login_success)
+                            activity.resources.getString(R.string.login_success)
                         mLoginResponse.name = AWSMobileClient.getInstance().username
 
                         if (result.details.containsKey("token")) {
