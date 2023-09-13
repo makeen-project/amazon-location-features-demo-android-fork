@@ -31,7 +31,6 @@ import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.EventType
-import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -398,12 +397,11 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             }
         }
         mUserDomain?.let { uDomain ->
-            uDomain.split(HTTPS)[1].let { domain ->
-                mPreferenceManager.setValue(
-                    KEY_USER_DOMAIN,
-                    domain.removeSuffix("/")
-                )
-            }
+            val domainToSave = Units.sanitizeUrl(uDomain)
+            mPreferenceManager.setValue(
+                KEY_USER_DOMAIN,
+                domainToSave
+            )
         }
 
         mUserPoolClientId?.let { uPoolClientId ->
