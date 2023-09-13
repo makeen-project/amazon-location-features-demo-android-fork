@@ -25,7 +25,6 @@ import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.EventType
-import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -41,6 +40,7 @@ import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SE_REGION_LIST
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.Units.sanitizeUrl
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
@@ -58,9 +58,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -372,13 +372,13 @@ class CloudFormationBottomSheetFragment(
             }
         }
         mUserDomain?.let { uDomain ->
-            uDomain.split(HTTPS)[1].let { domain ->
-                mPreferenceManager.setValue(
-                    KEY_USER_DOMAIN,
-                    domain.removeSuffix("/")
-                )
-            }
+            val domainToSave = Units.sanitizeUrl(uDomain)
+            mPreferenceManager.setValue(
+                KEY_USER_DOMAIN,
+                domainToSave
+            )
         }
+
 
         mUserPoolClientId?.let { uPoolClientId ->
             mPreferenceManager.setValue(
