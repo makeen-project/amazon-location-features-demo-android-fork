@@ -180,7 +180,7 @@ class BottomSheetHelper {
                             if (exportFragment?.mBaseActivity?.mTrackingUtils?.isTrackingSheetCollapsed() != null) {
                                 exportFragment?.mBaseActivity?.mTrackingUtils?.isTrackingSheetCollapsed()
                                     ?.let {
-                                        if (!isDirectionSearchSheetVisible()) {
+                                        if (!isDirectionSearchSheetVisible() && !isDirectionSheetVisible()) {
                                             if (!it && exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed() != null) {
                                                 exportFragment?.mBaseActivity?.mGeofenceUtils?.isGeofenceSheetCollapsed()
                                                     ?.let { it1 ->
@@ -190,6 +190,8 @@ class BottomSheetHelper {
                                                             } else {
                                                                 exportFragment?.mBaseActivity?.mSimulationUtils?.setSimulationDraggable()
                                                             }
+                                                        } else {
+                                                            mBaseActivity?.bottomNavigationVisibility(true)
                                                         }
                                                     }
                                             } else {

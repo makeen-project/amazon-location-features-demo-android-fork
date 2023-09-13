@@ -318,4 +318,15 @@ object Units {
             BuildConfig.SIMULATION_WEB_SOCKET_URL
         }
     }
+
+    fun sanitizeUrl(url: String): String {
+        var sanitizedUrl = url.replaceFirst("http://", "")
+        sanitizedUrl = sanitizedUrl.replaceFirst("https://", "")
+
+        if (sanitizedUrl.endsWith("/")) {
+            sanitizedUrl = sanitizedUrl.substring(0, sanitizedUrl.length - 1)
+        }
+
+        return sanitizedUrl
+    }
 }

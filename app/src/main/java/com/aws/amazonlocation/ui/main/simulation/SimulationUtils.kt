@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -41,6 +42,9 @@ import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.LABEL_IN_BETWEEN
 import com.aws.amazonlocation.utils.LABEL_PRE_DRAW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
 import com.aws.amazonlocation.utils.LAYER
 import com.aws.amazonlocation.utils.LAYER_SIMULATION_ICON
 import com.aws.amazonlocation.utils.MapCameraZoom.SIMULATION_CAMERA_ZOOM_1
@@ -56,6 +60,7 @@ import com.aws.amazonlocation.utils.Units.readRouteData
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
+import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.notificationData
@@ -547,6 +552,14 @@ class SimulationUtils(
             initAdapter()
             setSpinnerData()
             setSelectedNotificationCount()
+            if ((activity as MainActivity).isTablet) {
+                val languageCode = getLanguageCode()
+                val isRtl =
+                    languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
+                if (isRtl) {
+                    ViewCompat.setLayoutDirection(clPersistentBottomSheetSimulation, ViewCompat.LAYOUT_DIRECTION_RTL)
+                }
+            }
         }
     }
 
@@ -889,7 +902,7 @@ class SimulationUtils(
                     val notificationData =
                         Gson().fromJson(stringData, NotificationSimulationData::class.java)
                     var subTitle = ""
-                    mFragmentActivity?.applicationContext?.let {
+                    mFragmentActivity?.let {
                         if (notificationData.trackerEventType.equals(ENTER, true)) {
                             subTitle = "${it.getString(R.string.label_bus)} ${
                             notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)

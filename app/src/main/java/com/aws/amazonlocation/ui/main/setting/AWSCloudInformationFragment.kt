@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.URLUtil
 import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -31,7 +30,6 @@ import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.EventType
-import com.aws.amazonlocation.utils.HTTPS
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_ID_TOKEN
@@ -50,6 +48,7 @@ import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SE_REGION_LIST
 import com.aws.amazonlocation.utils.SignOutInterface
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeClickHereColor
 import com.aws.amazonlocation.utils.changeLearnMoreColor
@@ -352,7 +351,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
     private fun validateAWSAccountData() {
         if (!validateIdentityPoolId(mIdentityPoolId, regionData)) {
             (activity as MainActivity).showError(getString(R.string.label_enter_identity_pool_id))
-        } else if (!URLUtil.isValidUrl(mUserDomain)) {
+        } else if (mUserDomain.isNullOrEmpty()) {
             (activity as MainActivity).showError(getString(R.string.label_enter_domain))
         } else if (!validateUserPoolClientId(mUserPoolClientId)) {
             (activity as MainActivity).showError(getString(R.string.label_enter_user_pool_client_id))
@@ -397,12 +396,11 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             }
         }
         mUserDomain?.let { uDomain ->
-            uDomain.split(HTTPS)[1].let { domain ->
-                mPreferenceManager.setValue(
-                    KEY_USER_DOMAIN,
-                    domain.removeSuffix("/")
-                )
-            }
+            val domainToSave = Units.sanitizeUrl(uDomain)
+            mPreferenceManager.setValue(
+                KEY_USER_DOMAIN,
+                domainToSave
+            )
         }
 
         mUserPoolClientId?.let { uPoolClientId ->
@@ -418,10 +416,7 @@ class AWSCloudInformationFragment : BaseFragment(), SignOutInterface {
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
-            var webSocketUrlToSave = webSocketUrl
-            if (webSocketUrl.endsWith("/", true)) {
-                webSocketUrlToSave = webSocketUrl.removeSuffix("/")
-            }
+            val webSocketUrlToSave = Units.sanitizeUrl(webSocketUrl)
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
                 webSocketUrlToSave
