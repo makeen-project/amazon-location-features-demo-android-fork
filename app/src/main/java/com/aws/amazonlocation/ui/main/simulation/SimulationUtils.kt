@@ -345,7 +345,6 @@ class SimulationUtils(
                                 mMapHelper?.removeLayer("$LAYER${routeSimulationDataItem.id}")
                                 mMapHelper?.removeLayer("$SOURCE${routeSimulationDataItem.id}")
                                 busesCoordinates[index].clear()
-                                busSimulationHistoryData[index].clear()
                                 busStopCounts?.set(index, 0)
                                 routeData?.let { route ->
                                     addPreDrawTrackerLine(route, index)
