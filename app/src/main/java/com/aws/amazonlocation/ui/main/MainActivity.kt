@@ -85,6 +85,7 @@ class MainActivity : BaseActivity(), CrashListener {
     }
     override fun onResume() {
         super.onResume()
+        // check session expired
         val credentialsProvider = mAWSLocationHelper.getCognitoCachingCredentialsProvider()
         val sessionExpiration: Date? = credentialsProvider?.sessionCredentialsExpiration
 
