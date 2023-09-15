@@ -160,6 +160,7 @@ class ExploreFragment :
     private var mIsRouteOptionsOpened = false
     private var mTravelMode: String = TravelMode.Car.value
     private var mRouteFinish: Boolean = false
+    private var isGpsDialogVisible: Boolean = false
     private var mRedirectionType: String? = null
     private val mServiceName = "geo"
     private val bounds = LatLngBounds.Builder()
@@ -170,6 +171,7 @@ class ExploreFragment :
     private var gpsActivityResult = registerForActivityResult(
         ActivityResultContracts.StartIntentSenderForResult()
     ) {
+        isGpsDialogVisible = false
         if (it.resultCode == Activity.RESULT_OK) {
             checkAndEnableLocation()
         }
@@ -5234,11 +5236,14 @@ class ExploreFragment :
             } catch (exception: ApiException) {
                 when (exception.statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                        val resolvable = exception as ResolvableApiException
-                        val intentSenderRequest =
-                            IntentSenderRequest.Builder(resolvable.resolution).build()
-                        if (isAdded) {
-                            gpsActivityResult.launch(intentSenderRequest)
+                        if (!isGpsDialogVisible) {
+                            val resolvable = exception as ResolvableApiException
+                            val intentSenderRequest =
+                                IntentSenderRequest.Builder(resolvable.resolution).build()
+                            if (isAdded) {
+                                isGpsDialogVisible = true
+                                gpsActivityResult.launch(intentSenderRequest)
+                            }
                         }
                     } catch (_: IntentSender.SendIntentException) {
                     } catch (_: ClassCastException) {
