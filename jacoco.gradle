@@ -45,8 +45,6 @@ ext.excludes = [
         '**/*FontSpan*',
         '**/*TextWatcher*',
         '**/*GeofenceUtils*',
-        '**/*AWSLocationHelper*',
-        '**/*RemoteDataSourceImpl*',
         '**/*TurfMeasurement*',
         '**/*TurfConversion*',
         '**/*TurfMeta*',
