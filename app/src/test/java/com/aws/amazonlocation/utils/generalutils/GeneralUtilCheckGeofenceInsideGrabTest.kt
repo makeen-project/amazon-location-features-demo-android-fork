@@ -3,10 +3,18 @@ package com.aws.amazonlocation.utils.generalutils
 import android.content.Context
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.mock.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_USER_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.checkGeofenceInsideGrab
+import com.aws.amazonlocation.utils.isRunningAnalyticsTest
+import com.aws.amazonlocation.utils.isRunningRemoteDataSourceImplTest
+import com.aws.amazonlocation.utils.isRunningTest
+import com.aws.amazonlocation.utils.isRunningTest2LiveLocation
+import com.aws.amazonlocation.utils.isRunningTest3LiveLocation
+import com.aws.amazonlocation.utils.isRunningTestLiveLocation
 import com.aws.amazonlocation.utils.latSouth
+import com.aws.amazonlocation.utils.px
 import com.mapbox.mapboxsdk.geometry.LatLng
 import org.junit.Assert
 import org.junit.Test
@@ -21,9 +29,26 @@ class GeneralUtilCheckGeofenceInsideGrabTest : BaseTest() {
 
     @Test
     fun checkGeofenceInsideGrabTest() {
+        Assert.assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTest)
+        Assert.assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTestLiveLocation)
+        Assert.assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTest2LiveLocation)
+        Assert.assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTest3LiveLocation)
+        Assert.assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningRemoteDataSourceImplTest)
+        Assert.assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningAnalyticsTest)
         val mPreferenceManager = PreferenceManager(context)
         mPreferenceManager.setValue(KEY_USER_REGION, SE_REGION)
-        val result = checkGeofenceInsideGrab(LatLng(latSouth, latSouth), mPreferenceManager, context)
+        var result = checkGeofenceInsideGrab(LatLng(latSouth, latSouth), mPreferenceManager, context)
+        Assert.assertTrue(
+            TEST_FAILED_GRAB_MAP_NOT_ENABLE,
+            result
+        )
+        mPreferenceManager.setValue(KEY_MAP_NAME, GRAB)
+        result = checkGeofenceInsideGrab(LatLng(latSouth, latSouth), mPreferenceManager, context)
+        Assert.assertTrue(
+            TEST_FAILED_GRAB_MAP_NOT_ENABLE,
+            !result
+        )
+        result = checkGeofenceInsideGrab(LatLng(latSouth, latSouth), mPreferenceManager, null)
         Assert.assertTrue(
             TEST_FAILED_GRAB_MAP_NOT_ENABLE,
             result

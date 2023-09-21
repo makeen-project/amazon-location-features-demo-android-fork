@@ -660,7 +660,7 @@ object Responses {
     )
 
     val RESPONSE_SIGN_IN = LoginResponse(
-        name = BuildConfig.USER_LOGIN_NAME,
+        name = BuildConfig.USER_LOGIN_NAME + " TEST",
         email = null,
         success = SIGN_IN_SUCCESS,
         provider = "cognito-idp.us-east-1.amazonaws.com/us-east-1_48VeDo2Uw",
