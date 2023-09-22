@@ -362,3 +362,7 @@ val SE_REGION = "ap-southeast-1"
 // Dummy credential for test case
 val IDENTITY_POOL_CLIENT_ID_TEST = "66afllav6ri6hf66sikh6t6foh"
 val USER_POOL_ID_TEST = "ca-central-1_X6aaHHHb6"
+val SIGN_OUT_SUCCESSFULLY = "Sign out Successfully"
+val SIGN_OUT_FAILED = "Sign out failed"
+val SIGN_IN_SUCCESSFULLY = "Sign in Successfully"
+val SIGN_IN_FAILED = "Sign in failed"
