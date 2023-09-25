@@ -328,19 +328,4 @@ public final class TurfMeta {
     }
     return pointList;
   }
-
-  /**
-   * Unwrap a coordinate {@link Point} from a {@link Feature} with a {@link Point} geometry.
-   *
-   * @param obj any value
-   * @return a coordinate
-   * @see <a href="http://turfjs.org/docs/#getcoord">Turf getCoord documentation</a>
-   * @since 3.2.0
-   */
-  public static Point getCoord(Feature obj) {
-    if (obj.geometry() instanceof Point) {
-      return (Point) obj.geometry();
-    }
-    throw new TurfException("A Feature with a Point geometry is required.");
-  }
 }

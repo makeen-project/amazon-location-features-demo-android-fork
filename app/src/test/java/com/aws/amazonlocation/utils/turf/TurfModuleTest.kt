@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils
+package com.aws.amazonlocation.utils.turf
 
 import com.aws.amazonlocation.mock.DEFAULT_LOCATION
 import com.aws.amazonlocation.mock.TURF_TOLERANCE
