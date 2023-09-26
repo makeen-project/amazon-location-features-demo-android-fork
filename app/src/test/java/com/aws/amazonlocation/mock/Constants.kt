@@ -366,3 +366,48 @@ val SIGN_OUT_SUCCESSFULLY = "Sign out Successfully"
 val SIGN_OUT_FAILED = "Sign out failed"
 val SIGN_IN_SUCCESSFULLY = "Sign in Successfully"
 val SIGN_IN_FAILED = "Sign in failed"
+val jsonTurf: String = """
+                {
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [102.0, 0.5]
+  },
+  "properties": {
+    "prop0": "value0"
+  }
+}
+                """
+val jsonTurf1: String = """
+               {
+  "type": "FeatureCollection",
+  "bbox": [100.0, 0.0, -100.0, 105.0, 1.0, 0.0],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [102.0, 0.5]
+      },
+      "properties": {
+        "prop0": "value0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [102.0, 0.0],
+          [103.0, 1.0],
+          [104.0, 0.0]
+        ]
+      },
+      "properties": {
+        "prop0": "value1"
+      }
+    }
+    // You can add more feature objects here as needed
+  ]
+}
+                """
