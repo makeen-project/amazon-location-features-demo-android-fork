@@ -53,6 +53,7 @@ ext.excludes = [
         '**/*LatencyChecker*',
         '**/*SigV4Interceptor*',
         '**/*KeyBoardUtils*',
+        '**/*AmazonLocationApp*',
         // butterKnife
         '**/*$ViewInjector*.*',
         '**/*$ViewBinder*.*',
