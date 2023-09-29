@@ -58,7 +58,7 @@ class SettingsFragmentChangeDataProviderTest : BaseTestMainActivity() {
             onView(
                 allOf(withId(R.id.ll_here), isDisplayed()),
             ).perform(click())
-
+            Thread.sleep(DELAY_3000)
             var selectedMapName = preferenceManager.getValue(KEY_MAP_NAME, esriMapName)
 
             if (selectedMapName != hereMapName) {
@@ -72,7 +72,7 @@ class SettingsFragmentChangeDataProviderTest : BaseTestMainActivity() {
             onView(
                 allOf(withId(R.id.ll_esri), isDisplayed()),
             ).perform(click())
-
+            Thread.sleep(DELAY_3000)
             selectedMapName = preferenceManager.getValue(KEY_MAP_NAME, esriMapName)
 
             if (selectedMapName != esriMapName) {
