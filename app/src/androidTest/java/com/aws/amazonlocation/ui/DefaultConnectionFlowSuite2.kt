@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.ui
 
 import com.aws.amazonlocation.ui.main.CheckGoButtonClickLiveNavigationTest
+import com.aws.amazonlocation.ui.main.CheckGrabGoButtonTest
 import com.aws.amazonlocation.ui.main.CheckRouteEstimatedTimeAndDistanceTest
 import com.aws.amazonlocation.ui.main.CheckRouteMapAdjustedTest
 import com.aws.amazonlocation.ui.main.CheckRouteOptionsTest
@@ -18,9 +19,13 @@ import com.aws.amazonlocation.ui.main.SearchPlaceDisplayedOnMapTest
 import com.aws.amazonlocation.ui.main.SearchResultComparisonTest
 import com.aws.amazonlocation.ui.main.SettingRouteOptionAvailableTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentChangeDataProviderTest
+import com.aws.amazonlocation.ui.main.SettingsFragmentChangeLanguageTest
+import com.aws.amazonlocation.ui.main.SettingsFragmentChangeRegionTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentContentTest
 import com.aws.amazonlocation.ui.main.SettingsFragmentDefaultRouteTest
 import com.aws.amazonlocation.ui.main.SettingsMapStyleSearchFilterTest
+import com.aws.amazonlocation.ui.main.SimulationStartTrackingHistoryLoggedTest
+import com.aws.amazonlocation.ui.main.SimulationStopTrackingHistoryLoggedTest
 import org.junit.runner.RunWith
 import org.junit.runners.Suite
 
@@ -43,9 +48,14 @@ import org.junit.runners.Suite
     SettingsFragmentChangeDataProviderTest::class,
     SettingsFragmentContentTest::class,
     SettingsFragmentDefaultRouteTest::class,
-    ExploreFragmentGrabChangeStyleTest::class,
     ExploreFragmentChangeStyleTest::class,
     ExploreFragmentMapStyleSearchFilterTest::class,
-    SettingsMapStyleSearchFilterTest::class
+    SettingsMapStyleSearchFilterTest::class,
+    SimulationStartTrackingHistoryLoggedTest::class,
+    SimulationStopTrackingHistoryLoggedTest::class,
+    SettingsFragmentChangeRegionTest::class,
+    SettingsFragmentChangeLanguageTest::class,
+    ExploreFragmentGrabChangeStyleTest::class,
+    CheckGrabGoButtonTest::class
 )
 class DefaultConnectionFlowSuite2

@@ -51,7 +51,7 @@ class SettingsFragmentChangeDataProviderTest : BaseTestMainActivity() {
             val hereMapName = mActivityRule.activity.getString(R.string.here)
 
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
+            Thread.sleep(DELAY_3000)
 
             goToDataProvider()
 
