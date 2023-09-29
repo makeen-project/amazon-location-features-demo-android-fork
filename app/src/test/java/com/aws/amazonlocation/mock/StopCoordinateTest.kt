@@ -14,20 +14,20 @@ class StopCoordinateTest {
     @Before
     fun setUp() {
         stopCoordinate = StopCoordinate(
-            geometry = Geometry(listOf(1.0, 2.0), "Point"),
+            geometry = Geometry(listOf(1.0, 2.0), POINT),
             id = 1,
-            properties = Properties(2, "stop123", "Bus Stop"),
-            type = "Feature"
+            properties = Properties(2, STOP_123, BUS_STOP),
+            type = FEATURE
         )
-        stopCoordinate.geometry = Geometry(listOf(1.0, 2.0), "Point")
+        stopCoordinate.geometry = Geometry(listOf(1.0, 2.0), POINT)
         stopCoordinate.id = 1
-        stopCoordinate.properties = Properties(2, "stop123", "Bus Stop")
-        stopCoordinate.type = "Feature"
+        stopCoordinate.properties = Properties(2, STOP_123, BUS_STOP)
+        stopCoordinate.type = FEATURE
     }
 
     @Test
     fun testGeometry() {
-        val expectedGeometry = Geometry(listOf(1.0, 2.0), "Point")
+        val expectedGeometry = Geometry(listOf(1.0, 2.0), POINT)
         assertEquals(expectedGeometry, stopCoordinate.geometry)
     }
 
@@ -39,13 +39,13 @@ class StopCoordinateTest {
 
     @Test
     fun testProperties() {
-        val expectedProperties = Properties(2, "stop123", "Bus Stop")
+        val expectedProperties = Properties(2, STOP_123, BUS_STOP)
         assertEquals(expectedProperties, stopCoordinate.properties)
     }
 
     @Test
     fun testType() {
-        val expectedType = "Feature"
+        val expectedType = FEATURE
         assertEquals(expectedType, stopCoordinate.type)
     }
 }

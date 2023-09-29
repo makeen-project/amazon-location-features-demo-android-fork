@@ -12,19 +12,19 @@ class SimulationGeofenceDataTest {
     @Test
     fun testCollectionName() {
         val geofenceData = SimulationGeofenceData(
-            collectionName = "GeofenceCollection",
+            collectionName = GEOFENCE_COLLECTION,
             devicePositionData = ArrayList()
         )
         geofenceData.collectionName = geofenceData.collectionName
         geofenceData.devicePositionData = geofenceData.devicePositionData
-        assert(geofenceData.collectionName == "GeofenceCollection")
+        assert(geofenceData.collectionName == GEOFENCE_COLLECTION)
     }
 
     @Test
     fun testDevicePositionData() {
         val devicePositionData = ArrayList<ListGeofenceResponseEntry>()
         val geofenceData = SimulationGeofenceData(
-            collectionName = "GeofenceCollection",
+            collectionName = GEOFENCE_COLLECTION,
             devicePositionData = devicePositionData
         )
         assert(geofenceData.devicePositionData == devicePositionData)

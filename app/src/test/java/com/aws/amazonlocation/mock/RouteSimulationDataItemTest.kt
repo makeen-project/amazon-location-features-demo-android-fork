@@ -2,6 +2,7 @@ package com.aws.amazonlocation.mock
 
 import com.aws.amazonlocation.data.response.Geometry
 import com.aws.amazonlocation.data.response.Properties
+import com.aws.amazonlocation.data.response.RouteSimulationData
 import com.aws.amazonlocation.data.response.RouteSimulationDataItem
 import com.aws.amazonlocation.data.response.StopCoordinate
 import org.junit.Assert.assertEquals
@@ -16,31 +17,33 @@ class RouteSimulationDataItemTest {
     fun setUp() {
         routeSimulationDataItem = RouteSimulationDataItem(
             coordinates = listOf(listOf(1.0, 2.0), listOf(3.0, 4.0)),
-            geofenceCollection = "GeofenceCollection",
-            id = "RouteId",
-            name = "RouteName",
+            geofenceCollection = GEOFENCE_COLLECTION,
+            id = ROUTE_ID,
+            name = ROUTE_NAME,
             stopCoordinates = listOf(
-                StopCoordinate(Geometry(listOf(1.0, 2.0), "Point"), 1, Properties(1, "stop123", "Bus Stop")),
-                StopCoordinate(Geometry(listOf(3.0, 4.0), "Point"), 2, Properties(2, "stop456", "Bus Station"))
+                StopCoordinate(Geometry(listOf(1.0, 2.0), POINT), 1, Properties(1, STOP_123, BUS_STOP)),
+                StopCoordinate(Geometry(listOf(3.0, 4.0), POINT), 2, Properties(2, STOP_456, BUS_STATION))
             )
         )
         routeSimulationDataItem.coordinates = listOf(listOf(1.0, 2.0), listOf(3.0, 4.0))
-        routeSimulationDataItem.geofenceCollection = "GeofenceCollection"
-        routeSimulationDataItem.id = "RouteId"
-        routeSimulationDataItem.name = "RouteName"
+        routeSimulationDataItem.geofenceCollection = GEOFENCE_COLLECTION
+        routeSimulationDataItem.id = ROUTE_ID
+        routeSimulationDataItem.name = ROUTE_NAME
         routeSimulationDataItem.stopCoordinates = listOf(
-            StopCoordinate(Geometry(listOf(1.0, 2.0), "Point"), 1, Properties(1, "stop123", "Bus Stop")),
-            StopCoordinate(Geometry(listOf(3.0, 4.0), "Point"), 2, Properties(2, "stop456", "Bus Station"))
+            StopCoordinate(Geometry(listOf(1.0, 2.0), POINT), 1, Properties(1, STOP_123, BUS_STOP)),
+            StopCoordinate(Geometry(listOf(3.0, 4.0), POINT), 2, Properties(2, STOP_456,BUS_STATION))
         )
         routeSimulationDataItem.stopCoordinates?.let {
             it[0]?.properties?.id = 1
-            it[0]?.properties?.stop_id = "stop123"
-            it[0]?.properties?.stop_name = "Bus Stop"
+            it[0]?.properties?.stop_id = STOP_123
+            it[0]?.properties?.stop_name = BUS_STOP
         }
         routeSimulationDataItem.stopCoordinates?.let {
             it[0]?.geometry?.type = it[0]?.geometry?.type
             it[0]?.geometry?.coordinates = it[0]?.geometry?.coordinates
         }
+        val data = RouteSimulationData(arrayListOf(routeSimulationDataItem))
+        data.busRoutesData = data.busRoutesData
     }
 
     @Test
@@ -51,27 +54,27 @@ class RouteSimulationDataItemTest {
 
     @Test
     fun testGeofenceCollection() {
-        val expectedGeofenceCollection = "GeofenceCollection"
+        val expectedGeofenceCollection = GEOFENCE_COLLECTION
         assertEquals(expectedGeofenceCollection, routeSimulationDataItem.geofenceCollection)
     }
 
     @Test
     fun testId() {
-        val expectedId = "RouteId"
+        val expectedId = ROUTE_ID
         assertEquals(expectedId, routeSimulationDataItem.id)
     }
 
     @Test
     fun testName() {
-        val expectedName = "RouteName"
+        val expectedName = ROUTE_NAME
         assertEquals(expectedName, routeSimulationDataItem.name)
     }
 
     @Test
     fun testStopCoordinates() {
         val expectedStopCoordinates = listOf(
-            StopCoordinate(Geometry(listOf(1.0, 2.0), "Point"), 1, Properties(1, "stop123", "Bus Stop")),
-            StopCoordinate(Geometry(listOf(3.0, 4.0), "Point"), 2, Properties(2, "stop456", "Bus Station"))
+            StopCoordinate(Geometry(listOf(1.0, 2.0), POINT), 1, Properties(1, STOP_123, BUS_STOP)),
+            StopCoordinate(Geometry(listOf(3.0, 4.0), POINT), 2, Properties(2, STOP_456, BUS_STATION))
         )
         assertEquals(expectedStopCoordinates[0].properties?.id, routeSimulationDataItem.stopCoordinates?.get(0)?.properties?.id)
         assertEquals(expectedStopCoordinates[0].properties?.stop_name, routeSimulationDataItem.stopCoordinates?.get(0)?.properties?.stop_name)

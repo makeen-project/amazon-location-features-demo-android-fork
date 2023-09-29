@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.utils.turf
 
+import com.aws.amazonlocation.mock.TEST_DATA_5
 import com.aws.amazonlocation.mock.jsonTurf
 import com.aws.amazonlocation.mock.jsonTurf1
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeasurement
@@ -23,7 +24,9 @@ class TurfMeasurementFeatureTest {
         Assert.assertTrue(center != null)
         val centerFeature = TurfMeasurement.center(feature)
         Assert.assertTrue(centerFeature != null)
-        val centerWithId = TurfMeasurement.center(featureCollection, null, "test")
+        val centerFeatureProperties = TurfMeasurement.center(feature, null, TEST_DATA_5)
+        Assert.assertTrue(centerFeatureProperties != null)
+        val centerWithId = TurfMeasurement.center(featureCollection, null, TEST_DATA_5)
         Assert.assertTrue(centerWithId != null)
     }
 }

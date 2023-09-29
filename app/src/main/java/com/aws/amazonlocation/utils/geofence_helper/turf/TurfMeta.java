@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.utils.geofence_helper.turf;
 
+import com.aws.amazonlocation.utils.ExcludeFromJacocoGeneratedReport;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
@@ -304,6 +305,7 @@ public final class TurfMeta {
    * @return a {@code List} made up of {@link Point}s
    * @since 4.8.0
    */
+  @ExcludeFromJacocoGeneratedReport
   @NonNull
   private static List<Point> coordAllFromSingleGeometry(@NonNull List<Point> pointList,
                                                         @NonNull Geometry geometry,

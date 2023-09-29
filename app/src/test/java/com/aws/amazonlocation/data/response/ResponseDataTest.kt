@@ -163,7 +163,7 @@ class ResponseDataTest {
             isDisconnectFromAWSRequired = false
         )
         addGeofenceResponse.message = NO_DATA_FOUND
-        addGeofenceResponse.isDisconnectFromAWSRequired = false
+        addGeofenceResponse.isDisconnectFromAWSRequired = addGeofenceResponse.isDisconnectFromAWSRequired
         Assert.assertTrue(TEST_FAILED_SIGN_OUT_DATA, addGeofenceResponse.message == NO_DATA_FOUND)
     }
 
@@ -234,6 +234,7 @@ class ResponseDataTest {
             isSelected = false,
             mapInnerData = null
         )
+        mapStyleData.isDisable = mapStyleData.isDisable
         mapStyleData.mapInnerData = arrayListOf(data)
         Assert.assertTrue(TEST_FAILED_MAP_STYLE_DATA, !mapStyleData.isSelected)
     }

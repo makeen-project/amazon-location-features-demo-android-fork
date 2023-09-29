@@ -40,5 +40,8 @@ class TurfModuleTest {
         TurfTransformation.simplify(pointList, true)
         val data = TurfTransformation.simplify(pointList, TURF_TOLERANCE, true)
         Assert.assertTrue(data.isNotEmpty())
+        val pointList2Point = arrayListOf(pointList[0], pointList[1])
+        val data2Point = TurfTransformation.simplify(pointList2Point, TURF_TOLERANCE, true)
+        Assert.assertTrue(data2Point.isNotEmpty())
     }
 }
