@@ -12,7 +12,6 @@ import org.robolectric.RobolectricTestRunner
 class MarkerEnumTest : BaseTest() {
     @Test
     fun `Enum values should be correctly defined`() {
-        // Assert that the enum values are defined as expected
         assertEquals("NONE", MarkerEnum.NONE.name)
         assertEquals("DIRECTION_ICON", MarkerEnum.DIRECTION_ICON.name)
         assertEquals("ORIGIN_ICON", MarkerEnum.ORIGIN_ICON.name)
@@ -23,7 +22,6 @@ class MarkerEnumTest : BaseTest() {
 
     @Test
     fun `Enum values should have the correct ordinal`() {
-        // Assert that the enum values have the expected ordinal values
         assertEquals(0, MarkerEnum.NONE.ordinal)
         assertEquals(1, MarkerEnum.DIRECTION_ICON.ordinal)
         assertEquals(2, MarkerEnum.ORIGIN_ICON.ordinal)
@@ -34,7 +32,6 @@ class MarkerEnumTest : BaseTest() {
 
     @Test
     fun `Enum values should be retrievable by their names`() {
-        // Assert that you can retrieve enum values by their names
         assertEquals(MarkerEnum.NONE, MarkerEnum.valueOf("NONE"))
         assertEquals(MarkerEnum.DIRECTION_ICON, MarkerEnum.valueOf("DIRECTION_ICON"))
         assertEquals(MarkerEnum.ORIGIN_ICON, MarkerEnum.valueOf("ORIGIN_ICON"))

@@ -12,7 +12,6 @@ class TabEnumTest {
 
     @Test
     fun `Enum values should be correctly defined`() {
-        // Assert that the enum values are defined as expected
         assertEquals("TAB_EXPLORE", TabEnum.TAB_EXPLORE.name)
         assertEquals("TAB_TRACKING", TabEnum.TAB_TRACKING.name)
         assertEquals("TAB_GEOFENCE", TabEnum.TAB_GEOFENCE.name)
@@ -20,7 +19,6 @@ class TabEnumTest {
 
     @Test
     fun `Enum values should have the correct ordinal`() {
-        // Assert that the enum values have the expected ordinal values
         assertEquals(0, TabEnum.TAB_EXPLORE.ordinal)
         assertEquals(1, TabEnum.TAB_TRACKING.ordinal)
         assertEquals(2, TabEnum.TAB_GEOFENCE.ordinal)
@@ -28,7 +26,6 @@ class TabEnumTest {
 
     @Test
     fun `Enum values should be retrievable by their names`() {
-        // Assert that you can retrieve enum values by their names
         assertEquals(TabEnum.TAB_EXPLORE, TabEnum.valueOf("TAB_EXPLORE"))
         assertEquals(TabEnum.TAB_TRACKING, TabEnum.valueOf("TAB_TRACKING"))
         assertEquals(TabEnum.TAB_GEOFENCE, TabEnum.valueOf("TAB_GEOFENCE"))

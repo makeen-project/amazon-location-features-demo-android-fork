@@ -59,9 +59,7 @@ class GeneralUtilCheckGeofenceInsideGrabTest : BaseTest() {
 
     @Test
     fun testIsGrabMapSelectedTrueAndInsideGeofence() {
-        val latLng = LatLng(40.0, -75.0) // Inside the geofence
-
-        // Set the condition to true for isGrabMapSelected
+        val latLng = LatLng(40.0, -75.0)
         val mPreferenceManager = PreferenceManager(context)
         mPreferenceManager.setValue(KEY_USER_REGION, SE_REGION)
 
@@ -72,9 +70,7 @@ class GeneralUtilCheckGeofenceInsideGrabTest : BaseTest() {
 
     @Test
     fun testIsGrabMapSelectedTrueAndOutsideGeofence() {
-        val latLng = LatLng(45.0, -80.0) // Outside the geofence
-
-        // Set the condition to true for isGrabMapSelected
+        val latLng = LatLng(45.0, -80.0)
         val mPreferenceManager = PreferenceManager(context)
         mPreferenceManager.setValue(KEY_USER_REGION, SE_REGION)
 
@@ -85,9 +81,7 @@ class GeneralUtilCheckGeofenceInsideGrabTest : BaseTest() {
 
     @Test
     fun testIsGrabMapSelectedFalse() {
-        val latLng = LatLng(40.0, -75.0) // Inside or outside, doesn't matter
-
-        // Set the condition to false for isGrabMapSelected
+        val latLng = LatLng(40.0, -75.0)
         val mPreferenceManager = PreferenceManager(context)
         mPreferenceManager.setValue(KEY_USER_REGION, UNIT_AMPLIFY_JSON_CONF_INPUT_REGION)
 
@@ -99,8 +93,7 @@ class GeneralUtilCheckGeofenceInsideGrabTest : BaseTest() {
     @Test
     fun testContextNull() {
         val mContext: Context? = null
-        val latLng = LatLng(40.0, -75.0) // Inside or outside, doesn't matter
-        // Set the condition to false for isGrabMapSelected
+        val latLng = LatLng(40.0, -75.0)
         val mPreferenceManager = PreferenceManager(context)
         mPreferenceManager.setValue(KEY_USER_REGION, UNIT_AMPLIFY_JSON_CONF_INPUT_REGION)
         val result = checkGeofenceInsideGrab(latLng, mPreferenceManager, mContext)
