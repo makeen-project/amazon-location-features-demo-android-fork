@@ -121,7 +121,27 @@ class TrackingUtils(
             TrackingEnum.ENABLE_TRACKING -> {
                 mBottomSheetTrackingBehavior?.isDraggable = true
                 mBottomSheetTrackingBehavior?.isFitToContents = false
-                mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.58f
+                mBindingTracking?.clTracking?.post {
+                    val clEnableTrackingInnerHeight =
+                        mBindingTracking?.clEnableTrackingInner?.height ?: 0
+                    val clPersistentBottomSheetHeight =
+                        mBindingTracking?.clPersistentBottomSheet?.height ?: 0
+                    val clTrackingHeight =
+                        mBindingTracking?.clTracking?.height ?: 0
+
+                    val topLogoMargin = clPersistentBottomSheetHeight - clTrackingHeight
+                    val screenHeight = (mActivity as MainActivity).resources.displayMetrics.heightPixels
+                    val isTablet = (mActivity as MainActivity).isTablet
+                    val bottomNavHeight = if (isTablet) (mActivity as MainActivity).getBottomNavHeight().toFloat() else 0f
+                    val topLogoHeight = if (isTablet) 0f else topLogoMargin.toFloat()
+
+                    val halfExpandedRatio = if (screenHeight.toFloat() != 0.toFloat()) {
+                        ((clEnableTrackingInnerHeight.toFloat() + bottomNavHeight + topLogoHeight)) / screenHeight
+                    } else {
+                        0.55f
+                    }
+                    mBottomSheetTrackingBehavior?.halfExpandedRatio = halfExpandedRatio
+                }
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
                         mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
@@ -162,11 +182,19 @@ class TrackingUtils(
             trackingHistoryData.clear()
             getCurrentDateData()
 
+            val clTracking = mBindingTracking?.clTracking?.height ?: 0
+            val clPersistentBottomSheetHeight = mBindingTracking?.clPersistentBottomSheet?.height ?: 0
+            val clTrackingInnerHeight = mBindingTracking?.clTrackingInner?.height ?: 0
+            val totalHeight = (clPersistentBottomSheetHeight - clTracking) + clTrackingInnerHeight
+            mBottomSheetTrackingBehavior?.peekHeight = totalHeight
+
             mBottomSheetTrackingBehavior?.isDraggable = true
             if ((activity as MainActivity).isTablet) {
-                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_150)
+                mBottomSheetTrackingBehavior?.peekHeight =
+                    totalHeight
             } else {
-                mBottomSheetTrackingBehavior?.peekHeight = clTracking.context.resources.getDimensionPixelSize(R.dimen.dp_127)
+                mBottomSheetTrackingBehavior?.peekHeight =
+                    totalHeight
             }
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
