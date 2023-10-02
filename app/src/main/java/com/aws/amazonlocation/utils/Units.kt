@@ -96,12 +96,20 @@ object Units {
         }
 
         if (mHours != 0L) {
-            mTime = buildString {
-                append(mHours)
-                append(" ")
-                append(context.getString(R.string.label_hr))
-                append(" ")
-                append(mTime)
+            mTime = if (mMinute != 0L) {
+                buildString {
+                    append(mHours)
+                    append(" ")
+                    append(context.getString(R.string.label_hr))
+                    append(" ")
+                    append(mTime)
+                }
+            } else {
+                buildString {
+                    append(mHours)
+                    append(" ")
+                    append(context.getString(R.string.label_hr))
+                }
             }
         }
         return mTime

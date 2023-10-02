@@ -99,6 +99,7 @@ class GeofenceUtils {
     }
 
     fun collapseGeofenceList() {
+        mBottomSheetGeofenceListBehavior?.isDraggable = true
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -152,6 +153,7 @@ class GeofenceUtils {
         mBindingAddGeofence?.apply {
             mBottomSheetAddGeofenceBehavior = BottomSheetBehavior.from(root)
             mBottomSheetAddGeofenceBehavior?.isFitToContents = false
+            mBottomSheetAddGeofenceBehavior?.isDraggable = true
             mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             setGeofenceSearchSuggestionAdapter()
             setGeofenceSearchPlaceAdapter()
@@ -343,6 +345,7 @@ class GeofenceUtils {
         mBindingGeofenceList?.apply {
             mBottomSheetGeofenceListBehavior = BottomSheetBehavior.from(root)
             mBottomSheetGeofenceListBehavior?.isHideable = true
+            mBottomSheetGeofenceListBehavior?.isDraggable = true
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetGeofenceListBehavior?.isFitToContents = false
             if (isTablet) {
@@ -536,6 +539,7 @@ class GeofenceUtils {
             )
         }
         mBindingAddGeofence?.btnDeleteGeofence?.show()
+        mBottomSheetAddGeofenceBehavior?.isDraggable = true
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
 
         checkRtl()
@@ -622,6 +626,7 @@ class GeofenceUtils {
         enableAddGeofenceButton(false)
         mIsBtnEnable = false
         mBottomSheetGeofenceListBehavior?.isHideable = false
+        mBottomSheetGeofenceListBehavior?.isDraggable = true
         mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
@@ -639,6 +644,7 @@ class GeofenceUtils {
     }
 
     private fun hideGeofenceListBottomSheet() {
+        mBottomSheetGeofenceListBehavior?.isDraggable = false
         mBottomSheetGeofenceListBehavior?.isHideable = true
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
@@ -656,6 +662,7 @@ class GeofenceUtils {
         mBindingAddGeofence?.groupRadius?.show()
         mBindingAddGeofence?.edtAddGeofenceSearch?.clearFocus()
         mBottomSheetAddGeofenceBehavior?.isHideable = false
+        mBottomSheetAddGeofenceBehavior?.isDraggable = true
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
         mGeofenceHelper?.mDefaultLatLng?.let { mGeofenceInterface?.openAddGeofenceBottomSheet(it) }
         checkRtl()
@@ -679,14 +686,17 @@ class GeofenceUtils {
     }
 
     fun expandAddGeofenceBottomSheet() {
+        mBottomSheetAddGeofenceBehavior?.isDraggable = true
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     fun collapseAddGeofenceBottomSheet() {
+        mBottomSheetAddGeofenceBehavior?.isDraggable = true
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun hideAddGeofenceBottomSheet() {
+        mBottomSheetAddGeofenceBehavior?.isDraggable = false
         mBottomSheetAddGeofenceBehavior?.isHideable = true
         mBottomSheetAddGeofenceBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }

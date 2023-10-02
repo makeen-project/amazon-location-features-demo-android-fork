@@ -526,6 +526,7 @@ class TrackingUtils(
             it?.isHideable = true
             it?.state = BottomSheetBehavior.STATE_HIDDEN
             it?.isFitToContents = false
+            it?.isDraggable = false
             mMapHelper?.clearMarker()
             mMapHelper?.removeLine()
             sourceIdsToRemove.let { list ->
