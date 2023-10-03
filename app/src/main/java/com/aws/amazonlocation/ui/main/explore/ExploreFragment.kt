@@ -2085,6 +2085,7 @@ class ExploreFragment :
                 }
             } else {
                 hideViews(rvSearchPlacesDirection, nsDirectionSearchPlaces)
+                layoutNoDataFound.root.show()
                 layoutNoDataFound.groupNoSearchFound.show()
             }
         }

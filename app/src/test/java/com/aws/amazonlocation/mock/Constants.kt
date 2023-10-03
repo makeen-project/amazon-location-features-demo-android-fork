@@ -206,7 +206,7 @@ const val UNIT_TIME_SEC_3 = 3600.0
 
 const val UNIT_TIME_1_OUTPUT = "50 sec"
 const val UNIT_TIME_2_OUTPUT = "2 min"
-const val UNIT_TIME_3_OUTPUT = "1 hr 0 min"
+const val UNIT_TIME_3_OUTPUT = "1 hr"
 
 const val UNIT_DEF_AWS_CONF_INPUT_POOL_ID = "us-east-1_48VeDo2Uw"
 const val UNIT_DEF_AWS_CONF_INPUT_REGION = "us-east-1"
