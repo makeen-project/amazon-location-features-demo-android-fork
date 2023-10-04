@@ -90,9 +90,11 @@ const val TYPE_RASTER = "Raster"
 
 const val HERE = "Here"
 const val OPEN = "Open"
+const val GRAB = "Grab"
 const val DESCRIPTION_TAG_ESRI = "ESRI_"
 const val DESCRIPTION_TAG_HERE = "HERE_"
 const val DESCRIPTION_TAG_OPEN = "OPEN_"
+const val DESCRIPTION_TAG_GRAB = "GRAB_"
 
 const val MAP_STYLE_ATTRIBUTION = "MapStyleAttribution"
 
