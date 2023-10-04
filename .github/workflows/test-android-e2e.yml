@@ -38,14 +38,14 @@ jobs:
       - name: e2e tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 33
           emulator-boot-timeout: 1200
           target: playstore
           avd-name: test
           disable-animations: true
           profile: Nexus 6
           script: |
-            adb emu geo fix 72.58727 23.02579
+            adb emu geo fix 72.5228 23.0127
             ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.DefaultConnectionFlowSuite
             ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.DefaultConnectionFlowSuite2
             ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.SimulationStartTrackingHistoryLoggedTest
