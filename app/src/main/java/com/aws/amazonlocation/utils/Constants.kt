@@ -154,6 +154,7 @@ const val LAT_LNG_REG_EXP = "([+-]?\\d+\\.?\\d+)\\s*,\\s*([+-]?\\d+\\.?\\d+)"
 const val GEOFENCE_NAME_REG_EXP = "^[-._\\p{L}\\p{N}]+\$"
 const val userPoolIdPattern = "[\\w-]+_[0-9a-zA-Z]+"
 const val userPoolClientId = "[\\w+]+"
+const val regionPattern = "^[a-zA-Z-]+-\\d+$"
 
 const val LOCATION_AWS_PREFIX = "location.aws.com.demo."
 const val LOCATION_MAPS_PREFIX = "maps."
