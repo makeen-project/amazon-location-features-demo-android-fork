@@ -3367,6 +3367,7 @@ class ExploreFragment :
         mBinding.apply {
             bottomSheetAttribution.apply {
                 tvAttribution.text = mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
+                    ?.replace(Regex(attributionPattern), "") ?: ""
             }
         }
     }
