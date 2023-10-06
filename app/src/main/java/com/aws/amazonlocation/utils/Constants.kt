@@ -150,6 +150,7 @@ val regionDisplayName = arrayListOf("Automatic", "Europe (Ireland) eu-west-1", "
  * eg 2> "49.281174, -123.116823" > Check LAT_LNG_REG_EXP > return true
  */
 const val LAT_LNG_REG_EXP = "([+-]?\\d+\\.?\\d+)\\s*,\\s*([+-]?\\d+\\.?\\d+)"
+const val attributionPattern = "<a[^>]*>|</a>"
 
 const val GEOFENCE_NAME_REG_EXP = "^[-._\\p{L}\\p{N}]+\$"
 const val userPoolIdPattern = "[\\w-]+_[0-9a-zA-Z]+"
