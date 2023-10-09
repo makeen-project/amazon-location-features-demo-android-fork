@@ -16,22 +16,22 @@ Below are the requirements for development, running and testing.
 #### Pre-requisites
 1. Sign in to [Amazon AWS account](https://aws.amazon.com/)
 2. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `us-east-1` region and get `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
-    - `IdentityPoolId` value will be added to `.custom.properties` file against `DEFAULT_IDENTITY_POOL_ID`.
-    - `PinPointAppId` value will be added to `.custom.properties` file against `ANALYTICS_APP_ID`.
-    - `WebSocketUrl` value will be added to `.custom.properties` file against `SIMULATION_WEB_SOCKET_URL`.
-    - Take region from IdentityPoolId (Character before ':') that value will be added to `.custom.properties` file against `DEFAULT_REGION`.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID`.
+    - `PinPointAppId` value will be added to `custom.properties` file against `ANALYTICS_APP_ID`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL`.
+    - Take region from IdentityPoolId (Character before ':') that value will be added to `custom.properties` file against `DEFAULT_REGION`.
 3. Run the [CF template](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `ap-southeast-1` region and get `IdentityPoolId`, `WebSocketUrl` from stack output's tab.
-    - `IdentityPoolId` value will be added to `.custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_AP`.
-    - `WebSocketUrl` value will be added to `.custom.properties` file against `SIMULATION_WEB_SOCKET_URL_AP`.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_AP`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL_AP`.
 4. Run the [CF template](https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `eu-west-1` region and get `IdentityPoolId`, `WebSocketUrl` from stack output's tab.
-    - `IdentityPoolId` value will be added to `.custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_EU`.
-    - `WebSocketUrl` value will be added to `.custom.properties` file against `SIMULATION_WEB_SOCKET_URL_EU`.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_EU`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL_EU`.
 5. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or use the template from `/extra/main-cf-template.yaml` using your own AWS account and get below data.
-    - `IdentityPoolId` value will be added to `.custom.properties` file against `IDENTITY_POOL_ID`.
-    - `UserDomain` value will be added to `.custom.properties` file against `USER_DOMAIN`.
-    - `UserPoolClientId` value will be added to `.custom.properties` file against `USER_POOL_CLIENT_ID`.
-    - `UserPoolId` value will be added to `.custom.properties` file against `USER_POOL_ID`.
-    - `WebSocketUrl` value will be added to `.custom.properties` file against `WEB_SOCKET_URL`.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `IDENTITY_POOL_ID`.
+    - `UserDomain` value will be added to `custom.properties` file against `USER_DOMAIN`.
+    - `UserPoolClientId` value will be added to `custom.properties` file against `USER_POOL_CLIENT_ID`.
+    - `UserPoolId` value will be added to `custom.properties` file against `USER_POOL_ID`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `WEB_SOCKET_URL`.
 
 Follow this [Document](https://location.aws.com/demo/help) for detailed info to create & configure a new Cloud formation.
 
