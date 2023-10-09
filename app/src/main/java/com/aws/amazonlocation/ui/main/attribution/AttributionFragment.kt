@@ -17,6 +17,7 @@ import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_URL
 import com.aws.amazonlocation.utils.MAP_STYLE_ATTRIBUTION
+import com.aws.amazonlocation.utils.attributionPattern
 
 class AttributionFragment : BaseFragment() {
 
@@ -46,10 +47,12 @@ class AttributionFragment : BaseFragment() {
 
     private fun init() {
         mBinding.apply {
-            tvAttribution.text = mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
+            tvAttribution.text =
+                mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, getString(R.string.esri))
+                    ?.replace(Regex(attributionPattern), "") ?: ""
+
         }
     }
-
     private fun initClick() {
         mBinding.apply {
             btnLearnMoreSa.setOnClickListener {
