@@ -1492,6 +1492,7 @@ class ExploreFragment :
                                                 R.color.btn_go_disable
                                             )
                                         )
+                                        showCalculateRouteAPIError(TravelMode.Walking.value)
                                         mViewModel.mWalkingData = null
                                         isCalculateWalkApiError = true
                                         mBinding.bottomSheetDirectionSearch.clWalkLoader.hide()
@@ -1504,6 +1505,7 @@ class ExploreFragment :
                                                 R.color.btn_go_disable
                                             )
                                         )
+                                        showCalculateRouteAPIError(TravelMode.Car.value)
                                         isCalculateDriveApiError = true
                                         mViewModel.mCarData = null
                                         mBinding.bottomSheetDirectionSearch.clDriveLoader.hide()
@@ -1516,6 +1518,7 @@ class ExploreFragment :
                                                 R.color.btn_go_disable
                                             )
                                         )
+                                        showCalculateRouteAPIError(TravelMode.Truck.value)
                                         mViewModel.mTruckData = null
                                         isCalculateTruckApiError = true
                                         mBinding.bottomSheetDirectionSearch.clTruckLoader.hide()
@@ -1528,6 +1531,7 @@ class ExploreFragment :
                                                 R.color.btn_go_disable
                                             )
                                         )
+                                        showCalculateRouteAPIError(TRAVEL_MODE_BICYCLE)
                                         mViewModel.mBicycleData = null
                                         isCalculateBicycleApiError = true
                                         mBinding.bottomSheetDirectionSearch.clBicycleLoader.hide()
@@ -1540,6 +1544,7 @@ class ExploreFragment :
                                                 R.color.btn_go_disable
                                             )
                                         )
+                                        showCalculateRouteAPIError(TRAVEL_MODE_MOTORCYCLE)
                                         mViewModel.mMotorcycleData = null
                                         isCalculateMotorcycleApiError = true
                                         mBinding.bottomSheetDirectionSearch.clMotorcycleLoader.hide()
@@ -1825,6 +1830,12 @@ class ExploreFragment :
                     showError(it.messageResource.toString())
                 }
             }
+        }
+    }
+
+    private fun showCalculateRouteAPIError(value: String) {
+        if (mTravelMode == value) {
+            showError(getString(R.string.no_route_found))
         }
     }
 
@@ -2317,27 +2328,22 @@ class ExploreFragment :
             }
 
             bottomSheetDirectionSearch.apply {
-                if (checkInternetConnection()) {
-                    clDrive.setOnClickListener {
-                        mTravelMode = TravelMode.Car.value
-                        mViewModel.mCarData?.let {
-                            tvDriveSelected.show()
-                            showViews(cardRoutingOption)
-                            hideViews(tvTruckSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected)
-                            adjustMapBound()
-                            drawPolyLineOnMapCardClick(
-                                it.legs,
-                                isLineUpdate = false,
-                                isWalk = false,
-                                isLocationIcon = false
-                            )
+                clDrive.setOnClickListener {
+                    if (checkInternetConnection()) {
+                        if (mViewModel.mCarData == null) {
+                            showError(getString(R.string.no_route_found))
+                            return@setOnClickListener
                         }
-                        recordTravelModeChange()
+                        setCarClickData()
                     }
                 }
 
                 clWalk.setOnClickListener {
                     if (checkInternetConnection()) {
+                        if (mViewModel.mWalkingData == null) {
+                            showError(getString(R.string.no_route_found))
+                            return@setOnClickListener
+                        }
                         mTravelMode = TravelMode.Walking.value
                         mViewModel.mWalkingData?.let {
                             tvWalkSelected.show()
@@ -2361,6 +2367,10 @@ class ExploreFragment :
 
                 clTruck.setOnClickListener {
                     if (checkInternetConnection()) {
+                        if (mViewModel.mTruckData == null) {
+                            showError(getString(R.string.no_route_found))
+                            return@setOnClickListener
+                        }
                         mTravelMode = TravelMode.Truck.value
                         mViewModel.mTruckData?.let {
                             tvTruckSelected.show()
@@ -2380,6 +2390,10 @@ class ExploreFragment :
 
                 clBicycle.setOnClickListener {
                     if (checkInternetConnection()) {
+                        if (mViewModel.mBicycleData == null) {
+                            showError(getString(R.string.no_route_found))
+                            return@setOnClickListener
+                        }
                         mTravelMode = TRAVEL_MODE_BICYCLE
                         mViewModel.mBicycleData?.let {
                             tvBicycleSelected.show()
@@ -2403,6 +2417,10 @@ class ExploreFragment :
 
                 clMotorcycle.setOnClickListener {
                     if (checkInternetConnection()) {
+                        if (mViewModel.mMotorcycleData == null) {
+                            showError(getString(R.string.no_route_found))
+                            return@setOnClickListener
+                        }
                         mTravelMode = TRAVEL_MODE_MOTORCYCLE
                         mViewModel.mMotorcycleData?.let {
                             tvMotorcycleSelected.show()
@@ -3158,6 +3176,23 @@ class ExploreFragment :
         }
     }
 
+    private fun BottomSheetDirectionSearchBinding.setCarClickData() {
+        mTravelMode = TravelMode.Car.value
+        mViewModel.mCarData?.let {
+            tvDriveSelected.show()
+            showViews(cardRoutingOption)
+            hideViews(tvTruckSelected, tvWalkSelected, tvBicycleSelected, tvMotorcycleSelected)
+            adjustMapBound()
+            drawPolyLineOnMapCardClick(
+                it.legs,
+                isLineUpdate = false,
+                isWalk = false,
+                isLocationIcon = false
+            )
+        }
+        recordTravelModeChange()
+    }
+
     private fun recordTravelModeChange() {
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
             val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
@@ -3737,6 +3772,8 @@ class ExploreFragment :
                         )
                         clTruck.invisible()
                         clWalk.invisible()
+                        clBicycle.hide()
+                        clMotorcycle.hide()
                     }
                     layoutCardError.groupCardErrorNoSearchFound.hide()
                     layoutCardError.root.hide()
@@ -4070,7 +4107,9 @@ class ExploreFragment :
         mMapHelper.addLiveLocationMarker(false)
         mBinding.tvDistance.text = ""
         mBinding.tvNavigationName.text = ""
-        mBinding.bottomSheetDirectionSearch.clDrive.performClick()
+        mBinding.bottomSheetDirectionSearch.apply {
+            setCarClickData()
+        }
         mRouteFinish = true
         mNavigationList.clear()
         mMapHelper.removeLocationListener()
@@ -4331,8 +4370,6 @@ class ExploreFragment :
 
     private fun BottomSheetDirectionSearchBinding.routeOptionClose() {
         mIsRouteOptionsOpened = false
-        mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
-        mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         ivDown.show()
         cardRoutingOption.setCardBackgroundColor(
             ContextCompat.getColor(
@@ -4879,7 +4916,10 @@ class ExploreFragment :
 
     private fun BottomSheetDirectionSearchBinding.cardRouteOptionShow() {
         hideViews(rvSearchPlacesDirection, rvSearchPlacesSuggestionDirection, clMyLocation.root)
-        showViews(cardRoutingOption, cardMapOption)
+        if (mTravelMode == TravelMode.Car.value || mTravelMode == TravelMode.Truck.value) {
+            cardRoutingOption.show()
+        }
+        showViews(cardMapOption)
     }
 
     private fun BottomSheetDirectionSearchBinding.cardRouteOptionHide() {
