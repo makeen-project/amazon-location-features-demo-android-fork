@@ -26,8 +26,6 @@ class AmazonLocationApp : Application() {
     private fun setupUncaughtExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler { _, throwable ->
             notifyAppCrash(throwable.message)
-            android.os.Process.killProcess(android.os.Process.myPid())
-            exitProcess(1)
         }
     }
     fun setCrashListener(listener: CrashListener) {

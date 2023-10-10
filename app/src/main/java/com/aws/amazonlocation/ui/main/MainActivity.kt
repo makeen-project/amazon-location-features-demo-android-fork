@@ -967,6 +967,7 @@ class MainActivity : BaseActivity(), CrashListener {
                 )
                 analyticsHelper?.recordEvent(EventType.APPLICATION_ERROR, properties)
             }
+            restartApplication()
         }
     }
 }
