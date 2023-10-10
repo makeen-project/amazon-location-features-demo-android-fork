@@ -26,7 +26,8 @@ Below are the requirements for development, running and testing.
 4. Run the [CF template](https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `eu-west-1` region and get `IdentityPoolId`, `WebSocketUrl` from stack output's tab.
     - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_EU`.
     - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL_EU`.
-5. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) or use the template from `/extra/main-cf-template.yaml` using your own AWS account and get below data.
+5. After adding all above details in `custom.properties` file in Android studio then open `Build -> Clean project` after this run project.
+6. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/main-cf-template.yaml) or use the template from `/extra/main-cf-template.yaml` using your own AWS account and get below data.
     - `IdentityPoolId` value will be added to `custom.properties` file against `IDENTITY_POOL_ID`.
     - `UserDomain` value will be added to `custom.properties` file against `USER_DOMAIN`.
     - `UserPoolClientId` value will be added to `custom.properties` file against `USER_POOL_CLIENT_ID`.
