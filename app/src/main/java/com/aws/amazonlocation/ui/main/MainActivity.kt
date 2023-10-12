@@ -230,6 +230,11 @@ class MainActivity : BaseActivity(), CrashListener {
             val languageCode = getLanguageCode()
             languageCode?.let { setLocale(it, applicationContext) }
         }
+        val isAppCrashed = mPreferenceManager.getBooleanValue(KEY_APP_CRASH, false)
+        if (isAppCrashed) {
+            mPreferenceManager.setValue(KEY_APP_CRASH, false)
+            appCrashedDialog()
+        }
     }
 
     // check rtl layout
