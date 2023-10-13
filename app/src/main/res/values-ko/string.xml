@@ -216,6 +216,7 @@
   <string name="label_sec">초</string>
   <string name="label_min">분</string>
   <string name="label_hr">hr</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">km</string>
   <string name="label_ft">피트</string>
@@ -281,5 +282,4 @@
   <string name="region">지역</string>
   <string name="label_enable_open_data">활성화 오픈 데이터</string>
   <string name="label_enable_open_data_des">오픈 데이터 사용 에스리 ...에 대한 노선 과 장소 수색 기능성 에 높이다 당신의 경험.</string>
-  <string name="label_day">d</string>
 </resources>

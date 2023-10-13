@@ -216,6 +216,7 @@
   <string name="label_sec">秒</string>
   <string name="label_min">分鐘</string>
   <string name="label_hr">小時</string>
+  <string name="label_day">d</string>
   <string name="label_m">米</string>
   <string name="label_km">公里</string>
   <string name="label_ft">英呎</string>
@@ -281,5 +282,4 @@
   <string name="region">地區</string>
   <string name="label_enable_open_data">啟用 开放数据</string>
   <string name="label_enable_open_data_des">开放数据 使用 埃斯里 為了 路線 和 地方 搜尋 功能 至 提高 你的 經驗。</string>
-  <string name="label_day">d</string>
 </resources>

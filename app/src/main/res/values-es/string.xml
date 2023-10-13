@@ -216,6 +216,7 @@
   <string name="label_sec">segundo</string>
   <string name="label_min">min</string>
   <string name="label_hr">hora</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">km</string>
   <string name="label_ft">pies</string>
@@ -281,5 +282,4 @@
   <string name="region">Región</string>
   <string name="label_enable_open_data">Habilitar Datos abiertos</string>
   <string name="label_enable_open_data_des">Datos abiertos usos Esri por Rutas y Lugares búsqueda funcionalidad a mejorar vuestro experiencia.</string>
-  <string name="label_day">d</string>
 </resources>

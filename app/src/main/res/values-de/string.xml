@@ -216,6 +216,7 @@
   <string name="label_sec">Sekunde</string>
   <string name="label_min">Min.</string>
   <string name="label_hr">Std.</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">km</string>
   <string name="label_ft">ft</string>
@@ -281,5 +282,4 @@
   <string name="region">Region</string>
   <string name="label_enable_open_data">Aktivieren Daten öffnen</string>
   <string name="label_enable_open_data_des">Daten öffnen Verwendungszwecke Esri zum Strecken und Orte Suche Funktionalität zu verbessern dein erleben.</string>
-  <string name="label_day">d</string>
 </resources>

@@ -216,6 +216,7 @@
   <string name="label_sec">שניות</string>
   <string name="label_min">דק\'</string>
   <string name="label_hr">hr</string>
+  <string name="label_day">ד</string>
   <string name="label_m">מ</string>
   <string name="label_km">"ק""מ"</string>
   <string name="label_ft">רגל</string>
@@ -281,5 +282,4 @@
   <string name="region">אזור</string>
   <string name="label_enable_open_data">הפעל OpenData</string>
   <string name="label_enable_open_data_des">OpenData משתמש Esri בשביל מסלולים ו מקומות חפש פונקציונליות כדי לשפר שלך ניסיון.</string>
-  <string name="label_day">ד</string>
 </resources>

@@ -216,6 +216,7 @@
   <string name="label_sec">secondo</string>
   <string name="label_min">min</string>
   <string name="label_hr">ora</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">km</string>
   <string name="label_ft">piedi</string>
@@ -281,5 +282,4 @@
   <string name="region">Regione</string>
   <string name="label_enable_open_data">Abilita Dati aperti</string>
   <string name="label_enable_open_data_des">Dati aperti utilizza Esri per Percorsi e Luoghi ricerca funzionalità a accrescere tuo esperienza.</string>
-  <string name="label_day">d</string>
 </resources>

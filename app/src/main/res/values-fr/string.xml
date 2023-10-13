@@ -216,6 +216,7 @@
   <string name="label_sec">seconde</string>
   <string name="label_min">minimum</string>
   <string name="label_hr">heure</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">km</string>
   <string name="label_ft">pieds</string>
@@ -281,5 +282,4 @@
   <string name="region">Région</string>
   <string name="label_enable_open_data">Activer Données ouvertes</string>
   <string name="label_enable_open_data_des">Données ouvertes les usages Esri pour Itinéraires et Lieux chercher fonctionnalité pour améliorer votre expérience.</string>
-  <string name="label_day">d</string>
 </resources>

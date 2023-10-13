@@ -216,6 +216,7 @@
   <string name="label_sec">सेकंड</string>
   <string name="label_min">मिनट</string>
   <string name="label_hr">घंटा</string>
+  <string name="label_day">d</string>
   <string name="label_m">मी</string>
   <string name="label_km">किमी</string>
   <string name="label_ft">फुट</string>
@@ -281,5 +282,4 @@
   <string name="region">क्षेत्र</string>
   <string name="label_enable_open_data">चालू करें ओपनडेटा</string>
   <string name="label_enable_open_data_des">ओपनडेटा का उपयोग करता है एसरी के लिए रूट्स और जगहें तलाश कार्यक्षमता को बढ़ाने के लिए तुम्हारा अनुभव।</string>
-  <string name="label_day">d</string>
 </resources>

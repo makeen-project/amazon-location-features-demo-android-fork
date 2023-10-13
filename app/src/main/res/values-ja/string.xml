@@ -216,6 +216,7 @@
   <string name="label_sec">秒</string>
   <string name="label_min">最小</string>
   <string name="label_hr">時間</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">キロ</string>
   <string name="label_ft">フィート</string>
@@ -281,5 +282,4 @@
   <string name="region">リージョン</string>
   <string name="label_enable_open_data">有効化 オープンデータ</string>
   <string name="label_enable_open_data_des">オープンデータ 使用する Esri にとって ルート そして 場所 検索 機能性 に 強化します きみの 経験。</string>
-  <string name="label_day">d</string>
 </resources>

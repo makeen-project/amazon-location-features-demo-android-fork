@@ -216,6 +216,7 @@
   <string name="label_sec">ثانية</string>
   <string name="label_min">دقيقة</string>
   <string name="label_hr">ساعة</string>
+  <string name="label_day">د</string>
   <string name="label_m">م</string>
   <string name="label_km">كم</string>
   <string name="label_ft">قدم</string>
@@ -281,5 +282,4 @@
   <string name="region">المنطقة</string>
   <string name="label_enable_open_data">تمكين البيانات المفتوحة</string>
   <string name="label_enable_open_data_des">البيانات المفتوحة يستخدم إسري من أجل المسارات و الأماكن بحث وظائف إلى تعزيز ك تجربة.</string>
-  <string name="label_day">د</string>
 </resources>
