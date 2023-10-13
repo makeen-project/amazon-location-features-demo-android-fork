@@ -38,14 +38,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapboxMap
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener
+import java.text.DecimalFormat
+import java.util.regex.Pattern
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
-import java.util.regex.Pattern
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -570,7 +570,27 @@ class GeofenceUtils {
         mBottomSheetGeofenceListBehavior?.isHideable = false
         mBottomSheetGeofenceListBehavior?.isDraggable = true
         mBottomSheetGeofenceListBehavior?.isFitToContents = false
-        mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.58f
+        mBindingGeofenceList?.clGeofenceList?.post {
+            val clEmptyGeofenceListInnerHeight =
+                mBindingGeofenceList?.clEmptyGeofenceListInner?.height ?: 0
+            val clEmptyGeofenceListHeight =
+                mBindingGeofenceList?.clGeofenceListMain?.height ?: 0
+            val clGeofenceListHeight =
+                mBindingGeofenceList?.clGeofenceList?.height ?: 0
+
+            val topLogoMargin = clEmptyGeofenceListHeight - clGeofenceListHeight
+            val screenHeight = (mActivity as MainActivity).resources.displayMetrics.heightPixels
+            val isTablet = (mActivity as MainActivity).isTablet
+            val bottomNavHeight = if (isTablet) (mActivity as MainActivity).getBottomNavHeight().toFloat() else 0f
+            val topLogoHeight = if (isTablet) 0f else topLogoMargin.toFloat()
+
+            val halfExpandedRatio = if (screenHeight.toFloat() != 0.toFloat()) {
+                ((clEmptyGeofenceListInnerHeight.toFloat() + bottomNavHeight + topLogoHeight)) / screenHeight
+            } else {
+                0.55f
+            }
+            mBottomSheetGeofenceListBehavior?.halfExpandedRatio = halfExpandedRatio
+        }
         mBindingGeofenceList?.clGeofenceList?.context?.let {
             if ((mActivity as MainActivity).isTablet) {
                 mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)

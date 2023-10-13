@@ -566,14 +566,20 @@ fun Context.isInternetAvailable(): Boolean {
 }
 
 fun validateIdentityPoolId(mIdentityPoolId: String?, region: String?): Boolean {
-    val cognitoCredentialsProvider = CognitoCredentialsProvider(
-        mIdentityPoolId,
-        Regions.fromName(region)
-    )
+    val pattern = Pattern.compile(regionPattern)
+    val matcher = region?.let { pattern.matcher(it) }
+    if (matcher?.matches() != true) return false
     try {
+        val cognitoCredentialsProvider = CognitoCredentialsProvider(
+            mIdentityPoolId,
+            Regions.fromName(region)
+        )
         cognitoCredentialsProvider.refresh()
     } catch (exception: Exception) {
         if (exception is com.amazonaws.services.cognitoidentity.model.ResourceNotFoundException) {
+            return false
+        }
+        if (exception is IllegalArgumentException) {
             return false
         }
     }

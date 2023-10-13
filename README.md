@@ -14,13 +14,29 @@ Below are the requirements for development, running and testing.
 2. Java 11 or above.
 
 #### Pre-requisites
-
 1. Sign in to [Amazon AWS account](https://aws.amazon.com/)
-2. Run the [CF template](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/location-services.yaml) using your own AWS account and get `IdentityPoolId` and `region` from stack output
+2. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `us-east-1` region and get `IdentityPoolId`, `PinPointAppId`, `WebSocketUrl` from stack output's tab.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID`.
+    - `PinPointAppId` value will be added to `custom.properties` file against `ANALYTICS_APP_ID`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL`.
+    - Take region from IdentityPoolId (Character before ':') that value will be added to `custom.properties` file against `DEFAULT_REGION`.
+3. Run the [CF template](https://ap-southeast-1.console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `ap-southeast-1` region and get `IdentityPoolId`, `WebSocketUrl` from stack output's tab.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_AP`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL_AP`.
+4. Run the [CF template](https://eu-west-1.console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/create?stackName=amazon-location-default-unauth-resources&templateURL=https://amazon-location-demo-resources.s3.us-west-2.amazonaws.com/default-unauth-resources-template.yaml) or use the template from `/extra/default-unauth-resources-template.yaml` to create a cloudformation stack on AWS in `eu-west-1` region and get `IdentityPoolId`, `WebSocketUrl` from stack output's tab.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_EU`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL_EU`.
+5. After adding all above details in `custom.properties` file in Android studio then open `Build -> Clean project` after this run project.
+6. Run the [CF template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/main-cf-template.yaml) or use the template from `/extra/main-cf-template.yaml` using your own AWS account and get below data.
+    - `IdentityPoolId` value will be added to `custom.properties` file against `IDENTITY_POOL_ID`.
+    - `UserDomain` value will be added to `custom.properties` file against `USER_DOMAIN`.
+    - `UserPoolClientId` value will be added to `custom.properties` file against `USER_POOL_CLIENT_ID`.
+    - `UserPoolId` value will be added to `custom.properties` file against `USER_POOL_ID`.
+    - `WebSocketUrl` value will be added to `custom.properties` file against `WEB_SOCKET_URL`.
 
 Follow this [Document](https://location.aws.com/demo/help) for detailed info to create & configure a new Cloud formation.
 
-The required values can be found from the `Outputs` tab on your stack page created in step 2 above.
+The required values can be found from the `Outputs` tab on your stack page created in step 2, 3, 4 and 5 above.
 ## Configure
 
 Create *`custom.properties`* file inside the project root folder and add the details as below.
@@ -48,6 +64,10 @@ DEFAULT_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_REGION=xx-xxxx-x
 DEFAULT_IDENTITY_POOL_ID_EU=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 DEFAULT_IDENTITY_POOL_ID_AP=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
+SIMULATION_WEB_SOCKET_URL=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
+SIMULATION_WEB_SOCKET_URL_EU=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
+SIMULATION_WEB_SOCKET_URL_AP=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
+ANALYTICS_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 #### optional values to add after above if you want to run tests locally. (This can be a different stack only for testing)
@@ -122,6 +142,7 @@ Note:
     ./gradlew app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.SettingSignInTest
     ./gradlew app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.SettingAWSDisconnectingTest
     ./gradlew app:connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.main.ConnectToAWSTest
+
 ## Resources
 > Maps (Name - Style)
 - location.aws.com.demo.maps.Esri.DarkGrayCanvas - VectorEsriDarkGrayCanvas
@@ -137,6 +158,10 @@ Note:
 - location.aws.com.demo.maps.HERE.Imagery - RasterHereExploreSatellite
 - location.aws.com.demo.maps.Grab.StandardLight - VectorGrabStandardLight
 - location.aws.com.demo.maps.Grab.StandardDark - VectorGrabStandardDark
+- location.aws.com.demo.maps.OpenData.StandardLight - VectorOpenDataStandardLight
+- location.aws.com.demo.maps.OpenData.StandardDark - VectorOpenDataStandardDark
+- location.aws.com.demo.maps.OpenData.VisualizationLight - VectorOpenDataVisualizationLight
+- location.aws.com.demo.maps.OpenData.VisualizationDark - VectorOpenDataVisualizationDark
 
 > Place indexes (Name)
 - location.aws.com.demo.places.Esri.PlaceIndex

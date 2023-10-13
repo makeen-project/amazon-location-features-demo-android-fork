@@ -309,6 +309,10 @@ class MainActivity : BaseActivity(), CrashListener {
         mBinding.bottomNavigationMain.selectedItemId = R.id.menu_geofence
     }
 
+    fun getBottomNavHeight(): Int {
+        return mBinding.bottomNavigationMain.height
+    }
+
     private fun initObserver() {
         lifecycleScope.launchWhenStarted {
             mSignInViewModel.mSignInResponse.collect { handleResult ->

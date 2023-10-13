@@ -270,147 +270,158 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_amazon_logo_geofence_list">
 
-        <View
-            android:id="@+id/view_sheet_geofence_list"
-            android:layout_width="@dimen/dp_36"
-            android:layout_height="@dimen/dp_5"
-            android:layout_gravity="bottom|center"
-            android:layout_marginTop="@dimen/dp_10"
-            android:background="@drawable/bottom_sheet_view"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_empty_geofence_list_inner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/sheet_geofence_list_card_geo_fence"
-            android:layout_width="@dimen/dp_96"
-            android:layout_height="@dimen/dp_96"
-            android:layout_marginTop="@dimen/dp_36"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/dp_100"
-            app:cardElevation="@dimen/dp_0"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_sheet_geofence_list">
-
-            <androidx.appcompat.widget.AppCompatImageView
+            <View
+                android:id="@+id/view_sheet_geofence_list"
                 android:layout_width="@dimen/dp_36"
-                android:layout_height="@dimen/dp_36"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_geofence" />
+                android:layout_height="@dimen/dp_5"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:background="@drawable/bottom_sheet_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/sheet_geofence_list_card_geo_fence"
+                android:layout_width="@dimen/dp_96"
+                android:layout_height="@dimen/dp_96"
+                android:layout_marginTop="@dimen/dp_36"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/dp_100"
+                app:cardElevation="@dimen/dp_0"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_sheet_geofence_list">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_add_geofence_empty_geofence_list"
-            style="@style/SP20InterRegularMediumBlack1TextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_16"
-            android:fontFamily="@font/inter_semi_bold"
-            android:gravity="center"
-            android:textDirection="locale"
-            android:text="@string/menu_geofence"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sheet_geofence_list_card_geo_fence" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_geofence" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/sheet_geofence_list_tv_add_geofence_description"
-            style="@style/SP13HintRegularTextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dp_24"
-            android:layout_marginTop="@dimen/dp_8"
-            android:gravity="center"
-            android:textDirection="locale"
-            app:layout_constraintBottom_toTopOf="@+id/btn_try_geofence"
-            android:text="@string/add_geo_fence_1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_add_geofence_empty_geofence_list" />
-
-        <View
-            android:id="@+id/view_space"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_16"
-            app:layout_constraintTop_toBottomOf="@id/sheet_geofence_list_tv_add_geofence_description"/>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/btn_try_geofence"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="@dimen/dp_48"
-            android:layout_marginHorizontal="@dimen/dp_16"
-            android:paddingHorizontal="@dimen/dp_16"
-            app:cardBackgroundColor="@color/color_primary_green"
-            app:cardCornerRadius="@dimen/dp_8"
-            app:cardUseCompatPadding="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_space">
+            </com.google.android.material.card.MaterialCardView>
 
             <androidx.appcompat.widget.AppCompatTextView
-                style="@style/SP16BoldMediumBlackTextStyle"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_add_geofence_empty_geofence_list"
+                style="@style/SP20InterRegularMediumBlack1TextStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/label_try_trackers_amp_geofences_simulation"
-                android:textAllCaps="false"
+                android:layout_marginTop="@dimen/dp_16"
+                android:fontFamily="@font/inter_semi_bold"
+                android:gravity="center"
                 android:textDirection="locale"
-                android:gravity="center"
-                android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="@string/menu_geofence"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_direction"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/btn_add_geofence"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="@dimen/dp_48"
-            android:layout_marginHorizontal="@dimen/dp_16"
-            android:layout_marginTop="@dimen/dp_8"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="@dimen/dp_8"
-            android:paddingHorizontal="@dimen/dp_16"
-            app:cardElevation="@dimen/dp_0"
-            app:cardUseCompatPadding="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_try_geofence">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sheet_geofence_list_card_geo_fence" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_enable_geofence"
-                style="@style/SP16BoldMediumBlackTextStyle"
-                android:layout_width="wrap_content"
+                android:id="@+id/sheet_geofence_list_tv_add_geofence_description"
+                style="@style/SP13HintRegularTextStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/label_enable_live_geofences"
-                android:textAllCaps="false"
+                android:layout_marginHorizontal="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_8"
                 android:gravity="center"
-                android:textColor="@color/color_medium_black"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textDirection="locale"
+                app:layout_constraintBottom_toTopOf="@+id/btn_try_geofence"
+                android:text="@string/add_geo_fence_1"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_direction_sheet_geofence_list"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_add_geofence_empty_geofence_list" />
 
-        </com.google.android.material.card.MaterialCardView>
+            <View
+                android:id="@+id/view_space"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_16"
+                app:layout_constraintTop_toBottomOf="@id/sheet_geofence_list_tv_add_geofence_description"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_require_connection"
-            style="@style/SP13HintRegularTextStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/dp_24"
-            android:layout_marginTop="@dimen/dp_4"
-            android:gravity="center"
-            android:text="@string/label_requires_connection_to_aws_cloudformation"
-            android:textSize="@dimen/sp_10"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_add_geofence" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_try_geofence"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                android:paddingHorizontal="@dimen/dp_16"
+                app:cardBackgroundColor="@color/color_primary_green"
+                app:cardCornerRadius="@dimen/dp_8"
+                app:cardUseCompatPadding="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_space">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/SP16BoldMediumBlackTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/label_try_trackers_amp_geofences_simulation"
+                    android:textAllCaps="false"
+                    android:textDirection="locale"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_direction"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btn_add_geofence"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="@dimen/dp_48"
+                android:layout_marginHorizontal="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_8"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/dp_8"
+                android:paddingHorizontal="@dimen/dp_16"
+                app:cardElevation="@dimen/dp_0"
+                app:cardUseCompatPadding="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_try_geofence">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_enable_geofence"
+                    style="@style/SP16BoldMediumBlackTextStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/label_enable_live_geofences"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:textColor="@color/color_medium_black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/iv_direction_sheet_geofence_list"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_require_connection"
+                style="@style/SP13HintRegularTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/dp_24"
+                android:layout_marginTop="@dimen/dp_4"
+                android:gravity="center"
+                android:text="@string/label_requires_connection_to_aws_cloudformation"
+                android:textSize="@dimen/sp_10"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_add_geofence" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
