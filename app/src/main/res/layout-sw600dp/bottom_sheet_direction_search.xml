@@ -618,10 +618,18 @@
                         app:layout_constraintStart_toEndOf="@id/tv_drive"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_car"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:barrierDirection="end"
+                        app:constraint_referenced_ids="tv_drive_selected, tv_drive_distance, tv_drive" />
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_drive_minute"
                         style="@style/SP16HintRegularTextStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_0"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dp_4"
@@ -636,6 +644,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_drive_go"
                         app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@id/barrier_car"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="2 min" />
 
@@ -835,10 +844,18 @@
                         app:layout_constraintStart_toEndOf="@id/tv_walk"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_walk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:barrierDirection="end"
+                        app:constraint_referenced_ids="tv_walk_selected, tv_walk_distance, tv_walk" />
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_walk_minute"
                         style="@style/SP16HintRegularTextStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_0"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dp_4"
@@ -853,6 +870,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_walk_go"
                         app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@id/barrier_walk"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="7 min" />
 
@@ -1046,10 +1064,18 @@
                         app:layout_constraintStart_toEndOf="@id/tv_truck"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_truck"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:barrierDirection="end"
+                        app:constraint_referenced_ids="tv_truck_selected, tv_truck_distance, tv_truck" />
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_truck_minute"
                         style="@style/SP16HintRegularTextStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_0"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dp_4"
@@ -1064,6 +1090,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_truck_go"
                         app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@id/barrier_truck"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="7 min" />
 
@@ -1260,10 +1287,18 @@
                         app:layout_constraintStart_toEndOf="@id/tv_bicycle"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_bicycle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:barrierDirection="end"
+                        app:constraint_referenced_ids="tv_bicycle_selected, tv_bicycle_distance, tv_bicycle" />
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_bicycle_minute"
                         style="@style/SP16HintRegularTextStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_0"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dp_4"
@@ -1278,6 +1313,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_bicycle_go"
                         app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@id/barrier_bicycle"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="7 min" />
 
@@ -1475,10 +1511,18 @@
                         app:layout_constraintStart_toEndOf="@id/tv_motorcycle"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <androidx.constraintlayout.widget.Barrier
+                        android:id="@+id/barrier_motorcycle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:barrierDirection="end"
+                        app:constraint_referenced_ids="tv_motorcycle_selected, tv_motorcycle_distance, tv_motorcycle" />
+
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_motorcycle_minute"
                         style="@style/SP16HintRegularTextStyle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/dp_0"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginStart="@dimen/dp_4"
@@ -1493,6 +1537,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/card_motorcycle_go"
                         app:layout_constraintHorizontal_bias="1"
+                        app:layout_constraintStart_toEndOf="@id/barrier_motorcycle"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="7 min" />
 
