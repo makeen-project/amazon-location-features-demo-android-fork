@@ -2176,6 +2176,10 @@ class ExploreFragment :
             }
 
             cardMap.setOnClickListener {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < CLICK_TIME_DIFFERENCE) {
+                    return@setOnClickListener
+                }
+                mLastClickTime = SystemClock.elapsedRealtime()
                 mBaseActivity?.isTablet?.let { it1 ->
                     if (it1) {
                         mapStyleBottomSheetFragment =
@@ -2578,7 +2582,7 @@ class ExploreFragment :
                         }
                         activity?.hideKeyboard()
                         lifecycleScope.launch {
-                            delay(DELAY_500)
+                            delay(CLICK_DEBOUNCE)
                             mIsSwapClicked = false
                         }
                     }
@@ -2631,7 +2635,12 @@ class ExploreFragment :
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
                     }
-                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                    if (text.isNullOrEmpty()) {
+                        mViewModel.mSearchDirectionDestinationData = null
+                        hideViews(cardRoutingOption, cardMapOption, cardListRoutesOption, layoutCardError.root, clDriveLoader, clWalkLoader, clTruckLoader)
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion) {
                         cardRouteOptionHide()
                         clearMapLineMarker()
                         mViewModel.mSearchDirectionDestinationData = null
@@ -2652,7 +2661,12 @@ class ExploreFragment :
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
                     }
-                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                    if (text.isNullOrEmpty()) {
+                        mViewModel.mSearchDirectionOriginData = null
+                        hideViews(cardRoutingOption, cardMapOption, cardListRoutesOption, layoutCardError.root, clDriveLoader, clWalkLoader, clTruckLoader)
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion) {
                         cardRouteOptionHide()
                         clearMapLineMarker()
                         mViewModel.mSearchDirectionOriginData = null
@@ -2788,8 +2802,13 @@ class ExploreFragment :
 
             bottomSheetDirectionSearch.edtSearchDest.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    notifyAdapters()
-                    mViewModel.searchPlaceIndexForText(bottomSheetDirectionSearch.edtSearchDest.text.toString())
+                    if (checkInternetConnection() && bottomSheetDirectionSearch.edtSearchDest.text.toString().trim().isNotEmpty()) {
+                        mBinding.bottomSheetDirectionSearch.apply {
+                            clNoInternetConnectionDirectionSearch.hide()
+                        }
+                        notifyAdapters()
+                        mViewModel.searchPlaceIndexForText(bottomSheetDirectionSearch.edtSearchDest.text.toString())
+                    }
                     true
                 } else {
                     false
@@ -3614,7 +3633,7 @@ class ExploreFragment :
                         if (isMetric) {
                             showError(getString(R.string.error_distance_400))
                         } else {
-                            showError(String.format(getString(R.string.error_distance_248_miles), getFormatter()?.format(248.5)))
+                            showError(String.format(getString(R.string.error_distance_248_miles), getFormatter()?.format(248.5), getFormatter()?.format(24.85)))
                         }
                     }
                 } else {

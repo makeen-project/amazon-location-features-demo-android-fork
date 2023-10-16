@@ -329,4 +329,8 @@ object Units {
 
         return sanitizedUrl
     }
+
+    fun checkInternetConnection(context: Context): Boolean {
+        return context.isInternetAvailable()
+    }
 }

@@ -86,6 +86,10 @@ class AWSLocationHelper(
         mBaseActivity = baseActivity
     }
 
+    fun checkClientInitialize() :Boolean {
+        return mClient != null
+    }
+
     fun initCognitoCachingCredentialsProvider(): CognitoCredentialsProvider? {
         val idToken = mPreferenceManager.getValue(KEY_ID_TOKEN, "")
         var identityPoolId = mPreferenceManager.getValue(KEY_POOL_ID, "")

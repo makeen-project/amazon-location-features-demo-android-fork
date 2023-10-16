@@ -37,6 +37,7 @@ import com.aws.amazonlocation.utils.KEY_USER_DETAILS
 import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.google.android.material.snackbar.Snackbar
@@ -106,7 +107,9 @@ open class BaseActivity : AppCompatActivity() {
         mGeofenceUtils = GeofenceUtils()
 
         val preference = PreferenceManager(this)
-        mAWSLocationHelper.initAWSMobileClient(this@BaseActivity)
+        if (Units.checkInternetConnection(applicationContext)) {
+            initMobileClient()
+        }
         mTrackingUtils = TrackingUtils(preference, this@BaseActivity, mAWSLocationHelper)
         mSimulationUtils = SimulationUtils(preference, this@BaseActivity, mAWSLocationHelper)
         locationPermissionDialog()
@@ -123,6 +126,11 @@ open class BaseActivity : AppCompatActivity() {
         snackBar.show()
     }
 
+    fun initMobileClient() {
+        if (!mAWSLocationHelper.checkClientInitialize()) {
+            mAWSLocationHelper.initAWSMobileClient(this@BaseActivity)
+        }
+    }
     private fun locationPermissionDialog() {
         val dialogBuilder = AlertDialog.Builder(this, R.style.MyDialogTheme)
         dialogBuilder.setMessage(resources.getString(R.string.location_permission_is_required))
