@@ -125,6 +125,7 @@ class MainActivity : BaseActivity(), CrashListener {
         analyticsHelper?.startSession()
         checkRtl()
         makeTransparentStatusBar()
+        checkInternetObserver()
         reStartApp = mPreferenceManager.getBooleanValue(KEY_RE_START_APP, false)
         val mTab = mPreferenceManager.getValue(KEY_TAB_ENUM, "")
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
@@ -236,7 +237,6 @@ class MainActivity : BaseActivity(), CrashListener {
             val languageCode = getLanguageCode()
             languageCode?.let { setLocale(it, applicationContext) }
         }
-        checkInternetObserver()
     }
 
     private fun checkInternetObserver() {
