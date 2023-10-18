@@ -166,8 +166,8 @@
   <string name="no_route_found">没有 路线 找到</string>
   <string name="error_switch_to_here">距离 是 更大 比 400 千米， 不能 计算 通过 埃斯里， 好心地 开关 到 这里 提供者</string>
   <string name="error_switch_to_here_miles">距离 是 更大 比 %s mi， 不能 计算 通过 埃斯里， 好心地 开关 到 这里 提供者</string>
-  <string name="error_distance_400">在 数据源 埃斯里， 所有 航点 必须 是 之内 400 千米。</string>
-  <string name="error_distance_248_miles">在 数据源 埃斯里， 所有 航点 必须 是 之内 %smi。</string>
+  <string name="error_distance_400">在 数据源 Esri， 航点 为了 汽车 和 卡车 必须 是 之内 400 千米， 和 航点 为了 走路 必须 是 之内 40 千米。</string>
+  <string name="error_distance_248_miles">在 数据源 Esri， 航点 为了 汽车 和 卡车 必须 是 之内 %smi， 和 航点 为了 走路 必须 是 之内 %smi。</string>
   <string name="connect_to_aws_account">连接 AWS 账户</string>
   <string name="label_preview">预览</string>
   <string name="label_location_permission_denied">地点 许可 否认</string>

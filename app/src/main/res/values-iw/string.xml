@@ -166,8 +166,8 @@
   <string name="no_route_found">לא מסלול נמצא</string>
   <string name="error_switch_to_here">מרחק הווה רבתי מ 400 ק"מ, יכול\ לא לחשב דרך אסרי, באדיבות מתג כדי כאן ספק</string>
   <string name="error_switch_to_here_miles">מרחק הווה רבתי מ %s מי, יכול\ לא לחשב דרך אסרי, באדיבות מתג כדי כאן ספק</string>
-  <string name="error_distance_400">ב DataSource אסרי, כל נקודות ציון צריך להיות בפנים 400 ק"מ.</string>
-  <string name="error_distance_248_miles">ב DataSource אסרי, כל נקודות ציון צריך להיות בפנים %SMI.</string>
+  <string name="error_distance_400">ב מקור נתונים אסרי, נקודות דרך בשביל מכונית ו משאית צריך להיות בפנים 400 ק"מ, ו נקודות דרך בשביל ללכת צריך להיות בפנים 40 ק"מ.</string>
+  <string name="error_distance_248_miles">ב מקור נתונים אסרי, נקודות דרך בשביל מכונית ו משאית צריך להיות בפנים %smi, ו נקודות דרך בשביל ללכת צריך להיות בפנים %smi.</string>
   <string name="connect_to_aws_account">התחבר AWS חשבון</string>
   <string name="label_preview">תצוגה מקדימה</string>
   <string name="label_location_permission_denied">מיקום רשות נדחה</string>

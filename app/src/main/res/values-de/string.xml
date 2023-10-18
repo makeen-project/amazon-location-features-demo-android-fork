@@ -166,8 +166,8 @@
   <string name="no_route_found">Nein Route gefunden</string>
   <string name="error_switch_to_here">Entfernung ist größer als 400 km, kann\nicht berechnen über Esri, freundlich Schalter zu HIER Anbieter</string>
   <string name="error_switch_to_here_miles">Entfernung ist größer als %s mi, kann\nicht berechnen über Esri, freundlich Schalter zu HIER Anbieter</string>
-  <string name="error_distance_400">In Datenquelle Esri, alles Wegpunkte Muss Sein innerhalb 400 km.</string>
-  <string name="error_distance_248_miles">In Datenquelle Esri, alles Wegpunkte Muss Sein innerhalb %smi.</string>
+  <string name="error_distance_400">In Datenquelle Esri, Wegpunkte zum Auto und lkw Muss Sein innerhalb 400 km, und Wegpunkte zum gehen Muss Sein innerhalb 40 km.</string>
+  <string name="error_distance_248_miles">In Datenquelle Esri, Wegpunkte zum Auto und lkw Muss Sein innerhalb %smi, und Wegpunkte zum gehen Muss Sein innerhalb %smi.</string>
   <string name="connect_to_aws_account">Verbinden AWS Konto</string>
   <string name="label_preview">Vorschau</string>
   <string name="label_location_permission_denied">Standort Genehmigung verweigert</string>
