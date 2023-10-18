@@ -216,6 +216,7 @@
   <string name="label_sec">秒</string>
   <string name="label_min">分鐘</string>
   <string name="label_hr">小時</string>
+  <string name="label_day">d</string>
   <string name="label_m">米</string>
   <string name="label_km">公里</string>
   <string name="label_ft">英呎</string>

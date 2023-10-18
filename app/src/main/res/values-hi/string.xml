@@ -216,6 +216,7 @@
   <string name="label_sec">सेकंड</string>
   <string name="label_min">मिनट</string>
   <string name="label_hr">घंटा</string>
+  <string name="label_day">d</string>
   <string name="label_m">मी</string>
   <string name="label_km">किमी</string>
   <string name="label_ft">फुट</string>
