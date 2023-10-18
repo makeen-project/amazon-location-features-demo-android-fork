@@ -3043,21 +3043,6 @@ class ExploreFragment :
                 }
             }
 
-            bottomSheetDirectionSearch.edtSearchDest.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if (checkInternetConnection() && bottomSheetDirectionSearch.edtSearchDest.text.toString().trim().isNotEmpty()) {
-                        mBinding?.apply {
-                            bottomSheetDirectionSearch.clNoInternetConnectionDirectionSearch.hide()
-                        }
-                        notifyAdapters()
-                        mViewModel.searchPlaceIndexForText(bottomSheetDirectionSearch.edtSearchDest.text.toString())
-                    }
-                    true
-                } else {
-                    false
-                }
-            }
-
             bottomSheetSearch.ivClose.setOnClickListener {
                 bottomSheetSearch.edtSearchPlaces.setText("")
                 mMapHelper.clearMarker()
@@ -3074,6 +3059,21 @@ class ExploreFragment :
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     notifyAdapters()
                     mViewModel.searchPlaceIndexForText(bottomSheetSearch.edtSearchPlaces.text.toString())
+                    true
+                } else {
+                    false
+                }
+            }
+
+            bottomSheetDirectionSearch.edtSearchDest.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (checkInternetConnection() && bottomSheetDirectionSearch.edtSearchDest.text.toString().trim().isNotEmpty()) {
+                        mBinding?.apply {
+                            bottomSheetDirectionSearch.clNoInternetConnectionDirectionSearch.hide()
+                        }
+                        notifyAdapters()
+                        mViewModel.searchPlaceIndexForText(bottomSheetDirectionSearch.edtSearchDest.text.toString())
+                    }
                     true
                 } else {
                     false
