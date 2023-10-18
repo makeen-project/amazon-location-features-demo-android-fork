@@ -216,6 +216,7 @@
   <string name="label_sec">ثانية</string>
   <string name="label_min">دقيقة</string>
   <string name="label_hr">ساعة</string>
+  <string name="label_day">د</string>
   <string name="label_m">م</string>
   <string name="label_km">كم</string>
   <string name="label_ft">قدم</string>

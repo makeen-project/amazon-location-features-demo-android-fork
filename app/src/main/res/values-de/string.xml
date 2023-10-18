@@ -216,6 +216,7 @@
   <string name="label_sec">Sekunde</string>
   <string name="label_min">Min.</string>
   <string name="label_hr">Std.</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">km</string>
   <string name="label_ft">ft</string>

@@ -73,37 +73,65 @@ object Units {
 
     fun getTime(context: Context, second: Double): String {
         val mSeconds = second.toInt().toLong()
-        TimeUnit.SECONDS.toDays(mSeconds).toInt()
+        val mDays = TimeUnit.SECONDS.toDays(mSeconds)
         val mHours: Long =
-            TimeUnit.SECONDS.toHours(mSeconds)
+            TimeUnit.SECONDS.toHours(mSeconds) - TimeUnit.SECONDS.toDays(mSeconds) * 24
         val mMinute: Long =
             TimeUnit.SECONDS.toMinutes(mSeconds) - TimeUnit.SECONDS.toHours(mSeconds) * 60
         val mSecondNew: Long =
             TimeUnit.SECONDS.toSeconds(mSeconds) - TimeUnit.SECONDS.toMinutes(mSeconds) * 60
-
-        var mTime = if (mMinute == 0L && mHours == 0L) {
-            buildString {
-                append(mSecondNew)
-                append(" ")
-                append(context.getString(R.string.label_sec))
+        var mTime: String
+        if (mDays != 0L) {
+            mTime = if (mHours != 0L) {
+                buildString {
+                    append(mDays)
+                    append(" ")
+                    append(context.getString(R.string.label_day))
+                    append(" ")
+                    append(mHours)
+                    append(" ")
+                    append(context.getString(R.string.label_hr))
+                }
+            } else {
+                buildString {
+                    append(mDays)
+                    append(" ")
+                    append(context.getString(R.string.label_day))
+                }
             }
         } else {
-            buildString {
-                append(mMinute)
-                append(" ")
-                append(context.getString(R.string.label_min))
+            mTime = if (mMinute == 0L && mHours == 0L) {
+                buildString {
+                    append(mSecondNew)
+                    append(" ")
+                    append(context.getString(R.string.label_sec))
+                }
+            } else {
+                buildString {
+                    append(mMinute)
+                    append(" ")
+                    append(context.getString(R.string.label_min))
+                }
             }
-        }
 
         if (mHours != 0L) {
-            mTime = buildString {
-                append(mHours)
-                append(" ")
-                append(context.getString(R.string.label_hr))
-                append(" ")
-                append(mTime)
+            mTime = if (mMinute != 0L) {
+                buildString {
+                    append(mHours)
+                    append(" ")
+                    append(context.getString(R.string.label_hr))
+                    append(" ")
+                    append(mTime)
+                }
+            } else {
+                buildString {
+                    append(mHours)
+                    append(" ")
+                    append(context.getString(R.string.label_hr))
+                }
             }
         }
+            }
         return mTime
     }
 

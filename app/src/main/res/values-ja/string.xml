@@ -216,6 +216,7 @@
   <string name="label_sec">秒</string>
   <string name="label_min">最小</string>
   <string name="label_hr">時間</string>
+  <string name="label_day">d</string>
   <string name="label_m">m</string>
   <string name="label_km">キロ</string>
   <string name="label_ft">フィート</string>
