@@ -70,6 +70,8 @@ class BottomSheetHelper {
                             view.ivAmazonInfoSearchSheet.alpha = 0f
                             isSearchSheetOpen = true
                             view.tvSearchCancel?.show()
+                            view.edtSearchPlaces.requestFocus()
+                            activity.showKeyboard()
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }
@@ -252,6 +254,10 @@ class BottomSheetHelper {
                             mBaseActivity?.bottomNavigationVisibility(false)
                             view.imgAmazonLogoDirectionSearchSheet.alpha = 0f
                             view.ivAmazonInfoDirectionSearchSheet.alpha = 0f
+                            if (!view.edtSearchDest.hasFocus()) {
+                                view.edtSearchDirection.requestFocus()
+                            }
+                            mBaseActivity?.showKeyboard()
                         }
                         BottomSheetBehavior.STATE_DRAGGING -> {
                         }

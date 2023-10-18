@@ -55,6 +55,7 @@ import com.aws.amazonlocation.utils.SOURCE
 import com.aws.amazonlocation.utils.SOURCE_SIMULATION_ICON
 import com.aws.amazonlocation.utils.TRACKER
 import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.Units.checkInternetConnection
 import com.aws.amazonlocation.utils.Units.getSimulationWebSocketUrl
 import com.aws.amazonlocation.utils.Units.readRouteData
 import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
@@ -158,7 +159,11 @@ class SimulationUtils(
                 mBottomSheetSimulationBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
-        simulationInterface?.getGeofenceList()
+        mActivity?.let {
+            if (checkInternetConnection(it.applicationContext)) {
+                simulationInterface?.getGeofenceList()
+            }
+        }
         setBounds()
         mFragmentActivity?.applicationContext?.let { context ->
             notificationHelper = NotificationHelper(context)
@@ -405,7 +410,11 @@ class SimulationUtils(
             val position = arrayListOf<Double>()
             position.add(latLng.longitude)
             position.add(latLng.latitude)
-            simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
+            mActivity?.let {
+                if (checkInternetConnection(it.applicationContext)) {
+                    simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
+                }
+            }
 
             mMapHelper?.startAnimation(latLng, busIndex)
             delay(DELAY_1000)
@@ -708,7 +717,14 @@ class SimulationUtils(
                         viewLoader.show()
                         tvStopTracking.hide()
                         cardStartTracking.isEnabled = false
-                        startMqttManager()
+                        mActivity?.let {
+                            if (checkInternetConnection(it.applicationContext)) {
+                                startMqttManager()
+                            } else {
+                                mIsLocationUpdateEnable = true
+                                startTracking()
+                            }
+                        }
                     }
                 }
             }

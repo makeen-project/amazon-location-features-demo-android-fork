@@ -166,8 +166,8 @@
   <string name="no_route_found">沒有 路線 發現</string>
   <string name="error_switch_to_here">距離 是 更大 比 400 公里, 不能\ 計算 通過 埃斯里, 好心 切換器 至 這裡 供應商</string>
   <string name="error_switch_to_here_miles">距離 是 更大 比 %s 英哩, 不能\ 計算 通過 埃斯里, 好心 切換器 至 這裡 供應商</string>
-  <string name="error_distance_400">在 資料來源 埃斯里, 所有 航點 必須 是 內 四百公里</string>
-  <string name="error_distance_248_miles">在 資料來源 埃斯里, 所有 航點 必須 是 內 %smi.</string>
+  <string name="error_distance_400">在 資料來源 埃斯里， 航點 為了 汽車 和 卡車 必須 是 內 400 公里， 和 航點 為了 走路 必須 是 內 40 公里。</string>
+  <string name="error_distance_248_miles">在 資料來源 埃斯里， 航點 為了 汽車 和 卡車 必須 是 內 %sMI， 和 航點 為了 走路 必須 是 內 %sMI。</string>
   <string name="connect_to_aws_account">連接 亞馬遜網路服務公司 帳號</string>
   <string name="label_preview">預覽</string>
   <string name="label_location_permission_denied">位置 允許 否認</string>
