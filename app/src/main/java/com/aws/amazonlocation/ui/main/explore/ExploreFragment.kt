@@ -2528,9 +2528,11 @@ class ExploreFragment :
 
                 ivSwapLocation.setOnClickListener {
                     if (checkInternetConnection() && !mIsSwapClicked && !checkDirectionLoaderVisible()) {
+                        mViewModel.searchDebounce = DELAY_300
                         mIsSwapClicked = true
-                        mLastClickTime = SystemClock.elapsedRealtime()
-                        showDirectionSearchShimmer()
+                        if (!edtSearchDest.text.isNullOrEmpty() && !edtSearchDirection.text.isNullOrEmpty()) {
+                            showDirectionSearchShimmer()
+                        }
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
@@ -2582,8 +2584,9 @@ class ExploreFragment :
                         }
                         activity?.hideKeyboard()
                         lifecycleScope.launch {
-                            delay(CLICK_DEBOUNCE)
+                            delay(DELAY_300)
                             mIsSwapClicked = false
+                            mViewModel.searchDebounce = CLICK_DEBOUNCE
                         }
                     }
                 }
@@ -2630,7 +2633,7 @@ class ExploreFragment :
                         isDataSearchForDestination = false
                     }
                 }
-                edtSearchDest.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+                edtSearchDest.textChanges().debounce(mViewModel.searchDebounce).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
@@ -2656,7 +2659,7 @@ class ExploreFragment :
                     checkMyLocationUI(text, edtSearchDirection)
                 }.launchIn(lifecycleScope)
 
-                edtSearchDirection.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+                edtSearchDirection.textChanges().debounce(mViewModel.searchDebounce).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
