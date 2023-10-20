@@ -28,6 +28,7 @@ import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
 import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
 import com.aws.amazonlocation.utils.ATTRIBUTE_SATELLITE
 import com.aws.amazonlocation.utils.ATTRIBUTE_TRUCK
+import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyles
 import com.aws.amazonlocation.utils.TRAVEL_MODE_BICYCLE
@@ -73,6 +74,7 @@ class ExploreViewModel @Inject constructor(
     var providerOptions = ArrayList<FilterOption>()
     var attributeOptions = ArrayList<FilterOption>()
     var typeOptions = ArrayList<FilterOption>()
+    var searchDebounce = CLICK_DEBOUNCE
 
     private val _searchForSuggestionsResultList =
         Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)
