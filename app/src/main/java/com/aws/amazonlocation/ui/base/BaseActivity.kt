@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.Settings
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -82,19 +81,23 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (mPreferenceManager.getValue(KEY_NEAREST_REGION, "") == "") {
-            val latencyChecker = LatencyChecker()
-            val urls = arrayListOf<String>()
-            regionList.forEach {
-                urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
-            }
+            if (Units.checkInternetConnection(applicationContext)) {
+                val latencyChecker = LatencyChecker()
+                val urls = arrayListOf<String>()
+                regionList.forEach {
+                    urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
+                }
 
-            val (fastestUrl, _) = runBlocking { latencyChecker.checkLatencyForUrls(urls) }
-            regionList.forEach {
-                if (fastestUrl != null) {
-                    if (fastestUrl.contains(it)) {
-                        mPreferenceManager.setValue(KEY_NEAREST_REGION, it)
+                val (fastestUrl, _) = runBlocking { latencyChecker.checkLatencyForUrls(urls) }
+                regionList.forEach {
+                    if (fastestUrl != null) {
+                        if (fastestUrl.contains(it)) {
+                            mPreferenceManager.setValue(KEY_NEAREST_REGION, it)
+                        }
                     }
                 }
+            } else {
+                mPreferenceManager.setValue(KEY_NEAREST_REGION, regionList[0])
             }
         }
         try {
