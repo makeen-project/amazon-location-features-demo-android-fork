@@ -74,7 +74,6 @@ class ExploreViewModel @Inject constructor(
     var providerOptions = ArrayList<FilterOption>()
     var attributeOptions = ArrayList<FilterOption>()
     var typeOptions = ArrayList<FilterOption>()
-    var searchDebounce = CLICK_DEBOUNCE
 
     private val _searchForSuggestionsResultList =
         Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)
