@@ -222,6 +222,14 @@ fun EditText.textChanges(): Flow<CharSequence?> {
     }.onStart { emit(text) }
 }
 
+fun Activity.showKeyboard() {
+    val imm: InputMethodManager =
+        getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    var view = currentFocus
+    if (view == null) view = View(this)
+    imm.showSoftInput(view, 0)
+}
+
 // hide the keyboard
 fun Activity.hideKeyboard() {
     val imm: InputMethodManager =

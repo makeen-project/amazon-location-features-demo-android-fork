@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.Settings
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +36,7 @@ import com.aws.amazonlocation.utils.KEY_USER_DETAILS
 import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.google.android.material.snackbar.Snackbar
@@ -81,19 +81,23 @@ open class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (mPreferenceManager.getValue(KEY_NEAREST_REGION, "") == "") {
-            val latencyChecker = LatencyChecker()
-            val urls = arrayListOf<String>()
-            regionList.forEach {
-                urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
-            }
+            if (Units.checkInternetConnection(applicationContext)) {
+                val latencyChecker = LatencyChecker()
+                val urls = arrayListOf<String>()
+                regionList.forEach {
+                    urls.add(String.format(BuildConfig.AWS_NEAREST_REGION_CHECK_URL, it))
+                }
 
-            val (fastestUrl, _) = runBlocking { latencyChecker.checkLatencyForUrls(urls) }
-            regionList.forEach {
-                if (fastestUrl != null) {
-                    if (fastestUrl.contains(it)) {
-                        mPreferenceManager.setValue(KEY_NEAREST_REGION, it)
+                val (fastestUrl, _) = runBlocking { latencyChecker.checkLatencyForUrls(urls) }
+                regionList.forEach {
+                    if (fastestUrl != null) {
+                        if (fastestUrl.contains(it)) {
+                            mPreferenceManager.setValue(KEY_NEAREST_REGION, it)
+                        }
                     }
                 }
+            } else {
+                mPreferenceManager.setValue(KEY_NEAREST_REGION, regionList[0])
             }
         }
         try {
@@ -106,7 +110,9 @@ open class BaseActivity : AppCompatActivity() {
         mGeofenceUtils = GeofenceUtils()
 
         val preference = PreferenceManager(this)
-        mAWSLocationHelper.initAWSMobileClient(this@BaseActivity)
+        if (Units.checkInternetConnection(applicationContext)) {
+            initMobileClient()
+        }
         mTrackingUtils = TrackingUtils(preference, this@BaseActivity, mAWSLocationHelper)
         mSimulationUtils = SimulationUtils(preference, this@BaseActivity, mAWSLocationHelper)
         locationPermissionDialog()
@@ -123,6 +129,11 @@ open class BaseActivity : AppCompatActivity() {
         snackBar.show()
     }
 
+    fun initMobileClient() {
+        if (!mAWSLocationHelper.checkClientInitialize()) {
+            mAWSLocationHelper.initAWSMobileClient(this@BaseActivity)
+        }
+    }
     private fun locationPermissionDialog() {
         val dialogBuilder = AlertDialog.Builder(this, R.style.MyDialogTheme)
         dialogBuilder.setMessage(resources.getString(R.string.location_permission_is_required))

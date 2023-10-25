@@ -40,6 +40,7 @@ const val DELAY_300 = 300L
 const val DELAY_1000 = 1000L
 const val DELAY_SIMULATION_2000 = 2000L
 const val DELAY_LANGUAGE_3000 = 3000L
+const val CLICK_TIME_DIFFERENCE = 1500
 const val KEY_AVOID_TOLLS = "Avoid Tolls"
 const val KEY_AVOID_FERRIES = "Avoid Ferries"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"

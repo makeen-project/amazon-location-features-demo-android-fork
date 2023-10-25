@@ -28,6 +28,7 @@ import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
 import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
 import com.aws.amazonlocation.utils.ATTRIBUTE_SATELLITE
 import com.aws.amazonlocation.utils.ATTRIBUTE_TRUCK
+import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapStyles
 import com.aws.amazonlocation.utils.TRAVEL_MODE_BICYCLE
