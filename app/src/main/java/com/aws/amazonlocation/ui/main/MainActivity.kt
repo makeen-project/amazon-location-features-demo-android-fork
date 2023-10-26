@@ -51,8 +51,13 @@ import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.*
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_FRAGMENT_LOAD
+import com.aws.amazonlocation.utils.Units.checkInternetConnection
 import java.util.Date
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -72,6 +77,7 @@ class MainActivity : BaseActivity(), CrashListener {
     private var mBottomSheetDialog: Dialog? = null
     private var alertDialog: Dialog? = null
     private var currentPage: String? = null
+    private var connectivityObserver: ConnectivityObserveInterface? = null
     var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             checkMap()
@@ -119,6 +125,7 @@ class MainActivity : BaseActivity(), CrashListener {
         analyticsHelper?.startSession()
         checkRtl()
         makeTransparentStatusBar()
+        checkInternetObserver()
         reStartApp = mPreferenceManager.getBooleanValue(KEY_RE_START_APP, false)
         val mTab = mPreferenceManager.getValue(KEY_TAB_ENUM, "")
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
@@ -232,6 +239,22 @@ class MainActivity : BaseActivity(), CrashListener {
         }
     }
 
+    private fun checkInternetObserver() {
+        connectivityObserver = NetworkConnectivityObserveInterface(applicationContext)
+        connectivityObserver?.observer()?.onEach {
+            when (it) {
+                ConnectivityObserveInterface.ConnectionStatus.Available -> {
+                    initMobileClient()
+                }
+                ConnectivityObserveInterface.ConnectionStatus.Lost -> {
+                }
+                ConnectivityObserveInterface.ConnectionStatus.Unavailable -> {
+                }
+                else -> {
+                }
+            }
+        }?.launchIn(CoroutineScope(Dispatchers.Main))
+    }
     // check rtl layout
     private fun checkRtl() {
         if (isTablet) {
@@ -657,9 +680,11 @@ class MainActivity : BaseActivity(), CrashListener {
             mBottomSheetHelper.hideMapStyleSheet()
         }
         showSimulationTop()
-        if (!isSimulationPolicyAttached) {
-            lifecycleScope.launch {
-                setSimulationIotPolicy()
+        if (checkInternetConnection(applicationContext)) {
+            if (!isSimulationPolicyAttached) {
+                lifecycleScope.launch {
+                    setSimulationIotPolicy()
+                }
             }
         }
         mGeofenceUtils?.hideAllGeofenceBottomSheet()

@@ -1866,6 +1866,7 @@ class ExploreFragment :
     }
 
     private fun BottomSheetDirectionSearchBinding.showAllApiFailed() {
+        clMyLocation.root.hide()
         cardMapOption.hide()
         layoutCardError.groupCardErrorNoSearchFound.show()
         layoutCardError.root.show()
@@ -2176,6 +2177,10 @@ class ExploreFragment :
             }
 
             cardMap.setOnClickListener {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < CLICK_TIME_DIFFERENCE) {
+                    return@setOnClickListener
+                }
+                mLastClickTime = SystemClock.elapsedRealtime()
                 mBaseActivity?.isTablet?.let { it1 ->
                     if (it1) {
                         mapStyleBottomSheetFragment =
@@ -2526,7 +2531,9 @@ class ExploreFragment :
                     if (checkInternetConnection() && !mIsSwapClicked && !checkDirectionLoaderVisible()) {
                         mIsSwapClicked = true
                         mLastClickTime = SystemClock.elapsedRealtime()
-                        showDirectionSearchShimmer()
+                        if (!edtSearchDest.text.isNullOrEmpty() && !edtSearchDirection.text.isNullOrEmpty()) {
+                            showDirectionSearchShimmer()
+                        }
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mMapHelper.removeMarkerAndLine()
                             clearDirectionData()
@@ -2574,6 +2581,12 @@ class ExploreFragment :
                                 mViewModel.mSearchDirectionDestinationData = originData
                                 mViewModel.mSearchDirectionDestinationData?.isDestination = true
                                 showOriginToDestinationRoute()
+                            } else if (mViewModel.mSearchDirectionOriginData != null) {
+                                mViewModel.mSearchDirectionDestinationData = mViewModel.mSearchDirectionOriginData
+                                mViewModel.mSearchDirectionOriginData = null
+                            } else if (mViewModel.mSearchDirectionDestinationData != null) {
+                                mViewModel.mSearchDirectionOriginData = mViewModel.mSearchDirectionDestinationData
+                                mViewModel.mSearchDirectionDestinationData = null
                             }
                         }
                         activity?.hideKeyboard()
@@ -2626,12 +2639,17 @@ class ExploreFragment :
                         isDataSearchForDestination = false
                     }
                 }
-                edtSearchDest.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+                edtSearchDest.textChanges().debounce(DELAY_500).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
                     }
-                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                    if (text.isNullOrEmpty()) {
+                        mViewModel.mSearchDirectionDestinationData = null
+                        hideViews(cardRoutingOption, cardMapOption, cardListRoutesOption, layoutCardError.root, clDriveLoader, clWalkLoader, clTruckLoader)
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSet && !mIsSwapClicked && mViewModel.mIsPlaceSuggestion) {
                         cardRouteOptionHide()
                         clearMapLineMarker()
                         mViewModel.mSearchDirectionDestinationData = null
@@ -2647,12 +2665,17 @@ class ExploreFragment :
                     checkMyLocationUI(text, edtSearchDirection)
                 }.launchIn(lifecycleScope)
 
-                edtSearchDirection.textChanges().debounce(CLICK_DEBOUNCE).onEach { text ->
+                edtSearchDirection.textChanges().debounce(DELAY_500).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
                     }
-                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion && !text.isNullOrEmpty()) {
+                    if (text.isNullOrEmpty()) {
+                        mViewModel.mSearchDirectionOriginData = null
+                        hideViews(cardRoutingOption, cardMapOption, cardListRoutesOption, layoutCardError.root, clDriveLoader, clWalkLoader, clTruckLoader)
+                        return@onEach
+                    }
+                    if (mBottomSheetHelper.isDirectionSearchSheetVisible() && !mIsDirectionDataSetNew && !mIsSwapClicked && !mIsDirectionDataSet && mViewModel.mIsPlaceSuggestion) {
                         cardRouteOptionHide()
                         clearMapLineMarker()
                         mViewModel.mSearchDirectionOriginData = null
@@ -2788,8 +2811,13 @@ class ExploreFragment :
 
             bottomSheetDirectionSearch.edtSearchDest.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    notifyAdapters()
-                    mViewModel.searchPlaceIndexForText(bottomSheetDirectionSearch.edtSearchDest.text.toString())
+                    if (checkInternetConnection() && bottomSheetDirectionSearch.edtSearchDest.text.toString().trim().isNotEmpty()) {
+                        mBinding.bottomSheetDirectionSearch.apply {
+                            clNoInternetConnectionDirectionSearch.hide()
+                        }
+                        notifyAdapters()
+                        mViewModel.searchPlaceIndexForText(bottomSheetDirectionSearch.edtSearchDest.text.toString())
+                    }
                     true
                 } else {
                     false
@@ -3614,7 +3642,7 @@ class ExploreFragment :
                         if (isMetric) {
                             showError(getString(R.string.error_distance_400))
                         } else {
-                            showError(String.format(getString(R.string.error_distance_248_miles), getFormatter()?.format(248.5)))
+                            showError(String.format(getString(R.string.error_distance_248_miles), getFormatter()?.format(248.5), getFormatter()?.format(24.85)))
                         }
                     }
                 } else {
@@ -4013,7 +4041,9 @@ class ExploreFragment :
                     if (mMapHelper.isGrabSelectedAndOutsideBound) {
                         mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
                     } else {
-                        mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                        if (!mBinding.bottomSheetDirectionSearch.layoutCardError.root.isVisible) {
+                            mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                        }
                     }
                 }
             }
