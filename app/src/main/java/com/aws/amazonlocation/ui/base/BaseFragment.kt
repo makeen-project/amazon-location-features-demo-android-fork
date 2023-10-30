@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.utils.AWSLocationHelper
 import com.aws.amazonlocation.utils.BottomSheetHelper

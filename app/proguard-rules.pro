@@ -30,6 +30,7 @@
 -keep class com.amazon.** { *; }
 -keep class com.amazonaws.** { *; }
 -keep class com.amplifyframework.** { *; }
+-keep class * extends androidx.fragment.app.Fragment{}
 -dontwarn com.amazonaws.mobileconnectors.cognitoauth.**
 -dontwarn com.amazonaws.mobile.auth.**
 # AWS SDK
