@@ -1866,6 +1866,7 @@ class ExploreFragment :
     }
 
     private fun BottomSheetDirectionSearchBinding.showAllApiFailed() {
+        clMyLocation.root.hide()
         cardMapOption.hide()
         layoutCardError.groupCardErrorNoSearchFound.show()
         layoutCardError.root.show()
@@ -2529,8 +2530,8 @@ class ExploreFragment :
 
                 ivSwapLocation.setOnClickListener {
                     if (checkInternetConnection() && !mIsSwapClicked && !checkDirectionLoaderVisible()) {
-                        mViewModel.searchDebounce = DELAY_300
                         mIsSwapClicked = true
+                        mLastClickTime = SystemClock.elapsedRealtime()
                         if (!edtSearchDest.text.isNullOrEmpty() && !edtSearchDirection.text.isNullOrEmpty()) {
                             showDirectionSearchShimmer()
                         }
@@ -2581,13 +2582,18 @@ class ExploreFragment :
                                 mViewModel.mSearchDirectionDestinationData = originData
                                 mViewModel.mSearchDirectionDestinationData?.isDestination = true
                                 showOriginToDestinationRoute()
+                            } else if (mViewModel.mSearchDirectionOriginData != null) {
+                                mViewModel.mSearchDirectionDestinationData = mViewModel.mSearchDirectionOriginData
+                                mViewModel.mSearchDirectionOriginData = null
+                            } else if (mViewModel.mSearchDirectionDestinationData != null) {
+                                mViewModel.mSearchDirectionOriginData = mViewModel.mSearchDirectionDestinationData
+                                mViewModel.mSearchDirectionDestinationData = null
                             }
                         }
                         activity?.hideKeyboard()
                         lifecycleScope.launch {
-                            delay(DELAY_300)
+                            delay(DELAY_500)
                             mIsSwapClicked = false
-                            mViewModel.searchDebounce = CLICK_DEBOUNCE
                         }
                     }
                 }
@@ -2634,7 +2640,7 @@ class ExploreFragment :
                         isDataSearchForDestination = false
                     }
                 }
-                edtSearchDest.textChanges().debounce(mViewModel.searchDebounce).onEach { text ->
+                edtSearchDest.textChanges().debounce(DELAY_500).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
@@ -2660,7 +2666,7 @@ class ExploreFragment :
                     checkMyLocationUI(text, edtSearchDirection)
                 }.launchIn(lifecycleScope)
 
-                edtSearchDirection.textChanges().debounce(mViewModel.searchDebounce).onEach { text ->
+                edtSearchDirection.textChanges().debounce(DELAY_500).onEach { text ->
                     updateDirectionSearchUI(text.isNullOrEmpty())
                     if (text?.trim().toString().lowercase() == getString(R.string.label_my_location).trim().lowercase()) {
                         return@onEach
@@ -4036,7 +4042,9 @@ class ExploreFragment :
                     if (mMapHelper.isGrabSelectedAndOutsideBound) {
                         mBinding.bottomSheetDirectionSearch.clMyLocation.root.hide()
                     } else {
-                        mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                        if (!mBinding.bottomSheetDirectionSearch.layoutCardError.root.isVisible) {
+                            mBinding.bottomSheetDirectionSearch.clMyLocation.root.show()
+                        }
                     }
                 }
             }
