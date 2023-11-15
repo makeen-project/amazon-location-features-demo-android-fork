@@ -235,6 +235,7 @@ fun Activity.hideSoftKeyboard(input: TextInputEditText) {
     val imm = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(input.windowToken, 0)
 }
+
 fun checkLatLngValid(latitude: Double?, longitude: Double?): Boolean {
     return latitude?.toInt() in -90 until 90 && longitude?.toInt() in -180 until 180
 }
@@ -305,7 +306,8 @@ fun getRegion(region: String?, subRegion: String?, country: String?): String {
 
 fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
     val context = termsOfUse.context
-    val spannableString = SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString =
+        SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
     if (termsOfUse.text.contains(STRING_REPLACE_KEY)) {
         val text = termsOfUse.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -364,7 +366,8 @@ fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
 
 fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString =
+        SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
     if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
         val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -432,7 +435,8 @@ fun changeClickHereColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString =
+        SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
     if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
         val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -447,10 +451,13 @@ fun changeClickHereColor(
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
                         when (conditionPrivacy.text.toString()) {
-                            context.resources.getString(R.string.how_to_connect_1_1).replace(STRING_REPLACE_KEY, "") -> {
+                            context.resources.getString(R.string.how_to_connect_1_1)
+                                .replace(STRING_REPLACE_KEY, "") -> {
                                 mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
                             }
-                            context.resources.getString(R.string.label_connected_title_1).replace(STRING_REPLACE_KEY, "") -> {
+
+                            context.resources.getString(R.string.label_connected_title_1)
+                                .replace(STRING_REPLACE_KEY, "") -> {
                                 mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
                             }
                         }
@@ -601,7 +608,9 @@ fun validateUserPoolClientId(mUserPoolClientId: String?): Boolean {
 }
 
 fun checkSessionValid(mPreferenceManager: PreferenceManager): Boolean {
-    if (AWSMobileClient.getInstance().currentUserState().userState.name == UserState.SIGNED_IN.name) {
+    if (AWSMobileClient.getInstance()
+            .currentUserState().userState.name == UserState.SIGNED_IN.name
+    ) {
         val accessToken = mPreferenceManager.getValue(KEY_ACCESS_TOKEN, "")
         val refreshToken = mPreferenceManager.getValue(KEY_REFRESH_TOKEN, "")
         val idToken = mPreferenceManager.getValue(KEY_ID_TOKEN, "")
@@ -629,6 +638,7 @@ fun isGrabMapEnable(mPreferenceManager: PreferenceManager): Boolean {
                 isGrabMapEnable = true
             }
         }
+
         else -> {
             isGrabMapEnable = true
         }
@@ -655,8 +665,25 @@ fun setLocale(languageCode: String, context: Context) {
 
 fun getLanguageCode(): String? {
     val appLanguage = AppCompatDelegate.getApplicationLocales()
-    val languageCode = appLanguage.toLanguageTags().ifEmpty {
+    var languageCode = appLanguage.toLanguageTags().ifEmpty {
         Locale.getDefault().language
+    }
+    if (languageCode.toString().contains("-")) {
+        languageCode = if (!languageCode.toString().contains("zh")) {
+            languageCode.toString().split("-")[0]
+        } else if (languageCode.toString().contains("pt")) {
+            LANGUAGE_CODE_BR_PT
+        } else {
+            if (languageCode.toString().contains(LANGUAGE_CODE_BR_PT)) {
+                LANGUAGE_CODE_BR_PT
+            } else if (languageCode.toString().contains("CN")) {
+                LANGUAGE_CODE_CH_CN
+            } else if (languageCode.toString().contains("TW")) {
+                LANGUAGE_CODE_CH_TW
+            } else {
+                LANGUAGE_CODE_CH_CN
+            }
+        }
     }
     return languageCode
 }
