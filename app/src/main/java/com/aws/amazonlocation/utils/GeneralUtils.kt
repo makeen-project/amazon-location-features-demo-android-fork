@@ -676,17 +676,15 @@ fun getLanguageCode(): String? {
     var languageCode = appLanguage.toLanguageTags().ifEmpty {
         Locale.getDefault().language
     }
-    if (languageCode.toString().contains("-")) {
-        languageCode = if (!languageCode.toString().contains("zh")) {
-            languageCode.toString().split("-")[0]
-        } else if (languageCode.toString().contains("pt")) {
+    if (languageCode.toString().contains(LANGUAGE_CODE_DIVIDER)) {
+        languageCode = if (languageCode.toString().contains(LANGUAGE_CODE_PT_PRE_FIX)) {
             LANGUAGE_CODE_BR_PT
+        } else if (!languageCode.toString().contains(LANGUAGE_CODE_CH_PRE_FIX)) {
+            languageCode.toString().split(LANGUAGE_CODE_DIVIDER)[0]
         } else {
-            if (languageCode.toString().contains(LANGUAGE_CODE_BR_PT)) {
-                LANGUAGE_CODE_BR_PT
-            } else if (languageCode.toString().contains("CN")) {
+            if (languageCode.toString().contains(LANGUAGE_CODE_CN_POST_FIX)) {
                 LANGUAGE_CODE_CH_CN
-            } else if (languageCode.toString().contains("TW")) {
+            } else if (languageCode.toString().contains(LANGUAGE_CODE_TW_POST_FIX)) {
                 LANGUAGE_CODE_CH_TW
             } else {
                 LANGUAGE_CODE_CH_CN
