@@ -167,7 +167,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 } 
 ```
 
-![google-maps-load-a-map](./images/Screenshot_20231127_165706_GoogleMapTest.jpg)
+![google-maps-load-a-map](./images/Screenshot_20231127_165706_GoogleMapTest.jpg){ width=50% }
 
 #### With Amazon Location
 
