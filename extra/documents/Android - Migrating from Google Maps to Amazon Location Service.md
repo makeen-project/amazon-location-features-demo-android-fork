@@ -1992,7 +1992,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 **Step 1**: Add the below line inside `dependencies` in `build.gradle` file
 
 ```
-*implementation*("com.amazonaws:aws-android-sdk-location:2.72.0")
+implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
 **Step 2**: In `./app/src/main/res/raw` directory add  `awsconfiguration.json` file, which looks like below.
@@ -2306,7 +2306,7 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 **Step 1**: Add the below line inside `dependencies` in `build.gradle` file
 
 ```
-*implementation*("com.amazonaws:aws-android-sdk-location:2.72.0")
+implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
 **Step 2**: In `./app/src/main/res/raw` directory add  `awsconfiguration.json` file, which looks like below.
@@ -2527,7 +2527,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 **Step 1**: Add the below line inside `dependencies` in `build.gradle` file
 
 ```
-implementation*("org.maplibre.gl:android-sdk-turf:5.9.0")
+implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
 ```
 
 **Step 2**: Add the below code inside  `activity_map_load.xml`. file
