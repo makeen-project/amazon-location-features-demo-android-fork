@@ -43,7 +43,7 @@ Both Google Maps and Amazon Location Service allow you to integrate interactive,
 
 To display a map using the Google Maps SDK for Android, the following steps would be done:
 
-**Step 1**: In Android Studio, open your project-level `build.gradle` file and update it as below.
+**Step 1**: In Android Studio, open your app-level `build.gradle` file and update it as below.
 
 
 ```
@@ -100,12 +100,12 @@ dependencies {
 
 **Step 2**: Save the file and [sync your project with Gradle](https://developer.android.com/studio/build#sync-files).
 
-**Step 3**: In your `AndroidManifest.xml` file, go to `com.google.android.geo.API_KEY` and update the `android:value attribute` as follows:
+**Step 3**: In your `AndroidManifest.xml` file enter below code and replace `MAPS_API_KEY` with your google maps API key:
 
 ```
 <meta-data
     android:name="com.google.android.geo.API_KEY"
-    android:value="${MAPS_API_KEY}" />    
+    android:value="MAPS_API_KEY" />    
 ```
 
 **Step 4**: Add the below code to `activity_maps.xml` the file
