@@ -31,7 +31,7 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 * Coordinates in Google Maps are referred to as `latitude,longitude`, while Amazon Location Service uses `longitude,latitude`. The Amazon Location Service format is aligned with the standard `[x, y]`, which is followed by most Geographic Information System (GIS) platforms.
 * Coordinates in Amazon Location Maps are defined as Position objects. A coordinate is specified as a number array in the format of `[longitude,latitude]`.
 * Amazon Location Service has an API and SDK that work hand in hand with [MapLibre Native](https://github.com/maplibre/maplibre-native) SDK.
-* The MapLibre Native SDK for Android is a library based on[Mapbox Native](https://github.com/mapbox/mapbox-gl-native), and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
+* The MapLibre Native SDK for Android is a library based on [Mapbox Native](https://github.com/mapbox/mapbox-gl-native), and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
 
 ## Android SDK side-by-side examples
 
@@ -104,6 +104,7 @@ dependencies {
 ```
 
 **Step 2**: Save the file and [sync your project with Gradle](https://developer.android.com/studio/build#sync-files).
+
 **Step 3**: In your `AndroidManifest.xml` file, go to `com.google.android.geo.API_KEY` and update the `android:value attribute` as follows:
 
 ```
@@ -197,7 +198,8 @@ android {
     buildFeatures {
         viewBinding = true
     }
-}dependencies {
+}
+dependencies {
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -313,7 +315,41 @@ class SigV4Interceptor(
 </resources>
 ```
 
-**Step 4**: Add the below code inside  `activity_map_load.xml`. file
+**Step 4**: Add the below code inside `AndroidManifest.xml` file:
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AmazonMapTest"
+        tools:targetApi="31">
+        <activity
+            android:name=".activity.MapLoadActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+```
+
+**Step 5**: Add the below code inside  `activity_map_load.xml`. file
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -884,12 +920,26 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the code below inside `InfoWindowActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 1**: Add the below code inside  `activity_map_load.xml`. file
+
+```
+<?xml version="1.0" encoding="utf-8"?>
+<com.mapbox.mapboxsdk.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mapView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:mapbox_foregroundLoadColor="@color/white"
+    app:mapbox_renderTextureMode="true"
+    app:mapbox_renderTextureTranslucentSurface="true" />.
+```
+
+**Step 2**: Add the code below inside `InfoWindowActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
     
-    private lateinit var mBinding: ActivityAddMarkerBinding
+    private lateinit var mBinding: ActivityMapLoadBinding
     private val GEOJSON_SOURCE_ID = "GEOJSON_SOURCE_ID"
     private val MARKER_IMAGE_ID = "MARKER_IMAGE_ID"
     private val MARKER_LAYER_ID = "MARKER_LAYER_ID"
@@ -916,7 +966,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
                 .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
                 .build(),
         )
-        mBinding = ActivityAddMarkerBinding.inflate(layoutInflater)
+        mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
         mBinding.mapView.getMapAsync(this)
@@ -2667,7 +2717,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 **Step 1**: Add the below line inside `dependencies` in `build.gradle` file
 
 ```
-*implementation*("org.maplibre.gl:android-sdk-turf:5.9.0")
+implementation*("org.maplibre.gl:android-sdk-turf:5.9.0")
 ```
 
 **Step 2**: Add the below code inside  `activity_map_load.xml`. file
@@ -2833,7 +2883,3 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 ```
 
 <img src="./images/Screenshot_20231129_133159_AmazonMapTest.jpg" width="200">    <img src="./images/Screenshot_20231129_133228_AmazonMapTest.jpg" width="200">
-
-## Conclusion
-
-Following these steps, you can migrate your Android app from Google Maps to Amazon Location Service, including additional features such as Search, Suggestions, Geofence, Tracking, and Language Localization. This will give you access to the features and benefits of Amazon Location Service, such as cost-effectiveness, scalability, and integration with other AWS services.
