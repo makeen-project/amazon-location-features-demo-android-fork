@@ -2,23 +2,6 @@
 
 The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-features-demo-android) open-source project can be used fully to gauge the in-depth capabilities of Amazon Location service
 
-## This document includes:
-
-* [Prerequisites](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDX9d1d0ea4160a48efa51167477)
-* [Notable differences in the Android SDKs](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5753ab817b140cc88ca97ad3)
-* [Android SDK side-by-side examples](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5753ab817b140cc88ca97ad3)
-    * [Load a map](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDX9c4e051d0eec4f3692b75bdf3)
-    * [How to add a marker?](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDXbf4601fe009a4b60a987467c8)
-    * [Marker clustering](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDX1c62aaa93a92443caa5990fc7)
-    * [Display an Info window](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXe01cf180b51f4f7687b8020a6)
-    * [How to add a polyline?](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDXb21deb9d386348c4bbe4e9da2)
-    * [How to add a polygon?](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDXa02cebd8c9d14bc2ba1244941)
-    * [Add a heat map (Data Layers)](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXff97ad9d5ba145028351ee3bc)
-    * [Limit to bounds](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDX95dc21246618482d97dc29ce6)
-    * [Calculate route / Navigation](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDX90505e5e26674e4b9ecfdf6a1)
-    * [Search places](https://makeen.quip.com/AaRHAX14ueSg/Android-Migration-from-Google-Maps-to-Amazon-Maps#temp:C:XDX7d0a0fd0e9dd470182403dae6)
-    * [Drawing a geofence](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDX4163ab0069f443af83fd8c48d)
-
 ## Prerequisites:
 
 1. Create an [AWS account](https://portal.aws.amazon.com/billing/signup/iam#/start/email) if you don’t already have one. Once your AWS account is set up, you can create Amazon Location Service resources, which can be utilized to run the code snippets below.
