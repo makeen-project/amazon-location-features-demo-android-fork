@@ -89,17 +89,12 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    
+
     implementation("com.google.android.gms:play-services-maps:18.2.0")
-    
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("com.google.maps.android:android-maps-utils:3.7.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }
 ```
 
@@ -200,9 +195,6 @@ android {
     }
 }
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
@@ -210,11 +202,6 @@ dependencies {
     implementation("org.maplibre.gl:android-plugin-annotation-v9:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.amazonaws:aws-android-sdk-mobile-client:2.73.0")
-
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
 ```
 
@@ -309,13 +296,13 @@ class SigV4Interceptor(
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="identityPoolId"><IdentityPoolId></string>
-    <string name="mapName"><Map name></string>
-    <string name="awsRegion"><Region></string>
+    <string name="identityPoolId">Your Identity Pool Id</string>
+    <string name="mapName">Your Map name</string>
+    <string name="awsRegion">Your Region</string>
 </resources>
 ```
 
-**Step 4**: Add the below code inside `AndroidManifest.xml` file:
+**Step 4**: Add the below permission inside `AndroidManifest.xml` file:
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -325,26 +312,7 @@ class SigV4Interceptor(
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application
-        android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.AmazonMapTest"
-        tools:targetApi="31">
-        <activity
-            android:name=".activity.MapLoadActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+    ...
 
 </manifest>
 ```
@@ -360,14 +328,14 @@ class SigV4Interceptor(
     android:layout_height="match_parent"
     app:mapbox_foregroundLoadColor="@color/white"
     app:mapbox_renderTextureMode="true"
-    app:mapbox_renderTextureTranslucentSurface="true" />.
+    app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
 
-**Step 6**: Add the following code to your `MapLoadActivity.kt` file.
+**Step 6**: Add the following code to your `MapActivity.kt` file.
 
 ```
-class MapLoadActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -380,7 +348,7 @@ class MapLoadActivity : AppCompatActivity(), OnMapReadyCallback {
             Regions.fromName(identityPoolId.split(":").first()),
         )
 
-        Mapbox.getInstance(this@MapLoadActivity)
+        Mapbox.getInstance(this@MapActivity)
         HttpRequestUtil.setOkHttpClient(
             OkHttpClient.Builder()
                 .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
@@ -664,6 +632,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
         clusterManager.addItem(MyItem(60.2607, -150.5846, "Title15", "Snippet15"))
         clusterManager.addItem(MyItem(63.5257, -147.8929, "Title16", "Snippet16"))
     }
+    
     inner class MyItem(
         lat: Double,
         lng: Double,
@@ -950,6 +919,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     private var source: GeoJsonSource? = null
     private var featureCollection: FeatureCollection? = null
     private var map: MapboxMap? = null
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -1292,6 +1262,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityPolylineBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -1476,6 +1447,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityPolygonBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -1913,6 +1885,7 @@ class LimitToBoundActivity : AppCompatActivity(), OnMapReadyCallback {
     private val lonEast = 146.25
     private val latSouth = -21.943045533438166
     private val lonWest = 90.0
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -1971,6 +1944,7 @@ class LimitBoundsActivity : AppCompatActivity(), OnMapReadyCallback {
         .include(LatLng(latNorth, lonWest))
         .include(LatLng(latSouth, lonEast))
         .build()
+        
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -2235,6 +2209,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
     private var mClient: AmazonLocationClient? = null
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -2486,6 +2461,7 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
     }
+    
     private fun getSearchURL(search: String, key: String): String {
         return "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$search" +
             "&key=$key"
@@ -2544,8 +2520,10 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ```
 class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
+
     private lateinit var mBinding: ActivityMapLoadBinding
     private var mClient: AmazonLocationClient? = null
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -2740,6 +2718,7 @@ implementation*("org.maplibre.gl:android-sdk-turf:5.9.0")
 class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
