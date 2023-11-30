@@ -681,7 +681,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_165721_GoogleMapTest.jpg" width="200"><img src="./images/Screenshot_20231127_165735_GoogleMapTest.jpg" width="200">
+<img src="./images/Screenshot_20231127_165721_GoogleMapTest.jpg" width="200">    <img src="./images/Screenshot_20231127_165735_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -858,7 +858,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_165644_AmazonMapTest.jpg" width="200"><img src="./images/Screenshot_20231127_165655_AmazonMapTest.jpg" width="200">
+<img src="./images/Screenshot_20231127_165644_AmazonMapTest.jpg" width="200">    <img src="./images/Screenshot_20231127_165655_AmazonMapTest.jpg" width="200">
 
 ### Display an Info window
 
@@ -2676,7 +2676,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231128_130327_GoogleMapTest.jpg" width="200"><img src="./images/Screenshot_20231128_130333_GoogleMapTest.jpg" width="200">
+<img src="./images/Screenshot_20231128_130327_GoogleMapTest.jpg" width="200">    <img src="./images/Screenshot_20231128_130333_GoogleMapTest.jpg" width="200">
 
 
 #### With Amazon Location
@@ -2849,7 +2849,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231129_133159_AmazonMapTest.jpg" width="200"><img src="./images/Screenshot_20231129_133228_AmazonMapTest.jpg" width="200">
+<img src="./images/Screenshot_20231129_133159_AmazonMapTest.jpg" width="200">    <img src="./images/Screenshot_20231129_133228_AmazonMapTest.jpg" width="200">
 
 ## Conclusion
 
