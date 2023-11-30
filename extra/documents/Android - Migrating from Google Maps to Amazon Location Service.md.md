@@ -420,7 +420,7 @@ class MapLoadActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-location-load-a-map](./images/Screenshot_20231117_172249_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231117_172249_AmazonMapTest.jpg" width="200">
 
 ### How to add a marker?
 
@@ -456,7 +456,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-a-marker](./images/Screenshot_20231127_165713_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231127_165713_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -577,7 +577,7 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-adding-a-marker](./images/Screenshot_20231129_132315_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231129_132315_AmazonMapTest.jpg" width="200">
 
 ### Marker clustering
 
@@ -681,7 +681,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-marker-clustering1](./images/Screenshot_20231127_165721_GoogleMapTest.jpg)![google-maps-marker-clustering2](./images/Screenshot_20231127_165735_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231127_165721_GoogleMapTest.jpg" width="200"><img src="./images/Screenshot_20231127_165735_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -858,7 +858,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-marker-clustering1](./images/Screenshot_20231127_165644_AmazonMapTest.jpg)![amazon-maps-marker-clustering2](./images/Screenshot_20231127_165655_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231127_165644_AmazonMapTest.jpg" width="200"><img src="./images/Screenshot_20231127_165655_AmazonMapTest.jpg" width="200">
 
 ### Display an Info window
 
@@ -897,7 +897,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-display-an-info-window](./images/Screenshot_20231130_134819_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231130_134819_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -1182,7 +1182,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
 }
 ```
 
-![amazon-location-display-an-info-window](./images/Screenshot_20231130_135045_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231130_135045_AmazonMapTest.jpg" width="200">
 
 
 ### How to add a polyline?
@@ -1235,7 +1235,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-a-polyline](./images/Screenshot_20231127_170808_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231127_170808_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -1365,7 +1365,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-adding-a-polyline](./images/Screenshot_20231129_132234_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231129_132234_AmazonMapTest.jpg" width="200">
 
 ### How to add a polygon?
 
@@ -1419,7 +1419,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-a-polygon](./images/Screenshot_20231127_170820_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231127_170820_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -1545,7 +1545,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-adding-a-polygon](./images/Screenshot_20231129_132502_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231129_132502_AmazonMapTest.jpg" width="200">
 
 ### Add a heat map (Data Layers)
 
@@ -1619,7 +1619,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-a-heatmap](./images/Screenshot_20231127_192904_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231127_192904_GoogleMapTest.jpg" width="200">
 
 
 #### With Amazon Location
@@ -1863,8 +1863,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 }
 ```
-
-![amazon-maps-adding-a-heatmap](./images/Screenshot_20231127_192855_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231127_192855_AmazonMapTest.jpg" width="200">
 
 ### Limit to Bounds:
 
@@ -1907,7 +1906,7 @@ class LimitToBoundActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-a-limit-to-bound](./images/Screenshot_20231128_122526_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231128_122526_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -2030,7 +2029,7 @@ class LimitBoundsActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-adding-a-limit-to-bound](./images/Screenshot_20231128_122611_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231128_122611_AmazonMapTest.jpg" width="200">
 
 ### Calculate route / Navigation:
 
@@ -2147,7 +2146,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-route](./images/Screenshot_20231130_153428_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231130_153428_GoogleMapTest.jpg" width="200">
 
 #### With Amazon Location
 
@@ -2393,7 +2392,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-adding-route](./images/Screenshot_20231130_153525_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231130_153525_AmazonMapTest.jpg" width="200">
 
 ### Search places:
 
@@ -2677,7 +2676,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![google-maps-adding-geofence1](./images/Screenshot_20231128_130327_GoogleMapTest.jpg)![google-maps-adding-geofence2](./images/Screenshot_20231128_130333_GoogleMapTest.jpg)
+<img src="./images/Screenshot_20231128_130327_GoogleMapTest.jpg" width="200"><img src="./images/Screenshot_20231128_130333_GoogleMapTest.jpg" width="200">
 
 
 #### With Amazon Location
@@ -2850,7 +2849,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-![amazon-maps-adding-geofence1](./images/Screenshot_20231129_133159_AmazonMapTest.jpg)![amazon-maps-adding-geofence2](./images/Screenshot_20231129_133228_AmazonMapTest.jpg)
+<img src="./images/Screenshot_20231129_133159_AmazonMapTest.jpg" width="200"><img src="./images/Screenshot_20231129_133228_AmazonMapTest.jpg" width="200">
 
 ## Conclusion
 
