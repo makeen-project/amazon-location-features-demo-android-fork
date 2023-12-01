@@ -492,7 +492,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and Add any marker drawable inside the drawable folder with the name `ic_marker_blue` , include the following code to `AddMarkerActivity.kt`.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project. Also, add a marker drawable named `ic_marker_blue` to the drawable folder. Finally, insert the below code into `AddMarkerActivity.kt`.
 
 ```
 class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
