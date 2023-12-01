@@ -21,8 +21,38 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
     2. Add a Name and Description for the new route calculator resource. Make a note of the name that you use for the route calculator resource. You will need it when creating your script file later in the tutorial.
     3. Choose a data provider; remember that while choosing a map style, also choose which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
     4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
+5. To set up authentication for your application
+    1. In Amazon Location service to authenticate your application need to set up roles in IAM roles like the below in [the AWS console](https://us-east-1.signin.aws/platform/login?workflowStateHandle=ebef097a-b05a-4111-80e9-75ee1630349f)
+       1. Choose which IAM roles you want to use with your identity pool and Expand **View Details**.
+       2. Under **Unauthenticated identities**, enter a role name.
+       3. Expand the **View Policy Document** section, then choose **Edit** to add your policy. The edited policy will look like the one below.
+       4.
+        ```{
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "LocationReadOnly",
+                  "Effect": "Allow",
+                  "Action": [
+                    "geo:GetMapStyleDescriptor",
+                    "geo:GetMapGlyphs",
+                    "geo:GetMapSprites",
+                    "geo:GetMapTile",
+                    "geo:SearchPlaceIndexForPosition",
+                    "geo:CalculateRoute"
+                  ],
+                  "Resource": [
+                    "arn:aws:geo:<region>:<accountID>:map/<ExampleMap>",
+                    "arn:aws:geo:<region>:<accountID>:route-calculator/<ExampleRoueCalculator>",
+                    "arn:aws:geo:<region>:<accountID>:place-index/<ExamplePlaceIndex>"
+                  ]
+                }
+              ]
+            }
+        ```
+       5. After updating the above policy, you can access the map, route calculator and place-index.
 
->(Please follow this [REDME.md](https://github.com/aws-geospatial/amazon-location-features-demo-android/blob/main/README.md) file for more details to set up code in Android Studio.)
+>(Please follow this [README.md](https://github.com/aws-geospatial/amazon-location-features-demo-android/blob/main/README.md) file for more details to set up code in Android Studio.)
 
 
 
@@ -31,7 +61,7 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 * Coordinates in Google Maps are referred to as `latitude,longitude`, while Amazon Location Service uses `longitude,latitude`. The Amazon Location Service format is aligned with the standard `[x, y]`, which is followed by most Geographic Information System (GIS) platforms.
 * Coordinates in Amazon Location Maps are defined as Position objects. A coordinate is specified as a number array in the format of `[longitude,latitude]`.
 * Amazon Location Service has an API and SDK that work hand in hand with [MapLibre Native](https://github.com/maplibre/maplibre-native) SDK.
-* The MapLibre Native SDK for Android is a library based on [Mapbox Native](https://github.com/mapbox/mapbox-gl-native), and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
+* The MapLibre Native SDK for Android is a library based on[Mapbox Native](https://github.com/mapbox/mapbox-gl-native), and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
 
 ## Android SDK side-by-side examples
 
@@ -146,7 +176,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 } 
 ```
 
-<img src="./images/Screenshot_20231127_165706_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-load-a-map.jpg" width="200">
 
 #### With Amazon Location
 
@@ -407,7 +437,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231117_172249_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-load-a-map.jpg" width="200">
 
 ### How to add a marker?
 
@@ -443,7 +473,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_165713_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-adding-a-marker.jpg" width="200">
 
 #### With Amazon Location
 
@@ -564,7 +594,7 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231129_132315_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-adding-a-marker.jpg" width="200">
 
 ### Marker clustering
 
@@ -669,7 +699,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_165721_GoogleMapTest.jpg" width="200">    <img src="./images/Screenshot_20231127_165735_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-marker-clustering.jpg" width="200">    <img src="./images/android/google-maps-marker-clustering1.jpg" width="200">
 
 #### With Amazon Location
 
@@ -846,7 +876,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_165644_AmazonMapTest.jpg" width="200">    <img src="./images/Screenshot_20231127_165655_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-marker-clustering.jpg" width="200">    <img src="./images/android/amazon-location-marker-clustering1.jpg" width="200">
 
 ### Display an Info window
 
@@ -885,7 +915,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231130_134819_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-display-an-info-window.jpg" width="200">
 
 #### With Amazon Location
 
@@ -1185,7 +1215,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
 }
 ```
 
-<img src="./images/Screenshot_20231130_135045_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-display-an-info-window.jpg" width="200">
 
 
 ### How to add a polyline?
@@ -1238,7 +1268,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_170808_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-adding-a-polyline.jpg" width="200">
 
 #### With Amazon Location
 
@@ -1369,7 +1399,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231129_132234_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-adding-a-polyline.jpg" width="200">
 
 ### How to add a polygon?
 
@@ -1423,7 +1453,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_170820_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-adding-a-polygon.jpg" width="200">
 
 #### With Amazon Location
 
@@ -1550,7 +1580,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231129_132502_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-adding-a-polygon.jpg" width="200">
 
 ### Add a heat map (Data Layers)
 
@@ -1624,7 +1654,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231127_192904_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-add-a-heatmap.jpg" width="200">
 
 
 #### With Amazon Location
@@ -1868,7 +1898,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 }
 ```
-<img src="./images/Screenshot_20231127_192855_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-add-a-heatmap.jpg" width="200">
 
 ### Calculate route / Navigation:
 
@@ -1985,7 +2015,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231130_153428_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-routing-service.jpg" width="200">
 
 #### With Amazon Location
 
@@ -2232,7 +2262,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231130_153525_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-routing-service.jpg" width="200">
 
 ### Search places:
 
@@ -2519,7 +2549,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231128_130327_GoogleMapTest.jpg" width="200">    <img src="./images/Screenshot_20231128_130333_GoogleMapTest.jpg" width="200">
+<img src="./images/android/google-maps-drawing-a-geofence.jpg" width="200">    <img src="./images/android/google-maps-drawing-a-geofence1.jpg" width="200">
 
 
 #### With Amazon Location
@@ -2693,4 +2723,4 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/Screenshot_20231129_133159_AmazonMapTest.jpg" width="200">    <img src="./images/Screenshot_20231129_133228_AmazonMapTest.jpg" width="200">
+<img src="./images/android/amazon-location-drawing-a-geofence.jpg" width="200">    <img src="./images/android/amazon-location-drawing-a-geofence1.jpg" width="200">
