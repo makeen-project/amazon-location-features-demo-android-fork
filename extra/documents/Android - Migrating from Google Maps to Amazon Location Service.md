@@ -235,6 +235,7 @@ dependencies {
 }
 ```
 
+<a name="step-2-sigV4Interceptor"></a>
 **Step 2**: Create a class named `SigV4Interceptor.kt` to intercept AWS requests. This will be registered with the HTTP client used to fetch map resources when the Activity is created.
 
 ```
@@ -491,7 +492,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add any marker drawable inside the drawable folder with the name `ic_marker_blue` , Add the code below inside `AddMarkerActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 2**: Add any marker drawable inside the drawable folder with the name `ic_marker_blue` , Add the code below inside `AddMarkerActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
