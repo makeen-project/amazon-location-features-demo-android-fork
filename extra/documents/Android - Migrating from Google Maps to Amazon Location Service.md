@@ -718,7 +718,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the code below inside `MarkerClusterActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 2**: Add the code below inside `MarkerClusterActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -934,7 +934,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />.
 ```
 
-**Step 2**: Add the code below inside `InfoWindowActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 2**: Add the code below inside `InfoWindowActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
@@ -1287,7 +1287,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the below code inside `PolylineActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 2**: Add the below code inside `PolylineActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1472,7 +1472,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the code below inside `PolygonActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 2**: Add the code below inside `PolygonActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1674,7 +1674,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the below code inside `HeatMapActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 2**: Add the below code inside `HeatMapActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2065,7 +2065,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 4**:Add the below code in  `CalculateRouteActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 4**:Add the below code in  `CalculateRouteActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2379,7 +2379,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 4**: Add the below code inside `SearchActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 4**: Add the below code inside `SearchActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2575,7 +2575,7 @@ implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 3**: Add the below code in `GeofenceDrawActivity.kt` , add [SigV4Interceptor.kt](https://makeen.quip.com/AaRHAX14ueSg/Android-Migrating-from-Google-Maps-to-Amazon-Location-Service#temp:C:XDXf5d0b216e5a8406dbc85db934) before adding the below code.
+**Step 3**: Add the below code in `GeofenceDrawActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
 
 ```
 class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
