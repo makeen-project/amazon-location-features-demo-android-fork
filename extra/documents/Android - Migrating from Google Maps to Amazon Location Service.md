@@ -478,7 +478,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below code inside  `activity_add_marker.xml`. file
+**Step 1**: Add the below code inside `activity_add_marker.xml`. file
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -492,7 +492,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add any marker drawable inside the drawable folder with the name `ic_marker_blue` , Add the code below inside `AddMarkerActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and Add any marker drawable inside the drawable folder with the name `ic_marker_blue` , Add the code below inside `AddMarkerActivity.kt`.
 
 ```
 class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -718,7 +718,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the code below inside `MarkerClusterActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `MarkerClusterActivity.kt`.
 
 ```
 class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -934,7 +934,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />.
 ```
 
-**Step 2**: Add the code below inside `InfoWindowActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `InfoWindowActivity.kt`.
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
@@ -1287,7 +1287,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the below code inside `PolylineActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `PolylineActivity.kt`.
 
 ```
 class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1472,7 +1472,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the code below inside `PolygonActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `PolygonActivity.kt`.
 
 ```
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1674,7 +1674,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Add the below code inside `HeatMapActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `HeatMapActivity.kt`.
 
 ```
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2065,7 +2065,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 4**:Add the below code in  `CalculateRouteActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 4**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `CalculateRouteActivity.kt`.
 
 ```
 class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2379,7 +2379,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 4**: Add the below code inside `SearchActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 4**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `SearchActivity.kt`.
 
 ```
 class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2575,7 +2575,7 @@ implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 3**: Add the below code in `GeofenceDrawActivity.kt` , add [SigV4Interceptor.kt](#step-2-sigV4Interceptor) before adding the below code.
+**Step 3**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `GeofenceDrawActivity.kt`.
 
 ```
 class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
