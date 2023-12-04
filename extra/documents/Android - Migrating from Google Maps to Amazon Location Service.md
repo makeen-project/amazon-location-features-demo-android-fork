@@ -131,10 +131,10 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 
 ## **Notable differences in the Android SDKs**
 
-* Coordinates in Google Maps are referred to as `latitude,longitude`, while Amazon Location Service uses `longitude,latitude`. The Amazon Location Service format is aligned with the standard `[x, y]`, which is followed by most Geographic Information System (GIS) platforms.
-* Coordinates in Amazon Location Maps are defined as Position objects. A coordinate is specified as a number array in the format of `[longitude,latitude]`.
+* Coordinates in Google Maps are referred to as `latitude, longitude`, while Amazon Location Service uses `longitude, latitude`. The Amazon Location Service format is aligned with the standard `[x, y]`, which is followed by most Geographic Information System (GIS) platforms.
+* Coordinates in Amazon Location Maps are defined as Position objects. A coordinate is specified as a number array in the format of `[longitude, latitude]`.
 * Amazon Location Service has an API and SDK that work hand in hand with [MapLibre Native](https://github.com/maplibre/maplibre-native) SDK.
-* The MapLibre Native SDK for Android is a library based on[Mapbox Native](https://github.com/mapbox/mapbox-gl-native), and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
+* The MapLibre Native SDK for Android is a library based on[Mapbox Native](https://github.com/mapbox/mapbox-gl-native) and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
 
 ## Android SDK side-by-side examples
 
@@ -203,7 +203,7 @@ dependencies {
 
 **Step 2**: Save the file and [sync your project with Gradle](https://developer.android.com/studio/build#sync-files).
 
-**Step 3**: In your `AndroidManifest.xml` file enter below code and replace `MAPS_API_KEY` with your google maps API key:
+**Step 3**: In your `AndroidManifest.xml` file enter the below code and replace `MAPS_API_KEY` with your Google Maps API key:
 
 ```
 <meta-data
@@ -211,7 +211,7 @@ dependencies {
     android:value="MAPS_API_KEY" />    
 ```
 
-**Step 4**: Add the below code to `activity_maps.xml` the file
+**Step 4**: Add the below code to `activity_maps.xml` the file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -224,7 +224,7 @@ dependencies {
     android:layout_height="match_parent" />
 ```
 
-**Step 5**: Add the below code to `MapsActivity.kt`
+**Step 5**: Add the below code to `MapsActivity.kt`.
 
 ```
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -309,7 +309,7 @@ dependencies {
 ```
 
 <a name="step-2-sigV4Interceptor"></a>
-**Step 2**: Create a class named `SigV4Interceptor.kt` to intercept AWS requests. This will be registered with the HTTP client used to fetch map resources when the Activity is created.
+**Step 2**: Create a class named `SigV4Interceptor.kt` to intercept AWS requests. This will be registered with the HTTP client that fetches map resources when the Activity is created.
 
 ```
 class SigV4Interceptor(
@@ -406,7 +406,7 @@ class SigV4Interceptor(
 </resources>
 ```
 
-**Step 4**: Add the below permission inside `AndroidManifest.xml` file:
+**Step 4**: Add the below permission inside the `AndroidManifest.xml` file:
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -421,7 +421,7 @@ class SigV4Interceptor(
 </manifest>
 ```
 
-**Step 5**: Add the below code inside  `activity_map_load.xml`. file
+**Step 5**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -519,7 +519,7 @@ Both Google Maps and Amazon Location Service can plot markers at specific coordi
 
 #### With Google Maps
 
-**Step 1**: With Google Maps, markers are added using the maps `addMarker` method in `MarkerActivity.kt` .
+**Step 1**: With Google Maps, markers are added using the maps `addMarker` method in `MarkerActivity.kt`.
 
 ```
 class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -551,7 +551,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below code inside `activity_add_marker.xml`. file
+**Step 1**: Add the below code inside `activity_add_marker.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -676,13 +676,13 @@ Both Google Maps and Amazon Location Service provide marker clustering.
 
 #### With Google Maps
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file and click on Sync now.
+**Step 1**: Add the below line inside the `dependencies` in the `build.gradle` file and click on Sync now.
 
 ```
 implementation("com.google.maps.android:android-maps-utils:3.7.0")
 ```
 
-**Step 2**: Add the below code inside `MarkerClusterActivity.kt` .
+**Step 2**: Add the below code inside `MarkerClusterActivity.kt`.
 
 
 ```
@@ -777,7 +777,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the code below inside `activity_marker_cluster.xml`
+**Step 1**: Add the code below inside `activity_marker_cluster.xml`.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -935,17 +935,6 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
         unclusteredSymbolLayer.setFilter(has("mag"))
 
         loadedMapStyle.addLayer(unclusteredSymbolLayer)
-
-        loadedMapStyle.addLayer(
-            SymbolLayer("count", CLUSTER_SOURCE_ID).withProperties(
-                textField(Expression.toString(get(POINT_COUNT))),
-                textSize(12f),
-                textColor(Color.BLACK),
-                textIgnorePlacement(true),
-                textOffset(arrayOf(0f, .5f)),
-                textAllowOverlap(true),
-            ),
-        )
     }
 }
 ```
@@ -954,11 +943,11 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ### Display an Info window
 
-Both Google Maps and Amazon Location Service have the ability to render an info/popup on the map.
+Both Google Maps and Amazon Location Service can render an info/popup on the map.
 
 #### With Google Maps
 
-**Step 1**: Add the code below inside `InfoWindowActivity.kt`
+**Step 1**: Add the code below inside `InfoWindowActivity.kt`.
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -993,7 +982,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below code inside  `activity_map_load.xml`. file
+**Step 1**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1298,7 +1287,7 @@ Polylines can be drawn on Google Maps. For Amazon Location Service, there isn't 
 
 #### With Google Maps
 
-**Step 1**: Add the code below inside `PolylineActivity.kt`
+**Step 1**: Add the code below inside `PolylineActivity.kt`.
 
 ```
 class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1346,7 +1335,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below code inside `activity_polyline.xml`
+**Step 1**: Add the below code inside `activity_polyline.xml`.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1477,11 +1466,11 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ### How to add a polygon?
 
-Polygons are used to represent an area on the map. The following examples show you how to create a polygon.
+Polygons are geometric shapes that are used to represent a specific area on a map. The following examples show you how to create a polygon.
 
 #### With Google Maps
 
-**Step 1**: Add the code below inside `PolygonActivity.kt`
+**Step 1**: Add the code below inside `PolygonActivity.kt`.
 
 ```
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1531,7 +1520,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the code below inside `activity_polygon.xml`
+**Step 1**: Add the code below inside `activity_polygon.xml`.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1662,13 +1651,13 @@ Google Maps supports data layer functionality, allowing you to overlay data on t
 
 #### With Google Maps
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file
+**Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
 
 ```
 implementation("com.google.maps.android:android-maps-utils:3.7.0")
 ```
 
-**Step 2**: With Google Maps, heat map are added using the maps `addHeatMap` method in `HeatMapActivity.kt` .
+**Step 2**: With Google Maps, heat maps are added using the maps `addHeatMap` method in `HeatMapActivity.kt`.
 
 ```
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1733,7 +1722,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below code inside  `activity_map_load.xml`. file
+**Step 1**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1980,13 +1969,13 @@ Google Maps and Amazon Location services both provide routing services.
 
 #### With Google Maps
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file
+**Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
 
 ```
 implementation("com.squareup.okhttp3:okhttp:4.11.0")
 ```
 
-**Step 2**: Add the below data in `CalculateRouteActivity.kt`
+**Step 2**: Add the below data in `CalculateRouteActivity.kt`.
 
 ```
 class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2093,13 +2082,13 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file
+**Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
 
 ```
 implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
-**Step 2**: In `./app/src/main/res/raw` directory add  `awsconfiguration.json` file, which looks like below.
+**Step 2**: In the `./app/src/main/res/raw` directory add the `awsconfiguration.json` file, which looks like the one below.
 
 ```
 {
@@ -2124,7 +2113,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 }
 ```
 
-**Step 3**: Add the below code inside  `activity_map_load.xml`. file
+**Step 3**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -2342,13 +2331,13 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Google Maps
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file
+**Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
 
 ```
 implementation("com.squareup.okhttp3:okhttp:4.11.0")
 ```
 
-**Step 2**: Add the below data in `SearchActivity.kt`
+**Step 2**: Add the below data in `SearchActivity.kt`.
 
 
 ```
@@ -2407,13 +2396,13 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file
+**Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
 
 ```
 implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
-**Step 2**: In `./app/src/main/res/raw` directory add  `awsconfiguration.json` file, which looks like below.
+**Step 2**: In the `./app/src/main/res/raw` directory add the `awsconfiguration.json` file, which looks like the one below.
 
 ```
 {
@@ -2438,7 +2427,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 }
 ```
 
-**Step 3**: Add the below code inside  `activity_map_load.xml`. file
+**Step 3**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -2582,7 +2571,7 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Google Maps
 
-**Step 1**: Add the below code in `GeofenceDrawActivity.kt`
+**Step 1**: Add the below code in `GeofenceDrawActivity.kt`.
 
 ```
 class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -2628,13 +2617,13 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the below line inside `dependencies` in `build.gradle` file
+**Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
 
 ```
 implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
 ```
 
-**Step 2**: Add the below code inside  `activity_map_load.xml`. file
+**Step 2**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
