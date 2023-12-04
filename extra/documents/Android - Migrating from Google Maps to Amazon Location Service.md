@@ -23,10 +23,10 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
     4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
 5. To set up authentication for your application
     1. In Amazon Location service to authenticate your application need to set up roles in IAM roles like the below in [the AWS console](https://us-east-1.signin.aws/platform/login?workflowStateHandle=ebef097a-b05a-4111-80e9-75ee1630349f)
-       1. Choose which IAM roles you want to use with your identity pool and Expand **View Details**.
-       2. Under **Unauthenticated identities**, enter a role name.
-       3. Expand the **View Policy Document** section, then choose **Edit** to add your policy. The edited policy will look like the one below.
-       4.
+        1. Choose which IAM roles you want to use with your identity pool and Expand **View Details**.
+        2. Under **Unauthenticated identities**, enter a role name.
+        3. Expand the **View Policy Document** section, then choose **Edit** to add your policy. The edited policy will look like the one below.
+        4.
         ```{
               "Version": "2012-10-17",
               "Statement": [
@@ -50,11 +50,84 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
               ]
             }
         ```
-       5. After updating the above policy, you can access the map, route calculator and place-index.
+        5. After updating the above policy, you can access the map, route calculator and place-index.
 
 >(Please follow this [README.md](https://github.com/aws-geospatial/amazon-location-features-demo-android/blob/main/README.md) file for more details to set up code in Android Studio.)
 
 
+## Key features support:
+
+<table style="border: 1px solid white">
+      <thead>
+            <tr>
+                  <th style="text-align: center;">Features</th>
+                  <th style="text-align: center;">Google Maps with SDK</th>
+                  <th style="text-align: center;">Amazon Location with SDK</th>
+            </tr>
+      </thead>
+      <tbody>
+            <tr>
+                  <td style="text-align: left;">Markers</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Marker clustering</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Polylines & Polygons</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Data layers</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Ground Overlays</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Heat maps</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Tile Layers</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">KML Layer</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Drawing tools</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Geocoder service</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Routing service</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+            <tr>
+                  <td style="text-align: left;">Route Matrix service</td>
+                  <td style="text-align: center;">✓</td>
+                  <td style="text-align: center;">✓</td>
+            </tr>
+      </tbody>
+</table>
 
 ## **Notable differences in the Android SDKs**
 
@@ -704,7 +777,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 
 #### With Amazon Location
 
-**Step 1**: Add the code below inside `activity_marker_cluster.xml` 
+**Step 1**: Add the code below inside `activity_marker_cluster.xml`
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -2051,7 +2124,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 }
 ```
 
-**Step 3**: Add the below code inside  `activity_map_load.xml`. file 
+**Step 3**: Add the below code inside  `activity_map_load.xml`. file
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
