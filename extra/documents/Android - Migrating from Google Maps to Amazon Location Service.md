@@ -442,6 +442,7 @@ class SigV4Interceptor(
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
@@ -556,6 +557,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityAddMarkerBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
