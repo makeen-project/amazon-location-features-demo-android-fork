@@ -445,19 +445,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@MapActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -500,13 +490,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-        }
+        // Loads a new map style from the specified builder.
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {}
     }
 }
 ```
@@ -575,18 +560,10 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
 
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
 
         Mapbox.getInstance(this@AddMarkerActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityAddMarkerBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -629,40 +606,19 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-            val initialPosition = LatLng(47.6160281982247, -122.32642111977668)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(13.0)
-                .build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(13.0).build()
             addMarker(mBinding.mapView, mapboxMap, this, "marker-name")
         }
     }
-
-    private fun addMarker(
-        mapView: MapView,
-        mapboxMap: MapboxMap?,
-        activity: Activity,
-        name: String,
-    ) {
+    
+    private fun addMarker(mapView: MapView, mapboxMap: MapboxMap?, activity: Activity, name: String) {
         mapboxMap?.getStyle { style ->
             val symbolManager = SymbolManager(mapView, mapboxMap, style)
             ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_marker_blue)?.let {
-                style.addImage(
-                    name,
-                    it,
-                )
+                style.addImage(name, it)
             }
-            val latLng = LatLng(47.6160281982247, -122.32642111977668)
-            val symbolOptions = SymbolOptions()
-                .withLatLng(latLng).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER)
-
-            symbolManager.create(symbolOptions)
+            symbolManager.create(SymbolOptions().withLatLng(LatLng(47.6160281982247, -122.32642111977668)).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER))
         }
     }
 }
@@ -799,7 +755,6 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mBinding: ActivityMarkerClusterBinding
     private val CLUSTER_SOURCE_ID = "cluster-source"
     private val ICON_ID = "single-icon-id"
-    private val POINT_COUNT = "point_count"
     private val geoJsonString = "{\n" +
         "  \"type\": \"FeatureCollection\",\n" +
         "  \"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\" } },\n" +
@@ -827,19 +782,9 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@MarkerClusterActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMarkerClusterBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -882,17 +827,8 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-            val initialPosition = LatLng(63.1224, -150.4048)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(7.0)
-                .build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(63.1224, -150.4048)).zoom(7.0).build()
             style.transition = TransitionOptions(0, 0, false)
             initLayerIcons(style)
             addClusteredGeoJsonSource(style)
@@ -900,41 +836,22 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initLayerIcons(loadedMapStyle: Style) {
-        BitmapUtils.getBitmapFromDrawable(
-            ContextCompat.getDrawable(applicationContext, R.drawable.ic_marker_blue),
-        )?.let {
-            loadedMapStyle.addImage(
-                ICON_ID,
-                it,
-            )
+        BitmapUtils.getBitmapFromDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.ic_marker_blue))?.let {
+            loadedMapStyle.addImage(ICON_ID, it)
         }
     }
 
     private fun addClusteredGeoJsonSource(loadedMapStyle: Style) {
         try {
             val geoJsonOptions = GeoJsonOptions().withBuffer(16)
-            loadedMapStyle.addSource(
-                GeoJsonSource(
-                    CLUSTER_SOURCE_ID,
-                    geoJsonString,
-                    geoJsonOptions,
-                ),
-            )
+            loadedMapStyle.addSource(GeoJsonSource(CLUSTER_SOURCE_ID, geoJsonString, geoJsonOptions))
         } catch (_: URISyntaxException) {
         }
-        val unclusteredSymbolLayer =
-            SymbolLayer("unclustered-points", CLUSTER_SOURCE_ID).withProperties(
-                iconImage(ICON_ID),
-                iconSize(
-                    division(
-                        get("mag"),
-                        literal(4.0f),
-                    ),
-                ),
-            )
-        unclusteredSymbolLayer.setFilter(has("mag"))
+        val unClusteredSymbolLayer =
+            SymbolLayer("unclustered-points", CLUSTER_SOURCE_ID).withProperties(iconImage(ICON_ID), iconSize(division(get("mag"), literal(4.0f))))
+        unClusteredSymbolLayer.setFilter(has("mag"))
 
-        loadedMapStyle.addLayer(unclusteredSymbolLayer)
+        loadedMapStyle.addLayer(unClusteredSymbolLayer)
     }
 }
 ```
@@ -1000,7 +917,6 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
-    
     private lateinit var mBinding: ActivityMapLoadBinding
     private val GEOJSON_SOURCE_ID = "GEOJSON_SOURCE_ID"
     private val MARKER_IMAGE_ID = "MARKER_IMAGE_ID"
@@ -1016,19 +932,10 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
 
         Mapbox.getInstance(this@InfoWindowActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1071,18 +978,9 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) {
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {
             map = mapboxMap
-            val initialPosition = LatLng(47.6160281982247, -122.32642111977668)
-            mapboxMap.*cameraPosition* = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(13.0)
-                .build()
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(13.0).build()
             val featureCollection = FeatureCollection.fromJson(
                 "{\n" +
                     "  \"type\": \"FeatureCollection\",\n" +
@@ -1099,8 +997,8 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
                     "      \"geometry\": {\n" +
                     "        \"type\": \"Point\",\n" +
                     "        \"coordinates\": [\n" +
-                    "          -122.90480,\n" +
-                    "          47.03676\n" +
+                    "          -122.32642111977668,\n" +
+                    "          47.6160281982247\n" +
                     "        ]\n" +
                     "      }\n" +
                     "    }\n" +
@@ -1117,30 +1015,20 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
             val inflater = LayoutInflater.from(this)
             if (featureCollection != null) {
                 for (feature in featureCollection.features()!!) {
-                    val layout = inflater.inflate(
-                        R.layout.symbol_layer_info_window_layout_callout,
-                        null,
-                    ) as LinearLayout
+                    val layout = inflater.inflate(R.layout.symbol_layer_info_window_layout_callout, null) as LinearLayout
                     val name = feature.getStringProperty(PROPERTY_NAME)
-                    val titleTextView =
-                        layout.findViewById<TextView>(R.id.info_window_title)
+                    val titleTextView = layout.findViewById<TextView>(R.id.info_window_title)
                     titleTextView.text = name
                     val style = feature.getStringProperty(PROPERTY_CAPITAL)
-                    val descriptionTextView =
-                        layout.findViewById<TextView>(R.id.info_window_description)
-                    descriptionTextView.text = java.lang.String.format(
-                        getString(R.string.capital),
-                        style,
-                    )
-                    val measureSpec =
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    val descriptionTextView = layout.findViewById<TextView>(R.id.info_window_description)
+                    descriptionTextView.text = java.lang.String.format(getString(R.string.capital), style)
+                    val measureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                     layout.measure(measureSpec, measureSpec)
                     val bitmap: Bitmap = SymbolGenerator.generate(layout)
                     imagesMap[name] = bitmap
                     viewMap[name] = layout
                 }
             }
-
             setImageGenResults(imagesMap)
             refreshSource()
             mapboxMap.addOnMapClickListener(this@InfoWindowActivity)
@@ -1164,10 +1052,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
 
     private fun setUpImage(loadedStyle: Style) {
         ContextCompat.getDrawable(applicationContext, R.drawable.ic_marker_red)?.let {
-            loadedStyle.addImage(
-                MARKER_IMAGE_ID,
-                it,
-            )
+            loadedStyle.addImage(MARKER_IMAGE_ID, it)
         }
     }
 
@@ -1180,23 +1065,14 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     private fun setUpMarkerLayer(loadedStyle: Style) {
         loadedStyle.addLayer(
             SymbolLayer(MARKER_LAYER_ID, GEOJSON_SOURCE_ID)
-                .withProperties(
-                    iconImage(MARKER_IMAGE_ID),
-                    iconAllowOverlap(true),
-                    iconOffset(arrayOf(0f, -8f)),
-                ),
+                .withProperties(iconImage(MARKER_IMAGE_ID), iconAllowOverlap(true), iconOffset(arrayOf(0f, -8f))),
         )
     }
 
     private fun setUpInfoWindowLayer(loadedStyle: Style) {
         loadedStyle.addLayer(
             SymbolLayer(CALLOUT_LAYER_ID, GEOJSON_SOURCE_ID)
-                .withProperties(
-                    iconImage("{name}"),
-                    iconAnchor(ICON_ANCHOR_BOTTOM),
-                    iconAllowOverlap(true),
-                    iconOffset(arrayOf(-2f, -28f)),
-                )
+                .withProperties(iconImage("{name}"), iconAnchor(ICON_ANCHOR_BOTTOM), iconAllowOverlap(true), iconOffset(arrayOf(-2f, -28f)))
                 .withFilter(eq(get(PROPERTY_SELECTED), literal(true))),
         )
     }
@@ -1359,19 +1235,9 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@PolylineActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityPolylineBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1414,17 +1280,8 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-            val initialPosition = LatLng(47.6160281982247, -122.32642111977668)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(7.0)
-                .build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(7.0).build()
             addLine(
                 style,
                 listOf(
@@ -1437,6 +1294,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         }
     }
+
     private fun addLine(
         style: Style,
         coordinates: List<Point>,
@@ -1452,11 +1310,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         style.addSource(geoJsonSource)
 
         style.addLayer(
-            LineLayer(mLayerId, mSourceId).withProperties(
-                PropertyFactory.lineDasharray(arrayOf()),
-                PropertyFactory.lineWidth(6f),
-                PropertyFactory.lineColor("#111"),
-            ),
+            LineLayer(mLayerId, mSourceId).withProperties(PropertyFactory.lineDasharray(arrayOf()), PropertyFactory.lineWidth(6f), PropertyFactory.lineColor("#111")),
         )
     }
 }
@@ -1544,19 +1398,9 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@PolygonActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityPolygonBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1599,17 +1443,8 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-            val initialPosition = LatLng(47.6160281982247, -122.32642111977668)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(7.0)
-                .build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(7.0).build()
             addPolygon(style)
         }
     }
@@ -1625,19 +1460,11 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
                 Point.fromLngLat(-122.32642111977668, 47.6160281982247),
             ),
         )
-
         val polygon = Polygon.fromLngLats(polygonCoordinates)
         val polygonFeature = Feature.fromGeometry(polygon)
-
-        val geoJsonSource = GeoJsonSource("polygon-source", polygonFeature)
-        style.addSource(geoJsonSource)
-
+        style.addSource(GeoJsonSource("polygon-source", polygonFeature))
         style.addLayer(
-            FillLayer("polygon-layer", "polygon-source")
-                .withProperties(
-                    PropertyFactory.fillColor(-0xa80e9),
-                    PropertyFactory.fillOpacity(1f),
-                ),
+            FillLayer("polygon-layer", "polygon-source").withProperties(PropertyFactory.fillColor(-0xa80e9), PropertyFactory.fillOpacity(1f)),
         )
     }
 }
@@ -1740,7 +1567,6 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ```
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
-
     private lateinit var mBinding: ActivityMapLoadBinding
     private val CLUSTER_SOURCE_ID = "cluster-source"
     private val ICON_ID = "single-icon-id"
@@ -1773,19 +1599,9 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@HeatMapActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1828,17 +1644,8 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-            val initialPosition = LatLng(63.1224, -150.4048)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(4.0)
-                .build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(63.1224, -150.4048)).zoom(4.0).build()
             addSource(style)
             addHeatmapLayer(style)
             addCircleLayer(style)
@@ -1848,13 +1655,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addSource(loadedMapStyle: Style) {
         try {
             val geoJsonOptions = GeoJsonOptions().withBuffer(16)
-            loadedMapStyle.addSource(
-                GeoJsonSource(
-                    CLUSTER_SOURCE_ID,
-                    geoJsonString,
-                    geoJsonOptions,
-                ),
-            )
+            loadedMapStyle.addSource(GeoJsonSource(CLUSTER_SOURCE_ID, geoJsonString, geoJsonOptions))
         } catch (_: URISyntaxException) {
         }
     }
@@ -1875,40 +1676,11 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     literal(1), rgb(178, 24, 43),
                 ),
             ),
-            heatmapWeight(
-                interpolate(
-                    linear(),
-                    get("mag"),
-                    stop(0, 0),
-                    stop(6, 1),
-                ),
-            ),
-            heatmapIntensity(
-                interpolate(
-                    linear(),
-                    zoom(),
-                    stop(0, 1),
-                    stop(9, 3),
-                ),
-            ),
-            heatmapRadius(
-                interpolate(
-                    linear(),
-                    zoom(),
-                    stop(0, 2),
-                    stop(9, 20),
-                ),
-            ),
-            heatmapOpacity(
-                interpolate(
-                    linear(),
-                    zoom(),
-                    stop(7, 1),
-                    stop(9, 0),
-                ),
-            ),
+            heatmapWeight(interpolate(linear(), get("mag"), stop(0, 0), stop(6, 1))),
+            heatmapIntensity(interpolate(linear(), zoom(), stop(0, 1), stop(9, 3))),
+            heatmapRadius(interpolate(linear(), zoom(), stop(0, 2), stop(9, 20))),
+            heatmapOpacity(interpolate(linear(), zoom(), stop(7, 1), stop(9, 0))),
         )
-
         loadedMapStyle.addLayer(layer)
     }
 
@@ -1920,21 +1692,11 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     linear(),
                     zoom(),
                     literal(7),
-                    interpolate(
-                        linear(),
-                        get("mag"),
-                        stop(1, 1),
-                        stop(6, 4),
-                    ),
+                    interpolate(linear(), get("mag"), stop(1, 1), stop(6, 4)),
                     literal(16),
-                    interpolate(
-                        linear(),
-                        get("mag"),
-                        stop(1, 5),
-                        stop(6, 50),
-                    ),
+                    interpolate(linear(), get("mag"), stop(1, 5), stop(6, 50)),
                 ),
-            ), 
+            ),
             circleColor(
                 interpolate(
                     linear(), get("mag"),
@@ -1946,14 +1708,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     literal(6), rgb(178, 24, 43),
                 ),
             ),
-            circleOpacity(
-                interpolate(
-                    linear(),
-                    zoom(),
-                    stop(7, 0),
-                    stop(8, 1),
-                ),
-            ),
+            circleOpacity(interpolate(linear(), zoom(), stop(7, 0), stop(8, 1))),
             circleStrokeColor("white"),
             circleStrokeWidth(1.0f),
         )
@@ -2138,19 +1893,9 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@CalculateRouteActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initAWSMobileClient(applicationContext)
@@ -2213,27 +1958,10 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-            val initialPosition = LatLng(33.39691896489222, -118.38953208616074)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(14.0)
-                .build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(33.39691896489222, -118.38953208616074)).zoom(14.0).build()
             CoroutineScope(Dispatchers.IO).launch {
-                val result = calculateRoute(
-                    33.397676454651766,
-                    -118.39439114221236,
-                    33.395737842093304,
-                    -118.38638874990086,
-                    false,
-                    isAvoidTolls = false,
-                    travelMode = "Car",
-                )
+                val result = calculateRoute(33.397676454651766, -118.39439114221236, 33.395737842093304, -118.38638874990086, false, isAvoidTolls = false, travelMode = "Car")
                 result?.let {
                     runOnUiThread {
                         val lineString = arrayListOf<Point>()
@@ -2262,7 +1990,6 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
                                 PropertyFactory.lineColor(Color.parseColor("#2040F4")),
                             ),
                         )
-                        
                         addMarker(mBinding.mapView, mapboxMap, this@CalculateRouteActivity, "marker-origin", LatLng(33.397676454651766, -118.39439114221236))
                         addMarker(mBinding.mapView, mapboxMap, this@CalculateRouteActivity, "marker-destination", LatLng(33.395737842093304, -118.38638874990086))
                     }
@@ -2271,29 +1998,13 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun calculateRoute(
-        latDeparture: Double?,
-        lngDeparture: Double?,
-        latDestination: Double?,
-        lngDestination: Double?,
-        isAvoidFerries: Boolean?,
-        isAvoidTolls: Boolean?,
-        travelMode: String?,
-    ): CalculateRouteResult? {
+    private fun calculateRoute(latDeparture: Double?, lngDeparture: Double?, latDestination: Double?, lngDestination: Double?, isAvoidFerries: Boolean?, isAvoidTolls: Boolean?, travelMode: String?): CalculateRouteResult? {
         return try {
             val indexName = "<Your route calculator name>"
-
-            // Allowed Values: Kilometers, Miles
-            val DISTANCE_UNIT = "Kilometers"
             mClient?.calculateRoute(
-                CalculateRouteRequest().withDeparturePosition(
-                    lngDeparture,
-                    latDeparture,
-                ).withDestinationPosition(lngDestination, latDestination)
-                    .withCarModeOptions(
-                        CalculateRouteCarModeOptions().withAvoidTolls(isAvoidTolls)
-                            .withAvoidFerries(isAvoidFerries),
-                    ).withIncludeLegGeometry(true).withDistanceUnit(DISTANCE_UNIT)
+                CalculateRouteRequest().withDeparturePosition(lngDeparture, latDeparture).withDestinationPosition(lngDestination, latDestination)
+                    .withCarModeOptions(CalculateRouteCarModeOptions().withAvoidTolls(isAvoidTolls).withAvoidFerries(isAvoidFerries))
+                    .withIncludeLegGeometry(true).withDistanceUnit("Kilometers")
                     .withDepartNow(true).withTravelMode(travelMode)
                     .withCalculatorName(indexName),
             )
@@ -2301,24 +2012,14 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
             CalculateRouteResult()
         }
     }
-    private fun addMarker(
-        mapView: MapView,
-        mapboxMap: MapboxMap?,
-        activity: Activity,
-        name: String,
-        latLng: LatLng,
-    ) {
+
+    private fun addMarker(mapView: MapView, mapboxMap: MapboxMap?, activity: Activity, name: String, latLng: LatLng) {
         mapboxMap?.getStyle { style ->
             val symbolManager = SymbolManager(mapView, mapboxMap, style)
             ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_marker_red)?.let {
-                style.addImage(
-                    name,
-                    it,
-                )
+                style.addImage(name, it)
             }
-            val symbolOptions = SymbolOptions()
-                .withLatLng(latLng).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER)
-
+            val symbolOptions = SymbolOptions().withLatLng(latLng).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER)
             symbolManager.create(symbolOptions)
         }
     }
@@ -2452,19 +2153,9 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@SearchActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initAWSMobileClient(applicationContext)
@@ -2478,11 +2169,7 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
                 context,
                 object : Callback<UserStateDetails?> {
                     override fun onResult(result: UserStateDetails?) {
-                        mClient =
-                            AmazonLocationClient(
-                                AWSMobileClient.getInstance(),
-                                ClientConfiguration(),
-                            )
+                        mClient = AmazonLocationClient(AWSMobileClient.getInstance(), ClientConfiguration())
                     }
 
                     override fun onError(e: Exception?) {
@@ -2527,18 +2214,9 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {
             CoroutineScope(Dispatchers.IO).launch {
-                val result = searchPlaceIndexForText(
-                    23.022677,
-                    72.537837,
-                    "Car",
-                )
+                val result = searchPlaceIndexForText(23.022677, 72.537837, "Car")
                 result?.let {
                     val data = it.results
                     // Access search result data here
@@ -2547,17 +2225,11 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun searchPlaceIndexForText(
-        lat: Double?,
-        lng: Double?,
-        text: String?,
-    ): SearchPlaceIndexForTextResult? {
+    private fun searchPlaceIndexForText(lat: Double?, lng: Double?, text: String?): SearchPlaceIndexForTextResult? {
         return try {
             val indexName = "YourPlaceIndex"
             val response: SearchPlaceIndexForTextResult? = mClient?.searchPlaceIndexForText(
-                SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat))
-                    .withIndexName(indexName).withText(text)
-                    .withMaxResults(15),
+                SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat)).withIndexName(indexName).withText(text).withMaxResults(15),
             )
             response
         } catch (e: Exception) {
@@ -2643,23 +2315,12 @@ implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
 class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
-    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
-        val credentialProvider = CognitoCachingCredentialsProvider(
-            applicationContext,
-            identityPoolId,
-            Regions.fromName(identityPoolId.split(":").first()),
-        )
-
+        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@GeofenceDrawActivity)
-        HttpRequestUtil.setOkHttpClient(
-            OkHttpClient.Builder()
-                .addInterceptor(SigV4Interceptor(credentialProvider, "geo"))
-                .build(),
-        )
+        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -2702,85 +2363,21 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        val mapName = getString(R.string.mapName)
-        val awsRegion = getString(R.string.awsRegion)
-        mapboxMap.setStyle(
-            Style.Builder()
-                .fromUri("https://maps.geo.$awsRegion.amazonaws.com/maps/v0/maps/$mapName/style-descriptor"),
-        ) { style ->
-
-            val initialPosition = LatLng(47.6160281982247, -122.32642111977668)
-            mapboxMap.cameraPosition = CameraPosition.Builder()
-                .target(initialPosition)
-                .zoom(13.0)
-                .build()
-            if (style.getSource("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID") == null) {
-                style.addSource(GeoJsonSource("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID"))
-            }
-
-            if (style.getSource("TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID") == null) {
-                style.addSource(GeoJsonSource("TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID"))
-            }
-
-            val fillLayer = FillLayer(
-                "TURF_CALCULATION_FILL_LAYER_ID",
-                "TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID",
-            )
-
-            val lineLayer = LineLayer(
-                "TURF_CALCULATION_LINE_LAYER_ID",
-                "TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID",
-            )
-
-            lineLayer.setProperties(
-                PropertyFactory.lineWidth(2f),
-                PropertyFactory.lineColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.blue,
-                    ),
-                ),
-            )
-
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(13.0).build()
+            style.addSource(GeoJsonSource("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID"))
+            val fillLayer = FillLayer("TURF_CALCULATION_FILL_LAYER_ID", "TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID")
             fillLayer.setProperties(
-                PropertyFactory.fillColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.blue,
-                    ),
-                ),
-                PropertyFactory.fillOutlineColor(
-                    ContextCompat.getColor(
-                        applicationContext,
-                        R.color.blue,
-                    ),
-                ),
+                PropertyFactory.fillColor(ContextCompat.getColor(applicationContext, R.color.blue)),
+                PropertyFactory.fillOutlineColor(ContextCompat.getColor(applicationContext, R.color.blue)),
                 PropertyFactory.fillOpacity(0.9f),
             )
-            if (style.getLayer("TURF_CALCULATION_FILL_LAYER_ID") == null) {
-                style.addLayerBelow(fillLayer, "CIRCLE_CENTER_LAYER_ID")
-                style.addLayer(lineLayer)
-            }
-
-            val polygonArea: Polygon = TurfTransformation.circle(
-                Point.fromLngLat(-122.32642111977668, 47.6160281982247),
-                1000.toDouble(),
-                360,
-                TurfConstants.UNIT_METERS,
-            )
+            style.addLayerBelow(fillLayer, "CIRCLE_CENTER_LAYER_ID")
+            val polygonArea: Polygon = TurfTransformation.circle(Point.fromLngLat(-122.32642111977668, 47.6160281982247), 1000.toDouble(), 360, TurfConstants.UNIT_METERS)
             val pointList = TurfMeta.coordAll(polygonArea, false)
-
             val polygonCircleSource =
                 style.getSourceAs<GeoJsonSource>("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID")
-            polygonCircleSource?.setGeoJson(
-                Polygon.fromOuterInner(
-                    LineString.fromLngLats(pointList),
-                ),
-            )
-
-            val markerSource =
-                style.getSourceAs<GeoJsonSource>("TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID")
-            markerSource?.setGeoJson(Polygon.fromOuterInner(LineString.fromLngLats(pointList)))
+            polygonCircleSource?.setGeoJson(Polygon.fromOuterInner(LineString.fromLngLats(pointList)))
         }
     }
 }
