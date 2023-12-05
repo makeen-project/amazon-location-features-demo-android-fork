@@ -559,9 +559,7 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
-
         val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
-
         Mapbox.getInstance(this@AddMarkerActivity)
         HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityAddMarkerBinding.inflate(layoutInflater)
@@ -917,6 +915,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
+
     private lateinit var mBinding: ActivityMapLoadBinding
     private val GEOJSON_SOURCE_ID = "GEOJSON_SOURCE_ID"
     private val MARKER_IMAGE_ID = "MARKER_IMAGE_ID"
@@ -933,7 +932,6 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
         val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
-
         Mapbox.getInstance(this@InfoWindowActivity)
         HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
@@ -1567,6 +1565,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ```
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
+
     private lateinit var mBinding: ActivityMapLoadBinding
     private val CLUSTER_SOURCE_ID = "cluster-source"
     private val ICON_ID = "single-icon-id"
@@ -2315,6 +2314,7 @@ implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
 class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val identityPoolId = getString(R.string.identityPoolId)
