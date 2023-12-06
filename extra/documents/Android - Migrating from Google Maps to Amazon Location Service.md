@@ -133,14 +133,17 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 
 * Coordinates in Google Maps are referred to as `latitude, longitude`, while Amazon Location Service uses `longitude, latitude`. The Amazon Location Service format is aligned with the standard `[x, y]`, which is followed by most Geographic Information System (GIS) platforms.
 * Coordinates in Amazon Location Maps are defined as Position objects. A coordinate is specified as a number array in the format of `[longitude, latitude]`.
-* Amazon Location Service has an API and SDK that work hand in hand with [MapLibre Native](https://github.com/maplibre/maplibre-native) SDK.
-* The MapLibre Native SDK for Android is a library based on[Mapbox Native](https://github.com/mapbox/mapbox-gl-native) and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
+* The APIs and SDK of Amazon Location Service seamlessly collaborate with the [MapLibre](https://github.com/maplibre/maplibre-native) SDK.
+* The MapLibre Native SDK for Android is a library based on [Mapbox Native](https://github.com/mapbox/mapbox-gl-native) and is compatible with the styles and tiles provided by the Amazon Location Service Maps API. You can integrate MapLibre Native SDK for Android to embed interactive map views with scalable, customizable vector maps in your Android applications.
 
 ## Android SDK side-by-side examples
 
 ### Load a map
 
 Both Google Maps and Amazon Location Service allow you to integrate interactive, customizable maps into your applications. These maps can display various types of geographical data and allow for features like panning and zooming.
+
+1. The `SupportMapFragment` object manages the life cycle of the map and is the parent element of the app's UI. The `GoogleMap` object provides access to the map data and view. This is the main class of the Google Maps SDK for Android.
+2. Amazon Location's MapLibre provides `MapView` to initialize and load the map.
 
 #### With Google Maps
 
@@ -503,6 +506,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
 Both Google Maps and Amazon Location Service can plot markers at specific coordinates on a map.
 
+1. Google Maps supports it natively out of the box via `addMarker`.
+2. Amazon Location Service utilizes the MapLibre library to render markers onto the map via `SymbolManager`.
+
 #### With Google Maps
 
 **Step 1**: With Google Maps, markers are added using the maps `addMarker` method in `MarkerActivity.kt`.
@@ -629,6 +635,9 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 ### Marker clustering
 
 Both Google Maps and Amazon Location Service provide marker clustering.
+
+1. Google Maps provides `ClusterManager` that takes the map reference and an array of markers to show marker clusters on the map.
+2. Amazon Location Service renders markers and data layers directly from MapLibre via `addSource` and `addLayer`.
 
 #### With Google Maps
 
@@ -861,6 +870,9 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 ### Display an Info window
 
 Both Google Maps and Amazon Location Service can render an info/popup on the map.
+
+1. Google Maps uses `MarkerOptions` to display a popup next to a marker.
+2. Amazon Location Service utilizes the MapLibre library. You can use the `addSource` and `addLayer` methods to add GeoJSON data.
 
 #### With Google Maps
 
@@ -1161,6 +1173,9 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
 
 Polylines can be drawn on Google Maps. For Amazon Location Service, there isn't any built-in support for polylines.
 
+1. You can use Google Maps `addPolyline` method to draw polylines on a map.
+2. Amazon Location Service utilizes the MapLibre library. You can use the `addSource` and `addLayer` methods to add GeoJSON data.
+
 #### With Google Maps
 
 **Step 1**: Add the code below inside `PolylineActivity.kt`.
@@ -1322,6 +1337,9 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
 
 Polygons are geometric shapes that are used to represent a specific area on a map. The following examples show you how to create a polygon.
 
+1. You can use Google Maps `addPolygon` method to draw a polygon on a map.
+2. Amazon Location Service utilizes the MapLibre library. You can use the `addSource` and `addLayer` methods to add GeoJSON data.
+
 #### With Google Maps
 
 **Step 1**: Add the code below inside `PolygonActivity.kt`.
@@ -1475,6 +1493,9 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
 ### Add a heat map (Data Layers)
 
 Google Maps supports data layer functionality, allowing you to overlay data on the map. This feature is not available natively with Amazon Location service.
+
+1. Google Maps provides a heatmap layer as part of the `com.google.maps.android:android-maps-utils` library and adds a heat map with the `HeatmapTileProvider` method.
+2. Amazon Location Service utilizes MapLibre's `addLayer` function. Typically, you'd first add a source using `addSource` and then add a layer referencing this source.
 
 #### With Google Maps
 
@@ -1722,6 +1743,9 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 ### Calculate route / Navigation:
 
 Google Maps and Amazon Location services both provide routing services.
+
+1. Google Maps provides the `maps.googleapis.com/maps/api/directions` URL with the Google Maps API key to load and display route data on the map.
+2. Amazon Location provides the `calculateRoute` method via its location client and utilizes Maplibre's rendering capability to display that data on a map.
 
 #### With Google Maps
 
@@ -2031,6 +2055,11 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 
 ### Search places:
 
+Both platforms provide place search capabilities, and they can offer information about places.
+
+1. Google Maps provides a `maps.googleapis.com/maps/api/place/textsearch` URL with Google Maps API key to search places
+2. Amazon Location Service provides `searchPlaceIndexForText` via its location client. Amazon Location Service also provides other Places APIs, such as `GetPlace` and `SearchPlaceIndexForSuggestions`. [Learn more](https://docs.aws.amazon.com/location/latest/developerguide/places-concepts.html)
+
 #### With Google Maps
 
 **Step 1**: Add the below line inside `dependencies` in the `build.gradle` file.
@@ -2240,8 +2269,12 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-### Drawing a geofence:
+### Drawing a circle:
 
+Both services allow to the drawing of circle on the map.
+
+1. Google Maps provides the `addCircle` method to draw a circle.
+2. Amazon Location Service utilizes Maplibre’s `addSource` and `addLayer` methods to render a circle and you can use the ` org.maplibre.gl:android-sdk-turf` library to get a point list of circle for rendering.
 #### With Google Maps
 
 **Step 1**: Add the below code in `GeofenceDrawActivity.kt`.
@@ -2285,7 +2318,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/android/google-maps-drawing-a-geofence.jpg" width="200">    <img src="./images/android/google-maps-drawing-a-geofence1.jpg" width="200">
+<img src="./images/android/google-maps-drawing-a-circle.jpg" width="200">    <img src="./images/android/google-maps-drawing-a-circle1.jpg" width="200">
 
 
 #### With Amazon Location
@@ -2385,4 +2418,4 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
 }
 ```
 
-<img src="./images/android/amazon-location-drawing-a-geofence.jpg" width="200">    <img src="./images/android/amazon-location-drawing-a-geofence1.jpg" width="200">
+<img src="./images/android/amazon-location-drawing-a-circle.jpg" width="200">    <img src="./images/android/amazon-location-drawing-a-circle1.jpg" width="200">
