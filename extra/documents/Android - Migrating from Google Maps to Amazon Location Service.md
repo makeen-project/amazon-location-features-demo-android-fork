@@ -20,7 +20,7 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
     1. In the Amazon Location Service console on the [Route calculators page](https://us-east-1.console.aws.amazon.com/location/routes/home?region=us-east-1#/), choose Create Route Calculator.
     2. Add a Name and Description for the new route calculator resource. Make a note of the name that you use for the route calculator resource. You will need it when creating your script file later in the tutorial.
     3. Choose a data provider; remember that while choosing a map style, also select which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
-    4. Agree to the (Amazon Location Terms and Conditions)[https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service], then choose Create Route Calculator.
+    4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
 5. To set up authentication for your application
     1. In Amazon Location service to authenticate your application need to set up roles in IAM roles like the below in [the AWS console](https://us-east-1.signin.aws/platform/login?workflowStateHandle=ebef097a-b05a-4111-80e9-75ee1630349f)
         1. Choose which IAM roles you want to use with your identity pool and Expand **View Details**.
