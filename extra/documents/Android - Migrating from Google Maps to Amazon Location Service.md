@@ -4,7 +4,7 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 
 ## Prerequisites:
 
-1. Create an [AWS account](https://portal.aws.amazon.com/billing/signup/iam#/start/email) if you don’t already have one. Once your AWS account is set up, you can create Amazon Location Service resources, which can be utilized to run the code snippets below.
+1. Create an AWS account if you still need to create one. Once your AWS account is ready, you can create Amazon Location Service resources, which you will use to run the code snippets below.
 2. Choose the map style that you want to use.
     1. In the Amazon Location Service console, on the [Maps page](https://console.aws.amazon.com/location/maps/home), choose Create Map to preview map styles.
     2. Add a Name and Description for the new map resource. Make a note of the name that you use for the map resource. You will need it when creating your script file later in the tutorial.
@@ -13,14 +13,14 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 3. Choose the place index that you want to use.
     1. In the Amazon Location Service console on the [Place indexes page](https://us-east-1.console.aws.amazon.com/location/places/home?region=us-east-1), choose Create Place Index.
     2. Add a Name and Description for the new place index resource. Make a note of the name that you use for the place index resource. You will need it when creating your script file later in the tutorial.
-    3. Choose a data provider; in most cases, choose the one that matches the map provider you already chose. This helps to ensure that the searches will match the maps. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
-    4. Choose the Data storage option. The results are not stored for this tutorial so you can choose No, single use only.
+    3. Choose a data provider; in most cases, choose the one that matches your chosen map provider. This helps to ensure that the searches will match the maps. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
+    4. Choose the Data storage option. Since no data is stored for this tutorial, you can choose No, single use only.
     5. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Place Index.
 4. Choose the route calculator that you want to use.
     1. In the Amazon Location Service console on the [Route calculators page](https://us-east-1.console.aws.amazon.com/location/routes/home?region=us-east-1#/), choose Create Route Calculator.
     2. Add a Name and Description for the new route calculator resource. Make a note of the name that you use for the route calculator resource. You will need it when creating your script file later in the tutorial.
-    3. Choose a data provider; remember that while choosing a map style, also choose which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
-    4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
+    3. Choose a data provider; remember that while choosing a map style, also select which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
+    4. Agree to the (Amazon Location Terms and Conditions)[https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service], then choose Create Route Calculator.
 5. To set up authentication for your application
     1. In Amazon Location service to authenticate your application need to set up roles in IAM roles like the below in [the AWS console](https://us-east-1.signin.aws/platform/login?workflowStateHandle=ebef097a-b05a-4111-80e9-75ee1630349f)
         1. Choose which IAM roles you want to use with your identity pool and Expand **View Details**.
