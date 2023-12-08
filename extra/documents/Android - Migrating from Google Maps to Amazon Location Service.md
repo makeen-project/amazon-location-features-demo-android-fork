@@ -793,7 +793,6 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        // Add a marker in Sydney and move the camera
         val latLng = LatLng(37.8, -96.0)
         mMap.addMarker(
             MarkerOptions().position(latLng).title("Hello World!")
@@ -1713,7 +1712,6 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                // Handle failure
             }
         })
     }
@@ -1981,7 +1979,6 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 
                         if (resultsArray != null) {
                             if (resultsArray.length() > 0) {
-                                // Assuming you want the label of the first place in the results
                                 val firstPlace = resultsArray.getJSONObject(0)
                                 val placeLabel = firstPlace.getString("name")
                                 Toast.makeText(this@SearchActivity, placeLabel, Toast.LENGTH_SHORT).show()
@@ -1996,7 +1993,6 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             override fun onFailure(call: Call, e: IOException) {
-                // Handle failure
             }
         })
     }
