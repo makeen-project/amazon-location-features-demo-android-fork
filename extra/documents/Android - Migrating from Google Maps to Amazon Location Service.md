@@ -22,38 +22,15 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
     3. Choose a data provider; remember that while choosing a map style, also select which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
     4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
 5. To set up authentication for your application
-    1. In Amazon Location service to authenticate your application need to set up roles in IAM roles like the below in [the AWS console](https://us-east-1.signin.aws/platform/login?workflowStateHandle=ebef097a-b05a-4111-80e9-75ee1630349f)
-        1. Choose which IAM roles you want to use with your identity pool and Expand **View Details**.
-        2. Under **Unauthenticated identities**, enter a role name.
-        3. Expand the **View Policy Document** section, then choose **Edit** to add your policy. The edited policy will look like the one below.
-        4.
-        ```{
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Sid": "LocationReadOnly",
-                  "Effect": "Allow",
-                  "Action": [
-                    "geo:GetMapStyleDescriptor",
-                    "geo:GetMapGlyphs",
-                    "geo:GetMapSprites",
-                    "geo:GetMapTile",
-                    "geo:SearchPlaceIndexForPosition",
-                    "geo:CalculateRoute"
-                  ],
-                  "Resource": [
-                    "arn:aws:geo:<region>:<accountID>:map/<ExampleMap>",
-                    "arn:aws:geo:<region>:<accountID>:route-calculator/<ExampleRoueCalculator>",
-                    "arn:aws:geo:<region>:<accountID>:place-index/<ExamplePlaceIndex>"
-                  ]
-                }
-              ]
-            }
-        ```
-        5. After updating the above policy, you can access the map, route calculator and place-index.
-
->(Please follow this [README.md](https://github.com/aws-geospatial/amazon-location-features-demo-android/blob/main/README.md) file for more details to set up code in Android Studio.)
-
+    1. Go to the [Amazon Location console](https://us-east-1.console.aws.amazon.com/location/home?region=us-east-1#/), and choose API keys from the left menu.
+    2. Choose Create API key; remember that the API key you create must be in the same AWS account and AWS Region as the Amazon Location Service resources you created in the previous section.
+    3. Fill in the following information on the Create API key page.
+        1. Name – A name for your API key, such as MyAppKey.
+        2. Resources – Choose the Amazon Location Service Map and Place index resources you created in the previous section. You can add more than one resource by choosing Add Resource. By doing this, the API key will be permitted to be used with the specified resources.
+        3. Actions – Specify the actions you want to authorize with this API key. You must select at least `geo:GetMap`, `geo:SearchPlaceIndexfForPosition`, and `geo:CalculateRoute` so that the tutorial will work as expected.
+        4. You can optionally add a Description, Expiration time, or Tags to your API key. You can also add a referer (such as `.example.com`), to limit the key to only being used from a particular domain. This will mean that the tutorial will only work from that domain.
+    4. Choose Create API Key to create the API key.
+    5. Choose the Show API Key and copy the key value for use later in the tutorial. It will be in the form of `v1.public.a1b2c3d4....`
 
 ## Key features support:
 
@@ -248,8 +225,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    49.246559,
+                    -123.063554,
+                ),
+                10.0f,
+            ),
+        )
     }
-} 
+}
 ```
 
 <img src="./images/android/google-maps-load-a-map.jpg" width="200">
@@ -306,99 +292,10 @@ dependencies {
 
     implementation("org.maplibre.gl:android-sdk:9.6.0")
     implementation("org.maplibre.gl:android-plugin-annotation-v9:1.0.0")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation("com.amazonaws:aws-android-sdk-mobile-client:2.73.0")
 }
 ```
 
-<a name="step-2-sigV4Interceptor"></a>
-**Step 2**: Create a class named `SigV4Interceptor.kt` to intercept AWS requests. This will be registered with the HTTP client that fetches map resources when the Activity is created.
-
-```
-class SigV4Interceptor(
-    private val credentialsProvider: AWSCredentialsProvider,
-    private val serviceName: String,
-) : Interceptor {
-
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-
-        if (originalRequest.url.host.contains("amazonaws.com")) {
-            val signer = if (originalRequest.url.encodedPath.contains("@")) {
-                AWS4Signer(false)
-            } else {
-                AWS4Signer()
-            }
-
-            val awsRequest = toAWSRequest(originalRequest, serviceName)
-            signer.setServiceName(serviceName)
-            signer.sign(awsRequest, credentialsProvider.credentials)
-
-            return chain.proceed(toSignedOkHttpRequest(awsRequest, originalRequest))
-        }
-
-        return chain.proceed(originalRequest)
-    }
-
-    companion object {
-        fun toAWSRequest(request: Request, serviceName: String): DefaultRequest<Any> {
-            val dr = DefaultRequest<Any>(serviceName)
-
-            dr.httpMethod = HttpMethodName.valueOf(request.method)
-            with(request.url) {
-                dr.resourcePath = toUri().path
-                dr.endpoint = URI.create("$scheme://$host")
-
-                for (p in queryParameterNames) {
-                    if (p != "") {
-                        dr.addParameter(p, queryParameter(p))
-                    }
-                }
-            }
-
-            for (h in request.headers.names()) {
-                dr.addHeader(h, request.header(h))
-            }
-
-            val bodyBytes = request.body?.let { body ->
-                val buffer = Buffer()
-                body.writeTo(buffer)
-                IOUtils.toByteArray(buffer.inputStream())
-            }
-
-            dr.content = ByteArrayInputStream(bodyBytes ?: ByteArray(0))
-
-            return dr
-        }
-
-        fun toSignedOkHttpRequest(
-            awsRequest: DefaultRequest<Any>,
-            originalRequest: Request,
-        ): Request {
-            val builder = Request.Builder()
-
-            for ((k, v) in awsRequest.headers) {
-                builder.addHeader(k, v)
-            }
-
-            val urlBuilder = HttpUrl.Builder()
-                .host(awsRequest.endpoint.host)
-                .scheme(awsRequest.endpoint.scheme)
-                .encodedPath(awsRequest.resourcePath)
-
-            for ((k, v) in awsRequest.parameters) {
-                urlBuilder.addQueryParameter(k, v)
-            }
-
-            return builder.url(urlBuilder.build())
-                .method(originalRequest.method, originalRequest.body)
-                .build()
-        }
-    }
-}
-```
-
-**Step 3**: To configure your application with your resources and AWS Region inside `configuration.xml` file like the below:
+**Step 2**: To configure your application with your resources and AWS Region inside `configuration.xml` file like the below:
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -406,10 +303,11 @@ class SigV4Interceptor(
     <string name="identityPoolId">Your Identity Pool Id</string>
     <string name="mapName">Your Map name</string>
     <string name="awsRegion">Your Region</string>
+    <string name="apiKey">Your API key</string>
 </resources>
 ```
 
-**Step 4**: Add the below permission inside the `AndroidManifest.xml` file:
+**Step 3**: Add the below permission inside the `AndroidManifest.xml` file:
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -424,7 +322,7 @@ class SigV4Interceptor(
 </manifest>
 ```
 
-**Step 5**: Add the below code inside  `activity_map_load.xml` file.
+**Step 4**: Add the below code inside `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -438,8 +336,7 @@ class SigV4Interceptor(
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-
-**Step 6**: Add the following code to your `MapActivity.kt` file.
+**Step 5**: Add the following code to your `MapActivity.kt` file.
 
 ```
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -448,10 +345,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@MapActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -494,8 +388,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        // Loads a new map style from the specified builder.
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {}
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(49.246559, -123.063554)).zoom(10.0).build()
+        }
     }
 }
 ```
@@ -532,9 +427,17 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val latLng = LatLng(47.6160281982247, -122.32642111977668)
+        val latLng = LatLng(
+            49.246559,
+            -123.063554,
+        )
         mMap.addMarker(MarkerOptions().position(latLng))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                latLng,
+                10.0f,
+            ),
+        )
     }
 }
 ```
@@ -557,7 +460,7 @@ class MarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project. Also, add a marker drawable named `ic_marker_blue` to the drawable folder. Finally, insert the below code into `AddMarkerActivity.kt`.
+**Step 2**: Add a marker drawable named `ic_marker_blue` to the drawable folder and insert the below code into `AddMarkerActivity.kt`.
 
 ```
 class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -566,10 +469,7 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@AddMarkerActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityAddMarkerBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -612,8 +512,8 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(13.0).build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(49.246559, -123.063554)).zoom(9.0).build()
             addMarker(mBinding.mapView, mapboxMap, this, "marker-name")
         }
     }
@@ -624,7 +524,7 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
             ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_marker_blue)?.let {
                 style.addImage(name, it)
             }
-            symbolManager.create(SymbolOptions().withLatLng(LatLng(47.6160281982247, -122.32642111977668)).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER))
+            symbolManager.create(SymbolOptions().withLatLng(LatLng(49.246559, -123.063554)).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER))
         }
     }
 }
@@ -670,11 +570,11 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        setUpClusterer()
+        setUpCluster()
     }
 
-    private fun setUpClusterer() {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(63.1016, -151.5129), 10f))
+    private fun setUpCluster() {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(-28.024, 140.887), 3f))
 
         clusterManager = ClusterManager(applicationContext, mMap)
 
@@ -684,24 +584,24 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun addItems() {
-        clusterManager.addItem(MyItem(63.1016, -151.5129, "Title1", "Snippet1"))
-        clusterManager.addItem(MyItem(63.1224, -150.4048, "Title2", "Snippet2"))
-        clusterManager.addItem(MyItem(63.0781, -151.3597, "Title3", "Snippet3"))
-        clusterManager.addItem(MyItem(63.0719, -151.5053, "Title4", "Snippet4"))
-        clusterManager.addItem(MyItem(63.1725, -148.789, "Title5", "Snippet5"))
-        clusterManager.addItem(MyItem(63.0879, -151.512, "Title6", "Snippet6"))
-        clusterManager.addItem(MyItem(63.0933, -151.4378, "Title7", "Snippet7"))
-        clusterManager.addItem(MyItem(63.2272, -149.6538, "Title8", "Snippet8"))
-        clusterManager.addItem(MyItem(61.8518, -149.4752, "Title9", "Snippet9"))
-        clusterManager.addItem(MyItem(61.6214, -150.8597, "Title10", "Snippet10"))
-        clusterManager.addItem(MyItem(61.2705, -151.2484, "Title11", "Snippet11"))
-        clusterManager.addItem(MyItem(65.5942, -152.0732, "Title12", "Snippet12"))
-        clusterManager.addItem(MyItem(63.1812, -150.9126, "Title13", "Snippet13"))
-        clusterManager.addItem(MyItem(61.5726, -147.3106, "Title14", "Snippet14"))
-        clusterManager.addItem(MyItem(60.2607, -150.5846, "Title15", "Snippet15"))
-        clusterManager.addItem(MyItem(63.5257, -147.8929, "Title16", "Snippet16"))
+        clusterManager.addItem(MyItem(-31.56391, 147.154312, "Title1", "Snippet1"))
+        clusterManager.addItem(MyItem(-33.71823, 150.363181, "Title2", "Snippet2"))
+        clusterManager.addItem(MyItem(-33.72711, 150.371124, "Title3", "Snippet3"))
+        clusterManager.addItem(MyItem(-33.84858, 151.209834, "Title4", "Snippet4"))
+        clusterManager.addItem(MyItem(-33.85170, 151.216968, "Title5", "Snippet5"))
+        clusterManager.addItem(MyItem(-34.67126, 150.863657, "Title6", "Snippet6"))
+        clusterManager.addItem(MyItem(-35.30472, 148.662905, "Title7", "Snippet7"))
+        clusterManager.addItem(MyItem(-36.81768, 175.699196, "Title8", "Snippet8"))
+        clusterManager.addItem(MyItem(-36.82861, 175.790222, "Title9", "Snippet9"))
+        clusterManager.addItem(MyItem(-37.75, 145.116667, "Title10", "Snippet10"))
+        clusterManager.addItem(MyItem(-37.75985, 145.128708, "Title11", "Snippet11"))
+        clusterManager.addItem(MyItem(-37.76501, 145.133858, "Title12", "Snippet12"))
+        clusterManager.addItem(MyItem(-37.77010, 145.143299, "Title13", "Snippet13"))
+        clusterManager.addItem(MyItem(-37.7737, 45.145187, "Title14", "Snippet14"))
+        clusterManager.addItem(MyItem(-37.77478, 145.137978, "Title15", "Snippet15"))
+        clusterManager.addItem(MyItem(-37.81961, 144.968119, "Title16", "Snippet16"))
     }
-    
+
     inner class MyItem(
         lat: Double,
         lng: Double,
@@ -756,7 +656,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `MarkerClusterActivity.kt`.
+**Step 2**: Include the following code to `MarkerClusterActivity.kt`.
 
 ```
 class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -766,34 +666,30 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     private val ICON_ID = "single-icon-id"
     private val geoJsonString = "{\n" +
         "  \"type\": \"FeatureCollection\",\n" +
-        "  \"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\" } },\n" +
         "  \"features\": [\n" +
-        "    { \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994521\", \"mag\": 2.3, \"time\": 1507425650893, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.5129, 63.1016, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994519\", \"mag\": 1.7, \"time\": 1507425289659, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.4048, 63.1224, 105.5 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994517\", \"mag\": 1.6, \"time\": 1507424832518, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.3597, 63.0781, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994510\", \"mag\": 1.6, \"time\": 1507422449194, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.5053, 63.0719, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994298\", \"mag\": 2.4, \"time\": 1507419370097, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -148.789, 63.1725, 7.5 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994293\", \"mag\": 1.5, \"time\": 1507417256497, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.512, 63.0879, 10.8 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994287\", \"mag\": 2.0, \"time\": 1507413903714, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.4378, 63.0933, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994285\", \"mag\": 1.5, \"time\": 1507413670029, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -149.6538, 63.2272, 96.8 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994280\", \"mag\": 1.3, \"time\": 1507413266231, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -149.4752, 61.8518, 54.3 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994278\", \"mag\": 1.8, \"time\": 1507413195076, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.8597, 61.6214, 50.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994273\", \"mag\": 1.2, \"time\": 1507411925999, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.2484, 61.2705, 69.1 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994270\", \"mag\": 2.0, \"time\": 1507411814209, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -152.0732, 65.5942, 14.8 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993963\", \"mag\": 1.4, \"time\": 1507407100665, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.9126, 63.1812, 150.4 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993960\", \"mag\": 1.4, \"time\": 1507405129739, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -147.3106, 61.5726, 26.9 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993952\", \"mag\": 1.7, \"time\": 1507403679922, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.5846, 60.2607, 34.2 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993746\", \"mag\": 1.3, \"time\": 1507399350671, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -147.8929, 63.5257, 3.3 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993741\", \"mag\": 1.6, \"time\": 1507398797233, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.3473, 63.0775, 0.0 ] } }\n" +
+        "    { \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994521\", \"mag\": 2.3, \"time\": 1507425650893, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 147.154312, -31.56391, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994519\", \"mag\": 1.7, \"time\": 1507425289659, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 150.363181, -33.718234, 105.5 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994517\", \"mag\": 1.6, \"time\": 1507424832518, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 150.371124, -33.727111, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994510\", \"mag\": 1.6, \"time\": 1507422449194, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 151.209834, -33.848588, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994298\", \"mag\": 2.4, \"time\": 1507419370097, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 151.216968, -33.851702, 7.5 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994293\", \"mag\": 1.5, \"time\": 1507417256497, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 150.863657, -34.671264, 10.8 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994287\", \"mag\": 2.0, \"time\": 1507413903714, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 148.662905, -35.304724, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994285\", \"mag\": 1.5, \"time\": 1507413670029, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 175.699196, -36.817685, 96.8 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994280\", \"mag\": 1.3, \"time\": 1507413266231, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 175.790222, -36.828611, 54.3 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994278\", \"mag\": 1.8, \"time\": 1507413195076, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 145.116667, -37.75, 50.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994273\", \"mag\": 1.2, \"time\": 1507411925999, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 145.128708, -37.759859, 69.1 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994270\", \"mag\": 2.0, \"time\": 1507411814209, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 145.133858, -37.765015, 14.8 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993963\", \"mag\": 1.4, \"time\": 1507407100665, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 145.143299, -37.770104, 150.4 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993960\", \"mag\": 1.4, \"time\": 1507405129739, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 145.145187, -37.7737, 26.9 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993952\", \"mag\": 1.7, \"time\": 1507403679922, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 145.137978, -37.774785, 34.2 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993746\", \"mag\": 1.3, \"time\": 1507399350671, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 144.968119, -37.819616, 3.3 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993741\", \"mag\": 1.6, \"time\": 1507398797233, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ 144.695692, -38.330766, 0.0 ] } }\n" +
         "  ]\n" +
         "}\n"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@MarkerClusterActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMarkerClusterBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -836,8 +732,8 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(63.1224, -150.4048)).zoom(7.0).build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(-37.759859, 145.128708)).zoom(7.0).build()
             style.transition = TransitionOptions(0, 0, false)
             initLayerIcons(style)
             addClusteredGeoJsonSource(style)
@@ -897,12 +793,18 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val latLng = LatLng(47.6160281982247, -122.32642111977668)
+        // Add a marker in Sydney and move the camera
+        val latLng = LatLng(37.8, -96.0)
         mMap.addMarker(
-            MarkerOptions().position(latLng).title("Test")
-                .snippet("Population: 4,137,400"),
+            MarkerOptions().position(latLng).title("Hello World!")
+                .snippet("Hello"),
         )
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        mMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                latLng,
+                10.0f,
+            ),
+        )
     }
 }
 ```
@@ -925,11 +827,11 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />.
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `InfoWindowActivity.kt`.
+**Step 2**: Include the following code to `InfoWindowActivity.kt`.
 
 ```
 class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
-
+    
     private lateinit var mBinding: ActivityMapLoadBinding
     private val GEOJSON_SOURCE_ID = "GEOJSON_SOURCE_ID"
     private val MARKER_IMAGE_ID = "MARKER_IMAGE_ID"
@@ -944,10 +846,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@InfoWindowActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -990,9 +889,9 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
             map = mapboxMap
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(13.0).build()
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(37.8, -96.0)).zoom(3.0).build()
             val featureCollection = FeatureCollection.fromJson(
                 "{\n" +
                     "  \"type\": \"FeatureCollection\",\n" +
@@ -1003,14 +902,14 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
                     "        \"marker-color\": \"#7e7e7e\",\n" +
                     "        \"marker-size\": \"medium\",\n" +
                     "        \"marker-symbol\": \"\",\n" +
-                    "        \"name\": \"Washington\",\n" +
-                    "        \"capital\": \"Olympia\"\n" +
+                    "        \"name\": \"Hello World!\",\n" +
+                    "        \"capital\": \"Hello\"\n" +
                     "      },\n" +
                     "      \"geometry\": {\n" +
                     "        \"type\": \"Point\",\n" +
                     "        \"coordinates\": [\n" +
-                    "          -122.32642111977668,\n" +
-                    "          47.6160281982247\n" +
+                    "          -96.0,\n" +
+                    "          37.8\n" +
                     "        ]\n" +
                     "      }\n" +
                     "    }\n" +
@@ -1202,20 +1101,25 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.addPolyline(
             PolylineOptions()
                 .add(
-                    LatLng(47.6160281982247, -122.32642111977668),
-                    LatLng(47.603565, -121.774015),
-                    LatLng(47.328766, -121.828946),
-                    LatLng(47.252465, -122.286552),
-                    LatLng(47.6160281982247, -122.32642111977668),
+                    LatLng(37.83381888486939, -122.48369693756104),
+                    LatLng(37.83317489144141, -122.48348236083984),
+                    LatLng(37.83270036637107, -122.48339653015138),
+                    LatLng(37.832056363179625, -122.48356819152832),
+                    LatLng(37.83114119107971, -122.48404026031496),
+                    LatLng(37.83049717427869, -122.48404026031496),
+                    LatLng(37.829920943955045, -122.48348236083984),
+                    LatLng(37.82954808664175, -122.48356819152832),
+                    LatLng(37.82944639795659, -122.48507022857666),
+                    LatLng(37.82880236636284, -122.48610019683838),
                 ),
         )
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
-                    47.6160281982247,
-                    -122.32642111977668,
+                    37.830348,
+                    -122.486052,
                 ),
-                8.0f,
+                15.0f,
             ),
         )
     }
@@ -1240,7 +1144,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `PolylineActivity.kt`.
+**Step 2**: Include the following code to `PolylineActivity.kt`.
 
 ```
 class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1249,10 +1153,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@PolylineActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityPolylineBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1295,16 +1196,21 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(7.0).build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(37.830348, -122.486052)).zoom(15.0).build()
             addLine(
                 style,
                 listOf(
-                    Point.fromLngLat(-122.32642111977668, 47.6160281982247),
-                    Point.fromLngLat(-121.774015, 47.603565),
-                    Point.fromLngLat(-121.828946, 47.328766),
-                    Point.fromLngLat(-122.286552, 47.252465),
-                    Point.fromLngLat(-122.32642111977668, 47.6160281982247),
+                    Point.fromLngLat(-122.48369693756104, 37.83381888486939),
+                    Point.fromLngLat(-122.48348236083984, 37.83317489144141),
+                    Point.fromLngLat(-122.48339653015138, 37.83270036637107),
+                    Point.fromLngLat(-122.48356819152832, 37.832056363179625),
+                    Point.fromLngLat(-122.48404026031496, 37.83114119107971),
+                    Point.fromLngLat(-122.48404026031496, 37.83049717427869),
+                    Point.fromLngLat(-122.48348236083984, 37.829920943955045),
+                    Point.fromLngLat(-122.48356819152832, 37.82954808664175),
+                    Point.fromLngLat(-122.48507022857666, 37.82944639795659),
+                    Point.fromLngLat(-122.48610019683838, 37.82880236636284),
                 ),
             )
         }
@@ -1366,11 +1272,10 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
         val polygon = mMap.addPolygon(
             PolygonOptions()
                 .add(
-                    LatLng(47.6160281982247, -122.32642111977668),
-                    LatLng(47.603565, -121.774015),
-                    LatLng(47.328766, -121.828946),
-                    LatLng(47.252465, -122.286552),
-                    LatLng(47.6160281982247, -122.32642111977668),
+                    LatLng(25.774, -80.19),
+                    LatLng(18.466, -66.118),
+                    LatLng(32.321, -64.757),
+                    LatLng(25.774, -80.19),
                 ),
         )
         polygon.fillColor = -0xa80e9
@@ -1378,10 +1283,10 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
-                    47.6160281982247,
-                    -122.32642111977668,
+                    24.886,
+                    -70.268,
                 ),
-                8.0f,
+                5.0f,
             ),
         )
     }
@@ -1406,7 +1311,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `PolygonActivity.kt`.
+**Step 2**: Include the following code to `PolygonActivity.kt`.
 
 ```
 class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1415,10 +1320,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@PolygonActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityPolygonBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1461,8 +1363,8 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(7.0).build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(24.886, -70.268)).zoom(4.0).build()
             addPolygon(style)
         }
     }
@@ -1471,11 +1373,10 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
         val polygonCoordinates = mutableListOf<List<Point>>()
         polygonCoordinates.add(
             listOf(
-                Point.fromLngLat(-122.32642111977668, 47.6160281982247),
-                Point.fromLngLat(-121.774015, 47.603565),
-                Point.fromLngLat(-121.828946, 47.328766),
-                Point.fromLngLat(-122.286552, 47.252465),
-                Point.fromLngLat(-122.32642111977668, 47.6160281982247),
+                Point.fromLngLat(-80.19, 25.774),
+                Point.fromLngLat(-66.118, 18.466),
+                Point.fromLngLat(-64.757, 32.321),
+                Point.fromLngLat(-80.19, 25.77),
             ),
         )
         val polygon = Polygon.fromLngLats(polygonCoordinates)
@@ -1531,22 +1432,22 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addHeatMap() {
         val latLng = arrayListOf<LatLng>()
-        latLng.add(LatLng(63.1016, -151.5129))
-        latLng.add(LatLng(63.1224, -150.4048))
-        latLng.add(LatLng(63.0781, -151.3597))
-        latLng.add(LatLng(63.0719, -151.5053))
-        latLng.add(LatLng(63.1725, -148.789))
-        latLng.add(LatLng(63.0879, -151.512))
-        latLng.add(LatLng(63.0933, -151.4378))
-        latLng.add(LatLng(63.2272, -149.6538))
-        latLng.add(LatLng(61.8518, -149.4752))
-        latLng.add(LatLng(61.6214, -150.8597))
-        latLng.add(LatLng(61.2705, -151.2484))
-        latLng.add(LatLng(65.5942, -152.0732))
-        latLng.add(LatLng(63.1812, -150.9126))
-        latLng.add(LatLng(61.5726, -147.3106))
-        latLng.add(LatLng(60.2607, -150.5846))
-        latLng.add(LatLng(63.5257, -147.8929))
+        latLng.add(LatLng(37.782551, -122.445368))
+        latLng.add(LatLng(37.782745, -122.444586))
+        latLng.add(LatLng(37.782842, -122.443688))
+        latLng.add(LatLng(37.782919, -122.442815))
+        latLng.add(LatLng(37.782992, -122.442112))
+        latLng.add(LatLng(37.7831, -122.441461))
+        latLng.add(LatLng(37.783206, -122.440829))
+        latLng.add(LatLng(37.783273, -122.440324))
+        latLng.add(LatLng(37.783316, -122.440023))
+        latLng.add(LatLng(37.783357, -122.439794))
+        latLng.add(LatLng(37.78501, -122.439947))
+        latLng.add(LatLng(37.78536, -122.439952))
+        latLng.add(LatLng(37.785715, -122.44003))
+        latLng.add(LatLng(37.786117, -122.440119))
+        latLng.add(LatLng(37.786564, -122.440209))
+        latLng.add(LatLng(37.786905, -122.44027))
         val provider = HeatmapTileProvider.Builder()
             .data(latLng)
             .build()
@@ -1555,8 +1456,8 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
-                    63.1016,
-                    -151.5129,
+                    37.783273,
+                    -122.440324,
                 ),
                 8.0f,
             ),
@@ -1584,7 +1485,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 2**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `HeatMapActivity.kt`.
+**Step 2**: Include the following code to `HeatMapActivity.kt`.
 
 ```
 class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1598,32 +1499,29 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
         "  \"type\": \"FeatureCollection\",\n" +
         "  \"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\" } },\n" +
         "  \"features\": [\n" +
-        "    { \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994521\", \"mag\": 2.3, \"time\": 1507425650893, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.5129, 63.1016, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994519\", \"mag\": 1.7, \"time\": 1507425289659, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.4048, 63.1224, 105.5 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994517\", \"mag\": 1.6, \"time\": 1507424832518, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.3597, 63.0781, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994510\", \"mag\": 1.6, \"time\": 1507422449194, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.5053, 63.0719, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994298\", \"mag\": 2.4, \"time\": 1507419370097, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -148.789, 63.1725, 7.5 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994293\", \"mag\": 1.5, \"time\": 1507417256497, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.512, 63.0879, 10.8 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994287\", \"mag\": 2.0, \"time\": 1507413903714, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.4378, 63.0933, 0.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994285\", \"mag\": 1.5, \"time\": 1507413670029, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -149.6538, 63.2272, 96.8 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994280\", \"mag\": 1.3, \"time\": 1507413266231, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -149.4752, 61.8518, 54.3 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994278\", \"mag\": 1.8, \"time\": 1507413195076, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.8597, 61.6214, 50.0 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994273\", \"mag\": 1.2, \"time\": 1507411925999, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.2484, 61.2705, 69.1 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994270\", \"mag\": 2.0, \"time\": 1507411814209, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -152.0732, 65.5942, 14.8 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993963\", \"mag\": 1.4, \"time\": 1507407100665, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.9126, 63.1812, 150.4 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993960\", \"mag\": 1.4, \"time\": 1507405129739, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -147.3106, 61.5726, 26.9 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993952\", \"mag\": 1.7, \"time\": 1507403679922, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -150.5846, 60.2607, 34.2 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993746\", \"mag\": 1.3, \"time\": 1507399350671, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -147.8929, 63.5257, 3.3 ] } },\n" +
-        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993741\", \"mag\": 1.6, \"time\": 1507398797233, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -151.3473, 63.0775, 0.0 ] } }\n" +
+        "    { \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994521\", \"mag\": 2.3, \"time\": 1507425650893, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.445368, 37.782551, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994519\", \"mag\": 1.7, \"time\": 1507425289659, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.444586, 37.782745, 105.5 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994517\", \"mag\": 1.6, \"time\": 1507424832518, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.443688, 37.782842, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994510\", \"mag\": 1.6, \"time\": 1507422449194, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.442815, 37.782919, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994298\", \"mag\": 2.4, \"time\": 1507419370097, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.442112, 37.782992, 7.5 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994293\", \"mag\": 1.5, \"time\": 1507417256497, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.441461, 37.7831, 10.8 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994287\", \"mag\": 2.0, \"time\": 1507413903714, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.440829, 37.783206, 0.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994285\", \"mag\": 1.5, \"time\": 1507413670029, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.440324, 37.783273, 96.8 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994280\", \"mag\": 1.3, \"time\": 1507413266231, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.440023, 37.783316, 54.3 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994278\", \"mag\": 1.8, \"time\": 1507413195076, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.439794, 37.783357, 50.0 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994273\", \"mag\": 1.2, \"time\": 1507411925999, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.439947, 37.78501, 69.1 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16994270\", \"mag\": 2.0, \"time\": 1507411814209, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.439952, 37.78536, 14.8 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993963\", \"mag\": 1.4, \"time\": 1507407100665, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.44003, 37.785715, 150.4 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993960\", \"mag\": 1.4, \"time\": 1507405129739, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.440119, 37.786117, 26.9 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993952\", \"mag\": 1.7, \"time\": 1507403679922, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.440209, 37.786564, 34.2 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993746\", \"mag\": 1.3, \"time\": 1507399350671, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.44027, 37.786905, 3.3 ] } },\n" +
+        "{ \"type\": \"Feature\", \"properties\": { \"id\": \"ak16993741\", \"mag\": 1.6, \"time\": 1507398797233, \"felt\": null, \"tsunami\": 0 }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [ -122.440279, 37.786956, 0.0 ] } }\n" +
         "  ]\n" +
         "}\n"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@HeatMapActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -1666,8 +1564,8 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(63.1224, -150.4048)).zoom(4.0).build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(37.78501, -122.439947)).zoom(12.5).build()
             addSource(style)
             addHeatmapLayer(style)
             addCircleLayer(style)
@@ -1684,7 +1582,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun addHeatmapLayer(loadedMapStyle: Style) {
         val layer = HeatmapLayer(ICON_ID, CLUSTER_SOURCE_ID)
-        layer.maxZoom = 9.0F
+        layer.maxZoom = 13.0F
         layer.sourceLayer = HEATMAP_LAYER_SOURCE
         layer.setProperties(
             heatmapColor(
@@ -1701,7 +1599,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
             heatmapWeight(interpolate(linear(), get("mag"), stop(0, 0), stop(6, 1))),
             heatmapIntensity(interpolate(linear(), zoom(), stop(0, 1), stop(9, 3))),
             heatmapRadius(interpolate(linear(), zoom(), stop(0, 2), stop(9, 20))),
-            heatmapOpacity(interpolate(linear(), zoom(), stop(7, 1), stop(9, 0))),
+            heatmapOpacity(interpolate(linear(), zoom(), stop(13, 1), stop(9, 0))),
         )
         loadedMapStyle.addLayer(layer)
     }
@@ -1713,7 +1611,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 interpolate(
                     linear(),
                     zoom(),
-                    literal(7),
+                    literal(13),
                     interpolate(linear(), get("mag"), stop(1, 1), stop(6, 4)),
                     literal(16),
                     interpolate(linear(), get("mag"), stop(1, 5), stop(6, 50)),
@@ -1730,7 +1628,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
                     literal(6), rgb(178, 24, 43),
                 ),
             ),
-            circleOpacity(interpolate(linear(), zoom(), stop(7, 0), stop(8, 1))),
+            circleOpacity(interpolate(linear(), zoom(), stop(13, 0), stop(14, 1))),
             circleStrokeColor("white"),
             circleStrokeWidth(1.0f),
         )
@@ -1868,32 +1766,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
 implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
-**Step 2**: In the `./app/src/main/res/raw` directory add the `awsconfiguration.json` file, which looks like the one below.
-
-```
-{
-    "IdentityManager": {
-        "Default": {}
-    },
-    "CredentialsProvider": {
-        "CognitoIdentity": {
-            "Default": {
-                "PoolId": "<your identity pool id>",
-                "Region": "<your region>"
-            }
-        }
-    },
-    "CognitoUserPool": {
-        "Default": {
-            "PoolId": "<your pool id>",
-            "AppClientId": "<your app client id>",
-            "Region": "<your region>"
-        }
-    }
-}
-```
-
-**Step 3**: Add the below code inside  `activity_map_load.xml` file.
+**Step 2**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -1907,7 +1780,7 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 4**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `CalculateRouteActivity.kt`.
+**Step 3**: Include the following code to `CalculateRouteActivity.kt`.
 
 ```
 class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -1917,34 +1790,17 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@CalculateRouteActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        initAWSMobileClient(applicationContext)
+        initAmazonLocationClient()
         mBinding.mapView.onCreate(savedInstanceState)
         mBinding.mapView.getMapAsync(this)
     }
 
-    private fun initAWSMobileClient(context: Context) {
-        AWSMobileClient.getInstance()
-            .initialize(
-                context,
-                object : Callback<UserStateDetails?> {
-                    override fun onResult(result: UserStateDetails?) {
-                        mClient =
-                            AmazonLocationClient(
-                                AWSMobileClient.getInstance(),
-                                ClientConfiguration(),
-                            )
-                    }
-
-                    override fun onError(e: Exception?) {
-                    }
-                },
-            )
+    private fun initAmazonLocationClient() {
+        val mCognitoCredentialsProvider = CognitoCredentialsProvider(getString(R.string.identityPoolId), Regions.fromName(getString(R.string.awsRegion)))
+        mClient = AmazonLocationClient(mCognitoCredentialsProvider)
     }
 
     override fun onStart() {
@@ -1983,7 +1839,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(33.39691896489222, -118.38953208616074)).zoom(14.0).build()
             CoroutineScope(Dispatchers.IO).launch {
                 val result = calculateRoute(33.397676454651766, -118.39439114221236, 33.395737842093304, -118.38638874990086, false, isAvoidTolls = false, travelMode = "Car")
@@ -2093,13 +1949,22 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
-                    23.022677,
-                    72.537837,
+                    -33.867,
+                    151.195,
                 ),
-                8.0f,
+                12.0f,
             ),
         )
-        val apiUrl = getSearchURL("shyamal", "<GOOGLE_MAP_API_KEY>")
+        mMap.setOnMapClickListener { latLng ->
+            performSearch(latLng.latitude, latLng.longitude)
+        }
+    }
+
+    private fun performSearch(latitude: Double, longitude: Double) {
+        val apiKey = "YOUR_GOOGLE_MAPS_API_KEY"
+
+        val apiUrl = getSearchURL(latitude, longitude, apiKey)
+
         val client = OkHttpClient()
         val request = Request.Builder()
             .url(apiUrl)
@@ -2108,7 +1973,25 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    // Access search result data here
+                    val responseBody = response.body?.string()
+
+                    try {
+                        val jsonObject = responseBody?.let { JSONObject(it) }
+                        val resultsArray = jsonObject?.getJSONArray("results")
+
+                        if (resultsArray != null) {
+                            if (resultsArray.length() > 0) {
+                                // Assuming you want the label of the first place in the results
+                                val firstPlace = resultsArray.getJSONObject(0)
+                                val placeLabel = firstPlace.getString("name")
+                                Toast.makeText(this@SearchActivity, placeLabel, Toast.LENGTH_SHORT).show()
+                            } else {
+                                // Handle case when no results are found
+                            }
+                        }
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
                 }
             }
 
@@ -2117,10 +2000,16 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
     }
-    
-    private fun getSearchURL(search: String, key: String): String {
-        return "https://maps.googleapis.com/maps/api/place/textsearch/json?query=$search" +
-            "&key=$key"
+
+    private fun getSearchURL(
+        latitude: Double,
+        longitude: Double,
+        apiKey: String,
+    ): String {
+        return "https://maps.googleapis.com/maps/api/place/textsearch/json?" +
+            "location=$latitude,$longitude" +
+            "&radius=5000" + // Adjust the radius as needed
+            "&key=$apiKey"
     }
 }
 ```
@@ -2133,32 +2022,7 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
-**Step 2**: In the `./app/src/main/res/raw` directory add the `awsconfiguration.json` file, which looks like the one below.
-
-```
-{
-    "IdentityManager": {
-        "Default": {}
-    },
-    "CredentialsProvider": {
-        "CognitoIdentity": {
-            "Default": {
-                "PoolId": "<your identity pool id>",
-                "Region": "<your region>"
-            }
-        }
-    },
-    "CognitoUserPool": {
-        "Default": {
-            "PoolId": "<your pool id>",
-            "AppClientId": "<your app client id>",
-            "Region": "<your region>"
-        }
-    }
-}
-```
-
-**Step 3**: Add the below code inside  `activity_map_load.xml` file.
+**Step 2**: Add the below code inside  `activity_map_load.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -2172,40 +2036,29 @@ implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 4**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `SearchActivity.kt`.
+**Step 3**: Include the following code to `SearchActivity.kt`.
 
 ```
-class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
+class SearchActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
 
+    private lateinit var symbolManager: SymbolManager
+    private lateinit var mMap: MapboxMap
     private lateinit var mBinding: ActivityMapLoadBinding
     private var mClient: AmazonLocationClient? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
         Mapbox.getInstance(this@SearchActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        initAWSMobileClient(applicationContext)
+        initAmazonLocationClient()
         mBinding.mapView.onCreate(savedInstanceState)
         mBinding.mapView.getMapAsync(this)
     }
 
-    private fun initAWSMobileClient(context: Context) {
-        AWSMobileClient.getInstance()
-            .initialize(
-                context,
-                object : Callback<UserStateDetails?> {
-                    override fun onResult(result: UserStateDetails?) {
-                        mClient = AmazonLocationClient(AWSMobileClient.getInstance(), ClientConfiguration())
-                    }
-
-                    override fun onError(e: Exception?) {
-                    }
-                },
-            )
+    private fun initAmazonLocationClient() {
+        val mCognitoCredentialsProvider = CognitoCredentialsProvider(getString(R.string.identityPoolId), Regions.fromName(getString(R.string.awsRegion)))
+        mClient = AmazonLocationClient(mCognitoCredentialsProvider)
     }
 
     override fun onStart() {
@@ -2244,26 +2097,46 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val result = searchPlaceIndexForText(23.022677, 72.537837, "Car")
-                result?.let {
-                    val data = it.results
-                    // Access search result data here
-                }
-            }
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
+            mMap = mapboxMap
+            mapboxMap.addOnMapClickListener(this@SearchActivity)
+            symbolManager = SymbolManager(mBinding.mapView, mapboxMap, it)
         }
     }
 
-    private fun searchPlaceIndexForText(lat: Double?, lng: Double?, text: String?): SearchPlaceIndexForTextResult? {
+    private fun searchPlaceIndexForPosition(lat: Double?, lng: Double?): SearchPlaceIndexForPositionResult? {
         return try {
-            val indexName = "YourPlaceIndex"
-            val response: SearchPlaceIndexForTextResult? = mClient?.searchPlaceIndexForText(
-                SearchPlaceIndexForTextRequest().withBiasPosition(arrayListOf(lng, lat)).withIndexName(indexName).withText(text).withMaxResults(15),
+            val indexName = "Your Place Index"
+            val response: SearchPlaceIndexForPositionResult? = mClient?.searchPlaceIndexForPosition(
+                SearchPlaceIndexForPositionRequest().withIndexName(indexName).withPosition(lng, lat).withMaxResults(15),
             )
             response
         } catch (e: Exception) {
-            SearchPlaceIndexForTextResult()
+            SearchPlaceIndexForPositionResult()
+        }
+    }
+
+    override fun onMapClick(latLng: LatLng): Boolean {
+        addMarker(mMap, this@SearchActivity, "marker-name", latLng)
+        CoroutineScope(Dispatchers.IO).launch {
+            val result = searchPlaceIndexForPosition(latLng.latitude, latLng.longitude)
+            result?.let {
+                runOnUiThread {
+                    Toast.makeText(this@SearchActivity, it.results[0].place.label, Toast.LENGTH_SHORT).show()
+                }
+                // Access search result data here
+            }
+        }
+        return true
+    }
+
+    private fun addMarker(mapboxMap: MapboxMap?, activity: Activity, name: String, latLng: LatLng) {
+        mapboxMap?.getStyle { style ->
+            symbolManager.deleteAll()
+            ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_marker_blue)?.let {
+                style.addImage(name, it)
+            }
+            symbolManager.create(SymbolOptions().withLatLng(latLng).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER))
         }
     }
 }
@@ -2275,6 +2148,7 @@ Both services allow to the drawing of circle on the map.
 
 1. Google Maps provides the `addCircle` method to draw a circle.
 2. Amazon Location Service utilizes Maplibre’s `addSource` and `addLayer` methods to render a circle and you can use the ` org.maplibre.gl:android-sdk-turf` library to get a point list of circle for rendering.
+
 #### With Google Maps
 
 **Step 1**: Add the below code in `GeofenceDrawActivity.kt`.
@@ -2300,16 +2174,16 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap = googleMap
         mMap.addCircle(
             CircleOptions()
-                .center(LatLng(47.6160281982247, -122.32642111977668))
-                .radius(10000.0)
+                .center(LatLng(49.257387256602755, -123.11845533871497))
+                .radius(3000.0)
                 .strokeColor(Color.BLUE)
                 .fillColor(Color.BLUE),
         )
         mMap.animateCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
-                    47.6160281982247,
-                    -122.32642111977668,
+                    49.257387256602755,
+                    -123.11845533871497,
                 ),
                 8.0f,
             ),
@@ -2343,19 +2217,16 @@ implementation("org.maplibre.gl:android-sdk-turf:5.9.0")
     app:mapbox_renderTextureTranslucentSurface="true" />
 ```
 
-**Step 3**: Ensure that [SigV4Interceptor.kt](#step-2-sigV4Interceptor) is added to your project and include the following code to `GeofenceDrawActivity.kt`.
+**Step 3**: Include the following code to `DrawCircleActivity.kt`.
 
 ```
-class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
+class DrawCircleActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mBinding: ActivityMapLoadBinding
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val identityPoolId = getString(R.string.identityPoolId)
-        val credentialProvider = CognitoCachingCredentialsProvider(applicationContext, identityPoolId, Regions.fromName(identityPoolId.split(":").first()))
-        Mapbox.getInstance(this@GeofenceDrawActivity)
-        HttpRequestUtil.setOkHttpClient(OkHttpClient.Builder().addInterceptor(SigV4Interceptor(credentialProvider, "geo")).build())
+        Mapbox.getInstance(this@DrawCircleActivity)
         mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mBinding.mapView.onCreate(savedInstanceState)
@@ -2398,8 +2269,8 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor")) { style ->
-            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(47.6160281982247, -122.32642111977668)).zoom(13.0).build()
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+            mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(49.257387256602755, -123.11845533871497)).zoom(6.0).build()
             style.addSource(GeoJsonSource("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID"))
             val fillLayer = FillLayer("TURF_CALCULATION_FILL_LAYER_ID", "TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID")
             fillLayer.setProperties(
@@ -2408,7 +2279,7 @@ class GeofenceDrawActivity : AppCompatActivity(), OnMapReadyCallback {
                 PropertyFactory.fillOpacity(0.9f),
             )
             style.addLayerBelow(fillLayer, "CIRCLE_CENTER_LAYER_ID")
-            val polygonArea: Polygon = TurfTransformation.circle(Point.fromLngLat(-122.32642111977668, 47.6160281982247), 1000.toDouble(), 360, TurfConstants.UNIT_METERS)
+            val polygonArea: Polygon = TurfTransformation.circle(Point.fromLngLat(-123.11845533871497, 49.257387256602755), 100.toDouble(), 360, TurfConstants.UNIT_KILOMETERS)
             val pointList = TurfMeta.coordAll(polygonArea, false)
             val polygonCircleSource =
                 style.getSourceAs<GeoJsonSource>("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID")
