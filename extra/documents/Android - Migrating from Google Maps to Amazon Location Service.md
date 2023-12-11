@@ -6,31 +6,31 @@ The [Amazon Location Demo](https://github.com/aws-geospatial/amazon-location-fea
 
 1. Create an AWS account if you still need to create one. Once your AWS account is ready, you can create Amazon Location Service resources, which you will use to run the code snippets below.
 2. Choose the map style that you want to use.
-    1. In the Amazon Location Service console, on the [Maps page](https://console.aws.amazon.com/location/maps/home), choose Create Map to preview map styles.
-    2. Add a Name and Description for the new map resource. Make a note of the name that you use for the map resource. You will need it when creating your script file later in the tutorial.
-    3. Choose a map; remember that while choosing a map style, choose which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
-    4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Map. You can interact with the map that you've chosen: zoom in, zoom out, or pan in any direction.
+   1. In the Amazon Location Service console, on the [Maps page](https://console.aws.amazon.com/location/maps/home), choose Create Map to preview map styles.
+   2. Add a Name and Description for the new map resource. Make a note of the name that you use for the map resource. You will need it when creating your script file later in the tutorial.
+   3. Choose a map; remember that while choosing a map style, choose which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
+   4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Map. You can interact with the map that you've chosen: zoom in, zoom out, or pan in any direction.
 3. Choose the place index that you want to use.
-    1. In the Amazon Location Service console on the [Place indexes page](https://us-east-1.console.aws.amazon.com/location/places/home?region=us-east-1), choose Create Place Index.
-    2. Add a Name and Description for the new place index resource. Make a note of the name that you use for the place index resource. You will need it when creating your script file later in the tutorial.
-    3. Choose a data provider; in most cases, choose the one that matches your chosen map provider. This helps to ensure that the searches will match the maps. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
-    4. Choose the Data storage option. Since no data is stored for this tutorial, you can choose No, single use only.
-    5. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Place Index.
+   1. In the Amazon Location Service console on the [Place indexes page](https://us-east-1.console.aws.amazon.com/location/places/home?region=us-east-1), choose Create Place Index.
+   2. Add a Name and Description for the new place index resource. Make a note of the name that you use for the place index resource. You will need it when creating your script file later in the tutorial.
+   3. Choose a data provider; in most cases, choose the one that matches your chosen map provider. This helps to ensure that the searches will match the maps. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
+   4. Choose the Data storage option. Since no data is stored for this tutorial, you can choose No, single use only.
+   5. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Place Index.
 4. Choose the route calculator that you want to use.
-    1. In the Amazon Location Service console on the [Route calculators page](https://us-east-1.console.aws.amazon.com/location/routes/home?region=us-east-1#/), choose Create Route Calculator.
-    2. Add a Name and Description for the new route calculator resource. Make a note of the name that you use for the route calculator resource. You will need it when creating your script file later in the tutorial.
-    3. Choose a data provider; remember that while choosing a map style, also select which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
-    4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
+   1. In the Amazon Location Service console on the [Route calculators page](https://us-east-1.console.aws.amazon.com/location/routes/home?region=us-east-1#/), choose Create Route Calculator.
+   2. Add a Name and Description for the new route calculator resource. Make a note of the name that you use for the route calculator resource. You will need it when creating your script file later in the tutorial.
+   3. Choose a data provider; remember that while choosing a map style, also select which map data provider you will use. For more information, see section 82 of the [AWS service terms](http://aws.amazon.com/service-terms).
+   4. Agree to the [Amazon Location Terms and Conditions](https://aws.amazon.com/service-terms/#:~:text=82.%20Amazon%20Location%20Service), then choose Create Route Calculator.
 5. To set up authentication for your application
-    1. Go to the [Amazon Location console](https://us-east-1.console.aws.amazon.com/location/home?region=us-east-1#/), and choose API keys from the left menu.
-    2. Choose Create API key; remember that the API key you create must be in the same AWS account and AWS Region as the Amazon Location Service resources you created in the previous section.
-    3. Fill in the following information on the Create API key page.
-        1. Name – A name for your API key, such as MyAppKey.
-        2. Resources – Choose the Amazon Location Service Map and Place index resources you created in the previous section. You can add more than one resource by choosing Add Resource. By doing this, the API key will be permitted to be used with the specified resources.
-        3. Actions – Specify the actions you want to authorize with this API key. You must select at least `geo:GetMap`, `geo:SearchPlaceIndexfForPosition`, and `geo:CalculateRoute` so that the tutorial will work as expected.
-        4. You can optionally add a Description, Expiration time, or Tags to your API key. You can also add a referer (such as `.example.com`), to limit the key to only being used from a particular domain. This will mean that the tutorial will only work from that domain.
-    4. Choose Create API Key to create the API key.
-    5. Choose the Show API Key and copy the key value for use later in the tutorial. It will be in the form of `v1.public.a1b2c3d4....`
+   1. Go to the [Amazon Location console](https://us-east-1.console.aws.amazon.com/location/home?region=us-east-1#/), and choose API keys from the left menu.
+   2. Choose Create API key; remember that the API key you create must be in the same AWS account and AWS Region as the Amazon Location Service resources you created in the previous section.
+   3. Fill in the following information on the Create API key page.
+      1. Name – A name for your API key, such as MyAppKey.
+      2. Resources – Choose the Amazon Location Service Map and Place index resources you created in the previous section. You can add more than one resource by choosing Add Resource. By doing this, the API key will be permitted to be used with the specified resources.
+      3. Actions – Specify the actions you want to authorize with this API key. You must select at least `geo:GetMap`, `geo:SearchPlaceIndexfForPosition`, and `geo:CalculateRoute` so that the tutorial will work as expected.
+      4. You can optionally add a Description, Expiration time, or Tags to your API key. You can also add a referer (such as `.example.com`), to limit the key to only being used from a particular domain. This will mean that the tutorial will only work from that domain.
+   4. Choose Create API Key to create the API key.
+   5. Choose the Show API Key and copy the key value for use later in the tutorial. It will be in the form of `v1.public.a1b2c3d4....`
 
 ## Key features support:
 
@@ -264,6 +264,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_KEY", "\"Your API key\"")
     }
 
     buildTypes {
@@ -284,6 +285,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 dependencies {
@@ -303,7 +305,6 @@ dependencies {
     <string name="identityPoolId">Your Identity Pool Id</string>
     <string name="mapName">Your Map name</string>
     <string name="awsRegion">Your Region</string>
-    <string name="apiKey">Your API key</string>
 </resources>
 ```
 
@@ -388,7 +389,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) {
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(49.246559, -123.063554)).zoom(10.0).build()
         }
     }
@@ -512,7 +513,7 @@ class AddMarkerActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) {
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(49.246559, -123.063554)).zoom(9.0).build()
             addMarker(mBinding.mapView, mapboxMap, this, "marker-name")
         }
@@ -732,7 +733,7 @@ class MarkerClusterActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(-37.759859, 145.128708)).zoom(7.0).build()
             style.transition = TransitionOptions(0, 0, false)
             initLayerIcons(style)
@@ -888,7 +889,7 @@ class InfoWindowActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.On
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) {
             map = mapboxMap
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(37.8, -96.0)).zoom(3.0).build()
             val featureCollection = FeatureCollection.fromJson(
@@ -1195,7 +1196,7 @@ class PolylineActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(37.830348, -122.486052)).zoom(15.0).build()
             addLine(
                 style,
@@ -1362,7 +1363,7 @@ class PolygonActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(24.886, -70.268)).zoom(4.0).build()
             addPolygon(style)
         }
@@ -1563,7 +1564,7 @@ class HeatMapActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(37.78501, -122.439947)).zoom(12.5).build()
             addSource(style)
             addHeatmapLayer(style)
@@ -1797,8 +1798,9 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initAmazonLocationClient() {
-        val mCognitoCredentialsProvider = CognitoCredentialsProvider(getString(R.string.identityPoolId), Regions.fromName(getString(R.string.awsRegion)))
-        mClient = AmazonLocationClient(mCognitoCredentialsProvider)
+        val authHelper = AuthHelper(applicationContext)
+        val locationCredentialsProvider = authHelper.authenticateWithApiKey("Your API key")
+        mClient = AmazonLocationClient(locationCredentialsProvider!!.getCredentialsProvider())
     }
 
     override fun onStart() {
@@ -1837,7 +1839,7 @@ class CalculateRouteActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(33.39691896489222, -118.38953208616074)).zoom(14.0).build()
             CoroutineScope(Dispatchers.IO).launch {
                 val result = calculateRoute(33.397676454651766, -118.39439114221236, 33.395737842093304, -118.38638874990086, false, isAvoidTolls = false, travelMode = "Car")
@@ -1922,46 +1924,75 @@ Both platforms provide place search capabilities, and they can offer information
 implementation("com.squareup.okhttp3:okhttp:4.11.0")
 ```
 
-**Step 2**: Add the below data in `SearchActivity.kt`.
-
+**Step 2**: Add the below code inside `activity_search.xml` file.
 
 ```
-class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityMapsBinding
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter search text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtSearch" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+**Step 3**: Add the below data in `SearchActivity.kt`.
+
+```
+class SearchActivity : AppCompatActivity() {
+
+    private lateinit var mBinding: ActivitySearchBinding
+    private lateinit var adapter: ArrayAdapter<String>
+    private var data = arrayListOf<String>()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mBinding = ActivitySearchBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
+        mBinding.listView.adapter = adapter
+        mBinding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int,
+            ) {
+            }
 
-        binding = ActivityMapsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int,
+            ) {
+                performSearch(charSequence.toString())
+            }
 
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+            override fun afterTextChanged(editable: Editable?) {}
+        })
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        mMap.animateCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    -33.867,
-                    151.195,
-                ),
-                12.0f,
-            ),
-        )
-        mMap.setOnMapClickListener { latLng ->
-            performSearch(latLng.latitude, latLng.longitude)
-        }
-    }
-
-    private fun performSearch(latitude: Double, longitude: Double) {
+    private fun performSearch(text: String) {
         val apiKey = "YOUR_GOOGLE_MAPS_API_KEY"
 
-        val apiUrl = getSearchURL(latitude, longitude, apiKey)
+        val apiUrl = getSearchURL(47.654502614244194, -122.35862564621954, text, apiKey)
 
         val client = OkHttpClient()
         val request = Request.Builder()
@@ -1971,25 +2002,31 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
         client.newCall(request).enqueue(object : Callback {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val responseBody = response.body?.string()
-
                     try {
-                        val jsonObject = responseBody?.let { JSONObject(it) }
+                        val responseBodyString = response.body?.string()
+
+                        val jsonObject = responseBodyString?.let { JSONObject(it) }
                         val resultsArray = jsonObject?.getJSONArray("results")
 
-                        if (resultsArray != null) {
-                            if (resultsArray.length() > 0) {
-                                val firstPlace = resultsArray.getJSONObject(0)
-                                val placeLabel = firstPlace.getString("name")
-                                Toast.makeText(this@SearchActivity, placeLabel, Toast.LENGTH_SHORT).show()
-                            } else {
-                                // Handle case when no results are found
+                        if (resultsArray != null && resultsArray.length() > 0) {
+                            runOnUiThread {
+                                adapter.clear()
+                                data.clear()
+                                for (i in 0 until resultsArray.length()) {
+                                    val firstPlace = resultsArray.getJSONObject(i)
+                                    val placeLabel = firstPlace.getString("name")
+                                    data.add(placeLabel)
+                                }
+                                adapter.addAll(data)
+                                adapter.notifyDataSetChanged()
                             }
+                        } else {
                         }
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                 }
+                response.body?.close()
             }
 
             override fun onFailure(call: Call, e: IOException) {
@@ -2000,15 +2037,19 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getSearchURL(
         latitude: Double,
         longitude: Double,
+        text: String,
         apiKey: String,
     ): String {
-        return "https://maps.googleapis.com/maps/api/place/textsearch/json?" +
+        return "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
             "location=$latitude,$longitude" +
-            "&radius=5000" + // Adjust the radius as needed
+            "&radius=5000" +
+            "&keyword=$text" +
             "&key=$apiKey"
     }
 }
 ```
+
+<img src="./images/android/google-map-search.jpg" width="200">
 
 #### With Amazon Location
 
@@ -2018,125 +2059,90 @@ class SearchActivity : AppCompatActivity(), OnMapReadyCallback {
 implementation("com.amazonaws:aws-android-sdk-location:2.72.0")
 ```
 
-**Step 2**: Add the below code inside  `activity_map_load.xml` file.
+**Step 2**: Add the below code inside `activity_search.xml` file.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
-<com.mapbox.mapboxsdk.maps.MapView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/mapView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:mapbox_foregroundLoadColor="@color/white"
-    app:mapbox_renderTextureMode="true"
-    app:mapbox_renderTextureTranslucentSurface="true" />
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edtSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter search text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtSearch" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
 **Step 3**: Include the following code to `SearchActivity.kt`.
 
 ```
-class SearchActivity : AppCompatActivity(), OnMapReadyCallback, MapboxMap.OnMapClickListener {
+class SearchActivity : AppCompatActivity() {
 
-    private lateinit var symbolManager: SymbolManager
-    private lateinit var mMap: MapboxMap
-    private lateinit var mBinding: ActivityMapLoadBinding
+    private lateinit var adapter: ArrayAdapter<String>
+    private lateinit var mBinding: ActivitySearchBinding
     private var mClient: AmazonLocationClient? = null
+    private var data = arrayListOf<String>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Mapbox.getInstance(this@SearchActivity)
-        mBinding = ActivityMapLoadBinding.inflate(layoutInflater)
+        mBinding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         initAmazonLocationClient()
-        mBinding.mapView.onCreate(savedInstanceState)
-        mBinding.mapView.getMapAsync(this)
+        adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, data)
+        mBinding.listView.adapter = adapter
+        mBinding.edtSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                searchPlaceIndexForPosition(charSequence.toString())
+            }
+
+            override fun afterTextChanged(editable: Editable?) {}
+        })
     }
 
     private fun initAmazonLocationClient() {
-        val mCognitoCredentialsProvider = CognitoCredentialsProvider(getString(R.string.identityPoolId), Regions.fromName(getString(R.string.awsRegion)))
-        mClient = AmazonLocationClient(mCognitoCredentialsProvider)
+        val authHelper = AuthHelper(applicationContext)
+        val locationCredentialsProvider = authHelper.authenticateWithApiKey("Your API key")
+        mClient = AmazonLocationClient(locationCredentialsProvider!!.getCredentialsProvider())
     }
 
-    override fun onStart() {
-        super.onStart()
-        mBinding.mapView.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mBinding.mapView.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mBinding.mapView.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        mBinding.mapView.onStop()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mBinding.mapView.onSaveInstanceState(outState)
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mBinding.mapView.onLowMemory()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mBinding.mapView.onDestroy()
-    }
-
-    override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) {
-            mMap = mapboxMap
-            mapboxMap.addOnMapClickListener(this@SearchActivity)
-            symbolManager = SymbolManager(mBinding.mapView, mapboxMap, it)
-        }
-    }
-
-    private fun searchPlaceIndexForPosition(lat: Double?, lng: Double?): SearchPlaceIndexForPositionResult? {
-        return try {
-            val indexName = "Your Place Index"
-            val response: SearchPlaceIndexForPositionResult? = mClient?.searchPlaceIndexForPosition(
-                SearchPlaceIndexForPositionRequest().withIndexName(indexName).withPosition(lng, lat).withMaxResults(15),
-            )
-            response
-        } catch (e: Exception) {
-            SearchPlaceIndexForPositionResult()
-        }
-    }
-
-    override fun onMapClick(latLng: LatLng): Boolean {
-        addMarker(mMap, this@SearchActivity, "marker-name", latLng)
+    private fun searchPlaceIndexForPosition(text: String) {
+        val indexName = "<Your place index name>"
         CoroutineScope(Dispatchers.IO).launch {
-            val result = searchPlaceIndexForPosition(latLng.latitude, latLng.longitude)
-            result?.let {
-                runOnUiThread {
-                    Toast.makeText(this@SearchActivity, it.results[0].place.label, Toast.LENGTH_SHORT).show()
+            val response: SearchPlaceIndexForTextResult? = mClient?.searchPlaceIndexForText(
+                SearchPlaceIndexForTextRequest().withIndexName(indexName).withText(text)
+                    .withMaxResults(15),
+            )
+            runOnUiThread {
+                adapter.clear()
+                data.clear()
+                response?.results?.forEach {
+                    data.add(it.place.label)
                 }
-                // Access search result data here
+                adapter.addAll(data)
+                adapter.notifyDataSetChanged()
             }
-        }
-        return true
-    }
-
-    private fun addMarker(mapboxMap: MapboxMap?, activity: Activity, name: String, latLng: LatLng) {
-        mapboxMap?.getStyle { style ->
-            symbolManager.deleteAll()
-            ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_marker_blue)?.let {
-                style.addImage(name, it)
-            }
-            symbolManager.create(SymbolOptions().withLatLng(latLng).withIconImage(name).withIconAnchor(Property.ICON_ANCHOR_CENTER))
         }
     }
 }
 ```
+<img src="./images/android/amazon-location-search.jpg" width="200">
 
 ### Drawing a circle:
 
@@ -2265,7 +2271,7 @@ class DrawCircleActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     override fun onMapReady(mapboxMap: MapboxMap) {
-        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${getString(R.string.apiKey)}")) { style ->
+        mapboxMap.setStyle(Style.Builder().fromUri("https://maps.geo.${getString(R.string.awsRegion)}.amazonaws.com/maps/v0/maps/${getString(R.string.mapName)}/style-descriptor?key=${BuildConfig.API_KEY}")) { style ->
             mapboxMap.cameraPosition = CameraPosition.Builder().target(LatLng(49.257387256602755, -123.11845533871497)).zoom(6.0).build()
             style.addSource(GeoJsonSource("TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID"))
             val fillLayer = FillLayer("TURF_CALCULATION_FILL_LAYER_ID", "TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID")
