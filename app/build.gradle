@@ -8,14 +8,13 @@ apply from : '../git-hooks.gradle'
 
 android {
     namespace 'com.aws.amazonlocation'
-    compileSdk 33
+    compileSdk 34
     def customConfig = new Properties()
     customConfig.load(project.rootProject.file("custom.properties").newDataInputStream())
     defaultConfig {
         applicationId "com.aws.amazonlocation"
         minSdk 24
-        //noinspection OldTargetApi
-        targetSdk 33
+        targetSdk 34
         versionCode 43
         versionName "1.0.0"
         testInstrumentationRunner "com.aws.amazonlocation.AmazonLocationRunner"
@@ -78,11 +77,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         viewBinding = true
@@ -109,72 +108,64 @@ android {
             enableSplit = false
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // noinspection GradleDependency
-    implementation 'androidx.core:core-ktx:1.8.0'
-    // noinspection GradleDependency
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    // noinspection GradleDependency
-    implementation 'com.google.android.material:material:1.6.1'
-    // noinspection GradleDependency
+    implementation 'androidx.core:core-ktx:1.13.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
-    // noinspection GradleDependency
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    // noinspection GradleDependency
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    // noinspection GradleDependency
-    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.3.0"
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.6.1"
     androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.3'
 
     // Testing
-    testImplementation 'androidx.test:monitor:1.6.1'
-    testImplementation 'androidx.test.ext:junit-ktx:1.1.5'
+    testImplementation 'androidx.test:monitor:1.7.1'
+    testImplementation 'androidx.test.ext:junit-ktx:1.2.1'
     testImplementation "androidx.arch.core:core-testing:2.2.0"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0"
     testImplementation 'org.mockito:mockito-core:4.7.0'
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
     testImplementation "org.mockito:mockito-inline:3.11.1"
-    testImplementation 'org.robolectric:robolectric:4.9'
+    testImplementation 'org.robolectric:robolectric:4.13'
     testImplementation 'app.cash.turbine:turbine:0.12.3'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     // hilt test
     testImplementation "com.google.dagger:hilt-android-testing:2.45"
-    kaptTest 'com.google.dagger:hilt-android-compiler:2.45'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.45'
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.48'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.48'
     androidTestImplementation "com.google.dagger:hilt-android-testing:2.45"
 
-    // noinspection GradleDependency
-    implementation 'com.google.dagger:hilt-android:2.45'
-    // noinspection GradleDependency
-    kapt 'com.google.dagger:hilt-android-compiler:2.45'
-    // noinspection GradleDependency
-    implementation 'androidx.activity:activity-ktx:1.5.1'
+    implementation 'com.google.dagger:hilt-android:2.48'
+    kapt 'com.google.dagger:hilt-android-compiler:2.48'
+    implementation 'androidx.activity:activity-ktx:1.9.1'
     // pref
-    implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation "androidx.preference:preference-ktx:1.2.1"
     // Amplify core dependency
     implementation 'com.amplifyframework:core:2.11.1'
     implementation 'com.amplifyframework:aws-auth-cognito:2.11.1'
     implementation 'com.amplifyframework:aws-geo-location:2.11.1'
     implementation 'com.amplifyframework:maplibre-adapter:2.11.1'
-    // noinspection GradleDependency
-    implementation 'com.amazonaws:aws-android-sdk-core:2.72.0'
+
+    implementation 'com.amazonaws:aws-android-sdk-core:2.73.0'
     implementation('com.amazonaws:aws-android-sdk-cognitoauth:2.72.0@aar')
-    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.73.0'
     implementation 'com.amazonaws:aws-android-sdk-location:2.72.0'
     implementation 'com.amazonaws:aws-android-sdk-iot:2.72.0'
     implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.72.0'
-    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.72.0'
-    implementation "androidx.navigation:navigation-fragment-ktx:2.0.0"
-    implementation "androidx.navigation:navigation-ui-ktx:2.0.0"
-    implementation "androidx.fragment:fragment-ktx:1.5.6"
+    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.73.0'
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.7"
+    implementation "androidx.navigation:navigation-ui-ktx:2.7.7"
+    implementation "androidx.fragment:fragment-ktx:1.8.2"
     // Support for Java 8 features
-    // noinspection GradleDependency
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 }
 
 idea.project.settings {

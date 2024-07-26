@@ -157,7 +157,6 @@ class MainActivity : BaseActivity(), CrashListener {
                 mBinding.bottomNavigationMain.hide()
             }
         } else {
-            graph.startDestination = R.id.explore_fragment
             mNavHostFragment.navController.graph = graph
             if (mBottomSheetDialog == null) {
                 setBottomBar()
