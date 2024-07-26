@@ -32,7 +32,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AmazonLocation"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="31">
+        tools:targetApi="34">
         <activity
             android:name=".ui.main.web_view.WebViewActivity"
             android:configChanges="orientation|screenSize"
