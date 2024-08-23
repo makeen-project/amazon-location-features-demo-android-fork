@@ -8,7 +8,6 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
 import androidx.test.uiautomator.Until
-import com.amplifyframework.geo.maplibre.view.MapLibreView
 import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
@@ -27,11 +26,12 @@ import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.waitUntil
-import com.mapbox.mapboxsdk.maps.MapboxMap
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
 import org.junit.Test
+import org.maplibre.android.maps.MapLibreMap
+import org.maplibre.android.maps.MapView
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -59,8 +59,8 @@ class ExploreFragmentEnableLocation : BaseTestMainActivity() {
                     Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-                    var mapbox: MapboxMap? = null
-                    val mapView = mActivityRule.activity.findViewById<MapLibreView>(R.id.mapView)
+                    var mapbox: MapLibreMap? = null
+                    val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
                     mapView.getMapAsync {
                         mapbox = it
                     }
@@ -83,8 +83,8 @@ class ExploreFragmentEnableLocation : BaseTestMainActivity() {
                     Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-                    var mapbox: MapboxMap? = null
-                    val mapView = mActivityRule.activity.findViewById<MapLibreView>(R.id.mapView)
+                    var mapbox: MapLibreMap? = null
+                    val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
                     mapView.getMapAsync {
                         mapbox = it
                     }
