@@ -7,15 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
 import androidx.navigation.fragment.findNavController
-import com.amazonaws.mobile.client.AWSMobileClient
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.common.onError
-import com.aws.amazonlocation.data.common.onLoading
-import com.aws.amazonlocation.data.common.onSuccess
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.databinding.FragmentSettingBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
@@ -25,20 +20,14 @@ import com.aws.amazonlocation.ui.main.language.LanguageFragment
 import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.region.RegionFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
-import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
-import com.aws.amazonlocation.utils.KEY_ID_TOKEN
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
-import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
-import com.aws.amazonlocation.utils.KEY_PROVIDER
-import com.aws.amazonlocation.utils.KEY_RE_START_APP
-import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
@@ -55,17 +44,13 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_ITALIAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_JAPANESE
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_KOREAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_SPANISH
-import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.regionDisplayName
-import com.aws.amazonlocation.utils.regionList
-import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.signOutDialog
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -75,7 +60,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
 
     private lateinit var aWSCloudInformationFragment: AWSCloudInformationFragment
     private lateinit var mBinding: FragmentSettingBinding
-    private val mSignInViewModel: SignInViewModel by viewModels()
     private var mAuthStatus: String? = null
     private var isTablet = false
 
@@ -105,7 +89,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         getDataProvider()
         getMapStyle()
         getRegion()
-        initObserver()
         clickListener()
         if (isTablet) {
             addReplaceFragment(
@@ -226,40 +209,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 }
                 else -> {
                     mBinding.tvRegionName.text = selectedRegion.split("(")[0].trim()
-                }
-            }
-        }
-    }
-
-    private fun initObserver() {
-        lifecycleScope.launch {
-            withStarted { }
-            mSignInViewModel.mSignOutResponse.collect { handleResult ->
-                handleResult.onLoading {
-                }.onSuccess {
-                    val propertiesAws = listOf(
-                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
-                    )
-                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
-                    mBaseActivity?.clearUserInFo()
-                    mBaseActivity?.mPreferenceManager?.setValue(
-                        KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.AWS_CONNECTED.name
-                    )
-                    init()
-                    mPreferenceManager.removeValue(KEY_ID_TOKEN)
-                    mPreferenceManager.removeValue(KEY_PROVIDER)
-                    showError(it.message.toString())
-                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                    activity?.restartApplication()
-                }.onError { it ->
-                    val propertiesAws = listOf(
-                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
-                    )
-                    (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_FAILED, propertiesAws)
-                    it.messageResource?.let {
-                        showError(it.toString())
-                    }
                 }
             }
         }
@@ -409,21 +358,16 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                         object : DisconnectAWSInterface {
                             override fun disconnectAWS(dialog: DialogInterface) {
                                 lifecycleScope.launch {
-                                    mPreferenceManager.setValue(KEY_RE_START_APP, true)
-                                    mPreferenceManager.setValue(KEY_RE_START_APP_WITH_AWS_DISCONNECT, true)
                                     mPreferenceManager.setDefaultConfig()
-                                    mPreferenceManager.removeValue(KEY_ID_TOKEN)
-                                    mPreferenceManager.removeValue(KEY_PROVIDER)
-                                    delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                    activity?.restartApplication()
                                 }
+                                init()
                                 dialog.dismiss()
                             }
 
                             override fun logoutAndDisconnectAWS(dialog: DialogInterface) {
                             }
                         },
-                        AWSMobileClient.getInstance().isSignedIn
+                        false
                     )
                 }
             }
@@ -438,6 +382,15 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 }
             }
         }
+    }
+
+    fun refreshAfterSignOut() {
+        val propertiesAws = listOf(
+            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
+        )
+        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
+        init()
+        showError(getString(R.string.sign_out_successfully))
     }
 
     private fun FragmentSettingBinding.setDefaultSelection() {
@@ -488,6 +441,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
 
     override fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean) {
-        mSignInViewModel.signOutWithAmazon(requireContext(), isDisconnectFromAWSRequired)
+        (activity as MainActivity).openSignOut()
     }
 }
