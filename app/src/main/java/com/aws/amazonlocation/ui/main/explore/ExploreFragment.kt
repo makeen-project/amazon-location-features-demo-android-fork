@@ -188,7 +188,6 @@ import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.maps.MapLibreMap
 import org.maplibre.android.maps.OnMapReadyCallback
-import org.maplibre.android.module.http.HttpRequestUtil
 import org.maplibre.geojson.Point
 import org.maplibre.geojson.Point.fromLngLat
 import software.amazon.location.auth.EncryptedSharedPreferences
