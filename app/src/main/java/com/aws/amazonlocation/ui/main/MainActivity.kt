@@ -315,6 +315,7 @@ class MainActivity :
                 mBinding.bottomNavigationMain.hide()
             }
         } else {
+            graph.setStartDestination(R.id.explore_fragment)
             mNavHostFragment.navController.graph = graph
             if (mBottomSheetDialog == null) {
                 setBottomBar()

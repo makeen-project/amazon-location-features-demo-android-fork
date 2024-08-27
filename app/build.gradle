@@ -93,22 +93,17 @@ android {
         unitTests {
             includeAndroidResources = true
         }
-        unitTests.all {
-            jacoco {
-                jvmArgs '-noverify'
-            }
-        }
     }
     bundle {
         language {
             enableSplit = false
         }
     }
-    lint {
-        disable 'IconLauncherShape', 'Overdraw', 'IconDensities', 'IconDipSize', 'IconDuplicatesConfig'
-    }
     packagingOptions {
         exclude "lib/armeabi/**"
+    }
+    lint {
+        disable 'IconLauncherShape', 'Overdraw', 'IconDensities', 'IconDipSize', 'IconDuplicatesConfig'
     }
 }
 
