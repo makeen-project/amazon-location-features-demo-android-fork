@@ -38,7 +38,15 @@ import com.aws.amazonlocation.utils.GeofenceCons.CIRCLE_DRAGGABLE_INVISIBLE_ICON
 import com.aws.amazonlocation.utils.MapCameraZoom.DEFAULT_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.NAVIGATION_CAMERA_ZOOM
 import com.aws.amazonlocation.utils.MapCameraZoom.TRACKING_CAMERA_ZOOM
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
@@ -47,11 +55,6 @@ import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.location.LocationComponentActivationOptions
 import org.maplibre.android.location.LocationComponentOptions
-import org.maplibre.android.location.engine.LocationEngine
-import org.maplibre.android.location.engine.LocationEngineCallback
-import org.maplibre.android.location.engine.LocationEngineDefault
-import org.maplibre.android.location.engine.LocationEngineRequest
-import org.maplibre.android.location.engine.LocationEngineResult
 import org.maplibre.android.location.modes.CameraMode
 import org.maplibre.android.location.modes.RenderMode
 import org.maplibre.android.location.permissions.PermissionsManager
@@ -96,8 +99,6 @@ class MapHelper(
     private var mSymbolManagerWithClick: SymbolManager? = null
     private var mSymbolManagerTracker: SymbolManager? = null
     private var mMapboxMap: MapLibreMap? = null
-    private var mLocationEngine: LocationEngine? = null
-    private var mLocationTrackingEngine: LocationEngine? = null
     private var mLastStoreLocation: Location? = null
     private var mLastStoreTrackingLocation: Location? = null
     private var mRouteInterface: UpdateRouteInterface? = null
@@ -112,6 +113,8 @@ class MapHelper(
     private val geoJsonSources: Array<GeoJsonSource?> = Array(MAX_BUSES) { null }
     private val animators: Array<ValueAnimator?> = Array(MAX_BUSES) { null }
     private val currentPositions: Array<LatLng?> = Array(MAX_BUSES) { null }
+    private var fusedLocationClient: FusedLocationProviderClient? = null
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     fun initSymbolManager(
         mapView: MapView,
@@ -143,8 +146,12 @@ class MapHelper(
             ) { style ->
                 updateZoomRange(style)
                 enableLocationComponent()
+                if (activity != null) {
+                    fusedLocationClient =
+                        LocationServices.getFusedLocationProviderClient(activity.applicationContext)
+                }
                 if (activity?.checkLocationPermission() == true) {
-                    initLocationEngine(true)
+                    initLocationEngine()
                 }
                 mSymbolManager = SymbolManager(mapView, mapLibreMap, style)
                 mSymbolManagerWithClick = SymbolManager(mapView, mapLibreMap, style)
@@ -205,49 +212,50 @@ class MapHelper(
     }
 
     @SuppressLint("MissingPermission")
-    private fun initLocationEngine(setCurrentLocation: Boolean = false) {
-        mLocationEngine = LocationEngineDefault.getDefaultLocationEngine(appContext)
-        val request =
-            LocationEngineRequest
-                .Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                .setMaxWaitTime(1000)
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .build()
-
-        if (setCurrentLocation) {
-            try {
-                mLocationEngine?.getLastLocation(initialLocationListener)
-            } catch (_: Exception) {
+    private fun initLocationEngine() {
+        coroutineScope.launch {
+            fusedLocationClient?.locationAvailability?.addOnSuccessListener { locationAvailability ->
+                if (!locationAvailability.isLocationAvailable) {
+                    return@addOnSuccessListener
+                }
+                fusedLocationClient?.requestLocationUpdates(
+                    LocationRequest
+                        .Builder(ACCURACY, DEFAULT_INTERVAL_IN_MILLISECONDS)
+                        .setWaitForAccurateLocation(WAIT_FOR_ACCURATE_LOCATION)
+                        .setMinUpdateIntervalMillis(MIN_UPDATE_INTERVAL_MILLIS)
+                        .setMaxUpdateDelayMillis(LATENCY)
+                        .build(),
+                    locationListener,
+                    Looper.getMainLooper(),
+                )
             }
-        } else {
-            mLocationEngine?.requestLocationUpdates(
-                request,
-                locationListener,
-                Looper.getMainLooper(),
-            )
-            mLocationEngine?.getLastLocation(locationListener)
         }
     }
 
     @SuppressLint("MissingPermission")
     private fun initTrackingLocationEngine() {
-        mLocationTrackingEngine = LocationEngineDefault.getDefaultLocationEngine(appContext)
-        val request =
-            LocationEngineRequest
-                .Builder(DEFAULT_INTERVAL_IN_MILLISECONDS)
-                .setMaxWaitTime(1000)
-                .setPriority(LocationEngineRequest.PRIORITY_HIGH_ACCURACY)
-                .build()
-        mLocationTrackingEngine?.requestLocationUpdates(
-            request,
-            locationTrackingListener,
-            Looper.getMainLooper(),
-        )
-        mLocationTrackingEngine?.getLastLocation(locationTrackingListener)
+        coroutineScope.launch {
+            fusedLocationClient?.locationAvailability?.addOnSuccessListener {
+                if (!it.isLocationAvailable) {
+                    return@addOnSuccessListener
+                }
+
+                fusedLocationClient?.requestLocationUpdates(
+                    LocationRequest
+                        .Builder(ACCURACY, DEFAULT_INTERVAL_IN_MILLISECONDS)
+                        .setWaitForAccurateLocation(WAIT_FOR_ACCURATE_LOCATION)
+                        .setMinUpdateIntervalMillis(MIN_UPDATE_INTERVAL_MILLIS)
+                        .setMaxUpdateDelayMillis(LATENCY)
+                        .build(),
+                    locationTrackingListener,
+                    Looper.getMainLooper(),
+                )
+            }
+        }
     }
 
     fun setInitialLocation() {
-        initLocationEngine(true)
+        initLocationEngine()
     }
 
     fun setUpdateRoute(routeInterface: UpdateRouteInterface?) {
@@ -262,22 +270,22 @@ class MapHelper(
 
     fun removeLocationListener() {
         addLiveLocationMarker(false)
-        mLocationEngine?.removeLocationUpdates(locationListener)
+        fusedLocationClient?.removeLocationUpdates(locationListener)
     }
 
     fun removeTrackingLocationListener() {
         // addLiveLocationMarker(false)
-        mLocationTrackingEngine?.removeLocationUpdates(locationTrackingListener)
+        fusedLocationClient?.removeLocationUpdates(locationTrackingListener)
     }
 
     private val locationListener =
-        object : LocationEngineCallback<LocationEngineResult> {
-            override fun onSuccess(result: LocationEngineResult?) {
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
                 if (mLastStoreLocation == null) {
-                    mLastStoreLocation = result?.lastLocation
+                    mLastStoreLocation = result.lastLocation
                 } else {
                     mLastStoreLocation?.let {
-                        val distance = result?.lastLocation?.let { it1 -> it.distanceTo(it1) }
+                        val distance = result.lastLocation?.let { it1 -> it.distanceTo(it1) }
                         if (distance != null) {
                             if (distance > DISTANCE_IN_METER_20) {
                                 mLastStoreLocation = result.lastLocation
@@ -287,21 +295,18 @@ class MapHelper(
                     }
                 }
             }
-
-            override fun onFailure(exception: Exception) {
-            }
         }
 
     private val locationTrackingListener =
-        object : LocationEngineCallback<LocationEngineResult> {
-            override fun onSuccess(result: LocationEngineResult?) {
+        object : LocationCallback() {
+            override fun onLocationResult(result: LocationResult) {
                 try {
-                    mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
+                    mMapboxMap?.locationComponent?.forceLocationUpdate(result.lastLocation)
                     if (mLastStoreTrackingLocation == null) {
-                        mLastStoreTrackingLocation = result?.lastLocation
+                        mLastStoreTrackingLocation = result.lastLocation
                     } else {
                         mLastStoreTrackingLocation?.let {
-                            val distance = result?.lastLocation?.let { it1 -> it.distanceTo(it1) }
+                            val distance = result.lastLocation?.let { it1 -> it.distanceTo(it1) }
                             if (distance != null) {
                                 if (distance > DISTANCE_IN_METER_30) {
                                     mLastStoreTrackingLocation = result.lastLocation
@@ -316,45 +321,6 @@ class MapHelper(
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
-
-            override fun onFailure(exception: Exception) {
-            }
-        }
-
-    private val initialLocationListener =
-        object : LocationEngineCallback<LocationEngineResult> {
-            override fun onSuccess(result: LocationEngineResult?) {
-                mMapboxMap?.getStyle {
-                    mMapboxMap?.moveCamera(
-                        CameraUpdateFactory.newCameraPosition(
-                            CameraPosition
-                                .Builder()
-                                .zoom(DEFAULT_CAMERA_ZOOM)
-                                .padding(
-                                    appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                                    appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                                    appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                                    appContext.resources.getDimension(R.dimen.dp_130).toDouble(),
-                                ).target(
-                                    result?.lastLocation?.let {
-                                        LatLng(
-                                            it.latitude,
-                                            it.longitude,
-                                        )
-                                    } ?: mDefaultLatLng,
-                                ).build(),
-                        ),
-                    )
-                    try {
-                        mMapboxMap?.locationComponent?.forceLocationUpdate(result?.lastLocation)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-
-            override fun onFailure(exception: Exception) {
             }
         }
 

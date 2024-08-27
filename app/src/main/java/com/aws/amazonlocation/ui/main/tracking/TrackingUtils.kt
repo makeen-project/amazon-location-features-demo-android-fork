@@ -746,11 +746,9 @@ class TrackingUtils(
                     if (lastData) {
                         headerIdsToRemove.add("layerId$headerId")
                         sourceIdsToRemove.add("sourceId$headerId")
-                        mMapHelper?.addTrackerLine(
+                        mMapHelper?.addLine(
                             coordinates,
-                            "layerId$headerId",
-                            "sourceId$headerId",
-                            R.color.color_primary_green
+                            true
                         )
                         setCameraZoomLevel()
                         coordinates.clear()
@@ -774,11 +772,8 @@ class TrackingUtils(
                     if (lastData) {
                         headerIdsToRemove.add("layerId$headerId")
                         sourceIdsToRemove.add("sourceId$headerId")
-                        mMapHelper?.addTrackerLine(
-                            coordinates,
-                            "layerId$headerId",
-                            "sourceId$headerId",
-                            R.color.color_primary_green
+                        mMapHelper?.addLine(
+                            coordinates,true
                         )
                         setCameraZoomLevel()
                         coordinates.clear()
@@ -967,10 +962,7 @@ class TrackingUtils(
             } else {
                 headerIdsToRemove.add("layerId1")
                 sourceIdsToRemove.add("sourceId1")
-                mMapHelper?.addTrackerLine(coordinates, "layerId1",
-                    "sourceId1",
-                    R.color.color_primary_green
-                )
+                mMapHelper?.addLine(coordinates, true)
                 setCameraZoomLevel()
             }
 
