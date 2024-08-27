@@ -2,6 +2,7 @@ package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.ui.main.simulation.NotificationData
+import com.google.android.gms.location.Priority
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -132,6 +133,11 @@ const val simulationLatNorth = 49.295509609061924
 const val simulationLonEast = -123.04870086158795
 const val simulationLatSouth = 49.25908827302493
 const val simulationLonWest = -123.17226119977276
+
+const val ACCURACY = Priority.PRIORITY_HIGH_ACCURACY
+const val LATENCY = 1000L
+const val WAIT_FOR_ACCURATE_LOCATION = false
+const val MIN_UPDATE_INTERVAL_MILLIS = 1000L
 
 const val LANGUAGE_CODE_GERMAN = "de"
 const val LANGUAGE_CODE_SPANISH = "es"
