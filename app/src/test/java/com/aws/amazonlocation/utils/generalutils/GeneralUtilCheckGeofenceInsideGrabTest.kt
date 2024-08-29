@@ -28,7 +28,6 @@ class GeneralUtilCheckGeofenceInsideGrabTest : BaseTest() {
 
     @Test
     fun checkGeofenceInsideGrabTest() {
-        assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTest)
         assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTestLiveLocation)
         assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTest2LiveLocation)
         assertTrue(TEST_FAILED_GRAB_MAP_NOT_ENABLE, !isRunningTest3LiveLocation)

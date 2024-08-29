@@ -41,9 +41,7 @@ class SignInViewModel
         val fetchTokenResponse: Flow<HandleResult<String>> =
             _fetchTokenResponse.receiveAsFlow()
 
-        fun fetchTokensWithOkHttp(
-            authorizationCode: String,
-        ) {
+        fun fetchTokensWithOkHttp(authorizationCode: String) {
             _fetchTokenResponse.trySend(HandleResult.Loading)
             viewModelScope.launch(Dispatchers.IO) {
                 mGetAuthUseCase.fetchTokensWithOkHttp(

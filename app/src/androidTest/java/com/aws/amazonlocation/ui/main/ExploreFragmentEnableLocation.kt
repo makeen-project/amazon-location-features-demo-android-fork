@@ -36,9 +36,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentEnableLocation : BaseTestMainActivity() {
-    override fun enablePermissions(): Array<String> {
-        return arrayOf()
-    }
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 

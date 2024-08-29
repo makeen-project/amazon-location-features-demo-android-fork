@@ -253,40 +253,8 @@ open class BaseActivity : AppCompatActivity() {
         }
     }
 
-    fun openSignIn() {
-        val mUserDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
-        val mUserPoolClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
-        val redirectUri = "${getString(R.string.AMAZON_LOCATION_SCHEMA)}://signin/"
-        val signInUrl =
-            "https://$mUserDomain/login?client_id=$mUserPoolClientId&response_type=code&identity_provider=COGNITO&redirect_uri=$redirectUri"
-
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(signInUrl))
-        startActivity(intent)
-    }
-
-    fun openSignOut() {
-        val mUserDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
-        val mUserPoolClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
-        val redirectUri = "${getString(R.string.AMAZON_LOCATION_SCHEMA)}://signout/"
-        val signInUrl =
-            "https://$mUserDomain/logout?client_id=$mUserPoolClientId&logout_uri=$redirectUri"
-
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(signInUrl))
-        startActivity(intent)
-    }
-
     fun restartAppWithClearData() {
         lifecycleScope.launch {
-            when (
-                mPreferenceManager.getValue(
-                    KEY_CLOUD_FORMATION_STATUS,
-                    "",
-                )
-            ) {
-                AuthEnum.SIGNED_IN.name -> {
-                    openSignOut()
-                }
-            }
             mAWSLocationHelper.locationCredentialsProvider?.clear()
             mPreferenceManager.setDefaultConfig()
             delay(RESTART_DELAY)
