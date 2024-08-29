@@ -209,7 +209,7 @@ class ExploreFragment :
     private var mAttributeAdapter: SortingAdapter? = null
     private var mTypeAdapter: SortingAdapter? = null
     private var isDataSearchForDestination: Boolean = false
-    private lateinit var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment
+    private var mapStyleBottomSheetFragment: MapStyleBottomSheetFragment?= null
     private var isCalculateDriveApiError: Boolean = false
     private var isCalculateWalkApiError: Boolean = false
     private var isCalculateTruckApiError: Boolean = false
@@ -2629,7 +2629,7 @@ class ExploreFragment :
                             )
                         activity?.supportFragmentManager.let {
                             if (it != null) {
-                                mapStyleBottomSheetFragment.show(
+                                mapStyleBottomSheetFragment?.show(
                                     it,
                                     MapStyleBottomSheetFragment::class.java.name,
                                 )
@@ -6371,7 +6371,7 @@ class ExploreFragment :
         selectedProvider: String,
         selectedInnerData: String,
     ) {
-        lifecycleScope.launch(Dispatchers.Main) {
+        activity?.runOnUiThread {
             if (isMapClick) {
                 repeat(mViewModel.mStyleList.size) {
                     mViewModel.mStyleList[it].isSelected = false
@@ -6387,7 +6387,7 @@ class ExploreFragment :
                 }
                 mBaseActivity?.isTablet?.let {
                     if (it) {
-                        mapStyleBottomSheetFragment.notifyAdapter()
+                        mapStyleBottomSheetFragment?.notifyAdapter()
                     } else {
                         mMapStyleAdapter?.notifyDataSetChanged()
                     }
@@ -6407,7 +6407,7 @@ class ExploreFragment :
         mBinding.bottomSheetMapStyle.apply {
             mBaseActivity?.isTablet?.let {
                 if (it) {
-                    mapStyleBottomSheetFragment.refreshMapTile(selectedProvider)
+                    mapStyleBottomSheetFragment?.refreshMapTile(selectedProvider)
                 } else {
                     setMapTileSelection(selectedProvider)
                 }
@@ -6605,7 +6605,7 @@ class ExploreFragment :
         }
         mBaseActivity?.isTablet?.let {
             if (it) {
-                mapStyleBottomSheetFragment.notifyAdapter()
+                mapStyleBottomSheetFragment?.notifyAdapter()
             } else {
                 mMapStyleAdapter?.notifyDataSetChanged()
             }

@@ -39,29 +39,6 @@
             android:exported="false"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.main.hosted_ui.HostedUIRedirectActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/AMAZON_LOCATION_SCHEMA" android:host="signin"/>
-
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/AMAZON_LOCATION_SCHEMA" android:host="signout"/>
-
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".ui.main.MainActivity"
             android:configChanges="screenSize|orientation"
             android:exported="true"

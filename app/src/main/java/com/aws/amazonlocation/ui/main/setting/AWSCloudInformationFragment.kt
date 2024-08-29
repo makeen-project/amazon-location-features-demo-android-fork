@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withStarted
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
@@ -293,7 +292,7 @@ class AWSCloudInformationFragment :
                     EventType.SIGN_IN_STARTED,
                     propertiesAws,
                 )
-                (activity as MainActivity).openSignIn()
+                (activity as MainActivity).openSingIn()
             }
 
             btnLogout.setOnClickListener {
@@ -310,6 +309,7 @@ class AWSCloudInformationFragment :
                     mPreferenceManager.setValue(KEY_RE_START_APP_WITH_AWS_DISCONNECT, true)
                     mPreferenceManager.setDefaultConfig()
                 }
+                (activity as MainActivity).refreshSettings()
                 init()
                 dialog.dismiss()
             }
@@ -409,7 +409,12 @@ class AWSCloudInformationFragment :
                 mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
             }
         }
-        init()
+        if ((activity as MainActivity).isTablet){
+            (activity as MainActivity).refreshSettings()
+        }
+        (activity as MainActivity).runOnUiThread {
+            init()
+        }
     }
 
     private fun cloudFormationValidation() {

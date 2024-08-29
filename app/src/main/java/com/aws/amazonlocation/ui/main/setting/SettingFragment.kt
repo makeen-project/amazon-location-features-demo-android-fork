@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.withStarted
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
@@ -360,6 +359,13 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                                 lifecycleScope.launch {
                                     mPreferenceManager.setDefaultConfig()
                                 }
+                                if (isTablet) {
+                                    if (this@SettingFragment::aWSCloudInformationFragment.isInitialized) {
+                                        if (aWSCloudInformationFragment.isVisible) {
+                                            aWSCloudInformationFragment.refresh()
+                                        }
+                                    }
+                                }
                                 init()
                                 dialog.dismiss()
                             }
@@ -391,6 +397,24 @@ class SettingFragment : BaseFragment(), SignOutInterface {
         (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
         init()
         showError(getString(R.string.sign_out_successfully))
+        if (this::aWSCloudInformationFragment.isInitialized) {
+            if (aWSCloudInformationFragment.isVisible) {
+                aWSCloudInformationFragment.refresh()
+            }
+        }
+    }
+
+    fun refreshAfterConnection() {
+        init()
+    }
+
+    fun refreshAfterSignIn() {
+        init()
+        if (this::aWSCloudInformationFragment.isInitialized) {
+            if (aWSCloudInformationFragment.isVisible) {
+                aWSCloudInformationFragment.refresh()
+            }
+        }
     }
 
     private fun FragmentSettingBinding.setDefaultSelection() {
