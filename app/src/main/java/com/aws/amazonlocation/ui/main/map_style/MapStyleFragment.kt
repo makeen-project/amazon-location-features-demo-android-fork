@@ -261,6 +261,7 @@ class MapStyleFragment : BaseFragment() {
                         changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
                         if (isRestartNeeded) {
                             mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                            mAWSLocationHelper.locationCredentialsProvider?.clear()
                             lifecycleScope.launch {
                                 if (!isRunningTest) {
                                     delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
@@ -283,6 +284,7 @@ class MapStyleFragment : BaseFragment() {
                 changeMapStyle(isMapClick, selectedProvider, selectedInnerData)
                 if (isRestartNeeded) {
                     mPreferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
+                    mAWSLocationHelper.locationCredentialsProvider?.clear()
                     lifecycleScope.launch {
                         if (!isRunningTest) {
                             delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
