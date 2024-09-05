@@ -104,7 +104,6 @@ import com.aws.amazonlocation.utils.STRING_FORMAT
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.SimulationDialogInterface
 import com.aws.amazonlocation.utils.TRAVEL_MODE_BICYCLE
-import com.aws.amazonlocation.utils.TRAVEL_MODE_CAR
 import com.aws.amazonlocation.utils.TRAVEL_MODE_MOTORCYCLE
 import com.aws.amazonlocation.utils.TrackerCons
 import com.aws.amazonlocation.utils.Units
@@ -6139,11 +6138,9 @@ class ExploreFragment :
                         for (innerData in it) {
                             if (innerData.mapName.equals(selectedInnerData)) {
                                 innerData.isSelected = true
-                                var selectedId = ""
                                 if (data.styleNameDisplay != getString(R.string.grab)) {
                                     when (innerData.mapName) {
                                         getString(R.string.map_light) -> {
-                                            selectedId = ESRI_LIGHT
                                             mMapHelper.updateStyle(
                                                 ESRI_LIGHT,
                                                 VECTOR_ESRI_TOPOGRAPHIC,
@@ -6151,7 +6148,6 @@ class ExploreFragment :
                                         }
 
                                         getString(R.string.map_streets) -> {
-                                            selectedId = MapNames.ESRI_STREET_MAP
                                             mMapHelper.updateStyle(
                                                 MapNames.ESRI_STREET_MAP,
                                                 MapStyles.VECTOR_ESRI_STREETS,
@@ -6159,7 +6155,6 @@ class ExploreFragment :
                                         }
 
                                         getString(R.string.map_navigation) -> {
-                                            selectedId = MapNames.ESRI_NAVIGATION
                                             mMapHelper.updateStyle(
                                                 MapNames.ESRI_NAVIGATION,
                                                 MapStyles.VECTOR_ESRI_NAVIGATION,
@@ -6167,7 +6162,6 @@ class ExploreFragment :
                                         }
 
                                         getString(R.string.map_dark_gray) -> {
-                                            selectedId = MapNames.ESRI_DARK_GRAY_CANVAS
                                             mMapHelper.updateStyle(
                                                 MapNames.ESRI_DARK_GRAY_CANVAS,
                                                 MapStyles.VECTOR_ESRI_DARK_GRAY_CANVAS,
@@ -6175,7 +6169,6 @@ class ExploreFragment :
                                         }
 
                                         getString(R.string.map_light_gray) -> {
-                                            selectedId = MapNames.ESRI_LIGHT_GRAY_CANVAS
                                             mMapHelper.updateStyle(
                                                 MapNames.ESRI_LIGHT_GRAY_CANVAS,
                                                 MapStyles.VECTOR_ESRI_LIGHT_GRAY_CANVAS,
@@ -6183,7 +6176,6 @@ class ExploreFragment :
                                         }
 
                                         getString(R.string.map_imagery) -> {
-                                            selectedId = MapNames.ESRI_IMAGERY
                                             mMapHelper.updateStyle(
                                                 MapNames.ESRI_IMAGERY,
                                                 MapStyles.RASTER_ESRI_IMAGERY,
@@ -6191,7 +6183,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_contrast) -> {
-                                            selectedId = MapNames.HERE_CONTRAST
                                             mMapHelper.updateStyle(
                                                 MapNames.HERE_CONTRAST,
                                                 MapStyles.VECTOR_HERE_CONTRAST,
@@ -6199,7 +6190,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_explore) -> {
-                                            selectedId = MapNames.HERE_EXPLORE
                                             mMapHelper.updateStyle(
                                                 MapNames.HERE_EXPLORE,
                                                 MapStyles.VECTOR_HERE_EXPLORE,
@@ -6207,7 +6197,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_explore_truck) -> {
-                                            selectedId = MapNames.HERE_EXPLORE_TRUCK
                                             mMapHelper.updateStyle(
                                                 MapNames.HERE_EXPLORE_TRUCK,
                                                 MapStyles.VECTOR_HERE_EXPLORE_TRUCK,
@@ -6215,7 +6204,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_hybrid) -> {
-                                            selectedId = MapNames.HERE_HYBRID
                                             mMapHelper.updateStyle(
                                                 MapNames.HERE_HYBRID,
                                                 MapStyles.HYBRID_HERE_EXPLORE_SATELLITE,
@@ -6223,7 +6211,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_raster) -> {
-                                            selectedId = MapNames.HERE_IMAGERY
                                             mMapHelper.updateStyle(
                                                 MapNames.HERE_IMAGERY,
                                                 MapStyles.RASTER_HERE_EXPLORE_SATELLITE,
@@ -6231,7 +6218,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_standard_light) -> {
-                                            selectedId = MapNames.OPEN_DATA_STANDARD_LIGHT
                                             mMapHelper.updateStyle(
                                                 MapNames.OPEN_DATA_STANDARD_LIGHT,
                                                 MapStyles.VECTOR_OPEN_DATA_STANDARD_LIGHT,
@@ -6239,7 +6225,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_standard_dark) -> {
-                                            selectedId = MapNames.OPEN_DATA_STANDARD_DARK
                                             mMapHelper.updateStyle(
                                                 MapNames.OPEN_DATA_STANDARD_DARK,
                                                 MapStyles.VECTOR_OPEN_DATA_STANDARD_DARK,
@@ -6247,7 +6232,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_visualization_light) -> {
-                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_LIGHT
                                             mMapHelper.updateStyle(
                                                 MapNames.OPEN_DATA_VISUALIZATION_LIGHT,
                                                 MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_LIGHT,
@@ -6255,7 +6239,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_visualization_dark) -> {
-                                            selectedId = MapNames.OPEN_DATA_VISUALIZATION_DARK
                                             mMapHelper.updateStyle(
                                                 MapNames.OPEN_DATA_VISUALIZATION_DARK,
                                                 MapStyles.VECTOR_OPEN_DATA_VISUALIZATION_DARK,
@@ -6265,7 +6248,6 @@ class ExploreFragment :
                                 } else {
                                     when (innerData.mapName) {
                                         resources.getString(R.string.map_grab_light) -> {
-                                            selectedId = MapNames.GRAB_LIGHT
                                             mMapHelper.updateStyle(
                                                 MapNames.GRAB_LIGHT,
                                                 MapStyles.GRAB_LIGHT,
@@ -6273,7 +6255,6 @@ class ExploreFragment :
                                         }
 
                                         resources.getString(R.string.map_grab_dark) -> {
-                                            selectedId = MapNames.GRAB_DARK
                                             mMapHelper.updateStyle(
                                                 MapNames.GRAB_DARK,
                                                 MapStyles.GRAB_DARK,
