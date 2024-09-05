@@ -20,10 +20,8 @@ import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
 import com.aws.amazonlocation.ui.main.region.RegionFragment
 import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
-import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
-import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -310,10 +308,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 }
                 (activity as MainActivity).exitScreen()
                 (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
-                val propertiesAws = listOf(
-                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
-                )
-                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
             }
             clLanguage.setOnClickListener {
                 if (isTablet) {
@@ -391,10 +385,6 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
 
     fun refreshAfterSignOut() {
-        val propertiesAws = listOf(
-            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
-        )
-        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
         init()
         showError(getString(R.string.sign_out_successfully))
         if (this::aWSCloudInformationFragment.isInitialized) {

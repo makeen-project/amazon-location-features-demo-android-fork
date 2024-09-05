@@ -68,8 +68,6 @@ import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
-import com.aws.amazonlocation.utils.AnalyticsAttribute
-import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.CLICK_TIME_DIFFERENCE
@@ -77,10 +75,6 @@ import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.DELAY_500
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
 import com.aws.amazonlocation.utils.Durations
-import com.aws.amazonlocation.utils.EventType
-import com.aws.amazonlocation.utils.EventType.PLACE_SEARCH
-import com.aws.amazonlocation.utils.EventType.ROUTE_OPTION_CHANGED
-import com.aws.amazonlocation.utils.EventType.ROUTE_SEARCH
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
@@ -93,12 +87,10 @@ import com.aws.amazonlocation.utils.KEY_OPEN_DATA_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.KEY_URL
-import com.aws.amazonlocation.utils.KILOMETERS
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
 import com.aws.amazonlocation.utils.MAP_STYLE_ATTRIBUTION
-import com.aws.amazonlocation.utils.MILES
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.MapNames
 import com.aws.amazonlocation.utils.MapNames.ESRI_LIGHT
@@ -503,34 +495,12 @@ class ExploreFragment :
                                 rvGeofence.hide()
                                 clSearchLoaderGeofenceList.root.show()
                             }.onSuccess {
-                                val propertiesAws =
-                                    listOf(
-                                        Pair(
-                                            AnalyticsAttribute.TRIGGERED_BY,
-                                            AnalyticsAttributeValue.GEOFENCES,
-                                        ),
-                                    )
-                                (activity as MainActivity).analyticsHelper?.recordEvent(
-                                    EventType.GET_GEOFENCES_LIST_SUCCESSFUL,
-                                    propertiesAws,
-                                )
                                 clSearchLoaderGeofenceList.root.hide()
                                 rvGeofence.show()
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     mBaseActivity?.mGeofenceUtils?.manageGeofenceListUI(it)
                                 }
                             }.onError {
-                                val propertiesAws =
-                                    listOf(
-                                        Pair(
-                                            AnalyticsAttribute.TRIGGERED_BY,
-                                            AnalyticsAttributeValue.GEOFENCES,
-                                        ),
-                                    )
-                                (activity as MainActivity).analyticsHelper?.recordEvent(
-                                    EventType.GET_GEOFENCES_LIST_FAILED,
-                                    propertiesAws,
-                                )
                                 clSearchLoaderGeofenceList.root.hide()
                                 rvGeofence.hide()
                             }
@@ -637,17 +607,6 @@ class ExploreFragment :
                 handleResult
                     .onLoading {
                     }.onSuccess {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES,
-                                ),
-                            )
-                        (activity as MainActivity).analyticsHelper?.recordEvent(
-                            EventType.GEOFENCE_CREATION_SUCCESSFUL,
-                            propertiesAws,
-                        )
                         lifecycleScope.launch(Dispatchers.Main) {
                             mBaseActivity?.mGeofenceUtils?.mangeAddGeofenceUI(requireActivity())
                             mBaseActivity?.bottomNavigationVisibility(true)
@@ -655,17 +614,6 @@ class ExploreFragment :
                             activity?.hideKeyboard()
                         }
                     }.onError {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES,
-                                ),
-                            )
-                        (activity as MainActivity).analyticsHelper?.recordEvent(
-                            EventType.GEOFENCE_CREATION_FAILED,
-                            propertiesAws,
-                        )
                         if (it.messageResource
                                 .toString()
                                 .contains(resources.getString(R.string.unable_to_execute_request))
@@ -682,17 +630,6 @@ class ExploreFragment :
                 handleResult
                     .onLoading {
                     }.onSuccess {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES,
-                                ),
-                            )
-                        (activity as MainActivity).analyticsHelper?.recordEvent(
-                            EventType.GEOFENCE_DELETION_SUCCESSFUL,
-                            propertiesAws,
-                        )
                         lifecycleScope.launch(Dispatchers.Main) {
                             mGeofenceInterface.hideShowBottomNavigationBar(
                                 false,
@@ -705,19 +642,7 @@ class ExploreFragment :
                                 )
                             }
                         }
-                    }.onError {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES,
-                                ),
-                            )
-                        (activity as MainActivity).analyticsHelper?.recordEvent(
-                            EventType.GEOFENCE_DELETION_FAILED,
-                            propertiesAws,
-                        )
-                    }
+                    }.onError {}
             }
         }
 
@@ -1162,37 +1087,6 @@ class ExploreFragment :
                                             mIsAvoidTolls,
                                             mTravelMode,
                                         )
-                                        val isMetric =
-                                            isMetric(
-                                                mPreferenceManager.getValue(
-                                                    KEY_UNIT_SYSTEM,
-                                                    "",
-                                                ),
-                                            )
-                                        val properties =
-                                            listOf(
-                                                Pair(AnalyticsAttribute.TRAVEL_MODE, mTravelMode),
-                                                Pair(
-                                                    AnalyticsAttribute.DISTANCE_UNIT,
-                                                    if (isMetric) KILOMETERS else MILES,
-                                                ),
-                                                Pair(
-                                                    AnalyticsAttribute.TRIGGERED_BY,
-                                                    AnalyticsAttributeValue.ROUTE_MODULE,
-                                                ),
-                                                Pair(
-                                                    AnalyticsAttribute.AVOID_FERRIES,
-                                                    mIsAvoidFerries.toString(),
-                                                ),
-                                                Pair(
-                                                    AnalyticsAttribute.AVOID_TOLLS,
-                                                    mIsAvoidTolls.toString(),
-                                                ),
-                                            )
-                                        (activity as MainActivity).analyticsHelper?.recordEvent(
-                                            ROUTE_SEARCH,
-                                            properties,
-                                        )
                                     }
                                 }
                             }
@@ -1222,17 +1116,6 @@ class ExploreFragment :
         }
 
     fun refreshAfterSignOut() {
-        val propertiesAws =
-            listOf(
-                Pair(
-                    AnalyticsAttribute.TRIGGERED_BY,
-                    AnalyticsAttributeValue.EXPLORER,
-                ),
-            )
-        (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.SIGN_OUT_SUCCESSFUL,
-            propertiesAws,
-        )
         setUserProfile()
         showError(getString(R.string.sign_out_successfully))
     }
@@ -2726,29 +2609,6 @@ class ExploreFragment :
                     if (mViewModel.mIsPlaceSuggestion) {
                         if (!text.isNullOrEmpty()) {
                             searchPlaces(text.toString())
-                            val properties =
-                                listOf(
-                                    Pair(AnalyticsAttribute.VALUE, text.toString()),
-                                    Pair(
-                                        AnalyticsAttribute.TYPE,
-                                        if (validateLatLng(text.toString()) !=
-                                            null
-                                        ) {
-                                            AnalyticsAttributeValue.COORDINATES
-                                        } else {
-                                            AnalyticsAttributeValue.TEXT
-                                        },
-                                    ),
-                                    Pair(AnalyticsAttribute.TRIGGERED_BY, PLACE_SEARCH),
-                                    Pair(
-                                        AnalyticsAttribute.ACTION,
-                                        AnalyticsAttributeValue.AUTOCOMPLETE,
-                                    ),
-                                )
-                            (activity as MainActivity).analyticsHelper?.recordEvent(
-                                PLACE_SEARCH,
-                                properties,
-                            )
                         }
                     }
                 }.launchIn(lifecycleScope)
@@ -2798,7 +2658,6 @@ class ExploreFragment :
                                 isLocationIcon = false,
                             )
                         }
-                        recordTravelModeChange()
                     }
                 }
 
@@ -2826,7 +2685,6 @@ class ExploreFragment :
                                 isLocationIcon = false,
                             )
                         }
-                        recordTravelModeChange()
                     }
                 }
 
@@ -2853,7 +2711,6 @@ class ExploreFragment :
                                 isLocationIcon = false,
                             )
                         }
-                        recordTravelModeChange()
                     }
                 }
 
@@ -2880,7 +2737,6 @@ class ExploreFragment :
                                 isLocationIcon = false,
                             )
                         }
-                        recordTravelModeChange()
                     }
                 }
 
@@ -3123,32 +2979,6 @@ class ExploreFragment :
                             clearMapLineMarker()
                             mViewModel.mSearchDirectionDestinationData = null
                             searchPlaces(text.toString())
-                            val properties =
-                                listOf(
-                                    Pair(AnalyticsAttribute.VALUE, text.toString()),
-                                    Pair(
-                                        AnalyticsAttribute.TYPE,
-                                        if (validateLatLng(text.toString()) !=
-                                            null
-                                        ) {
-                                            AnalyticsAttributeValue.COORDINATES
-                                        } else {
-                                            AnalyticsAttributeValue.TEXT
-                                        },
-                                    ),
-                                    Pair(
-                                        AnalyticsAttribute.TRIGGERED_BY,
-                                        AnalyticsAttributeValue.ROUTE_MODULE,
-                                    ),
-                                    Pair(
-                                        AnalyticsAttribute.ACTION,
-                                        AnalyticsAttributeValue.TO_SEARCH_AUTOCOMPLETE,
-                                    ),
-                                )
-                            (activity as MainActivity).analyticsHelper?.recordEvent(
-                                PLACE_SEARCH,
-                                properties,
-                            )
                         }
                         checkMyLocationUI(text, edtSearchDirection)
                     }.launchIn(lifecycleScope)
@@ -3191,32 +3021,6 @@ class ExploreFragment :
                             clearMapLineMarker()
                             mViewModel.mSearchDirectionOriginData = null
                             searchPlaces(text.toString())
-                            val properties =
-                                listOf(
-                                    Pair(AnalyticsAttribute.VALUE, text.toString()),
-                                    Pair(
-                                        AnalyticsAttribute.TYPE,
-                                        if (validateLatLng(text.toString()) !=
-                                            null
-                                        ) {
-                                            AnalyticsAttributeValue.COORDINATES
-                                        } else {
-                                            AnalyticsAttributeValue.TEXT
-                                        },
-                                    ),
-                                    Pair(
-                                        AnalyticsAttribute.TRIGGERED_BY,
-                                        AnalyticsAttributeValue.ROUTE_MODULE,
-                                    ),
-                                    Pair(
-                                        AnalyticsAttribute.ACTION,
-                                        AnalyticsAttributeValue.FROM_SEARCH_AUTOCOMPLETE,
-                                    ),
-                                )
-                            (activity as MainActivity).analyticsHelper?.recordEvent(
-                                PLACE_SEARCH,
-                                properties,
-                            )
                         }
                         checkMyLocationUI(text, edtSearchDest)
                     }.launchIn(lifecycleScope)
@@ -3763,23 +3567,6 @@ class ExploreFragment :
                 isLineUpdate = false,
                 isWalk = false,
                 isLocationIcon = false,
-            )
-        }
-        recordTravelModeChange()
-    }
-
-    private fun recordTravelModeChange() {
-        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-            val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
-            val properties =
-                listOf(
-                    Pair(AnalyticsAttribute.TRAVEL_MODE, mTravelMode),
-                    Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                )
-            (activity as MainActivity).analyticsHelper?.recordEvent(
-                ROUTE_OPTION_CHANGED,
-                properties,
             )
         }
     }
@@ -4401,7 +4188,6 @@ class ExploreFragment :
                         isAvoidFerries = mIsAvoidFerries,
                         isAvoidTolls = mIsAvoidTolls,
                     )
-                    recordEventForAllGrabMode()
                 } else {
                     mViewModel.calculateDistance(
                         latitude = liveLocationLatLng?.latitude,
@@ -4418,7 +4204,6 @@ class ExploreFragment :
                         isAvoidTolls = mIsAvoidTolls,
                         isWalkingAndTruckCall = true,
                     )
-                    recordEventForAllMode(isWalkingAndTruckCall = true)
                 }
             }
             lifecycleScope.launch {
@@ -4427,71 +4212,6 @@ class ExploreFragment :
             }
         } else {
             showError(getString(R.string.no_route_found))
-        }
-    }
-
-    private fun recordEventForAllGrabMode() {
-        val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
-        val propertiesWalk =
-            listOf(
-                Pair(AnalyticsAttribute.TRAVEL_MODE, TravelMode.Walking.value),
-                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
-            )
-        val propertiesBicycle =
-            listOf(
-                Pair(AnalyticsAttribute.TRAVEL_MODE, TRAVEL_MODE_BICYCLE),
-                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
-            )
-        val propertiesMotorCycle =
-            listOf(
-                Pair(AnalyticsAttribute.TRAVEL_MODE, TRAVEL_MODE_MOTORCYCLE),
-                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
-            )
-        (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, propertiesWalk)
-        (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, propertiesBicycle)
-        (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, propertiesMotorCycle)
-    }
-
-    private fun recordEventForAllMode(isWalkingAndTruckCall: Boolean) {
-        val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
-        val propertiesCar =
-            listOf(
-                Pair(AnalyticsAttribute.TRAVEL_MODE, TravelMode.Car.value),
-                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
-            )
-        val propertiesTruck =
-            listOf(
-                Pair(AnalyticsAttribute.TRAVEL_MODE, TravelMode.Truck.value),
-                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
-            )
-        val propertiesWalk =
-            listOf(
-                Pair(AnalyticsAttribute.TRAVEL_MODE, TravelMode.Walking.value),
-                Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
-                Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
-            )
-        if (isWalkingAndTruckCall) {
-            (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, propertiesTruck)
-            (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, propertiesWalk)
-        } else {
-            (activity as MainActivity).analyticsHelper?.recordEvent(ROUTE_SEARCH, propertiesCar)
         }
     }
 
@@ -5411,7 +5131,6 @@ class ExploreFragment :
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false,
         )
-        recordEventForAllMode(isWalkingAndTruckCall = false)
         if (isGrabMapSelected(mPreferenceManager, requireContext())) {
             mViewModel.calculateGrabDistance(
                 latitude =
@@ -5433,7 +5152,6 @@ class ExploreFragment :
                 isAvoidFerries = mIsAvoidFerries,
                 isAvoidTolls = mIsAvoidTolls,
             )
-            recordEventForAllGrabMode()
         } else {
             mViewModel.calculateDistance(
                 latitude =
@@ -5456,7 +5174,6 @@ class ExploreFragment :
                 isAvoidTolls = mIsAvoidTolls,
                 isWalkingAndTruckCall = true,
             )
-            recordEventForAllMode(isWalkingAndTruckCall = true)
         }
         showDirectionSearchShimmer()
         mViewModel.mSearchDirectionOriginData?.let { it1 ->
@@ -5522,7 +5239,6 @@ class ExploreFragment :
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false,
         )
-        recordEventForAllMode(isWalkingAndTruckCall = false)
         if (isGrabMapSelected(mPreferenceManager, requireContext())) {
             mViewModel.calculateGrabDistance(
                 latitude = liveLocationLatLng?.latitude,
@@ -5540,7 +5256,6 @@ class ExploreFragment :
                 isAvoidFerries = mIsAvoidFerries,
                 isAvoidTolls = mIsAvoidTolls,
             )
-            recordEventForAllGrabMode()
         } else {
             mViewModel.calculateDistance(
                 latitude = liveLocationLatLng?.latitude,
@@ -5559,7 +5274,6 @@ class ExploreFragment :
                 isAvoidTolls = mIsAvoidTolls,
                 isWalkingAndTruckCall = true,
             )
-            recordEventForAllMode(isWalkingAndTruckCall = true)
         }
 
         showDirectionSearchShimmer()
@@ -5597,7 +5311,6 @@ class ExploreFragment :
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false,
         )
-        recordEventForAllMode(isWalkingAndTruckCall = false)
         if (isGrabMapSelected(mPreferenceManager, requireContext())) {
             mViewModel.calculateGrabDistance(
                 latitude =
@@ -5615,7 +5328,6 @@ class ExploreFragment :
                 isAvoidFerries = mIsAvoidFerries,
                 isAvoidTolls = mIsAvoidTolls,
             )
-            recordEventForAllGrabMode()
         } else {
             mViewModel.calculateDistance(
                 latitude =
@@ -5634,7 +5346,6 @@ class ExploreFragment :
                 isAvoidTolls = mIsAvoidTolls,
                 isWalkingAndTruckCall = true,
             )
-            recordEventForAllMode(isWalkingAndTruckCall = true)
         }
 
         showDirectionSearchShimmer()
@@ -5826,7 +5537,6 @@ class ExploreFragment :
                         isAvoidTolls = mIsAvoidTolls,
                         isWalkingAndTruckCall = false,
                     )
-                    recordEventForAllMode(isWalkingAndTruckCall = false)
                 } else {
                     mBinding.bottomSheetDirection.tvDirectionError2.text =
                         getString(R.string.label_current_location_disabled)
@@ -6231,7 +5941,6 @@ class ExploreFragment :
                     isAvoidTolls = mIsAvoidTolls,
                     isWalkingAndTruckCall = false,
                 )
-                recordEventForAllMode(isWalkingAndTruckCall = false)
             }
         }
     }
@@ -6573,19 +6282,6 @@ class ExploreFragment :
                                     }
                                 }
                                 innerData.mapName?.let { mapName ->
-                                    val properties =
-                                        listOf(
-                                            Pair(AnalyticsAttribute.PROVIDER, mapName),
-                                            Pair(AnalyticsAttribute.ID, selectedId),
-                                            Pair(
-                                                AnalyticsAttribute.TRIGGERED_BY,
-                                                AnalyticsAttributeValue.EXPLORER,
-                                            ),
-                                        )
-                                    (activity as MainActivity).analyticsHelper?.recordEvent(
-                                        EventType.MAP_STYLE_CHANGE,
-                                        properties,
-                                    )
                                     mPreferenceManager.setValue(
                                         KEY_MAP_STYLE_NAME,
                                         mapName,
@@ -6671,17 +6367,6 @@ class ExploreFragment :
                 "",
             )
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
-            val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
-            val properties =
-                listOf(
-                    Pair(AnalyticsAttribute.TRAVEL_MODE, TRAVEL_MODE_CAR),
-                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.PLACES_POPUP),
-                    Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
-                )
-            (activity as MainActivity).analyticsHelper?.recordEvent(
-                ROUTE_SEARCH,
-                properties,
-            )
             return true
         }
         if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
