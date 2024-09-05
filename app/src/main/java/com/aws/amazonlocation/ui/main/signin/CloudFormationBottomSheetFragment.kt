@@ -23,7 +23,6 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
-import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -84,21 +83,6 @@ class CloudFormationBottomSheetFragment(
         setStyle(
             STYLE_NORMAL,
             R.style.CustomBottomSheetDialogTheme,
-        )
-
-        val propertiesAws = getPairValue()
-        (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.AWS_ACCOUNT_CONNECTION_STARTED,
-            propertiesAws,
-        )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        val propertiesAws = getPairValue()
-        (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.AWS_ACCOUNT_CONNECTION_STOPPED,
-            propertiesAws,
         )
     }
 
@@ -302,11 +286,6 @@ class CloudFormationBottomSheetFragment(
             mPreferenceManager.setValue(
                 KEY_CLOUD_FORMATION_STATUS,
                 AuthEnum.AWS_CONNECTED.name,
-            )
-            val propertiesAws = getPairValue()
-            (activity as MainActivity).analyticsHelper?.recordEvent(
-                EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL,
-                propertiesAws,
             )
             storeDataInPreference()
         }

@@ -28,7 +28,6 @@ import androidx.navigation.ui.setupWithNavController
 import aws.sdk.kotlin.services.cognitoidentity.model.Credentials
 import aws.sdk.kotlin.services.iot.IotClient
 import aws.sdk.kotlin.services.iot.model.AttachPolicyRequest
-import com.aws.amazonlocation.AmazonLocationApp
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.common.onError
@@ -50,15 +49,12 @@ import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.ABOUT_FRAGMENT
 import com.aws.amazonlocation.utils.AWS_CLOUD_INFORMATION_FRAGMENT
-import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
-import com.aws.amazonlocation.utils.AnalyticsHelper
 import com.aws.amazonlocation.utils.AwsSignerInterceptor
 import com.aws.amazonlocation.utils.ConnectivityObserveInterface
 import com.aws.amazonlocation.utils.DELAY_LANGUAGE_3000
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_FRAGMENT_LOAD
 import com.aws.amazonlocation.utils.EnableTrackerInterface
-import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.IOT_POLICY
 import com.aws.amazonlocation.utils.IOT_POLICY_UN_AUTH
 import com.aws.amazonlocation.utils.IS_APP_FIRST_TIME_OPENED
@@ -102,7 +98,6 @@ import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.invisible
-import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.makeTransparentStatusBar
 import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.setLocale
@@ -117,17 +112,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import org.maplibre.android.module.http.HttpRequestUtil
-import org.maplibre.android.utils.ThreadUtils.init
 import software.amazon.location.auth.EncryptedSharedPreferences
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
 class MainActivity :
-    BaseActivity(),
-    CrashListener {
+    BaseActivity() {
     private var isSessionStarted: Boolean = false
-    var analyticsHelper: AnalyticsHelper? = null
     private var isMapStyleChangeCalled: Boolean = false
     private var isAppNotFirstOpened: Boolean = false
     private var reStartApp: Boolean = false
@@ -256,14 +248,6 @@ class MainActivity :
         setBottomBar()
         hideProgress()
         showError("Sign in failed")
-        val propertiesAws =
-            listOf(
-                Pair(
-                    AnalyticsAttribute.TRIGGERED_BY,
-                    AnalyticsAttributeValue.EXPLORER,
-                ),
-            )
-        analyticsHelper?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -273,19 +257,12 @@ class MainActivity :
         window.setSoftInputMode(
             WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN,
         )
-        if (!isRunningTest) {
-            (application as AmazonLocationApp).setCrashListener(this)
-        }
         isTablet = resources.getBoolean(R.bool.is_tablet)
         if (!isTablet) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        analyticsHelper =
-            AnalyticsHelper(this@MainActivity, mAWSLocationHelper, mPreferenceManager)
-        analyticsHelper?.initAnalytics()
-        analyticsHelper?.startSession()
         checkRtl()
         makeTransparentStatusBar()
         checkInternetObserver()
@@ -475,28 +452,11 @@ class MainActivity :
                             }.await()
                         }
                         getTokenAndAttachPolicy()
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.EXPLORER,
-                                ),
-                            )
-                        analyticsHelper?.recordEvent(EventType.SIGN_IN_SUCCESSFUL, propertiesAws)
                     }.onError { it ->
                         setBottomBar()
                         hideProgress()
                         it.messageResource?.let {
                             showError(it.toString())
-
-                            val propertiesAws =
-                                listOf(
-                                    Pair(
-                                        AnalyticsAttribute.TRIGGERED_BY,
-                                        AnalyticsAttributeValue.EXPLORER,
-                                    ),
-                                )
-                            analyticsHelper?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
                         }
                     }
             }
@@ -636,27 +596,15 @@ class MainActivity :
 
     fun setSelectedScreen(screen: String) {
         currentPage = screen
-        val properties =
-            listOf(
-                Pair(AnalyticsAttribute.SCREEN_NAME, screen),
-            )
-        analyticsHelper?.recordEvent(EventType.SCREEN_OPEN, properties)
     }
 
     fun exitScreen() {
-        currentPage?.let {
-            val properties =
-                listOf(
-                    Pair(AnalyticsAttribute.SCREEN_NAME, it),
-                )
-            analyticsHelper?.recordEvent(EventType.SCREEN_CLOSE, properties)
-        }
+        currentPage?.let {}
     }
 
     override fun onDestroy() {
         super.onDestroy()
         KeyBoardUtils.detachKeyboardListeners(mBinding.root)
-        analyticsHelper?.stopSession()
     }
 
     private fun initClick() {
@@ -1180,11 +1128,6 @@ class MainActivity :
             SignInConnectInterface {
             override fun signIn(dialog: Dialog?) {
                 mBottomSheetDialog = dialog
-                val propertiesAws =
-                    listOf(
-                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER),
-                    )
-                analyticsHelper?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
                 openSingIn()
             }
 
@@ -1198,11 +1141,6 @@ class MainActivity :
         object : SignInRequiredInterface {
             override fun signInClick(dialog: Dialog?) {
                 mBottomSheetDialog = dialog
-                val propertiesAws =
-                    listOf(
-                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER),
-                    )
-                analyticsHelper?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
                 openSingIn()
             }
 
@@ -1323,18 +1261,6 @@ class MainActivity :
     }
 
     fun isAppNotFirstOpened(): Boolean = isAppNotFirstOpened
-
-    override fun notifyAppCrash(message: String?) {
-        if (!isDestroyed) {
-            message?.let {
-                val properties =
-                    listOf(
-                        Pair(AnalyticsAttribute.ERROR, it),
-                    )
-                analyticsHelper?.recordEvent(EventType.APPLICATION_ERROR, properties)
-            }
-        }
-    }
 
     fun showSignInRequiredSheet() {
         reStartApp = true
