@@ -20,10 +20,7 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.signin.CustomSpinnerAdapter
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
-import com.aws.amazonlocation.utils.AnalyticsAttribute
-import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
-import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
@@ -95,18 +92,6 @@ class AWSCloudInformationFragment :
         clickListener()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        val propertiesAws =
-            listOf(
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS),
-            )
-        (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.AWS_ACCOUNT_CONNECTION_STOPPED,
-            propertiesAws,
-        )
-    }
-
     private fun init() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         mBinding.apply {
@@ -151,14 +136,6 @@ class AWSCloudInformationFragment :
 
     fun refreshAfterSignOut() {
         mBaseActivity?.clearUserInFo()
-        val propertiesAws =
-            listOf(
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS),
-            )
-        (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.SIGN_OUT_SUCCESSFUL,
-            propertiesAws,
-        )
         if (isDisconnectFromAWSRequired) {
             mPreferenceManager.setDefaultConfig()
         }
@@ -284,14 +261,6 @@ class AWSCloudInformationFragment :
             }
 
             btnSignIn.setOnClickListener {
-                val propertiesAws =
-                    listOf(
-                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS),
-                    )
-                (activity as MainActivity).analyticsHelper?.recordEvent(
-                    EventType.SIGN_IN_STARTED,
-                    propertiesAws,
-                )
                 (activity as MainActivity).openSingIn()
             }
 
@@ -338,14 +307,6 @@ class AWSCloudInformationFragment :
     }
 
     private fun storeDataAndRestartApp() {
-        val propertiesAws =
-            listOf(
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS),
-            )
-        (activity as MainActivity).analyticsHelper?.recordEvent(
-            EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL,
-            propertiesAws,
-        )
         mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
         mPreferenceManager.setValue(
             KEY_CLOUD_FORMATION_STATUS,

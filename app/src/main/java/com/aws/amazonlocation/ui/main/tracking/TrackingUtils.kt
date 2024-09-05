@@ -9,7 +9,6 @@ import android.text.format.DateUtils
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -35,13 +34,10 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
 import com.aws.amazonlocation.utils.AWSLocationHelper
-import com.aws.amazonlocation.utils.AnalyticsAttribute
-import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.ChangeDataProviderInterface
 import com.aws.amazonlocation.utils.DateFormat
 import com.aws.amazonlocation.utils.DeleteTrackingDataInterface
 import com.aws.amazonlocation.utils.Durations
-import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -389,13 +385,6 @@ class TrackingUtils(
             } catch (_: Exception) {
             }
             mqttClient = null
-            val properties = listOf(
-                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
-            )
-            (activity as MainActivity).analyticsHelper?.recordEvent(
-                EventType.STOP_TRACKING,
-                properties
-            )
         }
     }
 
@@ -460,10 +449,6 @@ class TrackingUtils(
         val latLng = mMapHelper?.getLiveLocation()
         latLng?.let { updateLatLngOnMap(it) }
         mTrackingInterface?.updateBatch()
-        val properties = listOf(
-            Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.TRACKERS)
-        )
-        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.START_TRACKING, properties)
     }
 
     fun updateLatLngOnMap(latLng: LatLng) {
@@ -482,23 +467,11 @@ class TrackingUtils(
                             val type = jsonObject.get("trackerEventType").asString
                             val geofenceName = jsonObject.get("geofenceId").asString
                             val subTitle = if (type.equals("ENTER", true)) {
-                                val propertiesAws = listOf(
-                                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
-                                    Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
-                                    Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.ENTER)
-                                )
-                                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
                                 "${mFragmentActivity?.getString(R.string.label_tracker_entered)} $geofenceName"
                             } else {
-                                val propertiesAws = listOf(
-                                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
-                                    Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
-                                    Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.EXIT)
-                                )
-                                (activity as MainActivity).analyticsHelper?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
                                 "${mFragmentActivity?.getString(R.string.label_tracker_exited)} $geofenceName"
                             }
-                            activity.runOnUiThread {
+                            activity?.runOnUiThread {
                                 activity.messageDialog(
                                     title = geofenceName,
                                     subTitle = subTitle,
@@ -610,11 +583,6 @@ class TrackingUtils(
     fun manageGeofenceListUI(list: ArrayList<ListGeofenceResponseEntry>) {
         mGeofenceList.clear()
         mGeofenceList.addAll(list)
-        val properties = listOf(
-            Pair(AnalyticsAttribute.NUMBER_OF_TRACKER_POINTS, mGeofenceList.size.toString()),
-            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS)
-        )
-        (activity as MainActivity).analyticsHelper?.recordEvent(EventType.TRACKER_SAVED, properties)
         if (mGeofenceList.isNotEmpty()) {
             val mLatLngList = ArrayList<LatLng>()
             mGeofenceList.forEachIndexed { index, data ->

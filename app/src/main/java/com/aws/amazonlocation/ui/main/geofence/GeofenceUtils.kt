@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +18,6 @@ import com.aws.amazonlocation.data.enum.GeofenceBottomSheetEnum
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.databinding.BottomSheetAddGeofenceBinding
 import com.aws.amazonlocation.databinding.BottomSheetGeofenceListBinding
-import com.aws.amazonlocation.domain.*
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.ui.base.BaseActivity
@@ -348,10 +346,6 @@ class GeofenceUtils {
             }
             btnAddGeofence.setOnClickListener {
                 if (tvEnableGeofence.text.toString() == mActivity?.getString(R.string.add_geofence)) {
-                    val propertiesAws = listOf(
-                        Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
-                    )
-                    (mActivity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_CREATION_STARTED, propertiesAws)
                     mGeofenceInterface?.hideShowBottomNavigationBar(
                         true,
                         GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
@@ -396,10 +390,6 @@ class GeofenceUtils {
             clAddGeofence.setOnClickListener {
                 if (checkInternetConnection()) {
                     if (mIsBtnEnable) {
-                        val propertiesAws = listOf(
-                            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
-                        )
-                        (mActivity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_CREATION_STARTED, propertiesAws)
                         mGeofenceInterface?.hideShowBottomNavigationBar(
                             true,
                             GeofenceBottomSheetEnum.NONE
@@ -500,11 +490,6 @@ class GeofenceUtils {
     fun editGeofenceBottomSheet(position: Int, data: ListGeofenceResponseEntry) {
         clearAddGeofenceSearch()
         removeGeofenceMarker()
-        val propertiesAws = listOf(
-            Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES),
-            Pair(AnalyticsAttribute.GEOFENCE_ID, data.geofenceId)
-        )
-        (mActivity as MainActivity).analyticsHelper?.recordEvent(EventType.GEOFENCE_ITEM_SELECTED, propertiesAws)
         mGeofenceInterface?.hideShowBottomNavigationBar(true, GeofenceBottomSheetEnum.NONE)
         data.geometry?.circle?.let {
             val latLng = LatLng(it.center[1], it.center[0])
