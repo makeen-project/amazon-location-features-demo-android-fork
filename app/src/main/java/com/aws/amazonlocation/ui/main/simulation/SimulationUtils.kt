@@ -561,7 +561,7 @@ class SimulationUtils(
                     }
                 })
 
-            mActivity?.let {
+            mFragmentActivity?.let {
                 if (encryptedSharedPreferences == null) {
                     encryptedSharedPreferences = EncryptedSharedPreferences(
                         it.applicationContext,
@@ -808,6 +808,14 @@ class SimulationUtils(
 
     private fun startMqttManager() {
         if (mqttClient != null) stopMqttManager()
+        mActivity?.let {
+            if (encryptedSharedPreferences == null) {
+                encryptedSharedPreferences = EncryptedSharedPreferences(
+                    it.applicationContext,
+                    PREFS_NAME_AUTH
+                ).apply { initEncryptedSharedPreferences() }
+            }
+        }
         val identityId = encryptedSharedPreferences?.get(PREFS_KEY_IDENTITY_ID)
         val defaultIdentityPoolId: String = Units.getDefaultIdentityPoolId(
             mPreferenceManager?.getValue(

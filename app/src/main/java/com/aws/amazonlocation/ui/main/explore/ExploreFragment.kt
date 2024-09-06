@@ -4917,7 +4917,7 @@ class ExploreFragment :
             showViews(
                 mBinding.cardMap,
             )
-            if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+            if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true && mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true && mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true) {
                 mBinding.cardGeofenceMap.show()
                 mBaseActivity?.isTablet?.let {
                     if (!it) {
@@ -4928,7 +4928,7 @@ class ExploreFragment :
             }
             clearMapLineMarker()
             clearSearchList()
-            if (!mBottomSheetHelper.isMapStyleVisible() && mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+            if (!mBottomSheetHelper.isMapStyleVisible() && (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true && mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true && mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true)) {
                 mBaseActivity?.bottomNavigationVisibility(true)
                 mBottomSheetHelper.hideSearchBottomSheet(false)
             }
@@ -4938,7 +4938,7 @@ class ExploreFragment :
                 mMapHelper.moveCameraToLocation(it1)
             }
             mBaseActivity?.isTablet?.let {
-                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true  && mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true && mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked == true) {
                     return@let
                 }
                 if (it) {
@@ -6311,7 +6311,7 @@ class ExploreFragment :
                     showViews(
                         cardMap,
                     )
-                    if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                    if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true && mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true && mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true) {
                         cardGeofenceMap.show()
                         mBaseActivity?.isTablet?.let {
                             if (!it) {
@@ -6323,10 +6323,12 @@ class ExploreFragment :
                 }
             }
             clearNavigationData()
-            if (activity is MainActivity) {
-                (activity as MainActivity).moveToExploreScreen()
-                (activity as MainActivity).mGeofenceUtils?.hideAllGeofenceBottomSheet()
-                (activity as MainActivity).mTrackingUtils?.hideTrackingBottomSheet()
+            if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true && mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true && mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true) {
+                if (activity is MainActivity) {
+                    (activity as MainActivity).moveToExploreScreen()
+                    (activity as MainActivity).mGeofenceUtils?.hideAllGeofenceBottomSheet()
+                    (activity as MainActivity).mTrackingUtils?.hideTrackingBottomSheet()
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()

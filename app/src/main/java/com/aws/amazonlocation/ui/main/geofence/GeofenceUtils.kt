@@ -49,6 +49,7 @@ import org.maplibre.android.plugins.annotation.OnSymbolDragListener
 @SuppressLint("NotifyDataSetChanged")
 class GeofenceUtils {
 
+    var isChangeDataProviderClicked: Boolean = false
     private var mBottomSheetGeofenceListBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var mBottomSheetAddGeofenceBehavior: BottomSheetBehavior<ConstraintLayout>? = null
 
@@ -356,29 +357,30 @@ class GeofenceUtils {
             }
             cardTrackerGeofenceSimulation.hide()
             btnTryGeofence.setOnClickListener {
-                preferenceManager?.let {
-                    if (isGrabMapSelected(it, btnTryGeofence.context)) {
+                preferenceManager?.let { manager ->
+                    if (isGrabMapSelected(manager, btnTryGeofence.context)) {
                         mActivity?.changeDataProviderDialog(object : ChangeDataProviderInterface {
                             override fun changeDataProvider(dialog: DialogInterface) {
                                 mActivity?.getString(R.string.map_light)?.let { it1 ->
-                                    it.setValue(
+                                    manager.setValue(
                                         KEY_MAP_STYLE_NAME,
                                         it1
                                     )
                                 }
                                 mActivity?.getString(R.string.esri)?.let { it1 ->
-                                    it.setValue(
+                                    manager.setValue(
                                         KEY_MAP_NAME,
                                         it1
                                     )
                                 }
-                                (mActivity as MainActivity).mAWSLocationHelper.locationCredentialsProvider?.clear()
-                                (mActivity as MainActivity).lifecycleScope.launch {
-                                    if (!isRunningTest) {
-                                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                        mFragmentActivity?.restartApplication()
-                                    }
+                                isChangeDataProviderClicked = true
+                                mActivity?.let {
+                                    (it as MainActivity).changeMapStyle(
+                                        it.getString(R.string.esri),
+                                        it.getString(R.string.map_light),
+                                    )
                                 }
+                                isChangeDataProviderClicked = false
                             }
                         })
                     } else {

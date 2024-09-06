@@ -49,7 +49,6 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.MessageInterface
 import com.aws.amazonlocation.utils.PreferenceManager
-import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.TIME_OUT
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.changeDataProviderDialog
@@ -61,9 +60,7 @@ import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.isGrabMapSelected
-import com.aws.amazonlocation.utils.isRunningTest
 import com.aws.amazonlocation.utils.messageDialog
-import com.aws.amazonlocation.utils.restartApplication
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.stickyHeaders.StickyHeaderDecoration
 import com.aws.amazonlocation.utils.validateIdentityPoolId
@@ -75,7 +72,6 @@ import java.util.Date
 import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng
@@ -98,6 +94,7 @@ class TrackingUtils(
     val activity: Activity?,
     val mAWSLocationHelper: AWSLocationHelper
 ) {
+    var isChangeDataProviderClicked: Boolean = false
     private var imageId: Int = 0
     private var headerIdsToRemove = arrayListOf<String>()
     private var sourceIdsToRemove = arrayListOf<String>()
@@ -244,29 +241,30 @@ class TrackingUtils(
             }
             cardTrackerGeofenceSimulation.hide()
             btnTryTracker.setOnClickListener {
-                mPreferenceManager?.let {
-                    if (isGrabMapSelected(it, btnTryTracker.context)) {
+                mPreferenceManager?.let { manager ->
+                    if (isGrabMapSelected(manager, btnTryTracker.context)) {
                         mActivity?.changeDataProviderDialog(object : ChangeDataProviderInterface {
                             override fun changeDataProvider(dialog: DialogInterface) {
                                 mActivity?.getString(R.string.map_light)?.let { it1 ->
-                                    mPreferenceManager.setValue(
+                                    manager.setValue(
                                         KEY_MAP_STYLE_NAME,
                                         it1
                                     )
                                 }
                                 mActivity?.getString(R.string.esri)?.let { it1 ->
-                                    mPreferenceManager.setValue(
+                                    manager.setValue(
                                         KEY_MAP_NAME,
                                         it1
                                     )
                                 }
-                                mAWSLocationHelper.locationCredentialsProvider?.clear()
-                                (activity as MainActivity).lifecycleScope.launch {
-                                    if (!isRunningTest) {
-                                        delay(RESTART_DELAY) // Need delay for preference manager to set default config before restarting
-                                        activity.restartApplication()
-                                    }
+                                isChangeDataProviderClicked = true
+                                mActivity?.let {
+                                    (it as MainActivity).changeMapStyle(
+                                        it.getString(R.string.esri),
+                                        it.getString(R.string.map_light)
+                                    )
                                 }
+                                isChangeDataProviderClicked = false
                             }
                         })
                     } else {
