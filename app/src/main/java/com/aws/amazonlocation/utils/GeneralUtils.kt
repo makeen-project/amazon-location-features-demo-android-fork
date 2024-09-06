@@ -65,8 +65,9 @@ val Int.px: Int
 
 val isRunningTest: Boolean by lazy {
     try {
-        Class.forName("androidx.test.espresso.Espresso")
-        true
+        val testProperty = System.getProperty("robolectric") != null ||
+                System.getProperty("android.injected.invoked.from.ide") == "true"
+        testProperty
     } catch (e: ClassNotFoundException) {
         false
     }
