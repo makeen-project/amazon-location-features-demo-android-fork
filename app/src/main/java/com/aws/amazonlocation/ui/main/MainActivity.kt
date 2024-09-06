@@ -226,7 +226,7 @@ class MainActivity :
                                 )
                             }
                                 ?: getString(R.string.map_esri)
-                        fragment.mapStyleChange(false, mapNameSelected, mapStyleNameDisplay)
+                        changeMapStyle(mapNameSelected, mapStyleNameDisplay)
                     }
 
                     is AWSCloudInformationFragment -> {
@@ -444,11 +444,7 @@ class MainActivity :
                                 } ?: getString(R.string.map_esri)
                             isMapStyleChangeCalled = true
                             async {
-                                fragment.mapStyleChange(
-                                    false,
-                                    mapNameSelected,
-                                    mapStyleNameDisplay,
-                                )
+                                changeMapStyle(mapNameSelected, mapStyleNameDisplay)
                             }.await()
                         }
                         getTokenAndAttachPolicy()
@@ -460,6 +456,20 @@ class MainActivity :
                         }
                     }
             }
+        }
+    }
+
+    fun changeMapStyle(
+        mapNameSelected: String,
+        mapStyleNameDisplay: String,
+    ) {
+        val fragment = mNavHostFragment.childFragmentManager.fragments[0]
+        if (fragment is ExploreFragment) {
+            fragment.mapStyleChange(
+                false,
+                mapNameSelected,
+                mapStyleNameDisplay,
+            )
         }
     }
 
@@ -477,19 +487,20 @@ class MainActivity :
                     view: WebView?,
                     request: WebResourceRequest?,
                 ): Boolean {
-                    hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
-                    showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
                     when (request?.url?.host) {
                         SIGN_OUT -> {
                             handleAuthorizationCode(SIGN_OUT, null)
+                            hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
+                            showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
                         }
                         SIGN_IN -> {
                             val authorizationCode = request.url?.getQueryParameter(KEY_CODE)
                             handleAuthorizationCode(SIGN_IN, authorizationCode)
+                            hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
+                            showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
                         }
                         else -> {
-                            mBottomSheetDialog?.show()
-                            return false
+                            mBinding.signInWebView.loadUrl(request?.url.toString())
                         }
                     }
                     return true
