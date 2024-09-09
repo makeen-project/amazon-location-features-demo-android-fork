@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.databinding.FragmentSettingBinding
@@ -25,6 +26,7 @@ import com.aws.amazonlocation.utils.DisconnectAWSInterface
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
@@ -42,6 +44,7 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_JAPANESE
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_KOREAN
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_SPANISH
 import com.aws.amazonlocation.utils.SignOutInterface
+import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
@@ -360,6 +363,25 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                                         }
                                     }
                                 }
+                                val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+                                val defaultIdentityPoolId: String =
+                                    Units.getDefaultIdentityPoolId(
+                                        mPreferenceManager.getValue(
+                                            KEY_SELECTED_REGION,
+                                            regionDisplayName[0],
+                                        ),
+                                        mPreferenceManager.getValue(KEY_NEAREST_REGION, ""),
+                                    )
+                                if (defaultIdentityPoolId != BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+                                    if (mapName == getString(R.string.grab)) {
+                                        mPreferenceManager.setValue(
+                                            KEY_MAP_STYLE_NAME,
+                                            resources.getString(R.string.map_light),
+                                        )
+                                        mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+                                    }
+                                }
+                                (activity as MainActivity).initClient()
                                 init()
                                 dialog.dismiss()
                             }

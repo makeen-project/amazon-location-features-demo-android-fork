@@ -173,7 +173,7 @@ class MapHelper(
     private fun setRegion() {
         region = ""
         val mAuthStatus = mPreferenceManager?.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-        if (mAuthStatus == AuthEnum.SIGNED_IN.name) {
+        if (mAuthStatus == AuthEnum.SIGNED_IN.name || mAuthStatus == AuthEnum.AWS_CONNECTED.name) {
             region = mPreferenceManager?.getValue(KEY_USER_REGION, "")
         }
         if (region.isNullOrEmpty()) {

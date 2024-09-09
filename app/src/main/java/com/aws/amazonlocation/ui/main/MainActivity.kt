@@ -1283,4 +1283,11 @@ class MainActivity :
             mBinding.bottomNavigationMain.selectedItemId = R.id.menu_tracking
         }
     }
+
+    fun initClient(){
+        mAWSLocationHelper.locationCredentialsProvider?.clear()
+        CoroutineScope(Dispatchers.IO).launch {
+            async { initMobileClient() }.await()
+        }
+    }
 }
