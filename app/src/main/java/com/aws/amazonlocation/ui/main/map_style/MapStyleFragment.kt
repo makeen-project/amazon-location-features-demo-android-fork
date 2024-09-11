@@ -19,11 +19,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
+import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.databinding.FragmentMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.explore.SortingAdapter
 import com.aws.amazonlocation.utils.DELAY_300
+import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_GRAB_DONT_ASK
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -238,7 +240,7 @@ class MapStyleFragment : BaseFragment() {
             ),
             mPreferenceManager.getValue(KEY_NEAREST_REGION, "")
         )
-        val isRestartNeeded =
+        var isRestartNeeded =
             if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
                 false
             } else {
@@ -248,6 +250,10 @@ class MapStyleFragment : BaseFragment() {
                     selectedProvider != getString(R.string.grab)
                 }
             }
+        val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
+        if (mAuthStatus == AuthEnum.SIGNED_IN.name || mAuthStatus == AuthEnum.AWS_CONNECTED.name) {
+            isRestartNeeded = false
+        }
         if (selectedProvider == getString(R.string.grab) && mapName != getString(R.string.grab)) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
             if (shouldShowGrabDialog) {

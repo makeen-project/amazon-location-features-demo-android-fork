@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TabEnum
@@ -25,9 +26,11 @@ import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.KEY_RE_START_APP
 import com.aws.amazonlocation.utils.KEY_RE_START_APP_WITH_AWS_DISCONNECT
+import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.KEY_TAB_ENUM
 import com.aws.amazonlocation.utils.KEY_URL
 import com.aws.amazonlocation.utils.KEY_USER_DOMAIN
@@ -45,6 +48,7 @@ import com.aws.amazonlocation.utils.disconnectFromAWSDialog
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.isGrabMapSelected
+import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.regionMapList
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
@@ -139,6 +143,7 @@ class AWSCloudInformationFragment :
         if (isDisconnectFromAWSRequired) {
             mPreferenceManager.setDefaultConfig()
         }
+        checkMapRefreshClient()
         init()
         showError(getString(R.string.sign_out_successfully))
     }
@@ -278,6 +283,7 @@ class AWSCloudInformationFragment :
                     mPreferenceManager.setValue(KEY_RE_START_APP_WITH_AWS_DISCONNECT, true)
                     mPreferenceManager.setDefaultConfig()
                 }
+                checkMapRefreshClient()
                 (activity as MainActivity).refreshSettings()
                 init()
                 dialog.dismiss()
@@ -287,6 +293,28 @@ class AWSCloudInformationFragment :
                 this@AWSCloudInformationFragment.logout(dialog, true)
             }
         }
+
+    private fun checkMapRefreshClient() {
+        val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
+        val defaultIdentityPoolId: String =
+            Units.getDefaultIdentityPoolId(
+                mPreferenceManager.getValue(
+                    KEY_SELECTED_REGION,
+                    regionDisplayName[0],
+                ),
+                mPreferenceManager.getValue(KEY_NEAREST_REGION, ""),
+            )
+        if (defaultIdentityPoolId != BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
+            if (mapName == getString(R.string.grab)) {
+                mPreferenceManager.setValue(
+                    KEY_MAP_STYLE_NAME,
+                    resources.getString(R.string.map_light),
+                )
+                mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
+            }
+        }
+        (activity as MainActivity).initClient()
+    }
 
     private fun validateAWSAccountData() {
         CoroutineScope(Dispatchers.IO).launch {
@@ -370,6 +398,7 @@ class AWSCloudInformationFragment :
                 mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
             }
         }
+        (activity as MainActivity).initClient()
         if ((activity as MainActivity).isTablet){
             (activity as MainActivity).refreshSettings()
         }

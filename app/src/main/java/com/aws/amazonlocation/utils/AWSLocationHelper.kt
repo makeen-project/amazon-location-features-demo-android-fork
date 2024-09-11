@@ -92,7 +92,7 @@ class AWSLocationHelper(
         if (mAuthStatus == AuthEnum.SIGNED_IN.name) {
             initializeAuthLocationCredentialsProvider(authHelper, baseActivity)
         } else {
-            val defaultIdentityPoolId: String =
+            var defaultIdentityPoolId: String =
                 getDefaultIdentityPoolId(
                     mPreferenceManager.getValue(
                         KEY_SELECTED_REGION,
@@ -100,6 +100,12 @@ class AWSLocationHelper(
                     ),
                     mPreferenceManager.getValue(KEY_NEAREST_REGION, ""),
                 )
+            if (mAuthStatus == AuthEnum.AWS_CONNECTED.name) {
+                defaultIdentityPoolId = mPreferenceManager.getValue(
+                    KEY_POOL_ID,
+                    "",
+                ).toString()
+            }
             val defaultRegion = defaultIdentityPoolId.split(":")[0]
             region = defaultRegion
             locationCredentialsProvider =

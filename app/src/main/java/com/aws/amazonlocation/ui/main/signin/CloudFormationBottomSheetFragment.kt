@@ -394,6 +394,7 @@ class CloudFormationBottomSheetFragment(
             )
         }
         dismiss()
+        (activity as MainActivity).initClient()
         (activity as MainActivity).showSignInRequiredSheet()
     }
 

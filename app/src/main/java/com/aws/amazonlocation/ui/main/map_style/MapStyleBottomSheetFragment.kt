@@ -435,7 +435,7 @@ class MapStyleBottomSheetFragment(
             cardOpenData.setOnClickListener {
                 val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
                 if (mapName != getString(R.string.open_data)) {
-                    mapInterface.mapStyleClick(3, 0)
+                    mapInterface.mapStyleClick(if (!isGrabMapEnable(mPreferenceManager)) 2 else 3, 0)
                 }
             }
             cardGrabMap.setOnClickListener {

@@ -5989,7 +5989,7 @@ class ExploreFragment :
                 ),
                 mPreferenceManager.getValue(KEY_NEAREST_REGION, ""),
             )
-        val isRestartNeeded =
+        var isRestartNeeded =
             if (defaultIdentityPoolId == BuildConfig.DEFAULT_IDENTITY_POOL_ID_AP) {
                 false
             } else {
@@ -5999,6 +5999,10 @@ class ExploreFragment :
                     selectedProvider != getString(R.string.grab)
                 }
             }
+        val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
+        if (mAuthStatus == AuthEnum.SIGNED_IN.name || mAuthStatus == AuthEnum.AWS_CONNECTED.name) {
+            isRestartNeeded = false
+        }
         if (selectedProvider == getString(R.string.grab) && mapName != getString(R.string.grab)) {
             val shouldShowGrabDialog = !mPreferenceManager.getValue(KEY_GRAB_DONT_ASK, false)
             if (shouldShowGrabDialog) {
