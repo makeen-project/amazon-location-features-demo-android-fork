@@ -1284,8 +1284,12 @@ class MainActivity :
         }
     }
 
-    fun initClient(){
-        mAWSLocationHelper.locationCredentialsProvider?.clear()
+    fun initClient(isAfterSignOut:Boolean = false){
+        if (!isAfterSignOut) {
+            try {
+                mAWSLocationHelper.locationCredentialsProvider?.clear()
+            } catch (_: Exception) { }
+        }
         CoroutineScope(Dispatchers.IO).launch {
             async { initMobileClient() }.await()
         }
