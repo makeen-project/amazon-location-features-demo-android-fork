@@ -143,7 +143,7 @@ class AWSCloudInformationFragment :
         if (isDisconnectFromAWSRequired) {
             mPreferenceManager.setDefaultConfig()
         }
-        checkMapRefreshClient()
+        checkMapRefreshClient(true)
         init()
         showError(getString(R.string.sign_out_successfully))
     }
@@ -283,7 +283,7 @@ class AWSCloudInformationFragment :
                     mPreferenceManager.setValue(KEY_RE_START_APP_WITH_AWS_DISCONNECT, true)
                     mPreferenceManager.setDefaultConfig()
                 }
-                checkMapRefreshClient()
+                checkMapRefreshClient(false)
                 (activity as MainActivity).refreshSettings()
                 init()
                 dialog.dismiss()
@@ -294,7 +294,7 @@ class AWSCloudInformationFragment :
             }
         }
 
-    private fun checkMapRefreshClient() {
+    private fun checkMapRefreshClient(isAfterSignOut: Boolean) {
         val mapName = mPreferenceManager.getValue(KEY_MAP_NAME, getString(R.string.map_esri))
         val defaultIdentityPoolId: String =
             Units.getDefaultIdentityPoolId(
@@ -313,7 +313,7 @@ class AWSCloudInformationFragment :
                 mPreferenceManager.setValue(KEY_MAP_NAME, resources.getString(R.string.esri))
             }
         }
-        (activity as MainActivity).initClient()
+        (activity as MainActivity).initClient(isAfterSignOut)
     }
 
     private fun validateAWSAccountData() {
