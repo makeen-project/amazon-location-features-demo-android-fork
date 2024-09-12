@@ -407,13 +407,16 @@ class SettingFragment : BaseFragment(), SignOutInterface {
     }
 
     fun refreshAfterSignOut() {
-        init()
-        showError(getString(R.string.sign_out_successfully))
-        if (this::aWSCloudInformationFragment.isInitialized) {
-            if (aWSCloudInformationFragment.isVisible) {
-                aWSCloudInformationFragment.refresh()
+        if (isTablet) {
+            if (this::aWSCloudInformationFragment.isInitialized) {
+                if (aWSCloudInformationFragment.isVisible) {
+                    aWSCloudInformationFragment.refreshAfterSignOut()
+                }
             }
+        } else {
+            showError(getString(R.string.sign_out_successfully))
         }
+        init()
     }
 
     fun refreshAfterConnection() {
