@@ -5,7 +5,7 @@ concurrency:
 on:
   workflow_dispatch:
   push:
-    branches: [ develop, main, master, ALS-1806 ]
+    branches: [ develop, main, master ]
 jobs:
   startSlackNotification:
     name: Slack Starting Notification
