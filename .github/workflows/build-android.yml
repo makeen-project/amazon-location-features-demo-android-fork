@@ -44,16 +44,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Set up Ruby 3.3.5
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.3.5
-
-      - name: Setup Bundler
+      - name: Set up Ruby with rbenv
         run: |
-          bundle config --local path ./vendor/bundle
-          bundle config --local deployment true
-          bundle install
+          rbenv install -s 3.3.5
+          rbenv local 3.3.5
+          rbenv rehash
+
+      - name: Install Bundler
+        run: |
+          gem install bundler
+          rbenv rehash
 
       - name: Setup Signing
         working-directory:
