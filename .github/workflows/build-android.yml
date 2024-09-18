@@ -40,20 +40,11 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
       - name: Set up Ruby with rbenv
         run: |
           rbenv install -s 3.3.5
           rbenv local 3.3.5
-          rbenv rehash
-
-      - name: Install Bundler
-        run: |
-          gem install bundler
-          rbenv rehash
+          bundle install    
 
       - name: Setup Signing
         working-directory:
