@@ -40,8 +40,11 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: bundle install
+      - name: Set up Ruby with rbenv
+        run: |
+          rbenv install -s 3.3.5
+          rbenv local 3.3.5
+          bundle install    
 
       - name: Setup Signing
         working-directory:
