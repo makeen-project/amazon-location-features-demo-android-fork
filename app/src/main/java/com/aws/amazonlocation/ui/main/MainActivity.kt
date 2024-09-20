@@ -1193,6 +1193,7 @@ class MainActivity :
                         mAWSLocationHelper.locationCredentialsProvider,
                         mPreferenceManager,
                         mAWSLocationHelper,
+                        this
                     ),
                 ).build(),
         )

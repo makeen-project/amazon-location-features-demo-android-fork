@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.data.enum.AuthEnum
+import com.aws.amazonlocation.ui.main.MainActivity
 import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -25,7 +26,8 @@ class AwsSignerInterceptor(
     private val region: String,
     private val credentialsProvider: LocationCredentialsProvider?,
     private val mPreferenceManager: PreferenceManager,
-    private val awsLocationHelper: AWSLocationHelper
+    private val awsLocationHelper: AWSLocationHelper,
+    private val activity: MainActivity
 ) : Interceptor {
 
     private val sdfMap = HashMap<String, SimpleDateFormat>()
@@ -41,6 +43,10 @@ class AwsSignerInterceptor(
                 if (mAuthStatus != AuthEnum.SIGNED_IN.name) {
                     if (!credentialsProvider.isCredentialsValid()) {
                         credentialsProvider.verifyAndRefreshCredentials()
+                    }
+                } else {
+                    if (awsLocationHelper.isAuthTokenExpired()) {
+                        activity.refreshToken()
                     }
                 }
             }
