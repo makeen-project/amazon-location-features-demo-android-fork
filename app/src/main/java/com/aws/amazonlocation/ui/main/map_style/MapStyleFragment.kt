@@ -620,7 +620,10 @@ class MapStyleFragment : BaseFragment() {
                     mViewModel.typeOptions.filter { !it.isSelected }
                         .forEach { data -> data.isApplyFilter = false }
                 } else {
+                    clearSortingSelection()
+                    notifySortingAdapter()
                     setFilterNotSelected()
+                    collapseSearchMap(params)
                 }
                 if (filterList.isNotEmpty()) {
                     mViewModel.mStyleList.clear()
@@ -843,6 +846,7 @@ class MapStyleFragment : BaseFragment() {
             cardGrabMap.hide()
             cardEsri.show()
             cardHere.show()
+            cardOpenData.show()
         } else {
             groupFilterButton.show()
         }
