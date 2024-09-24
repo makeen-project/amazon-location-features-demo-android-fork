@@ -900,11 +900,11 @@ class MainActivity :
     }
 
     private fun hideSearchAndShowGeofence(fragment: Fragment) {
-        mBottomSheetHelper.hideSearchBottomSheet(true)
         lifecycleScope.launch {
             if (fragment !is ExploreFragment) {
                 delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
+            mBottomSheetHelper.hideSearchBottomSheet(true)
             mGeofenceUtils?.showGeofenceBeforeLogin()
         }
     }
@@ -1066,11 +1066,11 @@ class MainActivity :
                 fragment.hideDirectionAndCurrentLocationIcon()
             }
         }
-        mBottomSheetHelper.hideSearchBottomSheet(true)
         lifecycleScope.launch {
             if (fragment !is ExploreFragment) {
                 delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
+            mBottomSheetHelper.hideSearchBottomSheet(true)
             mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
         }
         exitScreen()
