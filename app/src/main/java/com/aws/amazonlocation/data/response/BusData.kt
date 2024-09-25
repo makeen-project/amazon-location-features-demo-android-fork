@@ -1,8 +1,8 @@
 package com.aws.amazonlocation.data.response
 
 import android.animation.ValueAnimator
-import com.mapbox.mapboxsdk.geometry.LatLng
-import com.mapbox.mapboxsdk.style.sources.GeoJsonSource
+import org.maplibre.android.geometry.LatLng
+import org.maplibre.android.style.sources.GeoJsonSource
 
 data class BusData(
     var currentPosition: LatLng? = null,

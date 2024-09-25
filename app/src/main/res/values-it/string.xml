@@ -165,9 +165,9 @@
   <string name="error_route">Percorso non trovato.</string>
   <string name="no_route_found">No itinerario trovato</string>
   <string name="error_switch_to_here">Distanza è maggiore che 400 km, non posso calcolare tramite Esri, cortesemente interruttore a QUI fornitore</string>
-  <string name="error_switch_to_here_miles">Distanza è maggiore che %s mi, non posso calcolare tramite Esri, cortesemente interruttore a QUI fornitore</string>
+  <string name="error_switch_to_here_miles" formatted="false">Distanza è maggiore che %s mi, non posso calcolare tramite Esri, cortesemente interruttore a QUI fornitore</string>
   <string name="error_distance_400">Nel Fonte dati Esri, waypoint per auto e autocarro dovere essere entro 400 km, e waypoint per camminare dovere essere entro 40 km.</string>
-  <string name="error_distance_248_miles">Nel Fonte dati Esri, waypoint per auto e autocarro dovere essere entro %smi, e waypoint per camminare dovere essere entro %smi.</string>
+  <string name="error_distance_248_miles" formatted="false">Nel Fonte dati Esri, waypoint per auto e autocarro dovere essere entro %smi, e waypoint per camminare dovere essere entro %smi.</string>
   <string name="connect_to_aws_account">Connetti AWS Account</string>
   <string name="label_preview">Anteprima</string>
   <string name="label_location_permission_denied">Posizione autorizzazione negato</string>

@@ -46,6 +46,15 @@ ext.excludes = [
         '**/*TextWatcher*',
         '**/*GeofenceUtils*',
         '**/*AWSLocationHelper*',
+        '**/*AwsAuthorizationHeader*',
+        '**/*AwsSignerInterceptor*',
+        '**/*Hashing*',
+        '**/*RemoteDataSourceImpl*',
+        '**/*AnalyticsHelper*',
+        '**/*NotificationHelper*',
+        '**/*LatencyChecker*',
+        '**/*KeyBoardUtils*',
+        '**/*AmazonLocationApp*',
         // butterKnife
         '**/*$ViewInjector*.*',
         '**/*$ViewBinder*.*',
@@ -91,13 +100,7 @@ def createVariantCoverage(variant) {
         group = "Reporting"
         description = "Generate Jacoco coverage reports for the ${variantName.capitalize()} build."
 
-        reports {
-            csv.required = false
-            xml.required = true
-            html.required = true
-        }
-
-        def javaClasses = fileTree(dir: variant.javaCompileProvider.get().destinationDirectory, excludes: project.excludes)
+        def javaClasses = fileTree(dir: variant.javaCompileProvider.get().destinationDir, excludes: project.excludes)
         def kotlinClasses = fileTree(dir: "${buildDir}/tmp/kotlin-classes/${variantName}", excludes: project.excludes)
         getClassDirectories().setFrom(files([javaClasses, kotlinClasses]))
 
