@@ -670,9 +670,9 @@ class MainActivity :
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         KeyBoardUtils.detachKeyboardListeners(mBinding.root)
         analyticsUtils?.stopSession()
+        super.onDestroy()
     }
 
     private fun initClick() {

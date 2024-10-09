@@ -178,8 +178,13 @@ class AnalyticsUtils(
                         }
                 }
             try {
-                pinpointClient?.putEvents(putEventsRequest)
-            }catch (_:Exception) {}
+               pinpointClient?.putEvents(putEventsRequest)
+                if (sessionStopEvent != null){
+                    session = SessionData()
+                }
+            } catch (e:Exception) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -209,6 +214,5 @@ class AnalyticsUtils(
         recordEvent(
             EventTypeEnum.SESSION_STOP.eventType,
         )
-        session = SessionData()
     }
 }
