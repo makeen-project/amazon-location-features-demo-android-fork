@@ -20,9 +20,9 @@ class TurfMetaCoordsMultiPolygonTest {
                 mutableListOf(
                     mutableListOf(
                         mutableListOf(
-                            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG),
-                            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG),
-                            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG)
+                            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT),
+                            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT),
+                            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
                         )
                     )
                 )
@@ -38,9 +38,9 @@ class TurfMetaCoordsMultiPolygonTest {
                 mutableListOf(
                     mutableListOf(
                         mutableListOf(
-                            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG),
-                            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG),
-                            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG)
+                            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT),
+                            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT),
+                            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
                         )
                     )
                 )

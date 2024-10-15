@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.geofence_helper // ktlint-disable package-name
+package com.aws.amazonlocation.utils.geofence_helper
 
 import android.content.Context
 import android.widget.SeekBar

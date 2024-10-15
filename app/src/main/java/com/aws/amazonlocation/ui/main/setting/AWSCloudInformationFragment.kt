@@ -266,7 +266,7 @@ class AWSCloudInformationFragment :
             }
 
             btnSignIn.setOnClickListener {
-                (activity as MainActivity).openSingIn()
+                (activity as MainActivity).openSignIn()
             }
 
             btnLogout.setOnClickListener {

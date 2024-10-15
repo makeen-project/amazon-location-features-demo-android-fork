@@ -15,7 +15,6 @@ import com.aws.amazonlocation.mock.TEST_DATA_2
 import com.aws.amazonlocation.mock.TEST_DATA_3
 import com.aws.amazonlocation.mock.TEST_DATA_4
 import com.aws.amazonlocation.mock.TEST_DATA_5
-import com.aws.amazonlocation.mock.TEST_DATA_6
 import com.aws.amazonlocation.mock.TEST_DATA_LAT
 import com.aws.amazonlocation.mock.TEST_DATA_LNG
 import com.aws.amazonlocation.mock.TEST_FAILED_ADD_GEOFENCE_DATA
@@ -42,26 +41,10 @@ class ResponseDataTest {
     @Test
     fun navigationDataTest() {
         val navigationData = Responses.RESPONSE_NAVIGATION_DATA_CAR_STEP_1
-        navigationData.getRegions()
         navigationData.destinationAddress = TEST_DATA
-        navigationData.getRegions()
         navigationData.subRegion = ""
-        navigationData.getRegions()
         navigationData.region = ""
-        navigationData.getRegions()
         navigationData.country = ""
-        navigationData.getRegions()
-        navigationData.region
-        navigationData.country
-        navigationData.duration
-        navigationData.distance
-        navigationData.startLat
-        navigationData.startLng
-        navigationData.endLat
-        navigationData.endLng
-        navigationData.destinationAddress
-        navigationData.subRegion
-        navigationData.country
         Assert.assertTrue(TEST_FAILED_NAVIGATION_DATA, navigationData.country == "")
     }
 
@@ -101,8 +84,6 @@ class ResponseDataTest {
     @Test
     fun searchResponseTest() {
         val searchResponse = Responses.SEARCH_RESPONSE_TAJ
-        searchResponse.latitude = searchResponse.latitude
-        searchResponse.longitude = searchResponse.longitude
         searchResponse.searchPlaceIndexForPositionResult = SearchPlaceIndexForPositionResponse {
             results = listOf(
                 SearchForPositionResult {
@@ -110,7 +91,7 @@ class ResponseDataTest {
                     place = Place {
                         country = TEST_DATA_2
                         geometry = PlaceGeometry {
-                            point = listOf(TEST_DATA_LAT, TEST_DATA_LNG)
+                            point = listOf(TEST_DATA_LNG, TEST_DATA_LAT)
                         }
                         interpolated = false
                         label = TEST_DATA_3
@@ -123,10 +104,10 @@ class ResponseDataTest {
                 dataSource = ESRI
                 language = TEST_DATA_1
                 maxResults = 1
-                position = listOf(TEST_DATA_LAT, TEST_DATA_LNG)
+                position = listOf(TEST_DATA_LNG, TEST_DATA_LAT)
             }
         }
-        Assert.assertTrue(TEST_FAILED_SEARCH_DATA, searchResponse.latitude == TEST_DATA_LNG)
+        Assert.assertTrue(TEST_FAILED_SEARCH_DATA, searchResponse.latitude == TEST_DATA_LAT)
     }
 
     @Test
@@ -233,7 +214,6 @@ class ResponseDataTest {
             isSelected = false,
             mapInnerData = null
         )
-        mapStyleData.isDisable = mapStyleData.isDisable
         mapStyleData.mapInnerData = arrayListOf(data)
         Assert.assertTrue(TEST_FAILED_MAP_STYLE_DATA, !mapStyleData.isSelected)
     }

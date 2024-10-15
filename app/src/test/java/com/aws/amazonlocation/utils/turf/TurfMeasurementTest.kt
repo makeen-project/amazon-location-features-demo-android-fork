@@ -16,12 +16,12 @@ class TurfMeasurementTest {
     @Test
     fun turfMeasurementDistanceTest() {
         val distance = TurfMeasurement.distance(
-            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG),
-            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG)
+            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT),
+            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
         )
         Assert.assertTrue(!distance.isNaN())
         val destination = TurfMeasurement.destination(
-            Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG),
+            Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT),
             10.654654,
             10.5,
             TurfConstants.UNIT_MILES

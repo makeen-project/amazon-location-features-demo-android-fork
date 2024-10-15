@@ -7,14 +7,14 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
-import androidx.test.espresso.matcher.ViewMatchers.* // ktlint-disable no-wildcard-imports
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.utils.* // ktlint-disable no-wildcard-imports
+import com.aws.amazonlocation.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

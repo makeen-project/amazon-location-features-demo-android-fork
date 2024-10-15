@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.tracking // ktlint-disable package-name
+package com.aws.amazonlocation.ui.main.tracking
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

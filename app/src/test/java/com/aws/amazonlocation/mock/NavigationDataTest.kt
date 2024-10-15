@@ -64,7 +64,8 @@ class NavigationDataTest {
     }
 
     @Test
-    fun testGetRegionsWithDataSuccess() {
+    fun testGetAddressWithDataSuccess() {
+        // `getAddress()` should return `destinationAddress` directly, regardless of other fields.
         val navigationData = NavigationData(
             destinationAddress = CITY_NAME,
             region = REGION_NAME,
@@ -79,57 +80,61 @@ class NavigationDataTest {
         navigationData.endLat = 21.5511451
         navigationData.endLng = 21.5511451
         navigationData.isDataSuccess = true
-        val result = navigationData.getRegions()
+        val result = navigationData.getAddress()
 
         assertEquals(CITY_NAME, result)
     }
 
     @Test
-    fun testGetRegionsWithDataSuccessSubRegion() {
+    fun testGetAddressWithDataSuccessSubRegion() {
+        // `getAddress()` should return `country` if both are available.
         val navigationData = NavigationData(
             subRegion = SUB_REGION_NAME,
             country = COUNTRY_NAME,
             isDataSuccess = true
         )
 
-        val result = navigationData.getRegions()
+        val result = navigationData.getAddress()
 
         assertEquals(COUNTRY_NAME, result)
     }
 
     @Test
-    fun testGetRegionsWithDataSuccessRegion() {
+    fun testGetAddressWithDataSuccessRegion() {
+        // `getAddress()` should concatenate `region, country` as the result.
         val navigationData = NavigationData(
             region = REGION_NAME,
             country = COUNTRY_NAME,
             isDataSuccess = true
         )
 
-        val result = navigationData.getRegions()
+        val result = navigationData.getAddress()
 
         assertEquals("$REGION_NAME, $COUNTRY_NAME", result)
     }
 
     @Test
-    fun testGetRegionsWithDataSuccessCountry() {
+    fun testGetAddressWithDataSuccessCountry() {
+        // `getAddress()` should return the `country` value as the address.
         val navigationData = NavigationData(
             country = COUNTRY_NAME,
             isDataSuccess = true
         )
 
-        val result = navigationData.getRegions()
+        val result = navigationData.getAddress()
 
         assertEquals(COUNTRY_NAME, result)
     }
 
     @Test
-    fun testGetRegionsWithDataFailure() {
+    fun testGetAddressWithDataFailure() {
+        // of `destinationAddress` directly, irrespective of other fields.
         val navigationData = NavigationData(
             destinationAddress = CITY_NAME,
             isDataSuccess = false
         )
 
-        val result = navigationData.getRegions()
+        val result = navigationData.getAddress()
 
         assertEquals(CITY_NAME, result)
     }

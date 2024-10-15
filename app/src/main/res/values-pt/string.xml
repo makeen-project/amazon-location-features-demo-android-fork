@@ -165,7 +165,7 @@
   <string name="error_route">Rota não encontrado.</string>
   <string name="no_route_found">Não rota encontrado</string>
   <string name="error_switch_to_here">Distância é maior do que 400 km, não posso calcular através da Esri, gentilmente interruptor para AQUI fornecedor</string>
-  <string name="error_switch_to_here_miles">Distância é maior do que %s mi, não posso calcular através da Esri, gentilmente interruptor para AQUI fornecedor</string>
+  <string name="error_switch_to_here_miles" formatted="false">Distância é maior do que %s mi, não posso calcular através da Esri, gentilmente interruptor para AQUI fornecedor</string>
   <string name="error_distance_400">Em Fonte de dados Esri, pontos de referência pelo carro e caminhão mosto ser dentro 400 km, e pontos de referência pelo caminhar mosto ser dentro 40 km.</string>
   <string name="error_distance_248_miles" formatted="false">Em Fonte de dados Esri, pontos de referência pelo carro e caminhão mosto ser dentro %smi, e pontos de referência pelo caminhar mosto ser dentro %smi.</string>
   <string name="connect_to_aws_account">Conectar AWS Conta</string>
