@@ -19,10 +19,6 @@ class StopCoordinateTest {
             properties = Properties(2, STOP_123, BUS_STOP),
             type = FEATURE
         )
-        stopCoordinate.geometry = Geometry(listOf(1.0, 2.0), POINT)
-        stopCoordinate.id = 1
-        stopCoordinate.properties = Properties(2, STOP_123, BUS_STOP)
-        stopCoordinate.type = FEATURE
     }
 
     @Test

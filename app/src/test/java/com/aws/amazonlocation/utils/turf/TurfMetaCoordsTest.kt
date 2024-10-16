@@ -17,7 +17,7 @@ class TurfMetaCoordsTest {
 
     @Test
     fun turfMetaCordTest() {
-        val pointList = TurfMeta.coordAll(Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG))
+        val pointList = TurfMeta.coordAll(Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT))
         Assert.assertTrue(pointList.isNotEmpty())
     }
 
@@ -27,9 +27,9 @@ class TurfMetaCoordsTest {
             MultiPoint.fromLngLats(
                 mutableListOf(
                     Point.fromLngLat(
-                        TEST_DATA_LAT,
-                        TEST_DATA_LNG
-                    ), Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG)
+                        TEST_DATA_LNG,
+                        TEST_DATA_LAT
+                    ), Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
                 )
             )
         )
@@ -42,9 +42,9 @@ class TurfMetaCoordsTest {
             LineString.fromLngLats(
                 mutableListOf(
                     Point.fromLngLat(
-                        TEST_DATA_LAT,
-                        TEST_DATA_LNG
-                    ), Point.fromLngLat(TEST_DATA_LAT, TEST_DATA_LNG)
+                        TEST_DATA_LNG,
+                        TEST_DATA_LAT
+                    ), Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
                 )
             )
         )
@@ -58,16 +58,16 @@ class TurfMetaCoordsTest {
                 mutableListOf(
                     mutableListOf(
                         Point.fromLngLat(
-                            TEST_DATA_LAT,
-                            TEST_DATA_LNG
+                            TEST_DATA_LNG,
+                            TEST_DATA_LAT
                         ),
                         Point.fromLngLat(
-                            TEST_DATA_LAT,
-                            TEST_DATA_LNG
+                            TEST_DATA_LNG,
+                            TEST_DATA_LAT
                         ),
                         Point.fromLngLat(
-                            TEST_DATA_LAT,
-                            TEST_DATA_LNG
+                            TEST_DATA_LNG,
+                            TEST_DATA_LAT
                         )
                     )
                 )

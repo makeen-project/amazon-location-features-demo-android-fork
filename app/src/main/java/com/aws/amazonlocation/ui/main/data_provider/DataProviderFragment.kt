@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.data_provider // ktlint-disable package-name
+package com.aws.amazonlocation.ui.main.data_provider
 
 import android.content.DialogInterface
 import android.content.Intent

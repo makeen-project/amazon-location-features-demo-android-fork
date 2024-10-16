@@ -39,8 +39,6 @@ class FilterOptionTest {
     fun `FilterOption inequality`() {
         val filterOption1 = FilterOption(option4, isSelected = true, isApplyFilter = true)
         val filterOption2 = FilterOption(option5, isSelected = false, isApplyFilter = false)
-        filterOption1.isApplyFilter = filterOption1.isApplyFilter
-        filterOption1.isSelected = filterOption1.isSelected
         assertEquals(false, filterOption1 == filterOption2)
     }
 }

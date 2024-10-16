@@ -513,7 +513,7 @@ class MainActivity :
             }
     }
 
-    fun openSingIn() {
+    fun openSignIn() {
         showProgress()
         mBottomSheetDialog?.hide()
         showViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom)
@@ -1139,7 +1139,7 @@ class MainActivity :
             SignInConnectInterface {
             override fun signIn(dialog: Dialog?) {
                 mBottomSheetDialog = dialog
-                openSingIn()
+                openSignIn()
             }
 
             override fun continueToExplore(dialog: Dialog?) {
@@ -1152,7 +1152,7 @@ class MainActivity :
         object : SignInRequiredInterface {
             override fun signInClick(dialog: Dialog?) {
                 mBottomSheetDialog = dialog
-                openSingIn()
+                openSignIn()
             }
 
             override fun mayBeLaterClick(dialog: Dialog?) {

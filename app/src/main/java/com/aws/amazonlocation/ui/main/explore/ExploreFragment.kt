@@ -1163,7 +1163,7 @@ class ExploreFragment :
                                 it.navigationList[0].distance?.let { distance ->
                                     setNavigationTimeDialog(
                                         distance,
-                                        it.navigationList[0].getRegions(),
+                                        it.navigationList[0].getAddress(),
                                     )
                                 }
                             }
@@ -1985,7 +1985,7 @@ class ExploreFragment :
                         it.distance?.let { distance ->
                             setNavigationTimeDialog(
                                 distance,
-                                it.getRegions(),
+                                it.getAddress(),
                             )
                         }
                     }.onError {
@@ -4942,7 +4942,7 @@ class ExploreFragment :
                 mMapHelper.moveCameraToLocation(it1)
             }
             mBaseActivity?.isTablet?.let {
-                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true  && mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true && mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked == true) {
+                if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true  || mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true || mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked == true) {
                     return@let
                 }
                 if (it) {

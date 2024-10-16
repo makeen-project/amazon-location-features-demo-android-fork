@@ -327,7 +327,9 @@ class AWSLocationHelper(
                         this.language = getLanguageCode()
                         this.indexName = indexName
                         this.maxResults = SEARCH_MAX_SUGGESTION_RESULT
-                        this.biasPosition = listOf(lng ?: 0.0, lat ?: 0.0)
+                        if (lng != null && lat != null) {
+                            this.biasPosition = listOf(lng, lat)
+                        }
                     }
                 }
 
@@ -828,7 +830,7 @@ class AWSLocationHelper(
         deviceId: String,
     ): UpdateBatchLocationResponse {
         if (getIdentityId() == null) {
-            UpdateBatchLocationResponse("Identity is is null", false)
+            UpdateBatchLocationResponse("Identity is null", false)
         }
         val map: MutableMap<String, String> =
             getIdentityId()!!.split(":").let { splitStringList ->

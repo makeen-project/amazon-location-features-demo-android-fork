@@ -447,7 +447,7 @@ object Responses {
                             GeofenceGeometry {
                                 circle =
                                     Circle {
-                                        center = listOf(TEST_DATA_LAT_1, TEST_DATA_LNG_1)
+                                        center = listOf(TEST_DATA_LNG_1, TEST_DATA_LAT_1)
                                         radius = 100.00
                                     }
                             }
@@ -461,7 +461,7 @@ object Responses {
                             GeofenceGeometry {
                                 circle =
                                     Circle {
-                                        center = listOf(TEST_DATA_LAT_1, TEST_DATA_LNG_1)
+                                        center = listOf(TEST_DATA_LNG_1, TEST_DATA_LAT_1)
                                         radius = 100.00
                                     }
                             }
@@ -484,7 +484,7 @@ object Responses {
                         place = Place {
                             country = "IND"
                             geometry = PlaceGeometry {
-                                point = listOf(TEST_DATA_LAT, TEST_DATA_LNG)
+                                point = listOf(TEST_DATA_LNG, TEST_DATA_LAT)
                             }
                             interpolated = false
                             label = "The Taj, Mumbai, Mahārāshtra, IND"
@@ -497,11 +497,11 @@ object Responses {
                     dataSource = "ESRI"
                     language = "en"
                     maxResults = 1
-                    position = listOf(TEST_DATA_LAT, TEST_DATA_LNG)
+                    position = listOf(TEST_DATA_LNG, TEST_DATA_LAT)
                 }
             },
-            latitude = TEST_DATA_LNG,
-            longitude = TEST_DATA_LAT,
+            latitude = TEST_DATA_LAT,
+            longitude = TEST_DATA_LNG,
         )
 
     val RESPONSE_ADDRESS_LINE_FROM_LAT_LNG =

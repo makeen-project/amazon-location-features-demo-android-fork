@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui
 
-import com.aws.amazonlocation.ui.main.GeofenceAddTest
 import com.aws.amazonlocation.ui.main.SettingAWSDisconnectingTest
 import com.aws.amazonlocation.ui.main.SettingSignOutTest
 import com.aws.amazonlocation.ui.main.TrackingAwsConnectTest
@@ -23,8 +22,7 @@ import org.junit.runners.Suite
     TrackingStartTrackingHistoryLoggedTest::class,
     TrackingStartTrackingMapDisplayTest::class,
     TrackingDeleteTrackingHistoryTest::class,
-    GeofenceAddTest::class,
     SettingSignOutTest::class,
     SettingAWSDisconnectingTest::class,
 )
-class AWSConnectionSuite
+class AWSTrackingAndConnectionTestSuite
