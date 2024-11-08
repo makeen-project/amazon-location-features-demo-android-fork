@@ -240,4 +240,9 @@
   <string name="description_geo">格魯吉亞\ 的 政治 檢視</string>
   <string name="description_grc">希臘\ 的 政治 檢視</string>
   <string name="description_ps">巴勒斯坦\ 的 政治 檢視</string>
+  <string name="label_required_fields_missing">必須 配置 按鍵 是 遺失， 和 該 應用程式 不能 功能 無 他們。 The 以下 按鍵 是 缺少：\n</string>
+  <string name="label_some_fields_missing">一些 配置 按鍵 是 遺失。 地圖, 搜索, 地點， 和 路線 是 可用， 但 模擬 和 分析 是 殘疾人 直到 該 以下 按鍵 是 添加：\n</string>
+  <string name="label_simulation_fields_missing">一些 配置 按鍵 是 遺失。 地圖, 搜索, 地點， 和 路線 是 可用， 但 模擬 是 殘疾人 直到 該 以下 按鍵 是 添加：\n</string>
+  <string name="label_analytics_fields_missing">分析 追蹤 是 殘疾人 因為 該 以下 配置 按鍵 是 缺少：\n</string>
+  <string name="title_configuration_incomplete">配置 不完整</string>
 </resources>

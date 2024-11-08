@@ -240,4 +240,9 @@
   <string name="description_geo">Georgia\'s política vista</string>
   <string name="description_grc">Grecia\'s política vista</string>
   <string name="description_ps">Palestina\'s política vista</string>
+  <string name="label_required_fields_missing">Necesario configuración llaves somos desaparecido, y la aplicación no poder función sin ellos. El siguiendo llaves somos falta:\n</string>
+  <string name="label_some_fields_missing">Algunos configuración llaves somos desaparecido. Mapa, Buscar, Lugares, y Ruta somos disponible, pero Simulación y Analítica somos inhabilitado hasta la siguiendo llaves somos agregado:\n</string>
+  <string name="label_simulation_fields_missing">Algunos configuración llaves somos desaparecido. Mapa, Buscar, Lugares, y Ruta somos disponible, pero Simulación es inhabilitado hasta la siguiendo llaves somos agregado:\n</string>
+  <string name="label_analytics_fields_missing">Analítica rastreo es inhabilitado porque la siguiendo configuración llaves somos falta:\n</string>
+  <string name="title_configuration_incomplete">Configuración Incompleto</string>
 </resources>
