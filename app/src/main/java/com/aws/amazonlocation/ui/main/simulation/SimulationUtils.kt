@@ -819,9 +819,11 @@ class SimulationUtils(
             ),
             mPreferenceManager?.getValue(KEY_NEAREST_REGION, "")
         )
-
+        if (defaultIdentityPoolId == "null") return
         val credentials = createCredentialsProvider(mLocationProvider.getCredentials())
-        mqttClient = AWSIotMqttClient(getSimulationWebSocketUrl(defaultIdentityPoolId), identityId, credentials, defaultIdentityPoolId.split(":")[0])
+        val webSocketUrl = getSimulationWebSocketUrl(defaultIdentityPoolId)
+        if (webSocketUrl == "null") return
+        mqttClient = AWSIotMqttClient(webSocketUrl, identityId, credentials, defaultIdentityPoolId.split(":")[0])
 
         try {
             mqttClient?.connect(MQTT_CONNECT_TIME_OUT, false)

@@ -249,6 +249,24 @@ val notificationData = arrayListOf(
     NotificationData("Bus 05 UBC", false)
 )
 
+val requiredFields = mapOf(
+    "API_KEY_EU_CENTRAL" to BuildConfig.API_KEY_EU_CENTRAL,
+    "API_KEY_US_EAST" to BuildConfig.API_KEY_US_EAST
+)
+
+val simulationFields = mapOf(
+    "DEFAULT_IDENTITY_POOL_ID" to BuildConfig.DEFAULT_IDENTITY_POOL_ID,
+    "DEFAULT_IDENTITY_POOL_ID_EU" to BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU,
+    "DEFAULT_REGION" to BuildConfig.DEFAULT_REGION,
+    "SIMULATION_WEB_SOCKET_URL" to BuildConfig.SIMULATION_WEB_SOCKET_URL,
+    "SIMULATION_WEB_SOCKET_URL_EU" to BuildConfig.SIMULATION_WEB_SOCKET_URL_EU,
+)
+
+val analyticsFields = mapOf(
+    "ANALYTICS_IDENTITY_POOL_ID" to BuildConfig.ANALYTICS_IDENTITY_POOL_ID,
+    "ANALYTICS_APP_ID" to BuildConfig.ANALYTICS_APP_ID
+)
+
 object EventType {
     const val SCREEN_OPEN = "SCREEN_OPEN"
     const val SCREEN_CLOSE = "SCREEN_CLOSE"
