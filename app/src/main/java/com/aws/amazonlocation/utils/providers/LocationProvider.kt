@@ -77,6 +77,7 @@ class LocationProvider(
     suspend fun initPlaceRoutesClients(baseActivity: BaseActivity) {
         val mRegion = Units.getRegion(mPreferenceManager)
         val apiKey = Units.getApiKey(mPreferenceManager)
+        if (apiKey == "null") return
         val credentialProvider =
             CoroutineScope(Dispatchers.Main)
                 .async {
@@ -113,6 +114,7 @@ class LocationProvider(
                     "",
                 ).toString()
             }
+            if (defaultIdentityPoolId == "null") return
             val defaultRegion = defaultIdentityPoolId.split(":")[0]
             region = defaultRegion
             region?.let {
@@ -232,6 +234,7 @@ class LocationProvider(
         }
     }
     suspend fun getAnalyticsCredentialProvider(): CredentialsProvider? {
+        if (BuildConfig.ANALYTICS_IDENTITY_POOL_ID == "null") return null
         val defaultIdentityPoolId = BuildConfig.ANALYTICS_IDENTITY_POOL_ID
         val defaultRegion = BuildConfig.ANALYTICS_IDENTITY_POOL_ID.split(":")[0]
         return generateUnAuthCredentials(defaultRegion, defaultIdentityPoolId, true)
