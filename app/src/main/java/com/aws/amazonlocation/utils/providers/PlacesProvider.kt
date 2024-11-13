@@ -259,11 +259,15 @@ class PlacesProvider(
                             val placeData =
                                 SearchSuggestionData(
                                     placeId = result.placeId,
-                                    searchText = text,
-                                    amazonLocationAddress = result.address,
-                                    text = result.title,
-                                    position = listOf(it[0], it[1]),
-                                    distance = distance,
+                            searchText = text,
+                            amazonLocationAddress = result.address,
+                            text = result.title,
+                            position =
+                                listOf(
+                                    it[0], it[1]
+                                ),
+                                distance =
+                                distance,
                                 )
                             mList.add(placeData)
                         }
