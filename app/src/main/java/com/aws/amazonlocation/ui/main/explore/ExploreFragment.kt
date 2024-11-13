@@ -14,6 +14,11 @@ import android.net.Network
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -110,6 +115,7 @@ import com.aws.amazonlocation.utils.Units.isGPSEnabled
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.attributionPattern
 import com.aws.amazonlocation.utils.checkLocationPermission
+import com.aws.amazonlocation.utils.copyTextToClipboard
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.getRegion
 import com.aws.amazonlocation.utils.getUserName
@@ -1803,11 +1809,11 @@ class ExploreFragment :
             mViewModel.addressLineData.collect { handleResult ->
                 handleResult
                     .onLoading {}
-                    .onSuccess {
+                    .onSuccess { response ->
                         if (!mBottomSheetHelper.isSearchPlaceSheetVisible() || mBottomSheetHelper.isDirectionSheetVisible()) {
                             val searchSuggestionData = SearchSuggestionData()
-                            if (!it.reverseGeocodeResponse?.resultItems.isNullOrEmpty()) {
-                                it.reverseGeocodeResponse?.let { searchPlaceIndexForPositionResult ->
+                            if (!response.reverseGeocodeResponse?.resultItems.isNullOrEmpty()) {
+                                response.reverseGeocodeResponse?.let { searchPlaceIndexForPositionResult ->
                                     searchSuggestionData.text =
                                         searchPlaceIndexForPositionResult.resultItems?.get(0)?.title
                                     searchSuggestionData.searchText =
@@ -1818,8 +1824,8 @@ class ExploreFragment :
                                     searchSuggestionData.placeId =
                                         searchPlaceIndexForPositionResult.resultItems?.get(0)?.placeId
                                     searchSuggestionData.isPlaceIndexForPosition = false
-                                    it.latitude?.let { lat->
-                                        it.longitude?.let { lng->
+                                    response.latitude?.let { lat->
+                                        response.longitude?.let { lng->
                                             searchSuggestionData.position = listOf(lng, lat)
                                         }
                                     }
@@ -1828,30 +1834,30 @@ class ExploreFragment :
                                 }
                             } else {
                                 searchSuggestionData.text =
-                                    String.format(STRING_FORMAT, it.latitude, it.longitude)
+                                    String.format(STRING_FORMAT, response.latitude, response.longitude)
                                 searchSuggestionData.searchText =
-                                    String.format(STRING_FORMAT, it.latitude, it.longitude)
+                                    String.format(STRING_FORMAT, response.latitude, response.longitude)
                                 searchSuggestionData.distance = null
                                 searchSuggestionData.isDestination = true
-                                searchSuggestionData.placeId = "11"
+                                searchSuggestionData.placeId = null
                                 searchSuggestionData.isPlaceIndexForPosition = false
-                                it.latitude?.let { lat->
-                                    it.longitude?.let { lng->
+                                response.latitude?.let { lat->
+                                    response.longitude?.let { lng->
                                         searchSuggestionData.position = listOf(lng, lat)
                                     }
                                 }
                                 val place = Address {
-                                    label = String.format(STRING_FORMAT, it.latitude, it.longitude)
-                                    addressNumber = String.format(STRING_FORMAT, it.latitude, it.longitude)
-                                    street = String.format(STRING_FORMAT, it.latitude, it.longitude)
-                                    postalCode = String.format(STRING_FORMAT, it.latitude, it.longitude)
+                                    label = String.format(STRING_FORMAT, response.latitude, response.longitude)
+                                    addressNumber = String.format(STRING_FORMAT, response.latitude, response.longitude)
+                                    street = String.format(STRING_FORMAT, response.latitude, response.longitude)
+                                    postalCode = String.format(STRING_FORMAT, response.latitude, response.longitude)
                                 }
                                 searchSuggestionData.amazonLocationAddress = place
                             }
                             setDirectionData(searchSuggestionData, true)
                             return@onSuccess
                         }
-                        it.reverseGeocodeResponse?.let { searchPlaceIndexForPositionResult ->
+                        response.reverseGeocodeResponse?.let { searchPlaceIndexForPositionResult ->
                             if (searchPlaceIndexForPositionResult.resultItems?.isNotEmpty() == true) {
                                 val label = searchPlaceIndexForPositionResult.resultItems?.get(0)?.title
                                 if (label != null) {
@@ -1871,6 +1877,70 @@ class ExploreFragment :
                     }
             }
         }
+
+        lifecycleScope.launch {
+            withStarted { }
+            mViewModel.placeData.collect { handleResult ->
+                handleResult
+                    .onLoading {
+                        if (mBottomSheetHelper.isDirectionSheetVisible()) {
+                            mBinding.bottomSheetDirection.apply {
+                                groupPlaceDetailsLoad.show()
+                                viewDivider.show()
+                                clearPlaceDetails()
+                            }
+                        }
+                    }
+                    .onSuccess { response ->
+                        if (mBottomSheetHelper.isDirectionSheetVisible()) {
+                            mViewModel.mSearchSuggestionData?.let {
+                                it.contacts = response.contacts
+                                it.openingHours = response.openingHours
+                            }
+                            mViewModel.mSearchDirectionDestinationData?.let {
+                                it.contacts = response.contacts
+                                it.openingHours = response.openingHours
+                            }
+                            if (response.contacts == null && response.openingHours == null) {
+                                mBinding.bottomSheetDirection.apply {
+                                    viewDivider.hide()
+                                    clearPlaceDetails()
+                                }
+                            }
+                            mBinding.bottomSheetDirection.apply {
+                                groupPlaceDetailsLoad.hide()
+                            }
+                            mViewModel.mSearchSuggestionData?.let { setContactPlaceData(it) }
+                            return@onSuccess
+                        }
+                    }.onError {
+                        if (mBottomSheetHelper.isDirectionSheetVisible()) {
+                            mBinding.bottomSheetDirection.apply {
+                                groupPlaceDetailsLoad.hide()
+                                viewDivider.hide()
+                                clearPlaceDetails()
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
+    private fun BottomSheetDirectionBinding.clearPlaceDetails() {
+        tvPhone.text = ""
+        tvPlaceLink.text = ""
+        tvScheduleDetails.text = ""
+        ivArrow.rotation = 0F
+        hideViews(
+            tvPhone,
+            ivPhone,
+            tvPlaceLink,
+            ivPlaceLink,
+            tvSchedule,
+            tvScheduleDetails,
+            ivSchedule,
+            ivArrow
+        )
     }
 
     private fun showCalculateRouteAPIError(value: String) {
@@ -2007,7 +2077,7 @@ class ExploreFragment :
             if (it.text == (mLatLng?.latitude.toString() + "," + mLatLng?.longitude.toString())) {
                 setPlaceData(it, searchPlaceIndexText)
             }
-        } else if (!it.text.isNullOrEmpty() && it.text == mText) {
+        } else if (!it.text.isNullOrEmpty()) {
             setPlaceData(it, searchPlaceIndexText)
         }
         mBinding.apply {
@@ -2849,12 +2919,20 @@ class ExploreFragment :
                         routeOption()
                     }
                 }
+                ivArrow.setOnClickListener {
+                    tvScheduleDetails.visibility = if (tvScheduleDetails.isVisible) View.GONE else View.VISIBLE
+                    if (ivArrow.rotation == 0F) ivArrow.rotation = 180F else ivArrow.rotation = 0F
+                }
                 ivInfo.setOnClickListener {
                     if (tvDirectionError2.isVisible) {
                         if (tvDirectionError2.text.equals(getString(R.string.label_location_permission_denied))) {
                             activity?.locationPermissionDialog()
                         }
                     }
+                }
+                ivCopyAddress.setOnClickListener {
+                    copyTextToClipboard(requireContext(), sheetDirectionTvDirectionStreet.text.toString())
+                    showError(getString(R.string.label_copied_to_clipboard))
                 }
             }
 
@@ -3927,7 +4005,9 @@ class ExploreFragment :
             }
             mBinding.bottomSheetDirection.apply {
                 tvDirectionError.invisible()
+                groupDistanceLoad.show()
             }
+            hideDirectionData()
             showViews(
                 mBinding.cardMap,
             )
@@ -4404,6 +4484,10 @@ class ExploreFragment :
                 edtSearchPlaces.clearFocus()
                 edtSearchPlaces.setText("")
             }
+            mBottomSheetHelper.hideSearchBottomSheet(true)
+            mBottomSheetHelper.isSearchSheetOpen = false
+            mBaseActivity?.bottomNavigationVisibility(false)
+            mBottomSheetHelper.expandDirectionSheet()
             mViewModel.mSearchSuggestionData = data
             mViewModel.mSearchDirectionDestinationData = data
             mViewModel.mSearchDirectionDestinationData?.isDestination = true
@@ -4415,6 +4499,15 @@ class ExploreFragment :
                 tvDirectionError2.hide()
                 val liveLocationLatLng = mMapHelper.getLiveLocation()
                 isCalculateDriveApiError = false
+                if (data.placeId != null) {
+                    data.placeId?.let {
+                        groupPlaceDetailsLoad.show()
+                        mViewModel.getPlaceData(it)
+                    }
+                } else {
+                    groupPlaceDetailsLoad.hide()
+                    setContactPlaceData(data)
+                }
                 mViewModel.calculateDistance(
                     latitude = liveLocationLatLng?.latitude,
                     longitude = liveLocationLatLng?.longitude,
@@ -4456,9 +4549,6 @@ class ExploreFragment :
                     }
                 }
                 notifyAdapters()
-                mBottomSheetHelper.hideSearchBottomSheet(true)
-                mBaseActivity?.bottomNavigationVisibility(false)
-                mBottomSheetHelper.expandDirectionSheet()
             }
             mMapHelper.clearMarker()
             mMapHelper.addDirectionMarker(
@@ -4467,6 +4557,86 @@ class ExploreFragment :
                 mViewModel.mSearchDirectionDestinationData,
                 isFromMapClick,
             )
+        }
+    }
+
+    private fun setContactPlaceData(data: SearchSuggestionData) {
+        mBinding.bottomSheetDirection.apply {
+            data.contacts?.let {
+                if (!it.phones.isNullOrEmpty()) {
+                    tvPhone.movementMethod = LinkMovementMethod.getInstance()
+                    showViews(tvPhone, ivPhone, viewDivider)
+                    it.phones!!.forEachIndexed { index, phones ->
+                        val spannableString = SpannableString(phones.value)
+                        val color =
+                            ContextCompat.getColor(requireContext(), R.color.color_medium_black)
+                        spannableString.setSpan(object : ClickableSpan() {
+                            override fun onClick(widget: View) {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_DIAL,
+                                        Uri.parse("tel:${phones.value}"),
+                                    ),
+                                )
+                            }
+
+                            override fun updateDrawState(ds: TextPaint) {
+                                super.updateDrawState(ds)
+                                ds.color = color
+                                ds.isUnderlineText = true
+                            }
+                        }, 0, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        tvPhone.append(spannableString)
+                        if (index != it.phones!!.lastIndex) {
+                            tvPhone.append("\n")
+                        }
+                    }
+                }
+                if (!it.websites.isNullOrEmpty()) {
+                    tvPlaceLink.movementMethod = LinkMovementMethod.getInstance()
+                    showViews(tvPlaceLink, ivPlaceLink, viewDivider)
+                    it.websites!!.forEachIndexed { index, website ->
+                        val spannableString = SpannableString(website.value)
+                        val color =
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        spannableString.setSpan(object : ClickableSpan() {
+                            override fun onClick(widget: View) {
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(website.value),
+                                    ),
+                                )
+                            }
+
+                            override fun updateDrawState(ds: TextPaint) {
+                                super.updateDrawState(ds)
+                                ds.color = color
+                                ds.isUnderlineText = false
+                            }
+                        }, 0, spannableString.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                        tvPlaceLink.append(spannableString)
+
+                        if (index != it.websites!!.lastIndex) {
+                            tvPlaceLink.append("\n")
+                        }
+                    }
+                }
+            }
+            data.openingHours?.let {
+                if (!data.openingHours.isNullOrEmpty()) {
+                    showViews(tvSchedule, ivSchedule, ivArrow, viewDivider)
+                    data.openingHours!!.forEachIndexed { index, openingHour ->
+                        openingHour.display?.forEachIndexed { displayIndex, displayText ->
+                            tvScheduleDetails.append(displayText)
+                            if (index != data.openingHours!!.lastIndex || displayIndex != openingHour.display!!.lastIndex) {
+                                tvScheduleDetails.append("\n")
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -4844,6 +5014,7 @@ class ExploreFragment :
                 MarkerEnum.DIRECTION_ICON,
                 "",
             )
+            hideDirectionData()
             mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
             val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
             val properties = listOf(
@@ -4860,6 +5031,25 @@ class ExploreFragment :
             return true
         }
         return false
+    }
+
+    private fun hideDirectionData() {
+        mBinding.bottomSheetDirection.apply {
+            tvPhone.text = ""
+            tvPlaceLink.text = ""
+            tvScheduleDetails.text = ""
+            ivArrow.rotation = 0F
+            hideViews(
+                tvPhone,
+                ivPhone,
+                tvPlaceLink,
+                ivPlaceLink,
+                tvSchedule,
+                tvScheduleDetails,
+                ivSchedule,
+                ivArrow
+            )
+        }
     }
 
     override fun mapLoadedSuccess() {

@@ -259,4 +259,6 @@
   <string name="label_simulation_fields_missing">Alguns configuração chaves está desaparecido. Mapa, Pesquisar, Lugares, e Rota está disponível, mas Simulação é deficiente até a segue chaves está adicionado:\n</string>
   <string name="label_analytics_fields_missing">Análise rastreamento é deficiente porque a segue configuração chaves está ausente:\n</string>
   <string name="title_configuration_incomplete">Configuração Incompleto</string>
+  <string name="label_schedule">Cronograma</string>
+  <string name="label_copied_to_clipboard">Copiado para prancheta</string>
 </resources>

@@ -259,4 +259,6 @@
   <string name="label_simulation_fields_missing">بعض التكوين مفاتيح يكونوا مفقود. خريطة، ابحث، الأماكن، و المسار يكونوا متاح، لكن محاكاة هو معاق حتى ال التالي مفاتيح يكونوا وأضاف:\n</string>
   <string name="label_analytics_fields_missing">تحليلات تتبع هو معاق بسبب ال التالي التكوين مفاتيح يكونوا مفقود:\n</string>
   <string name="title_configuration_incomplete">التكوين غير مكتمل</string>
+  <string name="label_schedule">جدول</string>
+  <string name="label_copied_to_clipboard">تم نسخها إلى الحافظة</string>
 </resources>

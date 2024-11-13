@@ -1,6 +1,8 @@
 package com.aws.amazonlocation.utils
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -603,4 +605,10 @@ fun hideKeyboard(activity: Activity, appCompatEditText: AppCompatEditText) {
     val imm: InputMethodManager =
         activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(appCompatEditText.windowToken, 0)
+}
+
+fun copyTextToClipboard(context: Context, text: String) {
+    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("label", text)
+    clipboard.setPrimaryClip(clip)
 }
