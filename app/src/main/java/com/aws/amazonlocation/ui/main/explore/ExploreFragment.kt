@@ -1887,7 +1887,7 @@ class ExploreFragment :
                             mBinding.bottomSheetDirection.apply {
                                 groupPlaceDetailsLoad.show()
                                 viewDivider.show()
-                                hideDirectionData()
+                                clearPlaceDetails()
                             }
                         }
                     }
@@ -1904,7 +1904,7 @@ class ExploreFragment :
                             if (response.contacts == null && response.openingHours == null) {
                                 mBinding.bottomSheetDirection.apply {
                                     viewDivider.hide()
-                                    hideDirectionData()
+                                    clearPlaceDetails()
                                 }
                             }
                             mBinding.bottomSheetDirection.apply {
@@ -1918,12 +1918,29 @@ class ExploreFragment :
                             mBinding.bottomSheetDirection.apply {
                                 groupPlaceDetailsLoad.hide()
                                 viewDivider.hide()
-                                hideDirectionData()
+                                clearPlaceDetails()
                             }
                         }
                     }
             }
         }
+    }
+
+    private fun BottomSheetDirectionBinding.clearPlaceDetails() {
+        tvPhone.text = ""
+        tvPlaceLink.text = ""
+        tvScheduleDetails.text = ""
+        ivArrow.rotation = 0F
+        hideViews(
+            tvPhone,
+            ivPhone,
+            tvPlaceLink,
+            ivPlaceLink,
+            tvSchedule,
+            tvScheduleDetails,
+            ivSchedule,
+            ivArrow
+        )
     }
 
     private fun showCalculateRouteAPIError(value: String) {
