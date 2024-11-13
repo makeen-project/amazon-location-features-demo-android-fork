@@ -259,4 +259,6 @@
   <string name="label_simulation_fields_missing">कुछ कॉन्फ़िगरेशन चांबियाँ हैं लापता। नक्शा, खोजें, जगहें, और रूट हैं उपलब्ध, परंतु सिमुलेशन है दिव्यांग जब तक यह निम्नलिखित चांबियाँ हैं जोड़ा गया:\n</string>
   <string name="label_analytics_fields_missing">एनालिटिक्स नज़र रखना है दिव्यांग इसलिये यह निम्नलिखित कॉन्फ़िगरेशन चांबियाँ हैं अनुपलब्ध:\n</string>
   <string name="title_configuration_incomplete">कॉन्फ़िगरेशन अधूरा</string>
+  <string name="label_schedule">शेड्यूल</string>
+  <string name="label_copied_to_clipboard">कॉपी किया गया को क्लिपबोर्ड</string>
 </resources>

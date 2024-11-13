@@ -259,4 +259,6 @@
   <string name="label_simulation_fields_missing">חלק תצורה מפתחות מהווים חסר. מפה, חיפוש, מקומות, ו מסלול מהווים זמין, אולם סימולציה הווה מושבת עד ה הבא מפתחות מהווים הוסיף:\ n</string>
   <string name="label_analytics_fields_missing">ניתוח מעקב הווה מושבת בגלל ה הבא תצורה מפתחות מהווים חסר:\ n</string>
   <string name="title_configuration_incomplete">תצורה לא שלם</string>
+  <string name="label_schedule">לוח זמנים</string>
+  <string name="label_copied_to_clipboard">הועתק כדי הלוח</string>
 </resources>

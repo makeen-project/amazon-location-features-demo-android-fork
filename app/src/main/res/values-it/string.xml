@@ -259,4 +259,6 @@
   <string name="label_simulation_fields_missing">Alcuni configurazione chiavi siamo mancante. Mappa, Cerca, Luoghi, e Percorso siamo disponibile, tranne Simulazione è disabili fino a lo seguenti chiavi siamo aggiunto:\n</string>
   <string name="label_analytics_fields_missing">analitica tracciamento è disabili perché lo seguenti configurazione chiavi siamo mancante:\n</string>
   <string name="title_configuration_incomplete">Configurazione Incompleto</string>
+  <string name="label_schedule">Pianificazione</string>
+  <string name="label_copied_to_clipboard">Copiato a appunti</string>
 </resources>
