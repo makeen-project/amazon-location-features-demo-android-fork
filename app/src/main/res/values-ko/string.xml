@@ -245,4 +245,6 @@
   <string name="label_simulation_fields_missing">일부 구성 키를 누릅니다 입니다 누락되었습니다. 지도, 검색, 장소, 과 노선 입니다 사용 가능, 하지만 시뮬레이션 입니다 비활성화 ...까지 그 다음의 키를 누릅니다 입니다 추가됨:\n</string>
   <string name="label_analytics_fields_missing">해석학 추적 입니다 비활성화 왜냐하면 그 다음의 구성 키를 누릅니다 입니다 누락:\n</string>
   <string name="title_configuration_incomplete">구성 불완전</string>
+  <string name="label_schedule">스케줄</string>
+  <string name="label_copied_to_clipboard">복사됨 에 클립보드</string>
 </resources>

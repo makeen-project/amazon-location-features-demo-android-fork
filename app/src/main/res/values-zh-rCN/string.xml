@@ -245,4 +245,6 @@
   <string name="label_simulation_fields_missing">一些 配置 钥匙 是 失踪。 地图， 搜索， 地方， 和 路线 是 可用， 但是 模拟 是 残疾的 直到 这 以下 钥匙 是 已添加：\n</string>
   <string name="label_analytics_fields_missing">分析 追踪 是 残疾的 因为 这 以下 配置 钥匙 是 缺失：\n</string>
   <string name="title_configuration_incomplete">配置 不完整</string>
+  <string name="label_schedule">日程安排</string>
+  <string name="label_copied_to_clipboard">已复制 到 剪贴板</string>
 </resources>

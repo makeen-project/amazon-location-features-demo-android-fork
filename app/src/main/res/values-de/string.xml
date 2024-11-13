@@ -245,4 +245,6 @@
   <string name="label_simulation_fields_missing">Einige Aufbau Schlüssel sind fehlt. Landkarte, Suche, Orte, und Route sind verfügbar, aber Simulation ist Behinderte bis die folgend Schlüssel sind hinzugefügt:\n</string>
   <string name="label_analytics_fields_missing">Analytik Verfolgung ist Behinderte da die folgend Aufbau Schlüssel sind fehlt:\n</string>
   <string name="title_configuration_incomplete">Konfiguration Unvollständig</string>
+  <string name="label_schedule">Zeitplan</string>
+  <string name="label_copied_to_clipboard">Kopiert zu Zwischenablage</string>
 </resources>
