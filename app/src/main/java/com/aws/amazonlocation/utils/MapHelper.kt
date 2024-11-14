@@ -63,10 +63,12 @@ import org.maplibre.android.plugins.annotation.OnSymbolDragListener
 import org.maplibre.android.plugins.annotation.Symbol
 import org.maplibre.android.plugins.annotation.SymbolManager
 import org.maplibre.android.plugins.annotation.SymbolOptions
+import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.CircleLayer
 import org.maplibre.android.style.layers.LineLayer
 import org.maplibre.android.style.layers.Property
 import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.layers.PropertyFactory.textField
 import org.maplibre.android.style.layers.SymbolLayer
 import org.maplibre.android.style.sources.GeoJsonSource
 import org.maplibre.android.utils.BitmapUtils
@@ -1520,8 +1522,24 @@ class MapHelper(
         fun mapLoadedSuccess()
     }
 
+    private fun setStyleLanguage(style: Style) {
+        val languageCode = getLanguageCode()
+        val expression: Expression? = Expression.coalesce(
+                Expression.get("name:$languageCode"),
+                Expression.get("name:en"),
+                Expression.get("name"),
+            )
+        for (layer in style.layers) {
+            if (layer is SymbolLayer) {
+                val textField = textField(expression)
+                layer.setProperties(textField)
+            }
+        }
+    }
+
     fun updateZoomRange(style: Style) {
         mMapLibreMap?.getStyle {
+            setStyleLanguage(style)
             val cameraPosition = mMapLibreMap?.cameraPosition
             val zoom = cameraPosition?.zoom
             val minZoom = minZoomLevel()
