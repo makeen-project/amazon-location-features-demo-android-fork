@@ -118,11 +118,6 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
                 countryName = context.getString(R.string.label_ury),
                 description = context.getString(R.string.description_ury),
                 countryCode = context.getString(R.string.flag_ury),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_vnm),
-                description = context.getString(R.string.description_vnm),
-                countryCode = context.getString(R.string.flag_vnm),
             )
         )
         mPoliticalData.addAll(item)
