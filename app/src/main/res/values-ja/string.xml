@@ -247,4 +247,5 @@
   <string name="title_configuration_incomplete">コンフィギュレーション 不完全</string>
   <string name="label_schedule">スケジュール</string>
   <string name="label_copied_to_clipboard">コピーされました に クリップボード</string>
+  <string name="label_no_political_view">いいえ 政治的 見る</string>
 </resources>
