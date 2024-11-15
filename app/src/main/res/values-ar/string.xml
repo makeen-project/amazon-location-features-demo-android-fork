@@ -247,4 +247,5 @@
   <string name="title_configuration_incomplete">التكوين غير مكتمل</string>
   <string name="label_schedule">جدول</string>
   <string name="label_copied_to_clipboard">تم نسخها إلى الحافظة</string>
+  <string name="label_no_political_view">لا سياسي منظر</string>
 </resources>

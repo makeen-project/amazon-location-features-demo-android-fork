@@ -247,4 +247,5 @@
   <string name="title_configuration_incomplete">Configuration Incomplet</string>
   <string name="label_schedule">Calendrier</string>
   <string name="label_copied_to_clipboard">Copié pour presse-papier</string>
+  <string name="label_no_political_view">Non politique voir</string>
 </resources>

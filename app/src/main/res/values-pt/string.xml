@@ -247,4 +247,5 @@
   <string name="title_configuration_incomplete">Configuração Incompleto</string>
   <string name="label_schedule">Cronograma</string>
   <string name="label_copied_to_clipboard">Copiado para prancheta</string>
+  <string name="label_no_political_view">Não político olhar</string>
 </resources>
