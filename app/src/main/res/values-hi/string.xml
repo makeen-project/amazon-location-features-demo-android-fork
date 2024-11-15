@@ -260,4 +260,5 @@
   <string name="title_configuration_incomplete">कॉन्फ़िगरेशन अधूरा</string>
   <string name="label_schedule">शेड्यूल</string>
   <string name="label_copied_to_clipboard">कॉपी किया गया को क्लिपबोर्ड</string>
+  <string name="label_no_political_view">नहीं राजनीतिक राय</string>
 </resources>

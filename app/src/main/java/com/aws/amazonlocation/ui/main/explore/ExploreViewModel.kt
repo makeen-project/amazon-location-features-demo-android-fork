@@ -543,9 +543,14 @@ class ExploreViewModel
     fun setPoliticalListData(context: Context) {
         val item = arrayListOf(
             PoliticalData(
+                countryName = context.getString(R.string.label_no_political_view),
+                description = "",
+                countryCode = "",
+            ),
+            PoliticalData(
                 countryName = context.getString(R.string.label_arg),
                 description = context.getString(R.string.description_arg),
-                    countryCode = context.getString(R.string.flag_arg),
+                countryCode = context.getString(R.string.flag_arg),
             ),
             PoliticalData(
                 countryName = context.getString(R.string.label_egy),

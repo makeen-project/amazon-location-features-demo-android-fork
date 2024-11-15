@@ -305,4 +305,5 @@
     <string name="title_configuration_incomplete">Configuration Incomplete</string>
     <string name="label_schedule">Schedule</string>
     <string name="label_copied_to_clipboard">Copied to clipboard</string>
+    <string name="label_no_political_view">No political view</string>
 </resources>
