@@ -3,7 +3,6 @@ package com.aws.amazonlocation.ui.main.map_style
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.databinding.BottomSheetMapStickyBinding
 import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreViewModel
@@ -34,7 +32,6 @@ import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideKeyboard
 import com.aws.amazonlocation.utils.hideViews
-import com.aws.amazonlocation.utils.invisible
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.textChanges
@@ -59,7 +56,6 @@ class MapStyleBottomSheetFragment(
 ) : BottomSheetDialogFragment() {
     private var behaviour: BottomSheetBehavior<FrameLayout>?= null
     private lateinit var mBinding: BottomSheetMapStyleBinding
-    private lateinit var buttonStickyBinding: BottomSheetMapStickyBinding
 
     private var mMapStyleAdapter: MapStyleAdapter? = null
     private var mPoliticalAdapter: PoliticalAdapter? = null
@@ -132,17 +128,6 @@ class MapStyleBottomSheetFragment(
                 })
                 behaviour?.isDraggable = mBaseActivity?.isTablet != true
                 setupFullHeight(layout)
-                if (mBaseActivity?.isTablet != true) {
-                    val layoutParams = FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        Gravity.BOTTOM
-                    )
-                    (dialog.findViewById<View>(android.R.id.content) as ViewGroup).addView(
-                        buttonStickyBinding.root,
-                        layoutParams
-                    )
-                }
             }
         }
         if (mBaseActivity?.isTablet == true) {
@@ -203,7 +188,6 @@ class MapStyleBottomSheetFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        buttonStickyBinding = BottomSheetMapStickyBinding.inflate(LayoutInflater.from(requireContext()))
         mBinding = BottomSheetMapStyleBinding.inflate(inflater, container, false)
         return mBinding.root
     }
@@ -232,11 +216,18 @@ class MapStyleBottomSheetFragment(
                 mViewModel.mPoliticalSearchData.find { it.countryName == country }?.let {
                     it.isSelected = true
                     tvPoliticalDescription.apply {
-                        text = "${it.countryName}. ${it.description}"
+                        text = buildString {
+                            append(it.countryName)
+                            append(". ")
+                            append(it.description)
+                        }
                         setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
                     }
 
                 }
+            }
+            if (selectedCountry.isEmpty()) {
+                mViewModel.mPoliticalData[0].isSelected = true
             }
             rvPoliticalView.layoutManager = LinearLayoutManager(requireContext())
             mPoliticalAdapter = PoliticalAdapter(
@@ -254,10 +245,7 @@ class MapStyleBottomSheetFragment(
                         hideKeyboard(requireActivity(), etSearchCountry)
                         mViewModel.mPoliticalData[position].isSelected = true
                         mPoliticalAdapter?.notifyDataSetChanged()
-                        if (mBaseActivity?.isTablet != true) {
-                            buttonStickyBinding.root.show()
-                            clApply.invisible()
-                        }  else clApply.show()
+                        applyFilter()
                     }
                 },
             )
@@ -278,6 +266,12 @@ class MapStyleBottomSheetFragment(
                                 disableToggle()
                             } else {
                                 enableToggle()
+                            }
+
+                            if (mapStyleInnerData.mapName == getString(R.string.map_satellite)) {
+                                disablePoliticalView()
+                            } else {
+                                enablePoliticalView()
                             }
                             mapStyleInnerData.isSelected = true
                         }
@@ -308,10 +302,9 @@ class MapStyleBottomSheetFragment(
                 etSearchCountry.setText("")
                 tvMapStyle.text = getString(R.string.label_map_style)
                 showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                hideViews(clSearchPolitical, ivBack, clApply)
+                hideViews(clSearchPolitical, ivBack)
                 val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                 clearSelectionAndSetOriginalData(selectedCountry)
-                if (mBaseActivity?.isTablet != true) buttonStickyBinding.root.hide()
                 mapStyleShowList()
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
                     mBaseActivity.mSimulationUtils?.setSimulationDraggable()
@@ -343,12 +336,10 @@ class MapStyleBottomSheetFragment(
                 }
             }
             clPoliticalView.setOnClickListener {
-                mViewModel.mPoliticalData.find { it.isSelected }?.let {
-                    if (mBaseActivity?.isTablet != true) {
-                        buttonStickyBinding.root.show()
-                        clApply.invisible()
-                    } else clApply.show()
-                }
+                val mapStyleName =
+                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                        ?: getString(R.string.map_standard)
+                if (mapStyleName == getString(R.string.map_satellite)) return@setOnClickListener
                 tvMapStyle.text = getString(R.string.label_political_view)
                 hideViews(rvMapStyle, cardColorScheme, clPoliticalView)
                 showViews(clSearchPolitical, ivBack)
@@ -358,10 +349,9 @@ class MapStyleBottomSheetFragment(
                 etSearchCountry.setText("")
                 tvMapStyle.text = getString(R.string.label_map_style)
                 showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                hideViews(clSearchPolitical, ivBack, clApply)
+                hideViews(clSearchPolitical, ivBack)
                 val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                 clearSelectionAndSetOriginalData(selectedCountry)
-                if (mBaseActivity?.isTablet != true) buttonStickyBinding.root.hide()
             }
             etSearchCountry
                 .textChanges()
@@ -388,19 +378,6 @@ class MapStyleBottomSheetFragment(
             layoutNoDataFoundPolitical.tvClearFilter.setOnClickListener {
                 etSearchCountry.setText("")
             }
-            buttonStickyBinding.tvClearSelection.setOnClickListener {
-                clearSelection()
-            }
-            tvClearSelection.setOnClickListener {
-                clearSelection()
-            }
-            buttonStickyBinding.btnApplyFilter.setOnClickListener {
-                applyFilter()
-            }
-
-            btnApplyFilter.setOnClickListener {
-                applyFilter()
-            }
             tilSearch.isEndIconVisible = false
         }
     }
@@ -422,28 +399,16 @@ class MapStyleBottomSheetFragment(
         mPoliticalAdapter?.notifyDataSetChanged()
     }
 
-    private fun clearSelection() {
-        mViewModel.mPoliticalData.forEach {
-            it.isSelected = false
-        }
-        val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
-        if (selectedCountry.isEmpty()) {
-            if (mBaseActivity?.isTablet != true) {
-                buttonStickyBinding.root.hide()
-                mBinding.clApply.hide()
-            } else mBinding.clApply.hide()
-        }
-        activity?.runOnUiThread {
-            mPoliticalAdapter?.notifyDataSetChanged()
-        }
-    }
-
     private fun BottomSheetMapStyleBinding.applyFilter() {
         val selectedItem = mViewModel.mPoliticalData.find { it.isSelected }
-        if (selectedItem != null) {
+        if (selectedItem != null && selectedItem.countryName != getString(R.string.label_no_political_view)) {
             mPreferenceManager.setValue(KEY_POLITICAL_VIEW, selectedItem.countryName)
             tvPoliticalDescription.apply {
-                text = "${selectedItem.countryName}. ${selectedItem.description}"
+                text = buildString {
+                    append(selectedItem.countryName)
+                    append(". ")
+                    append(selectedItem.description)
+                }
                 setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
             }
         } else {
@@ -455,8 +420,7 @@ class MapStyleBottomSheetFragment(
         }
         tvMapStyle.text = getString(R.string.label_map_style)
         showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-        hideViews(clSearchPolitical, ivBack, clApply)
-        if (mBaseActivity?.isTablet != true) buttonStickyBinding.root.hide()
+        hideViews(clSearchPolitical, ivBack)
         val colorScheme =
             mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
         val mapStyleNameDisplay =
@@ -506,6 +470,31 @@ class MapStyleBottomSheetFragment(
         } else {
             enableToggle()
         }
+        if (mapStyleName == getString(R.string.map_satellite)) {
+            disablePoliticalView()
+            mPreferenceManager.setValue(KEY_POLITICAL_VIEW, "")
+            mBinding.tvPoliticalDescription.apply {
+                text =
+                    getString(R.string.label_map_representation_for_different_countries)
+                setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_hint_text,
+                    ),
+                )
+            }
+            mViewModel.mPoliticalSearchData.forEach {
+                it.isSelected = false
+            }
+            mViewModel.mPoliticalData.forEach {
+                it.isSelected = false
+            }
+            hideKeyboard(requireActivity(), mBinding.etSearchCountry)
+            mViewModel.mPoliticalData[0].isSelected = true
+            mPoliticalAdapter?.notifyDataSetChanged()
+        } else {
+            enablePoliticalView()
+        }
     }
 
     private fun enableToggle() {
@@ -516,6 +505,16 @@ class MapStyleBottomSheetFragment(
     private fun disableToggle() {
         mBinding.toggleMode.isEnabled = false
         mBinding.toggleMode.alpha = 0.5f
+    }
+
+    private fun enablePoliticalView() {
+        mBinding.clPoliticalView.isClickable = true
+        mBinding.clPoliticalView.alpha = 1.0f
+    }
+
+    private fun disablePoliticalView() {
+        mBinding.clPoliticalView.isClickable = false
+        mBinding.clPoliticalView.alpha = 0.5f
     }
 
     interface MapInterface {

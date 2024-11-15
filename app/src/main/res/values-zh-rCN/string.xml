@@ -260,4 +260,5 @@
   <string name="title_configuration_incomplete">配置 不完整</string>
   <string name="label_schedule">日程安排</string>
   <string name="label_copied_to_clipboard">已复制 到 剪贴板</string>
+  <string name="label_no_political_view">没有 政治的 观点</string>
 </resources>

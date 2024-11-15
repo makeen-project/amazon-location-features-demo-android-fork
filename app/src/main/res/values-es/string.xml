@@ -260,4 +260,5 @@
   <string name="title_configuration_incomplete">Configuración Incompleto</string>
   <string name="label_schedule">Programar</string>
   <string name="label_copied_to_clipboard">Copiado a portapapeles</string>
+  <string name="label_no_political_view">No política vista</string>
 </resources>

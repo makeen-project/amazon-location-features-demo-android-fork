@@ -94,6 +94,7 @@ import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.KEY_POLITICAL_VIEW
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.KEY_URL
 import com.aws.amazonlocation.utils.KILOMETERS
@@ -4918,6 +4919,9 @@ class ExploreFragment :
                 if (it != null) {
                     for (innerData in it) {
                         if (innerData.mapName.equals(mapStyleName)) {
+                            if (mapStyleName == getString(R.string.map_satellite)) {
+                                mPreferenceManager.setValue(KEY_POLITICAL_VIEW, "")
+                            }
                             innerData.isSelected = true
                             innerData.mapName?.let { it1 ->
                                 val colorScheme = mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
