@@ -253,7 +253,6 @@
   <string name="description_tur">Turchia\'s vista sul Cipro e Settentrionale Cipro</string>
   <string name="description_tza">della Tanzania vista sul Lago Malawi</string>
   <string name="description_ury">Uruguay\'s vista sul Rincon de Artigas</string>
-  <string name="description_vnm">Vietnam\'s vista sul lo Paracel Isole e Spratly Isole</string>
   <string name="label_required_fields_missing">Richiesto configurazione chiavi siamo mancante, e lo candidatura Non posso funzione senza loro. Le seguenti chiavi siamo mancante:\n</string>
   <string name="label_some_fields_missing">Alcuni configurazione chiavi siamo mancante. Mappa, Cerca, Luoghi, e Percorso siamo disponibile, tranne Simulazione e analitica siamo disabili fino a lo seguenti chiavi siamo aggiunto:\n</string>
   <string name="label_simulation_fields_missing">Alcuni configurazione chiavi siamo mancante. Mappa, Cerca, Luoghi, e Percorso siamo disponibile, tranne Simulazione è disabili fino a lo seguenti chiavi siamo aggiunto:\n</string>
@@ -261,4 +260,5 @@
   <string name="title_configuration_incomplete">Configurazione Incompleto</string>
   <string name="label_schedule">Pianificazione</string>
   <string name="label_copied_to_clipboard">Copiato a appunti</string>
+  <string name="label_no_political_view">No politico vista</string>
 </resources>

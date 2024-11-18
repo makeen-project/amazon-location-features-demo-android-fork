@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:id="@+id/cl_main"
-    android:paddingTop="@dimen/dp_12"
     android:layout_height="wrap_content"
     android:paddingHorizontal="@dimen/dp_20">
 
@@ -14,6 +13,9 @@
         style="@style/SP16HintRegularTextStyle"
         android:layout_height="@dimen/dp_20"
         android:src="@drawable/icon_search"
+        android:layout_marginTop="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_4"
+        app:layout_constraintEnd_toStartOf="@+id/tv_country_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,11 +24,11 @@
         style="@style/SP16HintRegularTextStyle"
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dp_4"
         android:gravity="start"
         android:text="@string/flag_arg"
+        android:layout_marginTop="@dimen/dp_12"
         android:textDirection="locale"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rb_country"
         app:layout_constraintStart_toEndOf="@id/tv_country"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
@@ -46,18 +48,20 @@
 
     <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/rb_country"
-        android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
+        android:layout_width="@dimen/dp_22"
+        android:layout_height="@dimen/dp_22"
+        android:layout_gravity="start"
+        android:background="@android:color/transparent"
         android:button="@null"
         android:clickable="false"
-        android:background="@android:color/transparent"
         android:drawableEnd="@drawable/ic_radio_button_unchecked"
-        android:layout_gravity="start"
         android:textAlignment="textStart"
         android:textColor="@color/color_medium_black"
         android:textDirection="locale"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"

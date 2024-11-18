@@ -68,11 +68,6 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
 
             Thread.sleep(DELAY_2000)
 
-            val btnApplyFilter = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_apply_filter"))
-            btnApplyFilter.click()
-
-            Thread.sleep(DELAY_2000)
-
             val tvPoliticalDescription = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_political_description"))
             Assert.assertTrue(TEST_FAILED_COUNTRY, tvPoliticalDescription.text.contains(TEST_WORD_ARG))
         } catch (e: Exception) {

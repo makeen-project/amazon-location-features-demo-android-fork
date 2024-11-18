@@ -35,13 +35,12 @@ import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.textChanges
-import kotlin.math.ceil
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlin.math.ceil
 
 class MapStyleFragment : BaseFragment() {
-
     private lateinit var layoutManager: GridLayoutManager
     private lateinit var mBinding: FragmentMapStyleBinding
     private val mViewModel: MapStyleViewModel by viewModels()
@@ -54,7 +53,7 @@ class MapStyleFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         mBinding = FragmentMapStyleBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -65,7 +64,10 @@ class MapStyleFragment : BaseFragment() {
         init()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         if ((activity is MainActivity)) {
             isTablet = (activity as MainActivity).isTablet
         }
@@ -86,42 +88,60 @@ class MapStyleFragment : BaseFragment() {
             val mapStyleName =
                 mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
                     ?: getString(R.string.map_standard)
-            val colorScheme = mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
-            toggleMode.check(if(colorScheme == ATTRIBUTE_LIGHT) R.id.btn_light else R.id.btn_dark)
+            val colorScheme =
+                mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
+            toggleMode.check(if (colorScheme == ATTRIBUTE_LIGHT) R.id.btn_light else R.id.btn_dark)
             mViewModel.mStyleList.forEach {
                 it.isSelected = true
                 it.mapInnerData?.forEach { mapStyleInnerData ->
                     if (mapStyleInnerData.mapName.equals(mapStyleName)) {
-                        if (mapStyleInnerData.mapName == getString(R.string.map_satellite) || mapStyleInnerData.mapName == getString(R.string.map_hybrid)) {
+                        if (mapStyleInnerData.mapName == getString(R.string.map_satellite) ||
+                            mapStyleInnerData.mapName ==
+                            getString(
+                                R.string.map_hybrid,
+                            )
+                        ) {
                             disableToggle()
                         } else {
                             enableToggle()
+                        }
+                        if (mapStyleInnerData.mapName == getString(R.string.map_satellite)) {
+                            disablePoliticalView()
+                        } else {
+                            enablePoliticalView()
                         }
                         mapStyleInnerData.isSelected = true
                     }
                 }
             }
-            layoutNoDataFoundPolitical.tvNoMatchingFound.text = getString(R.string.label_style_search_error_title)
-            layoutNoDataFoundPolitical.tvMakeSureSpelledCorrect.text = getString(R.string.label_style_search_error_des)
+            layoutNoDataFoundPolitical.tvNoMatchingFound.text =
+                getString(R.string.label_style_search_error_title)
+            layoutNoDataFoundPolitical.tvMakeSureSpelledCorrect.text =
+                getString(R.string.label_style_search_error_des)
             rvMapStyle.layoutManager = LinearLayoutManager(requireContext())
             mMapStyleAdapter =
                 SettingMapStyleAdapter(
                     columnCount,
                     mViewModel.mStyleList,
                     object : SettingMapStyleAdapter.MapInterface {
-                        override fun mapStyleClick(position: Int, innerPosition: Int) {
+                        override fun mapStyleClick(
+                            position: Int,
+                            innerPosition: Int,
+                        ) {
                             if (checkInternetConnection()) {
                                 if (position != -1 && innerPosition != -1) {
                                     val selectedInnerData =
-                                        mViewModel.mStyleList[position].mapInnerData?.get(
-                                            innerPosition
-                                        )?.mapName
+                                        mViewModel.mStyleList[position]
+                                            .mapInnerData
+                                            ?.get(
+                                                innerPosition,
+                                            )?.mapName
                                     for (data in mViewModel.mStyleList) {
                                         data.mapInnerData.let {
                                             if (it != null) {
                                                 for (innerData in it) {
                                                     if (innerData.mapName.equals(
-                                                            selectedInnerData
+                                                            selectedInnerData,
                                                         )
                                                     ) {
                                                         if (innerData.isSelected) return
@@ -132,13 +152,13 @@ class MapStyleFragment : BaseFragment() {
                                     }
                                     selectedInnerData?.let { it1 ->
                                         changeStyle(
-                                            it1
+                                            it1,
                                         )
                                     }
                                 }
                             }
                         }
-                    }
+                    },
                 )
             rvMapStyle.adapter = mMapStyleAdapter
 
@@ -150,39 +170,87 @@ class MapStyleFragment : BaseFragment() {
                 mViewModel.mPoliticalSearchData.find { it.countryName == country }?.let {
                     it.isSelected = true
                     tvPoliticalDescription.apply {
-                        text = "${it.countryName}. ${it.description}"
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        text =
+                            buildString {
+                                append(it.countryName)
+                                append(". ")
+                                append(it.description)
+                            }
+                        setTextColor(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.color_primary_green,
+                            ),
+                        )
                     }
                 }
             }
+            if (selectedCountry.isEmpty()) {
+                mViewModel.mPoliticalData[0].isSelected = true
+            }
             rvPoliticalView.layoutManager = LinearLayoutManager(requireContext())
-            mPoliticalAdapter = PoliticalAdapter(
-                mViewModel.mPoliticalData,
-                isRtl,
-                object : PoliticalAdapter.PoliticalInterface {
-                    override fun countryClick(position: Int) {
-                        if (mViewModel.mPoliticalData[position].isSelected) return
-                        mViewModel.mPoliticalSearchData.forEach {
-                            it.isSelected = false
+            mPoliticalAdapter =
+                PoliticalAdapter(
+                    mViewModel.mPoliticalData,
+                    isRtl,
+                    object : PoliticalAdapter.PoliticalInterface {
+                        override fun countryClick(position: Int) {
+                            if (mViewModel.mPoliticalData[position].isSelected) return
+                            mViewModel.mPoliticalSearchData.forEach {
+                                it.isSelected = false
+                            }
+                            mViewModel.mPoliticalData.forEach {
+                                it.isSelected = false
+                            }
+                            hideKeyboard(requireActivity(), etSearchCountry)
+                            mViewModel.mPoliticalData[position].isSelected = true
+                            mPoliticalAdapter?.notifyDataSetChanged()
+
+                            val selectedItem = mViewModel.mPoliticalData.find { it.isSelected }
+                            if (selectedItem != null && selectedItem.countryName != getString(R.string.label_no_political_view)) {
+                                mPreferenceManager.setValue(
+                                    KEY_POLITICAL_VIEW,
+                                    selectedItem.countryName,
+                                )
+                                tvPoliticalDescription.apply {
+                                    text =
+                                        buildString {
+                                            append(selectedItem.countryName)
+                                            append(". ")
+                                            append(selectedItem.description)
+                                        }
+                                    setTextColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.color_primary_green,
+                                        ),
+                                    )
+                                }
+                            } else {
+                                mPreferenceManager.setValue(KEY_POLITICAL_VIEW, "")
+                                tvPoliticalDescription.apply {
+                                    text =
+                                        getString(R.string.label_map_representation_for_different_countries)
+                                    setTextColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.color_hint_text,
+                                        ),
+                                    )
+                                }
+                            }
+                            appCompatTextView2.text = getString(R.string.label_map_style)
+                            showViews(rvMapStyle, cardColorScheme, clPoliticalView)
+                            hideViews(clSearchPolitical)
                         }
-                        mViewModel.mPoliticalData.forEach {
-                            it.isSelected = false
-                        }
-                        hideKeyboard(requireActivity(), etSearchCountry)
-                        mViewModel.mPoliticalData[position].isSelected = true
-                        mPoliticalAdapter?.notifyDataSetChanged()
-                        clApply.show()
-                    }
-                },
-            )
+                    },
+                )
             rvPoliticalView.adapter = mPoliticalAdapter
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun changeStyle(
-        mapStyleName: String
-    ) {
+    private fun changeStyle(mapStyleName: String) {
         mViewModel.mStyleList.forEach {
             it.mapInnerData?.forEach { innerData ->
                 innerData.isSelected = false
@@ -197,7 +265,7 @@ class MapStyleFragment : BaseFragment() {
                             innerData.mapName?.let { it1 ->
                                 mPreferenceManager.setValue(
                                     KEY_MAP_STYLE_NAME,
-                                    it1
+                                    it1,
                                 )
                             }
                         }
@@ -209,6 +277,31 @@ class MapStyleFragment : BaseFragment() {
             disableToggle()
         } else {
             enableToggle()
+        }
+        if (mapStyleName == getString(R.string.map_satellite)) {
+            disablePoliticalView()
+            mPreferenceManager.setValue(KEY_POLITICAL_VIEW, "")
+            mBinding.tvPoliticalDescription.apply {
+                text =
+                    getString(R.string.label_map_representation_for_different_countries)
+                setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_hint_text,
+                    ),
+                )
+            }
+            mViewModel.mPoliticalSearchData.forEach {
+                it.isSelected = false
+            }
+            mViewModel.mPoliticalData.forEach {
+                it.isSelected = false
+            }
+            hideKeyboard(requireActivity(), mBinding.etSearchCountry)
+            mViewModel.mPoliticalData[0].isSelected = true
+            mPoliticalAdapter?.notifyDataSetChanged()
+        } else {
+            enablePoliticalView()
         }
         mMapStyleAdapter?.notifyDataSetChanged()
     }
@@ -240,7 +333,7 @@ class MapStyleFragment : BaseFragment() {
                     etSearchCountry.setText("")
                     appCompatTextView2.text = getString(R.string.label_map_style)
                     showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                    hideViews(clSearchPolitical, clApply)
+                    hideViews(clSearchPolitical)
                     val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                     clearSelectionAndSetOriginalData(selectedCountry)
                 } else {
@@ -254,6 +347,7 @@ class MapStyleFragment : BaseFragment() {
                             mPreferenceManager.setValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT)
                         }
                     }
+
                     R.id.btn_dark -> {
                         if (isChecked) {
                             mPreferenceManager.setValue(KEY_COLOR_SCHEMES, ATTRIBUTE_DARK)
@@ -262,14 +356,10 @@ class MapStyleFragment : BaseFragment() {
                 }
             }
             clPoliticalView.setOnClickListener {
-                mViewModel.mPoliticalData.find { it.isSelected }?.let {
-                    if (mBaseActivity?.isTablet != true) {
-                        clApply.show()
-                    } else clApply.show()
-                }
-                mViewModel.mPoliticalData.find { it.isSelected }?.let {
-                    clApply.show()
-                }
+                val mapStyleName =
+                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                        ?: getString(R.string.map_standard)
+                if (mapStyleName == getString(R.string.map_satellite)) return@setOnClickListener
                 appCompatTextView2.text = getString(R.string.label_political_view)
                 hideViews(rvMapStyle, cardColorScheme, clPoliticalView)
                 showViews(clSearchPolitical)
@@ -279,7 +369,7 @@ class MapStyleFragment : BaseFragment() {
                 .debounce(DELAY_300)
                 .onEach { text ->
                     tilSearch.isEndIconVisible = !text.isNullOrEmpty()
-                    val result =  mViewModel.searchPoliticalData(text.toString())
+                    val result = mViewModel.searchPoliticalData(text.toString())
                     if (result.isEmpty()) {
                         layoutNoDataFoundPolitical.root.show()
                         mViewModel.mPoliticalData.clear()
@@ -298,33 +388,6 @@ class MapStyleFragment : BaseFragment() {
             }
             layoutNoDataFoundPolitical.tvClearFilter.setOnClickListener {
                 etSearchCountry.setText("")
-            }
-            tvClearSelection.setOnClickListener {
-                mViewModel.mPoliticalData.forEach {
-                    it.isSelected = false
-                }
-                activity?.runOnUiThread {
-                    mPoliticalAdapter?.notifyDataSetChanged()
-                }
-            }
-            btnApplyFilter.setOnClickListener {
-                val selectedItem = mViewModel.mPoliticalData.find { it.isSelected }
-                if (selectedItem != null) {
-                    mPreferenceManager.setValue(KEY_POLITICAL_VIEW, selectedItem.countryName)
-                    tvPoliticalDescription.apply {
-                        text = "${selectedItem.countryName}. ${selectedItem.description}"
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
-                    }
-                } else {
-                    mPreferenceManager.setValue(KEY_POLITICAL_VIEW, "")
-                    tvPoliticalDescription.apply {
-                        text = getString(R.string.label_map_representation_for_different_countries)
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
-                    }
-                }
-                appCompatTextView2.text = getString(R.string.label_map_style)
-                showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                hideViews(clSearchPolitical, clApply)
             }
             tilSearch.isEndIconVisible = false
         }
@@ -353,14 +416,14 @@ class MapStyleFragment : BaseFragment() {
         }
     }
 
-    private fun checkInternetConnection(): Boolean {
-        return if (context?.isInternetAvailable() == true) {
+    private fun checkInternetConnection(): Boolean =
+        if (context?.isInternetAvailable() == true) {
             true
         } else {
             showError(getString(R.string.check_your_internet_connection_and_try_again))
             false
         }
-    }
+
     fun hideKeyBoard() {
         mBinding.etSearchCountry.clearFocus()
     }
@@ -373,5 +436,15 @@ class MapStyleFragment : BaseFragment() {
     private fun disableToggle() {
         mBinding.toggleMode.isEnabled = false
         mBinding.toggleMode.alpha = 0.5f
+    }
+
+    private fun enablePoliticalView() {
+        mBinding.clPoliticalView.isClickable = true
+        mBinding.clPoliticalView.alpha = 1.0f
+    }
+
+    private fun disablePoliticalView() {
+        mBinding.clPoliticalView.isClickable = false
+        mBinding.clPoliticalView.alpha = 0.5f
     }
 }
