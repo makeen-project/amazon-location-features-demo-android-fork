@@ -51,12 +51,12 @@ import com.aws.amazonlocation.data.enum.GeofenceBottomSheetEnum
 import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.enum.RedirectionType
 import com.aws.amazonlocation.data.enum.SearchApiEnum
+import com.aws.amazonlocation.data.response.CalculateDistanceResponse
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.databinding.BottomSheetDirectionBinding
 import com.aws.amazonlocation.databinding.BottomSheetDirectionSearchBinding
-import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.databinding.FragmentExploreBinding
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
@@ -1275,246 +1275,25 @@ class ExploreFragment :
                         when (it.name) {
                             RouteTravelMode.Car.value -> {
                                 mViewModel.mCarData = it.calculateRouteResult
-                                mBinding.bottomSheetDirection.apply {
-                                    mViewModel.mCarData?.routes?.get(0).let { route ->
-                                        if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                            route?.summary?.let { summary ->
-                                                tvDirectionDistance.text =
-                                                    mPreferenceManager
-                                                        .getValue(
-                                                            KEY_UNIT_SYSTEM,
-                                                            "",
-                                                        ).let { unitSystem ->
-                                                            val isMetric = isMetric(unitSystem)
-                                                            getMetricsNew(
-                                                                requireContext(),
-                                                                summary.distance.toDouble(),
-                                                                isMetric,
-                                                                true
-                                                            )
-                                                        }
-                                                groupDistance.show()
-                                                tvDirectionDot.show()
-                                                tvDirectionTime.show()
-                                                tvDirectionTime.text =
-                                                    getTime(
-                                                        requireContext(),
-                                                        summary.duration,
-                                                    )
-                                            }
-                                        }
-                                        mBinding.bottomSheetDirectionSearch.apply {
-                                            if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                                mIsDirectionDataSet = true
-                                                edtSearchDest.setText(tvDirectionAddress.text)
-                                                lifecycleScope.launch {
-                                                    delay(CLICK_DEBOUNCE_ENABLE)
-                                                    mIsDirectionDataSet = false
-                                                }
-                                            } else {
-                                                if (mTravelMode == RouteTravelMode.Car.value) {
-                                                    tvDriveSelected.show()
-                                                    hideViews(
-                                                        tvTruckSelected,
-                                                        tvWalkSelected,
-                                                        tvScooterSelected,
-                                                    )
-                                                    route?.let { it1 ->
-                                                        drawPolyLineOnMap(
-                                                            it1.legs,
-                                                            isLineUpdate = false,
-                                                            isWalk = false,
-                                                            isLocationIcon = false,
-                                                            sourceLatLng = it.sourceLatLng,
-                                                            destinationLatLng = it.destinationLatLng,
-                                                        )
-                                                    }
-                                                }
-                                            }
-
-                                            setGOButtonState(
-                                                edtSearchDirection.text.toString(),
-                                                cardDriveGo,
-                                                clDrive,
-                                            )
-                                            route?.summary?.let { summary ->
-                                                tvDriveDistance.text =
-                                                    mPreferenceManager
-                                                        .getValue(
-                                                            KEY_UNIT_SYSTEM,
-                                                            "",
-                                                        ).let { unitSystem ->
-                                                            val isMetric = isMetric(unitSystem)
-                                                            getMetricsNew(
-                                                                requireContext(),
-                                                                summary.distance.toDouble(),
-                                                                isMetric,
-                                                                true
-                                                            )
-                                                        }
-                                                tvDriveMinute.text =
-                                                    getTime(
-                                                        requireContext(),
-                                                        summary.duration,
-                                                    )
-                                            }
-                                        }
-                                    }
-                                }
+                                mViewModel.mCarCalculateDistanceResponse = it
+                                setCarRouteData(it)
                             }
 
                             RouteTravelMode.Pedestrian.value -> {
                                 mViewModel.mWalkingData = it.calculateRouteResult
-                                mBinding.bottomSheetDirectionSearch.apply {
-                                    mViewModel.mWalkingData?.routes?.get(0).let { route ->
-                                        setGOButtonState(
-                                            edtSearchDirection.text.toString(),
-                                            cardWalkGo,
-                                            clWalk,
-                                        )
-                                        route?.summary?.let { summary ->
-                                            tvWalkDistance.text =
-                                                mPreferenceManager
-                                                    .getValue(
-                                                        KEY_UNIT_SYSTEM,
-                                                        "",
-                                                    ).let { unitSystem ->
-                                                        val isMetric = isMetric(unitSystem)
-                                                        getMetricsNew(
-                                                            requireContext(),
-                                                            summary.distance.toDouble(),
-                                                            isMetric,
-                                                            true
-                                                        )
-                                                    }
-                                            tvWalkMinute.text =
-                                                getTime(
-                                                    requireContext(),
-                                                    summary.duration,
-                                                )
-                                        }
-                                        if (mTravelMode == RouteTravelMode.Pedestrian.value) {
-                                            tvWalkSelected.show()
-                                            hideViews(
-                                                tvTruckSelected,
-                                                tvDriveSelected,
-                                                tvScooterSelected,
-                                            )
-                                            route?.let { it1 ->
-                                                drawPolyLineOnMap(
-                                                    it1.legs,
-                                                    isLineUpdate = false,
-                                                    isWalk = true,
-                                                    isLocationIcon = false,
-                                                    sourceLatLng = it.sourceLatLng,
-                                                    destinationLatLng = it.destinationLatLng,
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
+                                mViewModel.mWalkCalculateDistanceResponse = it
+                                setWalkingRouteData(it)
                             }
 
                             RouteTravelMode.Truck.value -> {
                                 mViewModel.mTruckData = it.calculateRouteResult
-                                mBinding.bottomSheetDirectionSearch.apply {
-                                    mViewModel.mTruckData?.routes?.get(0).let { route ->
-                                        setGOButtonState(
-                                            edtSearchDirection.text.toString(),
-                                            cardTruckGo,
-                                            clTruck,
-                                        )
-                                        route?.summary?.let { summary ->
-                                            tvTruckDistance.text =
-                                                mPreferenceManager
-                                                    .getValue(
-                                                        KEY_UNIT_SYSTEM,
-                                                        "",
-                                                    ).let { unitSystem ->
-                                                        val isMetric = isMetric(unitSystem)
-                                                        getMetricsNew(
-                                                            requireContext(),
-                                                            summary.distance.toDouble(),
-                                                            isMetric,
-                                                            true
-                                                        )
-                                                    }
-                                            tvTruckMinute.text =
-                                                getTime(
-                                                    requireContext(),
-                                                    summary.duration
-                                                )
-                                        }
-                                        if (mTravelMode == RouteTravelMode.Truck.value) {
-                                            tvTruckSelected.show()
-                                            hideViews(
-                                                tvWalkSelected,
-                                                tvDriveSelected,
-                                            )
-                                            route?.let { it1 ->
-                                                drawPolyLineOnMap(
-                                                    it1.legs,
-                                                    isLineUpdate = false,
-                                                    isWalk = false,
-                                                    isLocationIcon = false,
-                                                    sourceLatLng = it.sourceLatLng,
-                                                    destinationLatLng = it.destinationLatLng,
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
+                                mViewModel.mTruckCalculateDistanceResponse = it
+                                setTruckRouteData(it)
                             }
                             RouteTravelMode.Scooter.value -> {
                                 mViewModel.mScooterData = it.calculateRouteResult
-                                mBinding.bottomSheetDirectionSearch.apply {
-                                    mViewModel.mScooterData?.routes?.get(0).let { route ->
-                                        setGOButtonState(
-                                            edtSearchDirection.text.toString(),
-                                            cardScooterGo,
-                                            clScooter,
-                                        )
-                                        route?.summary?.let { summary ->
-                                            tvScooterDistance.text =
-                                                mPreferenceManager
-                                                    .getValue(
-                                                        KEY_UNIT_SYSTEM,
-                                                        "",
-                                                    ).let { unitSystem ->
-                                                        val isMetric = isMetric(unitSystem)
-                                                        getMetricsNew(
-                                                            requireContext(),
-                                                            summary.distance.toDouble(),
-                                                            isMetric,
-                                                            true
-                                                        )
-                                                    }
-                                            tvScooterMinute.text =
-                                                getTime(
-                                                    requireContext(),
-                                                    summary.duration
-                                                )
-                                        }
-                                        if (mTravelMode == RouteTravelMode.Scooter.value) {
-                                            tvScooterSelected.show()
-                                            hideViews(
-                                                tvWalkSelected,
-                                                tvDriveSelected,
-                                                tvTruckSelected,
-                                            )
-                                            route?.let { it1 ->
-                                                drawPolyLineOnMap(
-                                                    it1.legs,
-                                                    isLineUpdate = false,
-                                                    isWalk = false,
-                                                    isLocationIcon = false,
-                                                    sourceLatLng = it.sourceLatLng,
-                                                    destinationLatLng = it.destinationLatLng,
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
+                                mViewModel.mScooterCalculateDistanceResponse = it
+                                setScooterRouteData(it)
                             }
                         }
                     }.onError {
@@ -1545,6 +1324,7 @@ class ExploreFragment :
                                             )
                                             showCalculateRouteAPIError(RouteTravelMode.Pedestrian.value)
                                             mViewModel.mWalkingData = null
+                                            mViewModel.mWalkCalculateDistanceResponse = null
                                             isCalculateWalkApiError = true
                                             mBinding.bottomSheetDirectionSearch.clWalkLoader.hide()
                                             mBinding.bottomSheetDirectionSearch.clWalk.show()
@@ -1560,6 +1340,7 @@ class ExploreFragment :
                                             showCalculateRouteAPIError(RouteTravelMode.Car.value)
                                             isCalculateDriveApiError = true
                                             mViewModel.mCarData = null
+                                            mViewModel.mCarCalculateDistanceResponse = null
                                             mBinding.bottomSheetDirectionSearch.clDriveLoader.hide()
                                             mBinding.bottomSheetDirectionSearch.clDrive.show()
                                         }
@@ -1573,6 +1354,7 @@ class ExploreFragment :
                                             )
                                             showCalculateRouteAPIError(RouteTravelMode.Truck.value)
                                             mViewModel.mTruckData = null
+                                            mViewModel.mTruckCalculateDistanceResponse = null
                                             isCalculateTruckApiError = true
                                             mBinding.bottomSheetDirectionSearch.clTruckLoader.hide()
                                             mBinding.bottomSheetDirectionSearch.clTruck.show()
@@ -1587,6 +1369,7 @@ class ExploreFragment :
                                             )
                                             showCalculateRouteAPIError(RouteTravelMode.Scooter.value)
                                             mViewModel.mScooterData = null
+                                            mViewModel.mScooterCalculateDistanceResponse = null
                                             isCalculateScooterApiError = true
                                             mBinding.bottomSheetDirectionSearch.clScooterLoader.hide()
                                             mBinding.bottomSheetDirectionSearch.clScooter.show()
@@ -1923,6 +1706,247 @@ class ExploreFragment :
                             }
                         }
                     }
+            }
+        }
+    }
+
+    private fun setScooterRouteData(it: CalculateDistanceResponse) {
+        mBinding.bottomSheetDirectionSearch.apply {
+            mViewModel.mScooterData?.routes?.get(0).let { route ->
+                setGOButtonState(
+                    edtSearchDirection.text.toString(),
+                    cardScooterGo,
+                    clScooter,
+                )
+                route?.summary?.let { summary ->
+                    tvScooterDistance.text =
+                        mPreferenceManager
+                            .getValue(
+                                KEY_UNIT_SYSTEM,
+                                "",
+                            ).let { unitSystem ->
+                                val isMetric = isMetric(unitSystem)
+                                getMetricsNew(
+                                    requireContext(),
+                                    summary.distance.toDouble(),
+                                    isMetric,
+                                    true
+                                )
+                            }
+                    tvScooterMinute.text =
+                        getTime(
+                            requireContext(),
+                            summary.duration
+                        )
+                }
+                if (mTravelMode == RouteTravelMode.Scooter.value) {
+                    tvScooterSelected.show()
+                    hideViews(
+                        tvWalkSelected,
+                        tvDriveSelected,
+                        tvTruckSelected,
+                    )
+                    route?.let { it1 ->
+                        drawPolyLineOnMap(
+                            it1.legs,
+                            isLineUpdate = false,
+                            isWalk = false,
+                            isLocationIcon = false,
+                            sourceLatLng = it.sourceLatLng,
+                            destinationLatLng = it.destinationLatLng,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setTruckRouteData(it: CalculateDistanceResponse) {
+        mBinding.bottomSheetDirectionSearch.apply {
+            mViewModel.mTruckData?.routes?.get(0).let { route ->
+                setGOButtonState(
+                    edtSearchDirection.text.toString(),
+                    cardTruckGo,
+                    clTruck,
+                )
+                route?.summary?.let { summary ->
+                    tvTruckDistance.text =
+                        mPreferenceManager
+                            .getValue(
+                                KEY_UNIT_SYSTEM,
+                                "",
+                            ).let { unitSystem ->
+                                val isMetric = isMetric(unitSystem)
+                                getMetricsNew(
+                                    requireContext(),
+                                    summary.distance.toDouble(),
+                                    isMetric,
+                                    true
+                                )
+                            }
+                    tvTruckMinute.text =
+                        getTime(
+                            requireContext(),
+                            summary.duration
+                        )
+                }
+                if (mTravelMode == RouteTravelMode.Truck.value) {
+                    tvTruckSelected.show()
+                    hideViews(
+                        tvWalkSelected,
+                        tvDriveSelected,
+                    )
+                    route?.let { it1 ->
+                        drawPolyLineOnMap(
+                            it1.legs,
+                            isLineUpdate = false,
+                            isWalk = false,
+                            isLocationIcon = false,
+                            sourceLatLng = it.sourceLatLng,
+                            destinationLatLng = it.destinationLatLng,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setWalkingRouteData(it: CalculateDistanceResponse) {
+        mBinding.bottomSheetDirectionSearch.apply {
+            mViewModel.mWalkingData?.routes?.get(0).let { route ->
+                setGOButtonState(
+                    edtSearchDirection.text.toString(),
+                    cardWalkGo,
+                    clWalk,
+                )
+                route?.summary?.let { summary ->
+                    tvWalkDistance.text =
+                        mPreferenceManager
+                            .getValue(
+                                KEY_UNIT_SYSTEM,
+                                "",
+                            ).let { unitSystem ->
+                                val isMetric = isMetric(unitSystem)
+                                getMetricsNew(
+                                    requireContext(),
+                                    summary.distance.toDouble(),
+                                    isMetric,
+                                    true
+                                )
+                            }
+                    tvWalkMinute.text =
+                        getTime(
+                            requireContext(),
+                            summary.duration,
+                        )
+                }
+                if (mTravelMode == RouteTravelMode.Pedestrian.value) {
+                    tvWalkSelected.show()
+                    hideViews(
+                        tvTruckSelected,
+                        tvDriveSelected,
+                        tvScooterSelected,
+                    )
+                    route?.let { it1 ->
+                        drawPolyLineOnMap(
+                            it1.legs,
+                            isLineUpdate = false,
+                            isWalk = true,
+                            isLocationIcon = false,
+                            sourceLatLng = it.sourceLatLng,
+                            destinationLatLng = it.destinationLatLng,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setCarRouteData(it: CalculateDistanceResponse) {
+        mBinding.bottomSheetDirection.apply {
+            mViewModel.mCarData?.routes?.get(0).let { route ->
+                if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+                    route?.summary?.let { summary ->
+                        tvDirectionDistance.text =
+                            mPreferenceManager
+                                .getValue(
+                                    KEY_UNIT_SYSTEM,
+                                    "",
+                                ).let { unitSystem ->
+                                    val isMetric = isMetric(unitSystem)
+                                    getMetricsNew(
+                                        requireContext(),
+                                        summary.distance.toDouble(),
+                                        isMetric,
+                                        true
+                                    )
+                                }
+                        groupDistance.show()
+                        tvDirectionDot.show()
+                        tvDirectionTime.show()
+                        tvDirectionTime.text =
+                            getTime(
+                                requireContext(),
+                                summary.duration,
+                            )
+                    }
+                }
+                mBinding.bottomSheetDirectionSearch.apply {
+                    if (!mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+                        mIsDirectionDataSet = true
+                        edtSearchDest.setText(tvDirectionAddress.text)
+                        lifecycleScope.launch {
+                            delay(CLICK_DEBOUNCE_ENABLE)
+                            mIsDirectionDataSet = false
+                        }
+                    } else {
+                        if (mTravelMode == RouteTravelMode.Car.value) {
+                            tvDriveSelected.show()
+                            hideViews(
+                                tvTruckSelected,
+                                tvWalkSelected,
+                                tvScooterSelected,
+                            )
+                            route?.let { it1 ->
+                                drawPolyLineOnMap(
+                                    it1.legs,
+                                    isLineUpdate = false,
+                                    isWalk = false,
+                                    isLocationIcon = false,
+                                    sourceLatLng = it.sourceLatLng,
+                                    destinationLatLng = it.destinationLatLng,
+                                )
+                            }
+                        }
+                    }
+
+                    setGOButtonState(
+                        edtSearchDirection.text.toString(),
+                        cardDriveGo,
+                        clDrive,
+                    )
+                    route?.summary?.let { summary ->
+                        tvDriveDistance.text =
+                            mPreferenceManager
+                                .getValue(
+                                    KEY_UNIT_SYSTEM,
+                                    "",
+                                ).let { unitSystem ->
+                                    val isMetric = isMetric(unitSystem)
+                                    getMetricsNew(
+                                        requireContext(),
+                                        summary.distance.toDouble(),
+                                        isMetric,
+                                        true
+                                    )
+                                }
+                        tvDriveMinute.text =
+                            getTime(
+                                requireContext(),
+                                summary.duration,
+                            )
+                    }
+                }
             }
         }
     }
@@ -2991,10 +3015,6 @@ class ExploreFragment :
         }
     }
 
-    private fun BottomSheetMapStyleBinding.mapStyleShowList() {
-        rvMapStyle.show()
-    }
-
     fun showSimulationTop() {
         mBinding.apply {
             cardSimulationPopup.show()
@@ -3558,6 +3578,29 @@ class ExploreFragment :
             if (it) {
                 mBinding.cardDirection.hide()
                 mBinding.cardNavigation.show()
+            }
+        }
+        lifecycleScope.launch {
+            delay(CLICK_DEBOUNCE_ENABLE)
+            if (mBinding.bottomSheetDirectionSearch.clDriveLoader.isVisible && mViewModel.mCarData != null && mViewModel.mCarCalculateDistanceResponse != null) {
+                mBinding.bottomSheetDirectionSearch.clWalkLoader.hide()
+                mBinding.bottomSheetDirectionSearch.clWalk.show()
+                setCarRouteData(mViewModel.mCarCalculateDistanceResponse!!)
+            }
+            if (mBinding.bottomSheetDirectionSearch.clWalkLoader.isVisible && mViewModel.mWalkingData != null && mViewModel.mWalkCalculateDistanceResponse != null) {
+                mBinding.bottomSheetDirectionSearch.clDriveLoader.hide()
+                mBinding.bottomSheetDirectionSearch.clDrive.show()
+                setWalkingRouteData(mViewModel.mWalkCalculateDistanceResponse!!)
+            }
+            if (mBinding.bottomSheetDirectionSearch.clTruckLoader.isVisible && mViewModel.mTruckData != null && mViewModel.mTruckCalculateDistanceResponse != null) {
+                mBinding.bottomSheetDirectionSearch.clTruckLoader.hide()
+                mBinding.bottomSheetDirectionSearch.clTruck.show()
+                setTruckRouteData(mViewModel.mTruckCalculateDistanceResponse!!)
+            }
+            if (mBinding.bottomSheetDirectionSearch.clScooterLoader.isVisible && mViewModel.mScooterData != null && mViewModel.mScooterCalculateDistanceResponse != null) {
+                mBinding.bottomSheetDirectionSearch.clScooterLoader.hide()
+                mBinding.bottomSheetDirectionSearch.clScooter.show()
+                setScooterRouteData(mViewModel.mScooterCalculateDistanceResponse!!)
             }
         }
     }
@@ -5009,7 +5052,7 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.PLACES_POPUP),
                 Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES)
             )
-            (activity as MainActivity).analyticsUtils?.recordEvent(EventType.ROUTE_SEARCH, properties)
+            (activity as MainActivity).analyticsUtils?.recordEvent(ROUTE_SEARCH, properties)
             return true
         }
         if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
