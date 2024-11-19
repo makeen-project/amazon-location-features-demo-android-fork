@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.PoliticalData
 import com.aws.amazonlocation.databinding.ItemSearchCountryBinding
+import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.show
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -24,6 +26,8 @@ class PoliticalAdapter(
             binding.apply {
                 tvCountryName.text = data.countryName
                 tvDescription.text = data.description
+                if (data.description.isEmpty()) tvDescription.hide() else tvDescription.show()
+                if (data.countryCode.isEmpty()) tvCountry.hide() else tvCountry.show()
                 tvCountry.text = data.countryCode
                 clMain.setOnClickListener {
                     placeInterface.countryClick(adapterPosition)

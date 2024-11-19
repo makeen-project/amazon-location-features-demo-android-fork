@@ -3,6 +3,7 @@ package com.aws.amazonlocation.utils.providers
 import android.location.Location
 import aws.sdk.kotlin.services.geoplaces.GeoPlacesClient
 import aws.sdk.kotlin.services.geoplaces.model.Address
+import aws.sdk.kotlin.services.geoplaces.model.GetPlaceAdditionalFeature
 import aws.sdk.kotlin.services.geoplaces.model.ReverseGeocodeRequest
 import aws.sdk.kotlin.services.geoplaces.model.ReverseGeocodeResponse
 import aws.sdk.kotlin.services.geoplaces.model.SearchTextRequest
@@ -109,22 +110,13 @@ class PlacesProvider(
             reverseGeocodeResponse?.resultItems?.forEach {
                 val mSearchSuggestionData: SearchSuggestionData =
                     if (it.placeId.isNotEmpty()) {
-                        val getSearchResult = getPlace(it.placeId, mBaseActivity, getPlaceClient)
-                        val position = getSearchResult?.position
                         SearchSuggestionData(
                             placeId = it.placeId,
-                            text = getSearchResult?.address?.label,
-                            amazonLocationAddress = getSearchResult?.address,
-                            distance =
-                            position?.let { doubles ->
-                                getDistance(
-                                    liveLocation,
-                                    doubles[1],
-                                    doubles[0],
-                                )
-                            },
+                            text = it.address?.label,
+                            amazonLocationAddress = it.address,
+                            distance = it.distance.toDouble(),
                             position =
-                            position?.let { doubles ->
+                            it.position?.let { doubles ->
                                 listOf(
                                     doubles[0],
                                     doubles[1],
@@ -139,24 +131,14 @@ class PlacesProvider(
             suggestResponse?.resultItems?.forEach {
                 val mSearchSuggestionData: SearchSuggestionData =
                     if (!it.place?.placeId.isNullOrEmpty()) {
-                        val getSearchResult =
-                            getPlace(it.place?.placeId!!, mBaseActivity, getPlaceClient)
-                        val position = getSearchResult?.position
                         SearchSuggestionData(
                             placeId = it.place!!.placeId,
                             searchText = searchText,
-                            text = getSearchResult?.address?.label,
-                            amazonLocationAddress = getSearchResult?.address,
-                            distance =
-                            position?.let { doubles ->
-                                getDistance(
-                                    liveLocation,
-                                    doubles[1],
-                                    doubles[0],
-                                )
-                            },
+                            text = it.place?.address?.label,
+                            amazonLocationAddress = it.place?.address,
+                            distance = it.place?.distance?.toDouble(),
                             position =
-                            position?.let { doubles ->
+                            it.place?.position?.let { doubles ->
                                 listOf(
                                     doubles[0],
                                     doubles[1],
@@ -246,6 +228,7 @@ class PlacesProvider(
                 response?.resultItems?.forEach { result ->
                     val placeData =
                         SearchSuggestionData(
+                            placeId = result.placeId,
                             searchText = text,
                             amazonLocationAddress = result.address,
                             text = result.title,
@@ -254,7 +237,7 @@ class PlacesProvider(
                                     result.position?.get(0) ?: 0.0,
                                     result.position?.get(1) ?: 0.0,
                                 ),
-                            distance =
+                                distance =
                                 getDistance(
                                     liveLocation,
                                     result.position
@@ -281,6 +264,7 @@ class PlacesProvider(
         try {
             val request =
                 aws.sdk.kotlin.services.geoplaces.model.GetPlaceRequest {
+                    this.additionalFeatures = listOf(GetPlaceAdditionalFeature.Contact)
                     this.key = getApiKey(mPreferenceManager)
                     this.placeId = placeId
                     this.language = getLanguageCode()

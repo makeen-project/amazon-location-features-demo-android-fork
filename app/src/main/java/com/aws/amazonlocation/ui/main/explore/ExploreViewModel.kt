@@ -3,6 +3,7 @@ package com.aws.amazonlocation.ui.main.explore
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import aws.sdk.kotlin.services.geoplaces.model.GetPlaceResponse
 import aws.sdk.kotlin.services.geoplaces.model.ReverseGeocodeResponse
 import aws.sdk.kotlin.services.georoutes.model.CalculateRoutesResponse
 import aws.sdk.kotlin.services.georoutes.model.RouteTravelMode
@@ -19,6 +20,7 @@ import com.aws.amazonlocation.data.response.SearchResponse
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.domain.`interface`.DistanceInterface
+import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
@@ -26,7 +28,6 @@ import com.aws.amazonlocation.utils.Units
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -49,6 +50,10 @@ class ExploreViewModel
         var mSearchSuggestionData: SearchSuggestionData? = null
         var mSearchDirectionOriginData: SearchSuggestionData? = null
         var mSearchDirectionDestinationData: SearchSuggestionData? = null
+        var mCarCalculateDistanceResponse: CalculateDistanceResponse? = null
+        var mWalkCalculateDistanceResponse: CalculateDistanceResponse? = null
+        var mTruckCalculateDistanceResponse: CalculateDistanceResponse? = null
+        var mScooterCalculateDistanceResponse: CalculateDistanceResponse? = null
         var mCarData: CalculateRoutesResponse? = null
         var mWalkingData: CalculateRoutesResponse? = null
         var mTruckData: CalculateRoutesResponse? = null
@@ -93,6 +98,11 @@ class ExploreViewModel
             Channel<HandleResult<SearchResponse>>(Channel.BUFFERED)
         val addressLineData: Flow<HandleResult<SearchResponse>> =
             _addressLineData.receiveAsFlow()
+
+        private val _placeData =
+            Channel<HandleResult<GetPlaceResponse>>(Channel.BUFFERED)
+        val placeData: Flow<HandleResult<GetPlaceResponse>> =
+            _placeData.receiveAsFlow()
 
         fun searchPlaceSuggestion(
             searchText: String,
@@ -180,59 +190,43 @@ class ExploreViewModel
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 if (isWalkingAndTruckCall) {
-                    val two =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Pedestrian.value,
-                            )
-                        }
-                    two.await()
-                    val three =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Truck.value,
-                            )
-                        }
-                    three.await()
-                    val four =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Scooter.value,
-                            )
-                        }
-                    four.await()
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Pedestrian.value,
+                    )
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Truck.value,
+                    )
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Scooter.value,
+                    )
                 } else {
-                    val one =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Car.value,
-                            )
-                        }
-                    one.await()
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Car.value,
+                    )
                 }
             }
         }
@@ -459,6 +453,44 @@ class ExploreViewModel
             }
         }
 
+        fun getPlaceData(
+            placeId: String
+        ) {
+            _placeData.trySend(HandleResult.Loading)
+            viewModelScope.launch(Dispatchers.IO) {
+                getLocationSearchUseCase.getPlace(
+                    placeId,
+                    object : PlaceInterface {
+                        override fun placeSuccess(success: GetPlaceResponse) {
+                            _placeData.trySend(
+                                HandleResult.Success(
+                                    success,
+                                ),
+                            )
+                        }
+
+                        override fun placeFailed(exception: DataSourceException) {
+                            _placeData.trySend(
+                                HandleResult.Error(
+                                    exception
+                                ),
+                            )
+                        }
+
+                        override fun internetConnectionError(exception: String) {
+                            _placeData.trySend(
+                                HandleResult.Error(
+                                    DataSourceException.Error(
+                                        exception,
+                                    ),
+                                ),
+                            )
+                        }
+                    },
+                )
+            }
+        }
+
         fun setMapListData(context: Context) {
             val items =
                 arrayListOf(
@@ -498,9 +530,14 @@ class ExploreViewModel
     fun setPoliticalListData(context: Context) {
         val item = arrayListOf(
             PoliticalData(
+                countryName = context.getString(R.string.label_no_political_view),
+                description = "",
+                countryCode = "",
+            ),
+            PoliticalData(
                 countryName = context.getString(R.string.label_arg),
                 description = context.getString(R.string.description_arg),
-                    countryCode = context.getString(R.string.flag_arg),
+                countryCode = context.getString(R.string.flag_arg),
             ),
             PoliticalData(
                 countryName = context.getString(R.string.label_egy),
@@ -561,11 +598,6 @@ class ExploreViewModel
                 countryName = context.getString(R.string.label_ury),
                     description = context.getString(R.string.description_ury),
                     countryCode = context.getString(R.string.flag_ury),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_vnm),
-                    description = context.getString(R.string.description_vnm),
-                    countryCode = context.getString(R.string.flag_vnm),
             )
         )
         mPoliticalData.addAll(item)
