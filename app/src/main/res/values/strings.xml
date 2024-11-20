@@ -269,6 +269,10 @@
     <string name="description_tur">Turkey\'s view on Cyprus and Northern Cyprus</string>
     <string name="description_tza">Tanzania\'s view on Lake Malawi</string>
     <string name="description_ury">Uruguay\'s view on Rincon de Artigas</string>
+    <string name="description_cyp">Cyprus\'s view on </string>
+    <string name="description_geo">Georgia\'s view on </string>
+    <string name="description_grc">Greece\'s view on </string>
+    <string name="description_ps">Palestine\'s view on </string>
 
     <string name="flag_arg" translatable="false">🇦🇷</string>
     <string name="flag_egy" translatable="false">🇪🇬</string>
@@ -283,6 +287,10 @@
     <string name="flag_tur" translatable="false">🇹🇷</string>
     <string name="flag_tza" translatable="false">🇹🇿</string>
     <string name="flag_ury" translatable="false">🇺🇾</string>
+    <string name="flag_geo" translatable="false">🇬🇪</string>
+    <string name="flag_cyp" translatable="false">🇨🇾</string>
+    <string name="flag_ps" translatable="false">🇵🇸</string>
+    <string name="flag_grc" translatable="false">🇬🇷</string>
 
     <string name="label_arg" translatable="false">ARG</string>
     <string name="label_egy" translatable="false">EGY</string>
@@ -297,6 +305,10 @@
     <string name="label_tur" translatable="false">TUR</string>
     <string name="label_tza" translatable="false">TZA</string>
     <string name="label_ury" translatable="false">URY</string>
+    <string name="label_geo" translatable="false">GEO</string>
+    <string name="label_cyp" translatable="false">CYP</string>
+    <string name="label_ps" translatable="false">PS</string>
+    <string name="label_grc" translatable="false">GRC</string>
 
     <string name="label_required_fields_missing">Required configuration keys are missing, and the application cannot function without them. The following keys are missing:\n</string>
     <string name="label_some_fields_missing">Some configuration keys are missing. Map, Search, Places, and Route are available, but Simulation and Analytics are disabled until the following keys are added:\n</string>
