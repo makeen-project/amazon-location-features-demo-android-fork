@@ -865,6 +865,11 @@ class ExploreFragment :
                         clearAllMapData()
                         mMapHelper.updateStyle(mapStyleName, colorScheme)
                     }
+
+                    override fun amazonInfoIconClick() {
+                        setAttributionDataAndExpandSheet()
+                        hideMapStyleSheet()
+                    }
                 },
             )
     }
