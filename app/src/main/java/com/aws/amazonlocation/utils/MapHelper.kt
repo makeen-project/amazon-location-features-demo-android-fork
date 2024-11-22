@@ -1542,7 +1542,7 @@ class MapHelper(
             setStyleLanguage(style)
             val cameraPosition = mMapLibreMap?.cameraPosition
             val zoom = cameraPosition?.zoom
-            val minZoom = minZoomLevel()
+            val minZoom = MapCameraZoom.MIN_ZOOM
             val maxZoom = MapCameraZoom.MAX_ZOOM
             if (zoom != null) {
                 if (zoom < minZoom) {
@@ -1563,8 +1563,6 @@ class MapHelper(
             mMapLibreMap?.setMaxZoomPreference(maxZoom)
         }
     }
-
-    private fun minZoomLevel(): Double = MapLibreConstants.MINIMUM_ZOOM.toDouble()
 
     // Class is used to interpolate the marker animation.
     private val latLngEvaluators: Array<TypeEvaluator<LatLng>> =

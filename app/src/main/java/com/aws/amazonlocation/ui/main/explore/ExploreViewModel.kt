@@ -28,7 +28,6 @@ import com.aws.amazonlocation.utils.Units
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -51,6 +50,10 @@ class ExploreViewModel
         var mSearchSuggestionData: SearchSuggestionData? = null
         var mSearchDirectionOriginData: SearchSuggestionData? = null
         var mSearchDirectionDestinationData: SearchSuggestionData? = null
+        var mCarCalculateDistanceResponse: CalculateDistanceResponse? = null
+        var mWalkCalculateDistanceResponse: CalculateDistanceResponse? = null
+        var mTruckCalculateDistanceResponse: CalculateDistanceResponse? = null
+        var mScooterCalculateDistanceResponse: CalculateDistanceResponse? = null
         var mCarData: CalculateRoutesResponse? = null
         var mWalkingData: CalculateRoutesResponse? = null
         var mTruckData: CalculateRoutesResponse? = null
@@ -187,59 +190,43 @@ class ExploreViewModel
         ) {
             viewModelScope.launch(Dispatchers.IO) {
                 if (isWalkingAndTruckCall) {
-                    val two =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Pedestrian.value,
-                            )
-                        }
-                    two.await()
-                    val three =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Truck.value,
-                            )
-                        }
-                    three.await()
-                    val four =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Scooter.value,
-                            )
-                        }
-                    four.await()
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Pedestrian.value,
+                    )
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Truck.value,
+                    )
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Scooter.value,
+                    )
                 } else {
-                    val one =
-                        async {
-                            calculateDistanceFromMode(
-                                latitude,
-                                longitude,
-                                latDestination,
-                                lngDestination,
-                                isAvoidFerries,
-                                isAvoidTolls,
-                                RouteTravelMode.Car.value,
-                            )
-                        }
-                    one.await()
+                    calculateDistanceFromMode(
+                        latitude,
+                        longitude,
+                        latDestination,
+                        lngDestination,
+                        isAvoidFerries,
+                        isAvoidTolls,
+                        RouteTravelMode.Car.value,
+                    )
                 }
             }
         }
