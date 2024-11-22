@@ -1523,7 +1523,12 @@ class MapHelper(
     }
 
     private fun setStyleLanguage(style: Style) {
-        val languageCode = getLanguageCode()
+        var languageCode = getLanguageCode()
+        if (languageCode != null) {
+            if (languageCode.contains("-")) {
+                languageCode = languageCode.split("-")[0]
+            }
+        }
         val expression: Expression? = Expression.coalesce(
                 Expression.get("name:$languageCode"),
                 Expression.get("name:en"),
