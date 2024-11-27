@@ -61,9 +61,6 @@ import org.maplibre.android.geometry.LatLng
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-val Int.px: Int
-    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
 val isRunningTest: Boolean by lazy {
     try {
         val testProperty = System.getProperty("robolectric") != null ||
@@ -601,12 +598,14 @@ fun getLanguageCode(): String? {
     return languageCode
 }
 
+@ExcludeFromJacocoGeneratedReport
 fun hideKeyboard(activity: Activity, appCompatEditText: AppCompatEditText) {
     val imm: InputMethodManager =
         activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(appCompatEditText.windowToken, 0)
 }
 
+@ExcludeFromJacocoGeneratedReport
 fun copyTextToClipboard(context: Context, text: String) {
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("label", text)

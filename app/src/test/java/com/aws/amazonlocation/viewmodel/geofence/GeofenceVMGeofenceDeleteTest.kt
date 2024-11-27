@@ -100,6 +100,7 @@ class GeofenceVMGeofenceDeleteTest : BaseTest() {
             val result = awaitItem()
             assert(result is HandleResult.Success)
             assert((result as HandleResult.Success).response.data != null)
+            assert(result.response.position == 1)
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -114,8 +115,12 @@ class GeofenceVMGeofenceDeleteTest : BaseTest() {
             )
         ).thenAnswer {
             val callback: GeofenceAPIInterface = it.arguments[2] as GeofenceAPIInterface
+            val deleteGeofence = DeleteGeofence()
+            deleteGeofence.position = 0
+            deleteGeofence.errorMessage = NO_DATA_FOUND
+            deleteGeofence.data = null
             callback.deleteGeofence(
-                DeleteGeofence(data = null, errorMessage = NO_DATA_FOUND)
+                deleteGeofence
             )
         }
 

@@ -31,6 +31,8 @@ class MapStyleVMSetPoliticalListData : BaseTest() {
 
     @Test
     fun setPoliticalListDataSuccess() = runTest {
+        mMapStyleViewModel.mPoliticalData = arrayListOf()
+        mMapStyleViewModel.mPoliticalSearchData = arrayListOf()
         mMapStyleViewModel.setPoliticalListData(context)
 
         Assert.assertTrue(
