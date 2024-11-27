@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.ConnectivityManager
@@ -51,7 +50,6 @@ import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import java.util.Locale
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -187,7 +185,6 @@ fun changeConditionPrivacyColor(conditionPrivacy: AppCompatTextView) {
 }
 
 @ExcludeFromJacocoGeneratedReport
-@ExperimentalCoroutinesApi
 @CheckResult
 fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {
