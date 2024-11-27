@@ -37,6 +37,8 @@ class ExploreVMSetPoliticalListData : BaseTest() {
 
     @Test
     fun setPoliticalListDataSuccess() = runTest {
+        mExploreVM.mPoliticalData = arrayListOf()
+        mExploreVM.mPoliticalSearchData = arrayListOf()
         mExploreVM.setPoliticalListData(context)
 
         Assert.assertTrue(
