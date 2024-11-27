@@ -19,7 +19,6 @@ import com.aws.amazonlocation.mock.TEST_DATA_8
 import com.aws.amazonlocation.mock.TEST_DATA_LAT_1
 import com.aws.amazonlocation.mock.TEST_DATA_LNG_1
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
