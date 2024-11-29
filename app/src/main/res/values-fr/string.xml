@@ -232,6 +232,10 @@
   <string name="label_schedule">Calendrier</string>
   <string name="label_copied_to_clipboard">Copié pour presse-papier</string>
   <string name="label_no_political_view">Non politique voir</string>
+  <string name="label_map_language">Carte langue</string>
+  <string name="label_change_map_language">Changement carte langue</string>
+  <string name="label_no_map_language">Non carte langue</string>
+  <string name="label_is_selected">« est sélectionné »</string>
   <string name="description_cyp">Chypre politique voir</string>
   <string name="description_geo">Géorgie politique voir</string>
   <string name="description_grc">Grèce politique voir</string>

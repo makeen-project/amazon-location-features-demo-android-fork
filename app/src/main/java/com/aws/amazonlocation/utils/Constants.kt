@@ -50,6 +50,7 @@ const val KEY_MAP_NAME = "key_map_name"
 const val KEY_MAP_STYLE_NAME = "key_map_style_name"
 const val KEY_COLOR_SCHEMES = "key_color_schemes"
 const val KEY_POLITICAL_VIEW = "key_political_view"
+const val KEY_SELECTED_MAP_LANGUAGE = "key_selected_map_language"
 const val KEY_END_POINT = "key_end_point"
 
 const val CLICK_DEBOUNCE = 1000L

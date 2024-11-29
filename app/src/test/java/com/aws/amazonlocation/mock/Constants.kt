@@ -55,6 +55,7 @@ const val TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE = "Test failed due to incor
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_INTERNET_ERROR = "Test failed due to incorrect no internet error"
 const val TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING = "Test failed due to robolectric test running"
 
+const val TEST_FAILED_DUE_TO_INCORRECT_NO_OF_LANGUAGE_LOADED = "Test failed due to incorrect no of language loaded"
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED = "Test failed due to incorrect no of providers loaded"
 const val TEST_FAILED_DUE_TO_INCORRECT_STYLE_NAME_FOR_STANDARD = "Test failed due to incorrect style name for Standard"
 const val TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_STANDARD = "Test failed due to incorrect no of styles loaded for Standard"

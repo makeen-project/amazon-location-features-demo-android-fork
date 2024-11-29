@@ -232,6 +232,10 @@
   <string name="label_schedule">時間表</string>
   <string name="label_copied_to_clipboard">已複製 至 剪貼板</string>
   <string name="label_no_political_view">否 政治 檢視</string>
+  <string name="label_map_language">地圖 語言</string>
+  <string name="label_change_map_language">變更 地圖 語言</string>
+  <string name="label_no_map_language">否 地圖 語言</string>
+  <string name="label_is_selected">「 是 已選擇」</string>
   <string name="description_cyp">塞浦路斯\ 的 政治 檢視</string>
   <string name="description_geo">格魯吉亞\ 的 政治 檢視</string>
   <string name="description_grc">希臘\ 的 政治 檢視</string>

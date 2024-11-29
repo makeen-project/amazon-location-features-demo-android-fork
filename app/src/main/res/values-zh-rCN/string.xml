@@ -232,6 +232,10 @@
   <string name="label_schedule">日程安排</string>
   <string name="label_copied_to_clipboard">已复制 到 剪贴板</string>
   <string name="label_no_political_view">没有 政治的 观点</string>
+  <string name="label_map_language">地图 语言</string>
+  <string name="label_change_map_language">改变 地图 语言</string>
+  <string name="label_no_map_language">没有 地图 语言</string>
+  <string name="label_is_selected">“ 是 已选择”</string>
   <string name="description_cyp">塞浦路斯 政治的 观点</string>
   <string name="description_geo">乔治亚州 政治的 观点</string>
   <string name="description_grc">希腊的 政治的 观点</string>

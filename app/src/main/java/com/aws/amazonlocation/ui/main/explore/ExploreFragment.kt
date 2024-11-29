@@ -95,6 +95,7 @@ import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POLITICAL_VIEW
+import com.aws.amazonlocation.utils.KEY_SELECTED_MAP_LANGUAGE
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.KEY_URL
 import com.aws.amazonlocation.utils.KILOMETERS
@@ -821,6 +822,7 @@ class ExploreFragment :
     private fun setMapStyleBottomSheet() {
         mViewModel.setMapListData(requireContext())
         mViewModel.setPoliticalListData(requireContext())
+        mViewModel.setMapLanguageData(requireContext())
         mapStyleBottomSheetFragment =
             MapStyleBottomSheetFragment(
                 mViewModel,
@@ -864,6 +866,10 @@ class ExploreFragment :
                     ) {
                         clearAllMapData()
                         mMapHelper.updateStyle(mapStyleName, colorScheme)
+                    }
+
+                    override fun updateMapLanguage() {
+                        mMapLibreMap?.style?.let { mMapHelper.setStyleLanguage(it)}
                     }
 
                     override fun amazonInfoIconClick() {

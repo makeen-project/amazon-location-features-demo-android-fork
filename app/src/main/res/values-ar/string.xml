@@ -232,6 +232,10 @@
   <string name="label_schedule">جدول</string>
   <string name="label_copied_to_clipboard">تم نسخها إلى الحافظة</string>
   <string name="label_no_political_view">لا سياسي منظر</string>
+  <string name="label_map_language">خريطة لغة</string>
+  <string name="label_change_map_language">تغيير خريطة لغة</string>
+  <string name="label_no_map_language">لا خريطة لغة</string>
+  <string name="label_is_selected">« هو تم اختياره»</string>
   <string name="description_cyp">قبرص سياسي منظر</string>
   <string name="description_geo">جورجيا سياسي منظر</string>
   <string name="description_grc">اليونان سياسي منظر</string>
