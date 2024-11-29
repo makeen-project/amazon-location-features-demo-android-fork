@@ -232,4 +232,8 @@
   <string name="label_schedule">Pianificazione</string>
   <string name="label_copied_to_clipboard">Copiato a appunti</string>
   <string name="label_no_political_view">No politico vista</string>
+  <string name="label_map_language">Mappa lingua</string>
+  <string name="label_change_map_language">Cambia mappa lingua</string>
+  <string name="label_no_map_language">No mappa lingua</string>
+  <string name="label_is_selected">« è selezionato»</string>
 </resources>

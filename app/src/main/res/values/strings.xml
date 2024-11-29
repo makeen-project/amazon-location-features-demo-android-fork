@@ -292,4 +292,8 @@
     <string name="label_schedule">Schedule</string>
     <string name="label_copied_to_clipboard">Copied to clipboard</string>
     <string name="label_no_political_view">No political view</string>
+    <string name="label_map_language">Map language</string>
+    <string name="label_change_map_language">Change map language</string>
+    <string name="label_no_map_language">No map language</string>
+    <string name="label_is_selected">" is selected"</string>
 </resources>

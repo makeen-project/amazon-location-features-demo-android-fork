@@ -15,6 +15,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreViewModel
+import com.aws.amazonlocation.ui.main.explore.MapLanguageAdapter
 import com.aws.amazonlocation.ui.main.explore.MapStyleAdapter
 import com.aws.amazonlocation.ui.main.explore.PoliticalAdapter
 import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
@@ -24,6 +25,7 @@ import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POLITICAL_VIEW
+import com.aws.amazonlocation.utils.KEY_SELECTED_MAP_LANGUAGE
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
@@ -59,6 +61,7 @@ class MapStyleBottomSheetFragment(
 
     private var mMapStyleAdapter: MapStyleAdapter? = null
     private var mPoliticalAdapter: PoliticalAdapter? = null
+    private var mMapLanguageAdapter: MapLanguageAdapter? = null
     @Inject
     lateinit var mPreferenceManager: PreferenceManager
 
@@ -134,7 +137,7 @@ class MapStyleBottomSheetFragment(
             dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         } else {
             dialog.behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-            dialog.behavior.halfExpandedRatio = 0.58f
+            dialog.behavior.halfExpandedRatio = 0.65f
             dialog.behavior.isFitToContents = false
             dialog.setCanceledOnTouchOutside(false) // Prevent collapse on outside click
             dialog.behavior.expandedOffset =
@@ -251,6 +254,41 @@ class MapStyleBottomSheetFragment(
             )
             rvPoliticalView.adapter = mPoliticalAdapter
 
+            val selectedMapLanguage = mPreferenceManager.getValue(KEY_SELECTED_MAP_LANGUAGE, "") ?: ""
+            selectedMapLanguage.takeIf { it.isNotEmpty() }?.let { language ->
+                mViewModel.mMapLanguageData.find { it.value == language }?.let {
+                    it.isSelected = true
+                    tvMapLanguageDescription.apply {
+                        text = buildString{
+                            append(it.label)
+                            append(context.getString(R.string.label_is_selected))
+                        }
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+
+                }
+            }
+            if (selectedMapLanguage.isEmpty()) {
+                mViewModel.mMapLanguageData[0].isSelected = true
+            }
+            rvMapLanguage.layoutManager = LinearLayoutManager(requireContext())
+            mMapLanguageAdapter = MapLanguageAdapter(
+                mViewModel.mMapLanguageData,
+                isRtl,
+                object : MapLanguageAdapter.MapLanguageInterface {
+                    override fun languageClick(position: Int) {
+                        if (mViewModel.mMapLanguageData[position].isSelected) return
+                        mViewModel.mMapLanguageData.forEach {
+                            it.isSelected = false
+                        }
+                        mViewModel.mMapLanguageData[position].isSelected = true
+                        mMapLanguageAdapter?.notifyDataSetChanged()
+                        applyLanguage()
+                    }
+                },
+            )
+            rvMapLanguage.adapter = mMapLanguageAdapter
+
             rvMapStyle.apply {
                 mViewModel.setMapListData(context)
                 val mapStyleName =
@@ -301,7 +339,7 @@ class MapStyleBottomSheetFragment(
             ivMapStyleClose.setOnClickListener {
                 etSearchCountry.setText("")
                 tvMapStyle.text = getString(R.string.label_map_style)
-                showViews(rvMapStyle, cardColorScheme, clPoliticalView)
+                showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                 hideViews(clSearchPolitical, ivBack)
                 val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                 clearSelectionAndSetOriginalData(selectedCountry)
@@ -341,15 +379,20 @@ class MapStyleBottomSheetFragment(
                         ?: getString(R.string.map_standard)
                 if (mapStyleName == getString(R.string.map_satellite)) return@setOnClickListener
                 tvMapStyle.text = getString(R.string.label_political_view)
-                hideViews(rvMapStyle, cardColorScheme, clPoliticalView)
+                hideViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                 showViews(clSearchPolitical, ivBack)
+            }
+            clMapLanguage.setOnClickListener {
+                tvMapStyle.text = getString(R.string.label_map_language)
+                hideViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+                showViews(cardMapLanguage, ivBack)
             }
 
             ivBack.setOnClickListener {
                 etSearchCountry.setText("")
                 tvMapStyle.text = getString(R.string.label_map_style)
-                showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                hideViews(clSearchPolitical, ivBack)
+                showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+                hideViews(clSearchPolitical, cardMapLanguage, ivBack)
                 val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                 clearSelectionAndSetOriginalData(selectedCountry)
             }
@@ -419,7 +462,7 @@ class MapStyleBottomSheetFragment(
             }
         }
         tvMapStyle.text = getString(R.string.label_map_style)
-        showViews(rvMapStyle, cardColorScheme, clPoliticalView)
+        showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
         hideViews(clSearchPolitical, ivBack)
         val colorScheme =
             mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
@@ -428,6 +471,30 @@ class MapStyleBottomSheetFragment(
                 ?: getString(R.string.map_standard)
 
         mapInterface.mapColorScheme(colorScheme, mapStyleNameDisplay)
+    }
+
+    private fun BottomSheetMapStyleBinding.applyLanguage() {
+        val selectedItem = mViewModel.mMapLanguageData.find { it.isSelected }
+        if (selectedItem != null && selectedItem.label != getString(R.string.label_no_map_language)) {
+            mPreferenceManager.setValue(KEY_SELECTED_MAP_LANGUAGE, selectedItem.value)
+            tvMapLanguageDescription.apply {
+                text = buildString {
+                    append(selectedItem.label)
+                    append(context.getString(R.string.label_is_selected))
+                }
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+            }
+        } else {
+            mPreferenceManager.setValue(KEY_SELECTED_MAP_LANGUAGE, "")
+            tvMapLanguageDescription.apply {
+                text = getString(R.string.label_change_map_language)
+                setTextColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+            }
+        }
+        tvMapStyle.text = getString(R.string.label_map_style)
+        showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+        hideViews(clSearchPolitical, cardMapLanguage, ivBack)
+        mapInterface.updateMapLanguage()
     }
 
     private fun BottomSheetMapStyleBinding.mapStyleShowList() {
@@ -520,5 +587,6 @@ class MapStyleBottomSheetFragment(
     interface MapInterface {
         fun mapStyleClick(position: Int, innerPosition: Int)
         fun mapColorScheme(colorScheme: String, mapStyleName: String)
+        fun updateMapLanguage()
     }
 }

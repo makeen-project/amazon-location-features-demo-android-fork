@@ -232,4 +232,8 @@
   <string name="label_schedule">शेड्यूल</string>
   <string name="label_copied_to_clipboard">कॉपी किया गया को क्लिपबोर्ड</string>
   <string name="label_no_political_view">नहीं राजनीतिक राय</string>
+  <string name="label_map_language">नक्शा भाषा</string>
+  <string name="label_change_map_language">बदलें नक्शा भाषा</string>
+  <string name="label_no_map_language">नहीं नक्शा भाषा</string>
+  <string name="label_is_selected">“ है चयनित”</string>
 </resources>

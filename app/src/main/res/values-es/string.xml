@@ -232,4 +232,8 @@
   <string name="label_schedule">Programar</string>
   <string name="label_copied_to_clipboard">Copiado a portapapeles</string>
   <string name="label_no_political_view">No política vista</string>
+  <string name="label_map_language">Mapa lengua</string>
+  <string name="label_change_map_language">Cambiar mapa lengua</string>
+  <string name="label_no_map_language">No mapa lengua</string>
+  <string name="label_is_selected">« es seleccionado»</string>
 </resources>

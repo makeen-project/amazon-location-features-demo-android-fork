@@ -232,4 +232,8 @@
   <string name="label_schedule">Zeitplan</string>
   <string name="label_copied_to_clipboard">Kopiert zu Zwischenablage</string>
   <string name="label_no_political_view">Nein politisch anzeigen</string>
+  <string name="label_map_language">Landkarte Sprache</string>
+  <string name="label_change_map_language">Änderung Karte Sprache</string>
+  <string name="label_no_map_language">Nein Karte Sprache</string>
+  <string name="label_is_selected">„ ist ausgewählt“</string>
 </resources>

@@ -232,4 +232,8 @@
   <string name="label_schedule">スケジュール</string>
   <string name="label_copied_to_clipboard">コピーされました に クリップボード</string>
   <string name="label_no_political_view">いいえ 政治的 見る</string>
+  <string name="label_map_language">マップ 言語</string>
+  <string name="label_change_map_language">変更 地図 言語</string>
+  <string name="label_no_map_language">いいえ 地図 言語</string>
+  <string name="label_is_selected">「 です 選択済み」</string>
 </resources>

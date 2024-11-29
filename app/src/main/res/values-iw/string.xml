@@ -232,4 +232,8 @@
   <string name="label_schedule">לוח זמנים</string>
   <string name="label_copied_to_clipboard">הועתק כדי הלוח</string>
   <string name="label_no_political_view">לא מדיני מבט</string>
+  <string name="label_map_language">מפה לשון</string>
+  <string name="label_change_map_language">שינוי מפה לשון</string>
+  <string name="label_no_map_language">לא מפה לשון</string>
+  <string name="label_is_selected">" הווה נבחר"</string>
 </resources>
