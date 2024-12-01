@@ -1522,13 +1522,8 @@ class MapHelper(
         fun mapLoadedSuccess()
     }
 
-    private fun setStyleLanguage(style: Style) {
-        var languageCode = getLanguageCode()
-        if (languageCode != null) {
-            if (languageCode.contains("-")) {
-                languageCode = languageCode.split("-")[0]
-            }
-        }
+    fun setStyleLanguage(style: Style) {
+        val languageCode = mPreferenceManager?.getValue(KEY_SELECTED_MAP_LANGUAGE, "en") ?: "en"
         val expression: Expression? = Expression.coalesce(
                 Expression.get("name:$languageCode"),
                 Expression.get("name:en"),

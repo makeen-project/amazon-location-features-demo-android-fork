@@ -6,7 +6,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.net.ConnectivityManager
@@ -51,7 +50,6 @@ import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import java.util.Locale
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -61,9 +59,6 @@ import org.maplibre.android.geometry.LatLng
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-val Int.px: Int
-    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
-
 val isRunningTest: Boolean by lazy {
     try {
         val testProperty = System.getProperty("robolectric") != null ||
@@ -190,7 +185,6 @@ fun changeConditionPrivacyColor(conditionPrivacy: AppCompatTextView) {
 }
 
 @ExcludeFromJacocoGeneratedReport
-@ExperimentalCoroutinesApi
 @CheckResult
 fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {
@@ -601,12 +595,14 @@ fun getLanguageCode(): String? {
     return languageCode
 }
 
+@ExcludeFromJacocoGeneratedReport
 fun hideKeyboard(activity: Activity, appCompatEditText: AppCompatEditText) {
     val imm: InputMethodManager =
         activity.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(appCompatEditText.windowToken, 0)
 }
 
+@ExcludeFromJacocoGeneratedReport
 fun copyTextToClipboard(context: Context, text: String) {
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("label", text)

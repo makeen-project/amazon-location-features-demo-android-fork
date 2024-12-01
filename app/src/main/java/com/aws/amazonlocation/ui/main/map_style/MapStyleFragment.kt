@@ -17,6 +17,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentMapStyleBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
+import com.aws.amazonlocation.ui.main.explore.MapLanguageAdapter
 import com.aws.amazonlocation.ui.main.explore.PoliticalAdapter
 import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
 import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
@@ -24,6 +25,7 @@ import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POLITICAL_VIEW
+import com.aws.amazonlocation.utils.KEY_SELECTED_MAP_LANGUAGE
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
@@ -49,6 +51,7 @@ class MapStyleFragment : BaseFragment() {
     private var columnCount = 2
     private var mMapStyleAdapter: SettingMapStyleAdapter? = null
     private var mPoliticalAdapter: PoliticalAdapter? = null
+    private var mMapLanguageAdapter: MapLanguageAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,6 +88,7 @@ class MapStyleFragment : BaseFragment() {
         mBinding.apply {
             mViewModel.setMapListData(rvMapStyle.context)
             mViewModel.setPoliticalListData(rvPoliticalView.context)
+            mViewModel.setMapLanguageData(rvMapLanguage.context)
             val mapStyleName =
                 mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
                     ?: getString(R.string.map_standard)
@@ -240,12 +244,66 @@ class MapStyleFragment : BaseFragment() {
                                 }
                             }
                             appCompatTextView2.text = getString(R.string.label_map_style)
-                            showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                            hideViews(clSearchPolitical)
+                            showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+                            hideViews(clSearchPolitical, cardMapLanguage)
                         }
                     },
                 )
             rvPoliticalView.adapter = mPoliticalAdapter
+
+            val selectedMapLanguage = mPreferenceManager.getValue(KEY_SELECTED_MAP_LANGUAGE, "") ?: ""
+            selectedMapLanguage.takeIf { it.isNotEmpty() }?.let { language ->
+                mViewModel.mMapLanguageData.find { it.value == language }?.let {
+                    it.isSelected = true
+                    tvMapLanguageDescription.apply {
+                        text = buildString{
+                            append(it.label)
+                            append(context.getString(R.string.label_is_selected))
+                        }
+                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                    }
+
+                }
+            }
+            if (selectedMapLanguage.isEmpty()) {
+                mViewModel.mMapLanguageData[0].isSelected = true
+            }
+            rvMapLanguage.layoutManager = LinearLayoutManager(requireContext())
+            mMapLanguageAdapter = MapLanguageAdapter(
+                mViewModel.mMapLanguageData,
+                isRtl,
+                object : MapLanguageAdapter.MapLanguageInterface {
+                    override fun languageClick(position: Int) {
+                        if (mViewModel.mMapLanguageData[position].isSelected) return
+                        mViewModel.mMapLanguageData.forEach {
+                            it.isSelected = false
+                        }
+                        mViewModel.mMapLanguageData[position].isSelected = true
+                        mMapLanguageAdapter?.notifyDataSetChanged()
+                        val selectedItem = mViewModel.mMapLanguageData.find { it.isSelected }
+                        if (selectedItem != null && selectedItem.label != getString(R.string.label_no_map_language)) {
+                            mPreferenceManager.setValue(KEY_SELECTED_MAP_LANGUAGE, selectedItem.value)
+                            tvMapLanguageDescription.apply {
+                                text = buildString {
+                                    append(selectedItem.label)
+                                    append(context.getString(R.string.label_is_selected))
+                                }
+                                setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                            }
+                        } else {
+                            mPreferenceManager.setValue(KEY_SELECTED_MAP_LANGUAGE, "")
+                            tvMapLanguageDescription.apply {
+                                text = getString(R.string.label_change_map_language)
+                                setTextColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+                            }
+                        }
+                        appCompatTextView2.text = getString(R.string.label_map_style)
+                        showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+                        hideViews(clSearchPolitical, cardMapLanguage)
+                    }
+                },
+            )
+            rvMapLanguage.adapter = mMapLanguageAdapter
         }
     }
 
@@ -329,11 +387,11 @@ class MapStyleFragment : BaseFragment() {
     private fun clickListener() {
         mBinding.apply {
             ivMapStyleBack.setOnClickListener {
-                if (clSearchPolitical.visibility == View.VISIBLE) {
+                if (clSearchPolitical.visibility == View.VISIBLE || cardMapLanguage.visibility == View.VISIBLE) {
                     etSearchCountry.setText("")
                     appCompatTextView2.text = getString(R.string.label_map_style)
-                    showViews(rvMapStyle, cardColorScheme, clPoliticalView)
-                    hideViews(clSearchPolitical)
+                    showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+                    hideViews(clSearchPolitical, cardMapLanguage)
                     val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                     clearSelectionAndSetOriginalData(selectedCountry)
                 } else {
@@ -361,9 +419,15 @@ class MapStyleFragment : BaseFragment() {
                         ?: getString(R.string.map_standard)
                 if (mapStyleName == getString(R.string.map_satellite)) return@setOnClickListener
                 appCompatTextView2.text = getString(R.string.label_political_view)
-                hideViews(rvMapStyle, cardColorScheme, clPoliticalView)
+                hideViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                 showViews(clSearchPolitical)
             }
+            clMapLanguage.setOnClickListener {
+                appCompatTextView2.text = getString(R.string.label_map_language)
+                hideViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
+                showViews(cardMapLanguage)
+            }
+
             etSearchCountry
                 .textChanges()
                 .debounce(DELAY_300)
