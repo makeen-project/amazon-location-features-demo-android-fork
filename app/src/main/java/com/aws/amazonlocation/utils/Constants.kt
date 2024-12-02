@@ -130,6 +130,8 @@ const val LANGUAGE_CODE_ARABIC = "ar"
 const val LANGUAGE_CODE_HEBREW = "iw"
 const val LANGUAGE_CODE_HINDI = "hi"
 const val LANGUAGE_CODE_HEBREW_1 = "he"
+const val LANGUAGE_CODE_ZH_HANT= "zh-Hant"
+const val LANGUAGE_CODE_ZH= "zh"
 
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
