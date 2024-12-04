@@ -4,6 +4,7 @@ import android.content.Context
 import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.common.DataSourceException
+import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 import com.aws.amazonlocation.domain.`interface`.BatchLocationUpdateInterface
 import com.aws.amazonlocation.domain.`interface`.DistanceInterface
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
@@ -107,8 +108,7 @@ class RemoteDataSourceImpl(
         lngDeparture: Double?,
         latDestination: Double?,
         lngDestination: Double?,
-        isAvoidFerries: Boolean?,
-        isAvoidTolls: Boolean?,
+        avoidanceOptions: ArrayList<AvoidanceOption>,
         travelMode: String?,
         distanceInterface: DistanceInterface,
     ) {
@@ -117,8 +117,7 @@ class RemoteDataSourceImpl(
             lngDeparture,
             latDestination,
             lngDestination,
-            isAvoidFerries,
-            isAvoidTolls,
+            avoidanceOptions,
             travelMode,
             mLocationProvider.getBaseActivity(),
             mLocationProvider.getGeoRoutesClient()

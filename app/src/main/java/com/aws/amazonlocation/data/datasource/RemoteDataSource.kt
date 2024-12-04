@@ -1,6 +1,7 @@
 package com.aws.amazonlocation.data.datasource
 
 import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
+import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 import com.aws.amazonlocation.domain.`interface`.BatchLocationUpdateInterface
 import com.aws.amazonlocation.domain.`interface`.DistanceInterface
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
@@ -38,8 +39,7 @@ interface RemoteDataSource {
         lngDeparture: Double?,
         latDestination: Double?,
         lngDestination: Double?,
-        isAvoidFerries: Boolean?,
-        isAvoidTolls: Boolean?,
+        avoidanceOptions: ArrayList<AvoidanceOption>,
         travelMode: String?,
         distanceInterface: DistanceInterface
     )
