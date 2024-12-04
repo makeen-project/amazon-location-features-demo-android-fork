@@ -59,7 +59,9 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">לעשות בטח שלך חפש הווה מאוית נכון. נסה מוסיף א עיר, מיקוד, או מדינה.</string>
   <string name="search_nearby">חיפוש בקרבת מקום</string>
   <string name="text_switch_avoid_tools">הימנע אגרות</string>
-  <string name="text_switch_avoid_highways">הימנע כבישים מהירים</string>
+  <string name="text_switch_avoid_dirt_roads">הימנע עפר דרכים</string>
+  <string name="text_switch_avoid_u_turn">הימנע יוטורן</string>
+  <string name="text_switch_avoid_tunnels">הימנע מנהרות</string>
   <string name="text_switch_avoid_ferries">הימנע מעבורות</string>
   <string name="_2_min">2 דק\'</string>
   <string name="label_search_destination">חיפוש יעד</string>
