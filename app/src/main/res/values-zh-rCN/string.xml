@@ -59,7 +59,9 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">制作 当然 您的 搜索 是 拼出的 正确地。 试试 添加 一个 城市， 邮政编码， 要么 国家。</string>
   <string name="search_nearby">搜寻 附近</string>
   <string name="text_switch_avoid_tools">避免 通行费</string>
-  <string name="text_switch_avoid_highways">避免 公路</string>
+  <string name="text_switch_avoid_dirt_roads">避免 污垢 道路</string>
+  <string name="text_switch_avoid_u_turn">避免 UTurn</string>
+  <string name="text_switch_avoid_tunnels">避免 隧道</string>
   <string name="text_switch_avoid_ferries">避免 渡轮</string>
   <string name="_2_min">2 分钟</string>
   <string name="label_search_destination">搜寻 目的地</string>
