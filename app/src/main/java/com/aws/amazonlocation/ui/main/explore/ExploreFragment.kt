@@ -32,6 +32,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
@@ -91,7 +92,10 @@ import com.aws.amazonlocation.utils.EventType.ROUTE_OPTION_CHANGED
 import com.aws.amazonlocation.utils.EventType.ROUTE_SEARCH
 import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
+import com.aws.amazonlocation.utils.KEY_AVOID_DIRT_ROADS
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
+import com.aws.amazonlocation.utils.KEY_AVOID_TUNNEL
+import com.aws.amazonlocation.utils.KEY_AVOID_U_TURN
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -118,6 +122,7 @@ import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.attributionPattern
 import com.aws.amazonlocation.utils.checkLocationPermission
 import com.aws.amazonlocation.utils.copyTextToClipboard
+import com.aws.amazonlocation.utils.getKeyboardHeight
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.getRegion
 import com.aws.amazonlocation.utils.getUserName
@@ -214,6 +219,9 @@ class ExploreFragment :
     private val mSimulationViewModel: SimulationViewModel by viewModels()
     private var mIsAvoidTolls: Boolean = false
     private var mIsAvoidFerries: Boolean = false
+    private var mIsAvoidDirtRoads: Boolean = false
+    private var mIsAvoidUTurn: Boolean = false
+    private var mIsAvoidTunnel: Boolean = false
     private var mIsRouteOptionsOpened = false
     private var mTravelMode: String = RouteTravelMode.Car.value
     private var mRouteFinish: Boolean = false
@@ -294,6 +302,10 @@ class ExploreFragment :
         mBaseActivity?.mGeofenceUtils?.let {
             if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                 mBottomSheetHelper.expandDirectionSearchSheet(this@ExploreFragment)
+                getKeyboardHeight(requireActivity()) { keyboardHeight ->
+                    mBinding.bottomSheetDirectionSearch.viewKeyboardScroll.updateLayoutParams { height = keyboardHeight }
+                    mBinding.bottomSheetDirectionSearch.viewKeyboardScroll.show()
+                }
             } else if (it.geofenceBottomSheetVisibility()) {
                 mBaseActivity?.mGeofenceUtils?.expandAddGeofenceBottomSheet()
             } else if (mapStyleBottomSheetFragment?.isMapStyleExpandedOrHalfExpand() == true) {
@@ -316,6 +328,9 @@ class ExploreFragment :
             } else if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                 mBinding.apply {
                     bottomSheetDirectionSearch.apply {
+                        if (!cardListRoutesOption.isVisible) {
+                            viewKeyboardScroll.hide()
+                        }
                         edtSearchDest.clearFocus()
                         edtSearchDirection.clearFocus()
                     }
@@ -354,8 +369,14 @@ class ExploreFragment :
             )
             mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
             mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+            mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+            mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
+            mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
             mBinding.bottomSheetDirectionSearch.switchAvoidTools.isChecked = mIsAvoidTolls
             mBinding.bottomSheetDirectionSearch.switchAvoidFerries.isChecked = mIsAvoidFerries
+            mBinding.bottomSheetDirectionSearch.switchAvoidDirtRoads.isChecked = mIsAvoidDirtRoads
+            mBinding.bottomSheetDirectionSearch.switchAvoidUTurn.isChecked = mIsAvoidUTurn
+            mBinding.bottomSheetDirectionSearch.switchAvoidTunnels.isChecked = mIsAvoidTunnel
 
             mBottomSheetHelper.setNavigationBottomSheet(mBinding.bottomSheetNavigation)
             mBottomSheetHelper.setNavigationCompleteBottomSheet(
@@ -955,8 +976,13 @@ class ExploreFragment :
                                             latLng.longitude,
                                             mViewModel.mDestinationLatLng?.latitude,
                                             mViewModel.mDestinationLatLng?.longitude,
-                                            mIsAvoidFerries,
-                                            mIsAvoidTolls,
+                                            arrayListOf<AvoidanceOption>().apply {
+                                                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                                                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                                                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                                                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                                                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+                                            },
                                             mTravelMode,
                                         )
                                         val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, ""))
@@ -965,7 +991,10 @@ class ExploreFragment :
                                             Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
                                             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
                                             Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-                                            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString())
+                                            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
+                                            Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mIsAvoidDirtRoads.toString()),
+                                            Pair(AnalyticsAttribute.AVOID_U_TURN, mIsAvoidUTurn.toString()),
+                                            Pair(AnalyticsAttribute.AVOID_TUNNEL, mIsAvoidTunnel.toString())
                                         )
                                         (activity as MainActivity).analyticsUtils?.recordEvent(
                                             ROUTE_SEARCH, properties)
@@ -2205,7 +2234,7 @@ class ExploreFragment :
         mBinding.bottomSheetDirectionSearch.apply {
             if (mPlaceList.isNotEmpty()) {
                 clNoInternetConnectionDirectionSearch.hide()
-                nsDirectionSearchPlaces.show()
+                clMyLocationParent.show()
                 layoutNoDataFound.root.hide()
                 layoutCardError.groupCardErrorNoSearchFound.hide()
                 when (searchPlaceIndexText) {
@@ -2220,7 +2249,7 @@ class ExploreFragment :
                     }
                 }
             } else {
-                hideViews(rvSearchPlacesDirection, nsDirectionSearchPlaces)
+                hideViews(rvSearchPlacesDirection, clMyLocationParent)
                 layoutNoDataFound.root.show()
             }
         }
@@ -2495,9 +2524,13 @@ class ExploreFragment :
                             return@setOnClickListener
                         }
                         mTravelMode = RouteTravelMode.Scooter.value
+                        if (mIsRouteOptionsOpened) {
+                            mIsRouteOptionsOpened = false
+                            changeRouteListUI()
+                        }
+                        cardRoutingOption.hide()
                         mViewModel.mScooterData?.let {
                             tvScooterSelected.show()
-                            showViews(cardRoutingOption)
                             hideViews(
                                 tvDriveSelected,
                                 tvWalkSelected,
@@ -2675,6 +2708,69 @@ class ExploreFragment :
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
                         mIsAvoidFerries = isChecked
+                        if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
+                            mViewModel.mSearchDirectionDestinationData?.let {
+                                showCurrentLocationDestinationRoute(it)
+                            }
+                        } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
+                            mViewModel.mSearchDirectionOriginData?.let {
+                                showCurrentLocationOriginRoute(it)
+                            }
+                        } else if (!edtSearchDirection.text.isNullOrEmpty() &&
+                            !edtSearchDest.text.isNullOrEmpty()
+                        ) {
+                            showOriginToDestinationRoute()
+                        }
+                    }
+                }
+
+                switchAvoidDirtRoads.setOnCheckedChangeListener { _, isChecked ->
+                    if (checkInternetConnection()) {
+                        mMapHelper.removeMarkerAndLine()
+                        clearDirectionData()
+                        mIsAvoidDirtRoads = isChecked
+                        if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
+                            mViewModel.mSearchDirectionDestinationData?.let {
+                                showCurrentLocationDestinationRoute(it)
+                            }
+                        } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
+                            mViewModel.mSearchDirectionOriginData?.let {
+                                showCurrentLocationOriginRoute(it)
+                            }
+                        } else if (!edtSearchDirection.text.isNullOrEmpty() &&
+                            !edtSearchDest.text.isNullOrEmpty()
+                        ) {
+                            showOriginToDestinationRoute()
+                        }
+                    }
+                }
+
+                switchAvoidUTurn.setOnCheckedChangeListener { _, isChecked ->
+                    if (checkInternetConnection()) {
+                        mMapHelper.removeMarkerAndLine()
+                        clearDirectionData()
+                        mIsAvoidUTurn = isChecked
+                        if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
+                            mViewModel.mSearchDirectionDestinationData?.let {
+                                showCurrentLocationDestinationRoute(it)
+                            }
+                        } else if (edtSearchDest.text.toString() == resources.getString(R.string.label_my_location)) {
+                            mViewModel.mSearchDirectionOriginData?.let {
+                                showCurrentLocationOriginRoute(it)
+                            }
+                        } else if (!edtSearchDirection.text.isNullOrEmpty() &&
+                            !edtSearchDest.text.isNullOrEmpty()
+                        ) {
+                            showOriginToDestinationRoute()
+                        }
+                    }
+                }
+
+                switchAvoidTunnels.setOnCheckedChangeListener { _, isChecked ->
+                    if (checkInternetConnection()) {
+                        mMapHelper.removeMarkerAndLine()
+                        clearDirectionData()
+                        mIsAvoidTunnel = isChecked
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mViewModel.mSearchDirectionDestinationData?.let {
                                 showCurrentLocationDestinationRoute(it)
@@ -3088,10 +3184,16 @@ class ExploreFragment :
     private fun openDirectionWithError() {
         mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
         mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+        mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+        mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
+        mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
         mBinding.bottomSheetDirectionSearch.apply {
             clearDirectionData()
             switchAvoidTools.isChecked = mIsAvoidTolls
             switchAvoidFerries.isChecked = mIsAvoidFerries
+            switchAvoidDirtRoads.isChecked = mIsAvoidDirtRoads
+            switchAvoidUTurn.isChecked = mIsAvoidUTurn
+            switchAvoidTunnels.isChecked = mIsAvoidTunnel
             tvDriveGo.text = getString(R.string.btn_go)
             mIsDirectionDataSet = true
             if (mViewModel.mCarData?.routes?.get(0)?.legs == null) {
@@ -3218,6 +3320,9 @@ class ExploreFragment :
         notifyAdapters()
         mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
         mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+        mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+        mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
+        mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
         cardDirection.hide()
         bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root.hide()
         bottomSheetDirectionSearch.layoutNoDataFound.root.hide()
@@ -3250,6 +3355,9 @@ class ExploreFragment :
             }
             switchAvoidTools.isChecked = mIsAvoidTolls
             switchAvoidFerries.isChecked = mIsAvoidFerries
+            switchAvoidDirtRoads.isChecked = mIsAvoidDirtRoads
+            switchAvoidUTurn.isChecked = mIsAvoidUTurn
+            switchAvoidTunnels.isChecked = mIsAvoidTunnel
             mPlaceList.clear()
             mAdapterDirection?.notifyDataSetChanged()
             mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
@@ -3266,6 +3374,9 @@ class ExploreFragment :
     private fun routeOption() {
         mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
         mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+        mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+        mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
+        mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
         if (mViewModel.mCarData?.routes?.get(0)?.legs != null) {
             mIsDirectionDataSetNew = true
             mViewModel.mCarData?.routes?.get(0)?.legs?.let { legs ->
@@ -3281,6 +3392,9 @@ class ExploreFragment :
                     tvDriveGo.text = getString(R.string.btn_go)
                     switchAvoidTools.isChecked = mIsAvoidTolls
                     switchAvoidFerries.isChecked = mIsAvoidFerries
+                    switchAvoidDirtRoads.isChecked = mIsAvoidDirtRoads
+                    switchAvoidUTurn.isChecked = mIsAvoidUTurn
+                    switchAvoidTunnels.isChecked = mIsAvoidTunnel
                     edtSearchDirection.setText(getString(R.string.label_my_location))
                     showViews(
                         cardRoutingOption,
@@ -3321,8 +3435,13 @@ class ExploreFragment :
                     position?.get(1),
                     lngDestination =
                     position?.get(0),
-                    isAvoidFerries = mIsAvoidFerries,
-                    isAvoidTolls = mIsAvoidTolls,
+                    avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                        if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                        if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                        if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                        if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                        if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+                    },
                     isWalkingAndTruckCall = true,
                 )
                 recordEventForAllMode(isWalkingAndTruckCall = false)
@@ -3343,21 +3462,30 @@ class ExploreFragment :
             Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
             Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString())
+            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
+            Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mIsAvoidDirtRoads.toString()),
+            Pair(AnalyticsAttribute.AVOID_U_TURN, mIsAvoidUTurn.toString()),
+            Pair(AnalyticsAttribute.AVOID_TUNNEL, mIsAvoidTunnel.toString())
         )
         val propertiesTruck = listOf(
             Pair(AnalyticsAttribute.TRAVEL_MODE, RouteTravelMode.Truck.value),
             Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
             Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString())
+            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
+            Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mIsAvoidDirtRoads.toString()),
+            Pair(AnalyticsAttribute.AVOID_U_TURN, mIsAvoidUTurn.toString()),
+            Pair(AnalyticsAttribute.AVOID_TUNNEL, mIsAvoidTunnel.toString())
         )
         val propertiesWalk = listOf(
             Pair(AnalyticsAttribute.TRAVEL_MODE, RouteTravelMode.Pedestrian.value),
             Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES),
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.ROUTE_MODULE),
             Pair(AnalyticsAttribute.AVOID_FERRIES, mIsAvoidFerries.toString()),
-            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString())
+            Pair(AnalyticsAttribute.AVOID_TOLLS, mIsAvoidTolls.toString()),
+            Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mIsAvoidDirtRoads.toString()),
+            Pair(AnalyticsAttribute.AVOID_U_TURN, mIsAvoidUTurn.toString()),
+            Pair(AnalyticsAttribute.AVOID_TUNNEL, mIsAvoidTunnel.toString())
         )
         if (isWalkingAndTruckCall) {
             (activity as MainActivity).analyticsUtils?.recordEvent(ROUTE_SEARCH, propertiesTruck)
@@ -4253,8 +4381,13 @@ class ExploreFragment :
             positionDestination?.get(1),
             lngDestination =
             positionDestination?.get(0),
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
+            avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            },
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -4266,8 +4399,13 @@ class ExploreFragment :
             positionDestination?.get(1),
             lngDestination =
             positionDestination?.get(0),
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
+            avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            },
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -4324,8 +4462,13 @@ class ExploreFragment :
             longitude = liveLocationLatLng.longitude,
             latDestination = it.position?.get(1),
             lngDestination = it.position?.get(0),
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
+            avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            },
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -4333,8 +4476,13 @@ class ExploreFragment :
             longitude = liveLocationLatLng.longitude,
             latDestination = it.position?.get(1),
             lngDestination = it.position?.get(0),
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
+            avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            },
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -4362,8 +4510,13 @@ class ExploreFragment :
             longitude = it.position?.get(0),
             latDestination = mLatLng.latitude,
             lngDestination = mLatLng.longitude,
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
+            avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            },
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -4371,8 +4524,13 @@ class ExploreFragment :
             longitude = it.position?.get(0),
             latDestination = mLatLng.latitude,
             lngDestination = mLatLng.longitude,
-            isAvoidFerries = mIsAvoidFerries,
-            isAvoidTolls = mIsAvoidTolls,
+            avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            },
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -4552,8 +4710,13 @@ class ExploreFragment :
                     longitude = mLatLng.longitude,
                     latDestination = data.position?.get(1),
                     lngDestination = data.position?.get(0),
-                    isAvoidFerries = mIsAvoidFerries,
-                    isAvoidTolls = mIsAvoidTolls,
+                    avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                        if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                        if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                        if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                        if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                        if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+                    },
                     isWalkingAndTruckCall = false,
                 )
                 recordEventForAllMode(isWalkingAndTruckCall = false)
@@ -4906,8 +5069,13 @@ class ExploreFragment :
                     longitude = mLatLng.longitude,
                     latDestination = it?.position?.get(1),
                     lngDestination = it?.position?.get(0),
-                    isAvoidFerries = mIsAvoidFerries,
-                    isAvoidTolls = mIsAvoidTolls,
+                    avoidanceOptions = arrayListOf<AvoidanceOption>().apply {
+                        if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                        if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                        if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                        if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                        if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+                    },
                     isWalkingAndTruckCall = false,
                 )
                 recordEventForAllMode(isWalkingAndTruckCall = false)

@@ -8,8 +8,11 @@ import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.aws.amazonlocation.databinding.FragmentRouteOptionBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
+import com.aws.amazonlocation.utils.KEY_AVOID_DIRT_ROADS
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
+import com.aws.amazonlocation.utils.KEY_AVOID_TUNNEL
+import com.aws.amazonlocation.utils.KEY_AVOID_U_TURN
 
 class RouteOptionFragment : BaseFragment() {
 
@@ -32,8 +35,10 @@ class RouteOptionFragment : BaseFragment() {
     private fun clickListener() {
         mBinding.apply {
             switchAvoidTools.isChecked = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
-            switchAvoidFerries.isChecked =
-                mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+            switchAvoidFerries.isChecked = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+            switchAvoidDirtRoads.isChecked = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+            switchAvoidUTurn.isChecked = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
+            switchAvoidTunnels.isChecked = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
 
             ivRouteOptionBack.setOnClickListener {
                 findNavController().popBackStack()
@@ -45,6 +50,18 @@ class RouteOptionFragment : BaseFragment() {
 
             switchAvoidFerries.setOnCheckedChangeListener { _, isChecked ->
                 mPreferenceManager.setValue(KEY_AVOID_FERRIES, isChecked)
+            }
+
+            switchAvoidDirtRoads.setOnCheckedChangeListener { _, isChecked ->
+                mPreferenceManager.setValue(KEY_AVOID_DIRT_ROADS, isChecked)
+            }
+
+            switchAvoidUTurn.setOnCheckedChangeListener { _, isChecked ->
+                mPreferenceManager.setValue(KEY_AVOID_U_TURN, isChecked)
+            }
+
+            switchAvoidTunnels.setOnCheckedChangeListener { _, isChecked ->
+                mPreferenceManager.setValue(KEY_AVOID_TUNNEL, isChecked)
             }
         }
     }
