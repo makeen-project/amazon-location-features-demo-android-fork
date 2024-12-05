@@ -609,6 +609,7 @@ class ExploreViewModel
 
         mMapLanguageData = arrayListOf(
             LanguageData(value = context.getString(R.string.label_no_map_language), label = context.getString(R.string.label_no_map_language), isSelected = false),
+            LanguageData(value = "en", label = "English", isSelected = false),
             LanguageData(value = "ar", label = "العربية", isSelected = false),
             LanguageData(value = "as", label = "অসমীয়া", isSelected = false),
             LanguageData(value = "az", label = "Azərbaycan dili", isSelected = false),
@@ -622,7 +623,6 @@ class ExploreViewModel
             LanguageData(value = "da", label = "Dansk", isSelected = false),
             LanguageData(value = "de", label = "Deutsch", isSelected = false),
             LanguageData(value = "el", label = "Ελληνικά", isSelected = false),
-            LanguageData(value = "en", label = "English", isSelected = false),
             LanguageData(value = "es", label = "Español", isSelected = false),
             LanguageData(value = "et", label = "Eesti", isSelected = false),
             LanguageData(value = "eu", label = "Euskara", isSelected = false),

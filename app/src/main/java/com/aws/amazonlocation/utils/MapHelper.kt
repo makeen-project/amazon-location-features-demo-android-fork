@@ -1523,12 +1523,22 @@ class MapHelper(
     }
 
     fun setStyleLanguage(style: Style) {
-        val languageCode = mPreferenceManager?.getValue(KEY_SELECTED_MAP_LANGUAGE, "en") ?: "en"
-        val expression: Expression? = Expression.coalesce(
+        val languageCode = mPreferenceManager?.getValue(KEY_SELECTED_MAP_LANGUAGE, LANGUAGE_CODE_ENGLISH) ?: LANGUAGE_CODE_ENGLISH
+        val expression: Expression? = if (languageCode == LANGUAGE_CODE_ZH_HANT) {
+            Expression.coalesce(
                 Expression.get("name:$languageCode"),
-                Expression.get("name:en"),
-                Expression.get("name"),
+                Expression.get("name:$LANGUAGE_CODE_ZH"),
+                Expression.get("name:$LANGUAGE_CODE_ENGLISH"),
+                Expression.get("name")
             )
+        } else {
+            Expression.coalesce(
+                Expression.get("name:$languageCode"),
+                Expression.get("name:$LANGUAGE_CODE_ENGLISH"),
+                Expression.get("name")
+            )
+        }
+
         for (layer in style.layers) {
             if (layer is SymbolLayer) {
                 val textField = textField(expression)
