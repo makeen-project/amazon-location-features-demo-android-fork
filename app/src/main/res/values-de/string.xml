@@ -59,8 +59,10 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">Machen sicher dein Suche ist buchstabiert richtig. Versuche ergänzend ein stadt, postleitzahl, oder Land.</string>
   <string name="search_nearby">Suche in der Nähe</string>
   <string name="text_switch_avoid_tools">Vermeiden Mautgebühren</string>
-  <string name="text_switch_avoid_highways">Vermeiden Autobahnen</string>
   <string name="text_switch_avoid_ferries">Vermeiden Fähren</string>
+  <string name="text_switch_avoid_dirt_roads">Vermeiden Dreck Straßen</string>
+  <string name="text_switch_avoid_u_turn">Vermeiden Biegen Sie ab</string>
+  <string name="text_switch_avoid_tunnels">Vermeiden Tunnel</string>
   <string name="_2_min">2 Min.</string>
   <string name="label_search_destination">Suche Reiseziel</string>
   <string name="label_my_location">Mein Standort</string>

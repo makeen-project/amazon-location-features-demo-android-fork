@@ -59,7 +59,9 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">作る 承知しました きみの 検索 です 綴られた 正しく。 やってみる 追加 ある 都市、 郵便番号、 または 国。</string>
   <string name="search_nearby">検索 近所の</string>
   <string name="text_switch_avoid_tools">避ける 通行料</string>
-  <string name="text_switch_avoid_highways">避ける 高速道路</string>
+  <string name="text_switch_avoid_dirt_roads">避ける 泥 道路</string>
+  <string name="text_switch_avoid_u_turn">避ける Uターン</string>
+  <string name="text_switch_avoid_tunnels">避ける トンネル</string>
   <string name="text_switch_avoid_ferries">避ける フェリー</string>
   <string name="_2_min">2 最小</string>
   <string name="label_search_destination">検索 目的地</string>

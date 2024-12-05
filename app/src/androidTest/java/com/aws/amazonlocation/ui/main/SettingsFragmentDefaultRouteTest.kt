@@ -27,7 +27,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
-
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Throws(java.lang.Exception::class)
@@ -38,6 +37,9 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
         preferenceManager.setValue(IS_APP_FIRST_TIME_OPENED, true)
         preferenceManager.removeValue(KEY_AVOID_TOLLS)
         preferenceManager.removeValue(KEY_AVOID_FERRIES)
+        preferenceManager.removeValue(KEY_AVOID_DIRT_ROADS)
+        preferenceManager.removeValue(KEY_AVOID_U_TURN)
+        preferenceManager.removeValue(KEY_AVOID_TUNNEL)
 
         super.before()
     }
@@ -52,8 +54,17 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
             toggleSwitch(R.id.switch_avoid_tools)
             toggleSwitch(R.id.switch_avoid_ferries)
+            toggleSwitch(R.id.switch_avoid_dirt_roads)
+            toggleSwitch(R.id.switch_avoid_u_turn)
+            toggleSwitch(R.id.switch_avoid_tunnels)
 
-            checkDefaultRouteOptions(avoidTollsShouldBe = true, avoidFerriesShouldBe = true)
+            checkDefaultRouteOptions(
+                avoidTollsShouldBe = true,
+                avoidFerriesShouldBe = true,
+                avoidDirtRoadShouldBe = true,
+                avoidUTurnShouldBe = true,
+                avoidTunnelsShouldBe = true,
+            )
         } catch (_: Exception) {
             Assert.fail(TEST_FAILED)
         }
@@ -71,16 +82,19 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_setting)))
         explorer.click()
 
-        val routeOptions = waitForView(
-            allOf(
-                withId(R.id.cl_route_option),
-                isDisplayed(),
-            ),
-        )
+        val routeOptions =
+            waitForView(
+                allOf(
+                    withId(R.id.cl_route_option),
+                    isDisplayed(),
+                ),
+            )
         routeOptions?.perform(click())
     }
 
-    private fun toggleSwitch(@IdRes switchId: Int) {
+    private fun toggleSwitch(
+        @IdRes switchId: Int,
+    ) {
         waitForView(
             allOf(
                 withId(switchId),
@@ -89,7 +103,13 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
         )?.perform(click())
     }
 
-    private fun checkDefaultRouteOptions(avoidTollsShouldBe: Boolean, avoidFerriesShouldBe: Boolean) {
+    private fun checkDefaultRouteOptions(
+        avoidTollsShouldBe: Boolean,
+        avoidFerriesShouldBe: Boolean,
+        avoidDirtRoadShouldBe: Boolean,
+        avoidUTurnShouldBe: Boolean,
+        avoidTunnelsShouldBe: Boolean,
+    ) {
         val explorer =
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_explore)))
         explorer.click()
@@ -103,18 +123,20 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
         Thread.sleep(DELAY_2000)
 
-        val sourceEdt = waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
+        val sourceEdt =
+            waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
         sourceEdt?.perform(replaceText(SEARCH_TEST_WORD_1))
 
         Thread.sleep(DELAY_2000)
 
-        val suggestionListSrcRv = waitForView(
-            CoreMatchers.allOf(
-                withId(R.id.rv_search_places_suggestion_direction),
-                isDisplayed(),
-                hasMinimumChildCount(1),
-            ),
-        )
+        val suggestionListSrcRv =
+            waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1),
+                ),
+            )
         suggestionListSrcRv?.perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -124,24 +146,26 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
         Thread.sleep(DELAY_2000)
 
-        val destinationEdt = waitForView(
-            CoreMatchers.allOf(
-                withId(R.id.edt_search_dest),
-                isDisplayed(),
-            ),
-        )
+        val destinationEdt =
+            waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.edt_search_dest),
+                    isDisplayed(),
+                ),
+            )
         destinationEdt?.perform(click())
         destinationEdt?.perform(typeText(SEARCH_TEST_WORD_2))
 
         Thread.sleep(DELAY_2000)
 
-        val suggestionListDestRv = waitForView(
-            CoreMatchers.allOf(
-                withId(R.id.rv_search_places_suggestion_direction),
-                isDisplayed(),
-                hasMinimumChildCount(1),
-            ),
-        )
+        val suggestionListDestRv =
+            waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1),
+                ),
+            )
         suggestionListDestRv?.perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -156,22 +180,36 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             ),
         )
 
-        val cardRoutingOption = waitForView(
-            CoreMatchers.allOf(
-                withId(R.id.card_routing_option),
-                withEffectiveVisibility(Visibility.VISIBLE),
-            ),
-        )
+        val cardRoutingOption =
+            waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.card_routing_option),
+                    withEffectiveVisibility(Visibility.VISIBLE),
+                ),
+            )
         cardRoutingOption?.perform(click())
 
         Thread.sleep(DELAY_2000)
 
         getInstrumentation().waitForIdleSync()
         getInstrumentation().runOnMainSync {
-            val switchAvoidToll = mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_tools)
-            val switchAvoidFerry = mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_ferries)
+            val switchAvoidToll =
+                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_tools)
+            val switchAvoidFerry =
+                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_ferries)
+            val switchAvoidDirtRoads =
+                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_dirt_roads)
+            val switchAvoidUTurn =
+                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_u_turn)
+            val switchAvoidTunnels =
+                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_tunnels)
 
-            if (switchAvoidToll.isChecked != avoidTollsShouldBe || switchAvoidFerry.isChecked != avoidFerriesShouldBe) {
+            if (switchAvoidToll.isChecked != avoidTollsShouldBe ||
+                switchAvoidFerry.isChecked != avoidFerriesShouldBe ||
+                switchAvoidDirtRoads.isChecked != avoidDirtRoadShouldBe ||
+                switchAvoidUTurn.isChecked != avoidUTurnShouldBe ||
+                switchAvoidTunnels.isChecked != avoidTunnelsShouldBe
+            ) {
                 Assert.fail(TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED)
             }
         }

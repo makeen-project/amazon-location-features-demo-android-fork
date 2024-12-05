@@ -59,7 +59,9 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">製作 當然 你的 搜尋 是 拼寫 正確。 嘗試 添加 一個 城市， 郵遞區號， 或者 國家。</string>
   <string name="search_nearby">搜索 附近</string>
   <string name="text_switch_avoid_tools">避免 過路費</string>
-  <string name="text_switch_avoid_highways">避免 高速公路</string>
+  <string name="text_switch_avoid_dirt_roads">避免 污垢 道路</string>
+  <string name="text_switch_avoid_u_turn">避免 烏圖恩</string>
+  <string name="text_switch_avoid_tunnels">避免 隧道</string>
   <string name="text_switch_avoid_ferries">避免 渡輪</string>
   <string name="_2_min">2 分鐘</string>
   <string name="label_search_destination">搜索 目的地</string>

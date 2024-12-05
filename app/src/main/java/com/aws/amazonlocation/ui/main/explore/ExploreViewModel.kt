@@ -186,8 +186,7 @@ class ExploreViewModel
             longitude: Double?,
             latDestination: Double?,
             lngDestination: Double?,
-            isAvoidFerries: Boolean?,
-            isAvoidTolls: Boolean?,
+            avoidanceOptions: ArrayList<AvoidanceOption>,
             isWalkingAndTruckCall: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -197,8 +196,7 @@ class ExploreViewModel
                         longitude,
                         latDestination,
                         lngDestination,
-                        isAvoidFerries,
-                        isAvoidTolls,
+                        avoidanceOptions,
                         RouteTravelMode.Pedestrian.value,
                     )
                     calculateDistanceFromMode(
@@ -206,8 +204,7 @@ class ExploreViewModel
                         longitude,
                         latDestination,
                         lngDestination,
-                        isAvoidFerries,
-                        isAvoidTolls,
+                        avoidanceOptions,
                         RouteTravelMode.Truck.value,
                     )
                     calculateDistanceFromMode(
@@ -215,8 +212,7 @@ class ExploreViewModel
                         longitude,
                         latDestination,
                         lngDestination,
-                        isAvoidFerries,
-                        isAvoidTolls,
+                        avoidanceOptions,
                         RouteTravelMode.Scooter.value,
                     )
                 } else {
@@ -225,8 +221,7 @@ class ExploreViewModel
                         longitude,
                         latDestination,
                         lngDestination,
-                        isAvoidFerries,
-                        isAvoidTolls,
+                        avoidanceOptions,
                         RouteTravelMode.Car.value,
                     )
                 }
@@ -238,8 +233,7 @@ class ExploreViewModel
             longitude: Double?,
             latDestination: Double?,
             lngDestination: Double?,
-            isAvoidFerries: Boolean?,
-            isAvoidTolls: Boolean?,
+            avoidanceOptions: ArrayList<AvoidanceOption>,
             travelMode: String?,
         ) {
             _calculateDistance.trySend(HandleResult.Loading)
@@ -250,8 +244,7 @@ class ExploreViewModel
                 longitude,
                 latDestination,
                 lngDestination,
-                isAvoidFerries,
-                isAvoidTolls,
+                avoidanceOptions,
                 travelMode,
                 object : DistanceInterface {
                     override fun distanceSuccess(success: CalculateRoutesResponse) {
@@ -302,8 +295,7 @@ class ExploreViewModel
             longitude: Double?,
             latDestination: Double?,
             lngDestination: Double?,
-            isAvoidFerries: Boolean?,
-            isAvoidTolls: Boolean?,
+            avoidanceOptions: ArrayList<AvoidanceOption>,
             travelMode: String?,
         ) {
             _updateCalculateDistance.trySend(HandleResult.Loading)
@@ -313,8 +305,7 @@ class ExploreViewModel
                     longitude,
                     latDestination,
                     lngDestination,
-                    isAvoidFerries,
-                    isAvoidTolls,
+                    avoidanceOptions,
                     travelMode,
                     object : DistanceInterface {
                         override fun distanceSuccess(success: CalculateRoutesResponse) {

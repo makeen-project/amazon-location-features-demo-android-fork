@@ -59,7 +59,9 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">Faça com certeza seu procurar é soletrado corretamente. Experimente adicionando uma cidade, código postal, ou país.</string>
   <string name="search_nearby">Pesquisar nas proximidades</string>
   <string name="text_switch_avoid_tools">Evite cobra pedágio</string>
-  <string name="text_switch_avoid_highways">Evite rodovias</string>
+  <string name="text_switch_avoid_dirt_roads">Evite sujeira estradas</string>
+  <string name="text_switch_avoid_u_turn">Evite TuTurn</string>
+  <string name="text_switch_avoid_tunnels">Evite túneis</string>
   <string name="text_switch_avoid_ferries">Evite balsas</string>
   <string name="_2_min">2 min</string>
   <string name="label_search_destination">Pesquisar Destino</string>

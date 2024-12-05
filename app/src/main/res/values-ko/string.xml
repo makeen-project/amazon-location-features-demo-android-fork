@@ -59,7 +59,9 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">만들기 확실한 당신의 수색 입니다 철자 바르게. 시도해 보세요 첨가 a 도시, 우편번호, 또는 국가.</string>
   <string name="search_nearby">검색 근처에</string>
   <string name="text_switch_avoid_tools">피하십시오 통행료</string>
-  <string name="text_switch_avoid_highways">피하십시오 고속도로</string>
+  <string name="text_switch_avoid_dirt_roads">피하십시오 먼지 도로</string>
+  <string name="text_switch_avoid_u_turn">피하십시오 uTurn</string>
+  <string name="text_switch_avoid_tunnels">피하십시오 터널</string>
   <string name="text_switch_avoid_ferries">피하십시오 페리</string>
   <string name="_2_min">2 분</string>
   <string name="label_search_destination">검색 목적지</string>

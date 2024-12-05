@@ -59,8 +59,10 @@
   <string name="make_sure_your_search_is_spelled_correctly_try_adding_a_city_country_or_postcode">Hacer Sí, claro vuestro búsqueda es deletreado correctamente. Prueba sumando un ciudad, código postal, o país.</string>
   <string name="search_nearby">Buscar cerca</string>
   <string name="text_switch_avoid_tools">Evitar peajes</string>
-  <string name="text_switch_avoid_highways">Evitar carreteras</string>
   <string name="text_switch_avoid_ferries">Evitar transbordadores</string>
+  <string name="text_switch_avoid_dirt_roads">Evitar suciedad carreteras</string>
+  <string name="text_switch_avoid_u_turn">Evitar Turno en U</string>
+  <string name="text_switch_avoid_tunnels">Evitar túneles</string>
   <string name="_2_min">2 min</string>
   <string name="label_search_destination">Buscar Destino</string>
   <string name="label_my_location">Mi Ubicación</string>
