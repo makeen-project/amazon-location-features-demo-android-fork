@@ -82,6 +82,7 @@ import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.CLICK_TIME_DIFFERENCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.DELAY_500
+import com.aws.amazonlocation.utils.Debouncer
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
 import com.aws.amazonlocation.utils.Durations
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_BOTTOM_SHEET_LOAD
@@ -225,6 +226,7 @@ class ExploreFragment :
     private var mTravelMode: String = RouteTravelMode.Car.value
     private var mRouteFinish: Boolean = false
     private var mRedirectionType: String? = null
+    private val debouncer = Debouncer(lifecycleScope)
 
     private var gpsActivityResult =
         registerForActivityResult(
@@ -2672,7 +2674,7 @@ class ExploreFragment :
                     }
                 }
                 switchAvoidTools.setOnCheckedChangeListener { _, isChecked ->
-                    if (checkInternetConnection()) {
+                    if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
                         mIsAvoidTolls = isChecked
@@ -2693,7 +2695,7 @@ class ExploreFragment :
                 }
 
                 switchAvoidFerries.setOnCheckedChangeListener { _, isChecked ->
-                    if (checkInternetConnection()) {
+                    if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
                         mIsAvoidFerries = isChecked
@@ -2714,7 +2716,7 @@ class ExploreFragment :
                 }
 
                 switchAvoidDirtRoads.setOnCheckedChangeListener { _, isChecked ->
-                    if (checkInternetConnection()) {
+                    if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
                         mIsAvoidDirtRoads = isChecked
@@ -2735,7 +2737,7 @@ class ExploreFragment :
                 }
 
                 switchAvoidUTurn.setOnCheckedChangeListener { _, isChecked ->
-                    if (checkInternetConnection()) {
+                    if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
                         mIsAvoidUTurn = isChecked
@@ -2756,7 +2758,7 @@ class ExploreFragment :
                 }
 
                 switchAvoidTunnels.setOnCheckedChangeListener { _, isChecked ->
-                    if (checkInternetConnection()) {
+                    if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
                         mIsAvoidTunnel = isChecked
@@ -5326,8 +5328,7 @@ class ExploreFragment :
             mapStyleBottomSheetFragment?.setImageIcon(logoResId)
         }
         if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
-            lifecycleScope.launch {
-                delay(DELAY_500)
+            debouncer.debounce(DELAY_500) {
                 mBaseActivity?.mSimulationUtils?.setSimulationData()
             }
         }
