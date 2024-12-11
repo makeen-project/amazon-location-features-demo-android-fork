@@ -80,7 +80,7 @@ class MapStyleBottomSheetFragment(
             val parentLayout = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as? FrameLayout
             parentLayout?.let { layout ->
                 val colorScheme = mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
-                val logoResId =
+                var logoResId =
                     when (colorScheme) {
                         ATTRIBUTE_LIGHT,
                         -> R.drawable.ic_amazon_logo_on_light
@@ -90,6 +90,12 @@ class MapStyleBottomSheetFragment(
 
                         else -> R.drawable.ic_amazon_logo_on_light
                     }
+                val mapStyleName =
+                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                        ?: getString(R.string.map_standard)
+                if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(R.string.map_hybrid)) {
+                    logoResId = R.drawable.ic_amazon_logo_on_dark
+                }
                 setImageIcon(logoResId)
                 behaviour = BottomSheetBehavior.from(layout)
                 behaviour?.addBottomSheetCallback(object :
