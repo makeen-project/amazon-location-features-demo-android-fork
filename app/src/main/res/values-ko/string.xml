@@ -261,4 +261,8 @@
   <string name="label_schedule">스케줄</string>
   <string name="label_copied_to_clipboard">복사됨 에 클립보드</string>
   <string name="label_no_political_view">아니요 정치적 전망</string>
+  <string name="description_cyp">키프로스 정치적 전망</string>
+  <string name="description_geo">조지아 정치적 전망</string>
+  <string name="description_grc">그리스 정치적 전망</string>
+  <string name="description_ps">팔레스타인 정치적 전망</string>
 </resources>

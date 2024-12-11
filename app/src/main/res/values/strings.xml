@@ -269,11 +269,10 @@
     <string name="description_tur">Turkey\'s view on Cyprus and Northern Cyprus</string>
     <string name="description_tza">Tanzania\'s view on Lake Malawi</string>
     <string name="description_ury">Uruguay\'s view on Rincon de Artigas</string>
-    <!-- TODO add below description for other languages    -->
-    <string name="description_cyp">Cyprus\'s view on </string>
-    <string name="description_geo">Georgia\'s view on </string>
-    <string name="description_grc">Greece\'s view on </string>
-    <string name="description_ps">Palestine\'s view on </string>
+    <string name="description_cyp">Cyprus\'s political view</string>
+    <string name="description_geo">Georgia\'s political view</string>
+    <string name="description_grc">Greece\'s political view</string>
+    <string name="description_ps">Palestine\'s political view</string>
 
     <string name="flag_arg" translatable="false">🇦🇷</string>
     <string name="flag_egy" translatable="false">🇪🇬</string>

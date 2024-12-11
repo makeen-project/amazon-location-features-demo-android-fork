@@ -261,4 +261,8 @@
   <string name="label_schedule">Cronograma</string>
   <string name="label_copied_to_clipboard">Copiado para prancheta</string>
   <string name="label_no_political_view">Não político olhar</string>
+  <string name="description_cyp">Chipre\'s político olhar</string>
+  <string name="description_geo">Georgia\'s político olhar</string>
+  <string name="description_grc">Grécia\'s político olhar</string>
+  <string name="description_ps">Palestina\'s político olhar</string>
 </resources>

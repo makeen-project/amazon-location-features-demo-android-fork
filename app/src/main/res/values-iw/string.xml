@@ -261,4 +261,8 @@
   <string name="label_schedule">לוח זמנים</string>
   <string name="label_copied_to_clipboard">הועתק כדי הלוח</string>
   <string name="label_no_political_view">לא מדיני מבט</string>
+  <string name="description_cyp">קפריסין\ של מדיני מבט</string>
+  <string name="description_geo">ג\'ורג\'יה\ \'ס מדיני מבט</string>
+  <string name="description_grc">יוון\ של מדיני מבט</string>
+  <string name="description_ps">פלסטין\ מדיני מבט</string>
 </resources>
