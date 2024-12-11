@@ -880,11 +880,6 @@ class ExploreFragment :
                     override fun updateMapLanguage() {
                         mMapLibreMap?.style?.let { mMapHelper.setStyleLanguage(it)}
                     }
-
-                    override fun amazonInfoIconClick() {
-                        setAttributionDataAndExpandSheet()
-                        hideMapStyleSheet()
-                    }
                 },
             )
     }

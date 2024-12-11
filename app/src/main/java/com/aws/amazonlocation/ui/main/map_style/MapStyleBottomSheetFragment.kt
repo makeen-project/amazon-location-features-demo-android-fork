@@ -142,7 +142,7 @@ class MapStyleBottomSheetFragment(
         if (mBaseActivity?.isTablet == true) {
             dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         } else {
-            dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            dialog.behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             dialog.behavior.halfExpandedRatio = 0.65f
             dialog.behavior.isFitToContents = false
             dialog.setCanceledOnTouchOutside(false) // Prevent collapse on outside click
@@ -217,8 +217,6 @@ class MapStyleBottomSheetFragment(
     @SuppressLint("NotifyDataSetChanged")
     private fun init() {
         mBinding.apply {
-            imgAmazonLogoMapStyle?.alpha = 0f
-            ivAmazonInfoMapStyle?.alpha = 0f
             val languageCode = getLanguageCode()
             val isRtl =
                 languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
@@ -360,9 +358,6 @@ class MapStyleBottomSheetFragment(
                 }
                 mapStyleHide()
                 dismiss()
-            }
-            ivAmazonInfoMapStyle?.setOnClickListener {
-                mapInterface.amazonInfoIconClick()
             }
             toggleMode.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 when (checkedId) {
@@ -603,6 +598,5 @@ class MapStyleBottomSheetFragment(
         fun mapStyleClick(position: Int, innerPosition: Int)
         fun mapColorScheme(colorScheme: String, mapStyleName: String)
         fun updateMapLanguage()
-        fun amazonInfoIconClick()
     }
 }
