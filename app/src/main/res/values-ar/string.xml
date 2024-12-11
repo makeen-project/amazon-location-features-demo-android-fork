@@ -261,4 +261,8 @@
   <string name="label_schedule">جدول</string>
   <string name="label_copied_to_clipboard">تم نسخها إلى الحافظة</string>
   <string name="label_no_political_view">لا سياسي منظر</string>
+  <string name="description_cyp">قبرص سياسي منظر</string>
+  <string name="description_geo">جورجيا سياسي منظر</string>
+  <string name="description_grc">اليونان سياسي منظر</string>
+  <string name="description_ps">فلسطين سياسي منظر</string>
 </resources>

@@ -261,4 +261,8 @@
   <string name="label_schedule">Pianificazione</string>
   <string name="label_copied_to_clipboard">Copiato a appunti</string>
   <string name="label_no_political_view">No politico vista</string>
+  <string name="description_cyp">Cipro\'s politico vista</string>
+  <string name="description_geo">Georgia\'s politico vista</string>
+  <string name="description_grc">Grecia\'s politico vista</string>
+  <string name="description_ps">Palestina politico vista</string>
 </resources>

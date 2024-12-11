@@ -261,4 +261,8 @@
   <string name="label_schedule">Calendrier</string>
   <string name="label_copied_to_clipboard">Copié pour presse-papier</string>
   <string name="label_no_political_view">Non politique voir</string>
+  <string name="description_cyp">Chypre politique voir</string>
+  <string name="description_geo">Géorgie politique voir</string>
+  <string name="description_grc">Grèce politique voir</string>
+  <string name="description_ps">Palestine politique voir</string>
 </resources>

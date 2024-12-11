@@ -261,4 +261,8 @@
   <string name="label_schedule">शेड्यूल</string>
   <string name="label_copied_to_clipboard">कॉपी किया गया को क्लिपबोर्ड</string>
   <string name="label_no_political_view">नहीं राजनीतिक राय</string>
+  <string name="description_cyp">साइप्रस का राजनीतिक राय</string>
+  <string name="description_geo">जॉर्जिया का राजनीतिक राय</string>
+  <string name="description_grc">ग्रीस का राजनीतिक राय</string>
+  <string name="description_ps">फिलिस्तीन राजनीतिक राय</string>
 </resources>

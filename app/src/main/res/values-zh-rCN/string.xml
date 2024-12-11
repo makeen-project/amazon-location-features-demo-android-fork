@@ -261,4 +261,8 @@
   <string name="label_schedule">日程安排</string>
   <string name="label_copied_to_clipboard">已复制 到 剪贴板</string>
   <string name="label_no_political_view">没有 政治的 观点</string>
+  <string name="description_cyp">塞浦路斯 政治的 观点</string>
+  <string name="description_geo">乔治亚州 政治的 观点</string>
+  <string name="description_grc">希腊的 政治的 观点</string>
+  <string name="description_ps">巴勒斯坦的 政治的 观点</string>
 </resources>

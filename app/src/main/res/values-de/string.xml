@@ -261,4 +261,8 @@
   <string name="label_schedule">Zeitplan</string>
   <string name="label_copied_to_clipboard">Kopiert zu Zwischenablage</string>
   <string name="label_no_political_view">Nein politisch anzeigen</string>
+  <string name="description_cyp">Zyperns politisch anzeigen</string>
+  <string name="description_geo">Georgiens politisch anzeigen</string>
+  <string name="description_grc">Griechenlands politisch anzeigen</string>
+  <string name="description_ps">Palästinas politisch anzeigen</string>
 </resources>

@@ -261,4 +261,8 @@
   <string name="label_schedule">Programar</string>
   <string name="label_copied_to_clipboard">Copiado a portapapeles</string>
   <string name="label_no_political_view">No política vista</string>
+  <string name="description_cyp">Chipre\'s política vista</string>
+  <string name="description_geo">Georgia\'s política vista</string>
+  <string name="description_grc">Grecia\'s política vista</string>
+  <string name="description_ps">Palestina\'s política vista</string>
 </resources>
