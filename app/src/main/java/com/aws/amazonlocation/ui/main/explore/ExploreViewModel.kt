@@ -630,7 +630,6 @@ class ExploreViewModel
                     it.countryName.contains(query, ignoreCase = true)
                 },
             )
-    }
 
     fun setMapLanguageData(context: Context) {
         mMapLanguageData.clear()
@@ -708,4 +707,4 @@ class ExploreViewModel
             LanguageData(value = "zh-Hant", label = "繁體中文", isSelected = false)
         )
     }
-}
+    }
