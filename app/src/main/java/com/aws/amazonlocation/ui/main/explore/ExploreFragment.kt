@@ -218,6 +218,7 @@ class ExploreFragment :
     private var mIsRouteOptionsOpened = false
     private var mTravelMode: String = RouteTravelMode.Car.value
     private var mRouteFinish: Boolean = false
+    private var isFromMapStyle: Boolean = false
     private var mRedirectionType: String? = null
     private val debouncer = Debouncer(lifecycleScope)
 
@@ -831,6 +832,12 @@ class ExploreFragment :
                 mBaseActivity,
                 mBottomSheetHelper,
                 object : MapStyleBottomSheetFragment.MapInterface {
+                    override fun infoIconClick() {
+                        isFromMapStyle = true
+                        hideMapStyleSheet()
+                        setAttributionDataAndExpandSheet()
+                    }
+
                     override fun mapStyleClick(
                         position: Int,
                         innerPosition: Int,
@@ -2832,6 +2839,9 @@ class ExploreFragment :
                 bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
+                bottomSheetTrackSimulation.ivAmazonInfoTrackingSheet.setOnClickListener {
+                    setAttributionDataAndExpandSheet()
+                }
                 mBinding.bottomSheetAttribution.apply {
                     btnLearnMoreSa.setOnClickListener {
                         startActivity(
@@ -2853,7 +2863,7 @@ class ExploreFragment :
                         )
                     }
                     ivBack.setOnClickListener {
-                        mBottomSheetHelper.hideAttributeSheet()
+                        hideAttribution()
                     }
                 }
             }
@@ -2988,6 +2998,14 @@ class ExploreFragment :
                     false
                 }
             }
+        }
+    }
+
+    fun hideAttribution() {
+        mBottomSheetHelper.hideAttributeSheet()
+        if (isFromMapStyle) {
+            isFromMapStyle = false
+            mBinding.cardMap.performClick()
         }
     }
 

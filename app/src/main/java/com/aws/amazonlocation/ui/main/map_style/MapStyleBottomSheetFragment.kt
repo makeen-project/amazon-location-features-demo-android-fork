@@ -342,6 +342,9 @@ class MapStyleBottomSheetFragment(
                     )
                 this.adapter = mMapStyleAdapter
             }
+            ivAmazonInfoMapStyle?.setOnClickListener {
+                mapInterface.infoIconClick()
+            }
             ivMapStyleClose.setOnClickListener {
                 etSearchCountry.setText("")
                 tvMapStyle.text = getString(R.string.label_map_style)
@@ -591,6 +594,7 @@ class MapStyleBottomSheetFragment(
     }
 
     interface MapInterface {
+        fun infoIconClick()
         fun mapStyleClick(position: Int, innerPosition: Int)
         fun mapColorScheme(colorScheme: String, mapStyleName: String)
         fun updateMapLanguage()
