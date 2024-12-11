@@ -5127,16 +5127,22 @@ class ExploreFragment :
 
     override fun onMapStyleChanged(mapStyle: String) {
         val colorScheme = mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
-        val logoResId =
+        var logoResId =
             when (colorScheme) {
                 ATTRIBUTE_LIGHT,
-                -> R.drawable.ic_amazon_logo_on_light
+                    -> R.drawable.ic_amazon_logo_on_light
 
                 ATTRIBUTE_DARK,
-                -> R.drawable.ic_amazon_logo_on_dark
+                    -> R.drawable.ic_amazon_logo_on_dark
 
                 else -> R.drawable.ic_amazon_logo_on_light
             }
+        val mapStyleName =
+            mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                ?: getString(R.string.map_standard)
+        if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(R.string.map_hybrid)) {
+            logoResId = R.drawable.ic_amazon_logo_on_dark
+        }
         lifecycleScope.launch {
             delay(DELAY_500)
             mMapLibreMap?.setLatLngBoundsForCameraTarget(null)
@@ -5167,6 +5173,7 @@ class ExploreFragment :
         mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
         mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
+        mBaseActivity?.mSimulationUtils?.setImageIcon(logoResId)
         if (mapStyleBottomSheetFragment != null && mapStyleBottomSheetFragment?.isVisible == true) {
             mapStyleBottomSheetFragment?.setImageIcon(logoResId)
         }
