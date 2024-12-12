@@ -3580,7 +3580,9 @@ class ExploreFragment :
                 )
             }
         }
-        mMapHelper.getLiveLocation()?.let { it1 -> latLngList.add(it1) }
+        if(latLngList.size < 2) {
+            mMapHelper.getLiveLocation()?.let { it1 -> latLngList.add(it1) }
+        }
         mMapHelper.adjustMapBounds(
             latLngList,
             resources.getDimension(R.dimen.dp_90).roundToInt(),
