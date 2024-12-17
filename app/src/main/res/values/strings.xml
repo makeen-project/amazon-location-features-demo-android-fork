@@ -312,4 +312,7 @@
     <string name="label_schedule">Schedule</string>
     <string name="label_copied_to_clipboard">Copied to clipboard</string>
     <string name="label_no_political_view">No political view</string>
+    <string name="label_leave_now">Leave now</string>
+    <string name="label_depart_at">Depart at</string>
+    <string name="label_arrive_by">Arrive by</string>
 </resources>

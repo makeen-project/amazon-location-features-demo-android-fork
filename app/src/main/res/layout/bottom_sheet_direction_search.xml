@@ -257,6 +257,197 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_depart_options"
+                    style="@style/SP11MediumBlackRegularTextStyle"
+                    android:layout_width="@dimen/dp_152"
+                    android:layout_height="@dimen/dp_32"
+                    android:layout_marginHorizontal="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_16"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/color_route_option_unselected"
+                    app:cardCornerRadius="@dimen/dp_8"
+                    app:cardElevation="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_direction_search">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tv_depart_options"
+                            style="@style/SP13BoldMediumBlackTextStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/dp_23"
+                            android:background="@android:color/transparent"
+                            android:ellipsize="end"
+                            android:maxLength="200"
+                            android:singleLine="true"
+                            android:text="Leave now"
+                            android:textDirection="locale"
+                            android:textSize="@dimen/sp_12"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/iv_down_depart_options"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_down_depart_options"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_18"
+                            android:src="@drawable/ic_down_arrow"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_up_depart_options"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/dp_18"
+                            android:rotation="180"
+                            android:src="@drawable/ic_down_arrow"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_list_depart_options"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dp_16"
+                    android:layout_marginTop="@dimen/dp_1"
+                    android:visibility="gone"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="@dimen/dp_8"
+                    app:cardElevation="@dimen/dp_1"
+                    app:cardUseCompatPadding="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/card_depart_options">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_leave_now"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_leave_now"
+                                style="@style/SP16HintRegularTextStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/dp_50"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="@dimen/dp_16"
+                                android:background="@android:color/transparent"
+                                android:ellipsize="end"
+                                android:maxLength="200"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/label_leave_now"
+                                android:textDirection="locale"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/view_depart_options_1"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:background="@color/color_view"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/cl_leave_now" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_depart_at"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            app:layout_constraintBottom_toTopOf="@id/view_depart_options_2"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cl_leave_now">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_depart_at"
+                                style="@style/SP16HintRegularTextStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/dp_50"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="@dimen/dp_16"
+                                android:background="@android:color/transparent"
+                                android:ellipsize="end"
+                                android:maxLength="200"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/label_depart_at"
+                                android:textDirection="locale"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/view_depart_options_2"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:background="@color/color_view"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/cl_depart_at" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cl_arrive_by"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cl_depart_at">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_arrive_by"
+                                style="@style/SP16HintRegularTextStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/dp_50"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="@dimen/dp_16"
+                                android:background="@android:color/transparent"
+                                android:ellipsize="end"
+                                android:maxLength="200"
+                                android:gravity="center"
+                                android:singleLine="true"
+                                android:text="@string/label_arrive_by"
+                                android:textDirection="locale"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_routing_option"
                     style="@style/SP11MediumBlackRegularTextStyle"
                     android:layout_width="@dimen/dp_152"
@@ -579,6 +770,14 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier_map_option"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="card_list_routes_option,card_list_depart_options" />
+
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_map_option"
                     android:layout_width="match_parent"
@@ -594,7 +793,7 @@
                     app:cardUseCompatPadding="false"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/card_list_routes_option">
+                    app:layout_constraintTop_toBottomOf="@id/barrier_map_option">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cl_map_option_route"
