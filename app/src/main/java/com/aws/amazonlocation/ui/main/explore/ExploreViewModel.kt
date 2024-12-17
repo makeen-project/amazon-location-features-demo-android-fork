@@ -26,13 +26,13 @@ import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
 import com.aws.amazonlocation.utils.Units
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.maplibre.android.geometry.LatLng
+import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -63,6 +63,32 @@ class ExploreViewModel
         var mStyleList = ArrayList<MapStyleData>()
         var mPoliticalData = ArrayList<PoliticalData>()
         var mPoliticalSearchData = ArrayList<PoliticalData>()
+        var mIsAvoidTolls: Boolean = false
+        var mIsAvoidFerries: Boolean = false
+        var mIsAvoidDirtRoads: Boolean = false
+        var mIsAvoidUTurn: Boolean = false
+        var mIsAvoidTunnel: Boolean = false
+        var mIsRouteOptionsOpened = false
+        var mIsDepartOptionsOpened = false
+        var mTravelMode: String = RouteTravelMode.Car.value
+        var mRouteFinish: Boolean = false
+        var mIsSwapClicked: Boolean = false
+        var mIsDirectionDataSet: Boolean = false
+        var mIsDirectionDataSetNew: Boolean = false
+        var mIsDirectionSheetHalfExpanded: Boolean = false
+        var mIsLocationAlreadyEnabled: Boolean = false
+        var mIsCurrentLocationClicked: Boolean = false
+        var mIsTrackingLocationClicked: Boolean = false
+        var isCalculateDriveApiError: Boolean = false
+        var isCalculateWalkApiError: Boolean = false
+        var isCalculateTruckApiError: Boolean = false
+        var isCalculateScooterApiError: Boolean = false
+        var isLocationUpdatedNeeded: Boolean = false
+        var isZooming: Boolean = false
+        var isDataSearchForDestination: Boolean = false
+        var isLiveLocationClick: Boolean = false
+        var mSelectedDepartOption: String = DepartOption.LEAVE_NOW.name
+        var mLastClickTime: Long = 0
 
         private val _searchForSuggestionsResultList =
             Channel<HandleResult<SearchSuggestionResponse>>(Channel.BUFFERED)
@@ -104,9 +130,7 @@ class ExploreViewModel
         val placeData: Flow<HandleResult<GetPlaceResponse>> =
             _placeData.receiveAsFlow()
 
-        fun searchPlaceSuggestion(
-            searchText: String,
-        ) {
+        fun searchPlaceSuggestion(searchText: String) {
             _searchForSuggestionsResultList.trySend(
                 HandleResult.Loading,
             )
@@ -185,6 +209,8 @@ class ExploreViewModel
             latDestination: Double?,
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
+            departOption: String,
+            timeInput: String?,
             isWalkingAndTruckCall: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -195,6 +221,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Pedestrian.value,
                     )
                     calculateDistanceFromMode(
@@ -203,6 +231,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Truck.value,
                     )
                     calculateDistanceFromMode(
@@ -211,6 +241,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Scooter.value,
                     )
                 } else {
@@ -220,6 +252,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Car.value,
                     )
                 }
@@ -232,6 +266,8 @@ class ExploreViewModel
             latDestination: Double?,
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
+            departOption: String,
+            timeInput: String?,
             travelMode: String?,
         ) {
             _calculateDistance.trySend(HandleResult.Loading)
@@ -243,7 +279,9 @@ class ExploreViewModel
                 latDestination,
                 lngDestination,
                 avoidanceOptions,
+                departOption,
                 travelMode,
+                timeInput,
                 object : DistanceInterface {
                     override fun distanceSuccess(success: CalculateRoutesResponse) {
                         _calculateDistance.trySend(
@@ -294,6 +332,8 @@ class ExploreViewModel
             latDestination: Double?,
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
+            departOption: String,
+            timeInput: String?,
             travelMode: String?,
         ) {
             _updateCalculateDistance.trySend(HandleResult.Loading)
@@ -304,7 +344,9 @@ class ExploreViewModel
                     latDestination,
                     lngDestination,
                     avoidanceOptions,
+                    departOption,
                     travelMode,
+                    timeInput,
                     object : DistanceInterface {
                         override fun distanceSuccess(success: CalculateRoutesResponse) {
                             _updateCalculateDistance.trySend(
@@ -377,7 +419,7 @@ class ExploreViewModel
                                     ),
                                 )
                             }
-                        }else if (leg.ferryLegDetails != null) {
+                        } else if (leg.ferryLegDetails != null) {
                             leg.ferryLegDetails?.travelSteps?.forEach {
                                 mNavigationListModel.add(
                                     NavigationData(
@@ -444,9 +486,7 @@ class ExploreViewModel
             }
         }
 
-        fun getPlaceData(
-            placeId: String
-        ) {
+        fun getPlaceData(placeId: String) {
             _placeData.trySend(HandleResult.Loading)
             viewModelScope.launch(Dispatchers.IO) {
                 getLocationSearchUseCase.getPlace(
@@ -463,7 +503,7 @@ class ExploreViewModel
                         override fun placeFailed(exception: DataSourceException) {
                             _placeData.trySend(
                                 HandleResult.Error(
-                                    exception
+                                    exception,
                                 ),
                             )
                         }
@@ -518,87 +558,89 @@ class ExploreViewModel
                 )
         }
 
-    fun setPoliticalListData(context: Context) {
-        val item = arrayListOf(
-            PoliticalData(
-                countryName = context.getString(R.string.label_no_political_view),
-                description = "",
-                countryCode = "",
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_arg),
-                description = context.getString(R.string.description_arg),
-                countryCode = context.getString(R.string.flag_arg),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_egy),
-                    description = context.getString(R.string.description_egy),
-                    countryCode = context.getString(R.string.flag_egy),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_ind),
-                    description = context.getString(R.string.description_ind),
-                    countryCode = context.getString(R.string.flag_ind),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_ken),
-                    description = context.getString(R.string.description_ken),
-                    countryCode = context.getString(R.string.flag_ken),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_mar),
-                    description = context.getString(R.string.description_mar),
-                    countryCode = context.getString(R.string.flag_mar),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_rus),
-                    description = context.getString(R.string.description_rus),
-                    countryCode = context.getString(R.string.flag_rus),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_sdn),
-                    description = context.getString(R.string.description_sdn),
-                    countryCode = context.getString(R.string.flag_sdn),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_srb),
-                    description = context.getString(R.string.description_srb),
-                    countryCode = context.getString(R.string.flag_srb),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_sur),
-                    description = context.getString(R.string.description_sur),
-                    countryCode = context.getString(R.string.flag_sur),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_syr),
-                    description = context.getString(R.string.description_syr),
-                    countryCode = context.getString(R.string.flag_syr),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_tur),
-                    description = context.getString(R.string.description_tur),
-                    countryCode = context.getString(R.string.flag_tur),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_tza),
-                    description = context.getString(R.string.description_tza),
-                    countryCode = context.getString(R.string.flag_tza),
-            ),
-            PoliticalData(
-                countryName = context.getString(R.string.label_ury),
-                    description = context.getString(R.string.description_ury),
-                    countryCode = context.getString(R.string.flag_ury),
+        fun setPoliticalListData(context: Context) {
+            val item =
+                arrayListOf(
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_no_political_view),
+                        description = "",
+                        countryCode = "",
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_arg),
+                        description = context.getString(R.string.description_arg),
+                        countryCode = context.getString(R.string.flag_arg),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_egy),
+                        description = context.getString(R.string.description_egy),
+                        countryCode = context.getString(R.string.flag_egy),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_ind),
+                        description = context.getString(R.string.description_ind),
+                        countryCode = context.getString(R.string.flag_ind),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_ken),
+                        description = context.getString(R.string.description_ken),
+                        countryCode = context.getString(R.string.flag_ken),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_mar),
+                        description = context.getString(R.string.description_mar),
+                        countryCode = context.getString(R.string.flag_mar),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_rus),
+                        description = context.getString(R.string.description_rus),
+                        countryCode = context.getString(R.string.flag_rus),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_sdn),
+                        description = context.getString(R.string.description_sdn),
+                        countryCode = context.getString(R.string.flag_sdn),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_srb),
+                        description = context.getString(R.string.description_srb),
+                        countryCode = context.getString(R.string.flag_srb),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_sur),
+                        description = context.getString(R.string.description_sur),
+                        countryCode = context.getString(R.string.flag_sur),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_syr),
+                        description = context.getString(R.string.description_syr),
+                        countryCode = context.getString(R.string.flag_syr),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_tur),
+                        description = context.getString(R.string.description_tur),
+                        countryCode = context.getString(R.string.flag_tur),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_tza),
+                        description = context.getString(R.string.description_tza),
+                        countryCode = context.getString(R.string.flag_tza),
+                    ),
+                    PoliticalData(
+                        countryName = context.getString(R.string.label_ury),
+                        description = context.getString(R.string.description_ury),
+                        countryCode = context.getString(R.string.flag_ury),
+                    ),
+                )
+            mPoliticalData.addAll(item)
+
+            mPoliticalSearchData.addAll(item)
+        }
+
+        fun searchPoliticalData(query: String): ArrayList<PoliticalData> =
+            ArrayList(
+                mPoliticalSearchData.filter {
+                    it.countryName.contains(query, ignoreCase = true)
+                },
             )
-        )
-        mPoliticalData.addAll(item)
-
-        mPoliticalSearchData.addAll(item)
     }
-
-    fun searchPoliticalData(query: String): ArrayList<PoliticalData> {
-        return ArrayList(mPoliticalSearchData.filter {
-            it.countryName.contains(query, ignoreCase = true)
-        })
-    }
-}

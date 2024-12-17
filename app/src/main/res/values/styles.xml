@@ -256,4 +256,7 @@
         <item name="boxStrokeColor">#fff</item>
         <item name="boxStrokeWidth">0dp</item>
     </style>
+    <style name="CustomDatePickerTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">@color/color_primary_green</item>
+    </style>
 </resources>

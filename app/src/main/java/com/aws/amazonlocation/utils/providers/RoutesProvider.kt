@@ -11,6 +11,7 @@ import aws.sdk.kotlin.services.georoutes.model.RouteTravelMode
 import aws.sdk.kotlin.services.georoutes.model.RouteTravelStepType
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
+import com.aws.amazonlocation.ui.main.explore.DepartOption
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.Units.isMetric
@@ -27,7 +28,9 @@ class RoutesProvider(
         latDestination: Double?,
         lngDestination: Double?,
         avoidanceOptions: ArrayList<AvoidanceOption>,
+        departOption: String,
         travelMode: String?,
+        timeInput: String?= null,
         mBaseActivity: BaseActivity?,
         getRoutesClient: GeoRoutesClient?,
     ): CalculateRoutesResponse? =
@@ -76,7 +79,15 @@ class RoutesProvider(
                     legGeometryFormat = GeometryFormat.Simple
                     instructionsMeasurementSystem =
                         if (isMetric) MeasurementSystem.Metric else MeasurementSystem.Imperial
-                    departNow = true
+                    when (DepartOption.valueOf(departOption)) {
+                        DepartOption.LEAVE_NOW -> departNow = true
+                        DepartOption.DEPART_TIME -> {
+                            departureTime = timeInput
+                        }
+                        DepartOption.ARRIVE_TIME -> {
+                            arrivalTime = timeInput
+                        }
+                    }
                     this.travelMode = routeTravelMode
                     travelStepType = RouteTravelStepType.Default
                     legAdditionalFeatures =
