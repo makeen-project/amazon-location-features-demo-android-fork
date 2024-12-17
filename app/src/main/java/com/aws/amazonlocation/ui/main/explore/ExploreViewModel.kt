@@ -66,6 +66,32 @@ class ExploreViewModel
         var mStyleList = ArrayList<MapStyleData>()
         var mPoliticalData = ArrayList<PoliticalData>()
         var mPoliticalSearchData = ArrayList<PoliticalData>()
+        var mIsAvoidTolls: Boolean = false
+        var mIsAvoidFerries: Boolean = false
+        var mIsAvoidDirtRoads: Boolean = false
+        var mIsAvoidUTurn: Boolean = false
+        var mIsAvoidTunnel: Boolean = false
+        var mIsRouteOptionsOpened = false
+        var mIsDepartOptionsOpened = false
+        var mTravelMode: String = RouteTravelMode.Car.value
+        var mRouteFinish: Boolean = false
+        var mIsSwapClicked: Boolean = false
+        var mIsDirectionDataSet: Boolean = false
+        var mIsDirectionDataSetNew: Boolean = false
+        var mIsDirectionSheetHalfExpanded: Boolean = false
+        var mIsLocationAlreadyEnabled: Boolean = false
+        var mIsCurrentLocationClicked: Boolean = false
+        var mIsTrackingLocationClicked: Boolean = false
+        var isCalculateDriveApiError: Boolean = false
+        var isCalculateWalkApiError: Boolean = false
+        var isCalculateTruckApiError: Boolean = false
+        var isCalculateScooterApiError: Boolean = false
+        var isLocationUpdatedNeeded: Boolean = false
+        var isZooming: Boolean = false
+        var isDataSearchForDestination: Boolean = false
+        var isLiveLocationClick: Boolean = false
+        var mSelectedDepartOption: String = DepartOption.LEAVE_NOW.name
+        var mLastClickTime: Long = 0
         var mMapLanguageData = ArrayList<LanguageData>()
 
         private val _searchForSuggestionsResultList =
@@ -187,6 +213,8 @@ class ExploreViewModel
             latDestination: Double?,
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
+            departOption: String,
+            timeInput: String?,
             isWalkingAndTruckCall: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -197,6 +225,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Pedestrian.value,
                     )
                     calculateDistanceFromMode(
@@ -205,6 +235,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Truck.value,
                     )
                     calculateDistanceFromMode(
@@ -213,6 +245,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Scooter.value,
                     )
                 } else {
@@ -222,6 +256,8 @@ class ExploreViewModel
                         latDestination,
                         lngDestination,
                         avoidanceOptions,
+                        departOption,
+                        timeInput,
                         RouteTravelMode.Car.value,
                     )
                 }
@@ -234,6 +270,8 @@ class ExploreViewModel
             latDestination: Double?,
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
+            departOption: String,
+            timeInput: String?,
             travelMode: String?,
         ) {
             _calculateDistance.trySend(HandleResult.Loading)
@@ -245,7 +283,9 @@ class ExploreViewModel
                 latDestination,
                 lngDestination,
                 avoidanceOptions,
+                departOption,
                 travelMode,
+                timeInput,
                 object : DistanceInterface {
                     override fun distanceSuccess(success: CalculateRoutesResponse) {
                         _calculateDistance.trySend(
@@ -296,6 +336,8 @@ class ExploreViewModel
             latDestination: Double?,
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
+            departOption: String,
+            timeInput: String?,
             travelMode: String?,
         ) {
             _updateCalculateDistance.trySend(HandleResult.Loading)
@@ -306,7 +348,9 @@ class ExploreViewModel
                     latDestination,
                     lngDestination,
                     avoidanceOptions,
+                    departOption,
                     travelMode,
+                    timeInput,
                     object : DistanceInterface {
                         override fun distanceSuccess(success: CalculateRoutesResponse) {
                             _updateCalculateDistance.trySend(
@@ -519,7 +563,9 @@ class ExploreViewModel
         }
 
         fun setPoliticalListData(context: Context) {
-            val item = getPoliticalData(context)
+            val item =
+                getPoliticalData(context
+                    ),
 
             mPoliticalData.addAll(item)
 
@@ -532,8 +578,7 @@ class ExploreViewModel
                     it.countryName.contains(query, ignoreCase = true)
                 },
             )
-
-        fun setMapLanguageData(context: Context) {
+    fun setMapLanguageData(context: Context) {
             val item = getLanguageData(context)
 
             mMapLanguageData.clear()

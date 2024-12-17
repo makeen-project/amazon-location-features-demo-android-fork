@@ -32,7 +32,9 @@ interface LocationSearchRepository {
         latDestination: Double?,
         lngDestination: Double?,
         avoidanceOptions: ArrayList<AvoidanceOption>,
+        departOption: String,
         travelMode: String?,
+        timeInput: String?,
         distanceInterface: DistanceInterface
     )
 
