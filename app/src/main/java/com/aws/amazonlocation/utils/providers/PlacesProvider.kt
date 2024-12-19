@@ -144,8 +144,8 @@ class PlacesProvider(
                                 TurfConstants.UNIT_METRES
                             )
 
-                            val mSearchSuggestionData: SearchSuggestionData =
-                                if (!it.place?.placeId.isNullOrEmpty()) {
+                            if (!it.place?.placeId.isNullOrEmpty()) {
+                                mList.add(
                                     SearchSuggestionData(
                                         placeId = it.place!!.placeId,
                                         searchText = searchText,
@@ -153,14 +153,22 @@ class PlacesProvider(
                                         amazonLocationAddress = it.place?.address,
                                         distance = distance,
                                         position = listOf(position[0], position[1]),
+                                    ),
+                                )
+                            } else {
+                                it.query?.let { query ->
+                                    mList.add(
+                                        SearchSuggestionData(text = it.title, queryId = query.queryId),
                                     )
-                                } else {
-                                    SearchSuggestionData(text = it.title, queryId = it.query?.queryId)
                                 }
-                            mList.add(mSearchSuggestionData)
+                            }
                         }
                     } else {
-                        mList.add(SearchSuggestionData(text = it.title, queryId = it.query?.queryId))
+                        it.query?.let { query ->
+                            mList.add(
+                                SearchSuggestionData(text = it.title, queryId = query.queryId),
+                            )
+                        }
                     }
                 }
 
