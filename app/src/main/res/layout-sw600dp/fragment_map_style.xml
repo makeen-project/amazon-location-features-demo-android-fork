@@ -297,7 +297,8 @@
                             android:paddingStart="@dimen/dp_4"
                             android:paddingEnd="@dimen/dp_4"
                             android:textAlignment="viewStart"
-                            android:textColor="@color/color_hint_text" />
+                            android:textColorHint="@color/color_hint_text"
+                            android:textColor="@color/color_medium_black" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 

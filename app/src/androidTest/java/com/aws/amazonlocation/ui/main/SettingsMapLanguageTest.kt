@@ -37,24 +37,20 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
 
     @Test
     fun testSettingsMapPoliticalViewTest() {
-        Thread.sleep(DELAY_2000)
-
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-        Thread.sleep(DELAY_2000)
 
         goToMapStyles()
 
-        val clPoliticalView =
-            onView(withId(R.id.cl_map_language)).check(matches(isDisplayed()))
-        clPoliticalView.perform(click())
-
-        Thread.sleep(DELAY_2000)
+        waitForView(
+            AllOf.allOf(
+                withId(R.id.cl_map_language),
+                isDisplayed()
+            )
+        )?.perform(click())
 
         val language =
             waitForView(allOf(withText(TEST_WORD_LANGUAGE_BO), isDisplayed()))
         language?.perform(click())
-
-        Thread.sleep(DELAY_2000)
 
         val description = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_map_language_description"))
         Assert.assertTrue(TEST_FAILED_LANGUAGE, description.text.contains(TEST_WORD_LANGUAGE_BO))
@@ -67,19 +63,14 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
                 isDisplayed()
             )
-        )
-            ?.perform(click())
+        )?.perform(click())
 
-        Thread.sleep(DELAY_3000)
 
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_style),
                 isDisplayed()
             )
-        )
-            ?.perform(click())
-
-        Thread.sleep(DELAY_3000)
+        )?.perform(click())
     }
 }

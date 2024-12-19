@@ -39,7 +39,6 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
     @Test
     fun testMapLanguageChangeTest() {
         try {
-            Thread.sleep(DELAY_2000)
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
@@ -49,12 +48,8 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
             uiDevice.findObject(By.text(ALLOW))?.click()
-            Thread.sleep(DELAY_2000)
             enableGPS(ApplicationProvider.getApplicationContext())
-            Thread.sleep(DELAY_2000)
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-
-            Thread.sleep(DELAY_2000)
 
             goToMapStyles()
 
@@ -62,13 +57,9 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
                 onView(withId(R.id.cl_map_language)).check(matches(isDisplayed()))
             clMapLanguage.perform(click())
 
-            Thread.sleep(DELAY_2000)
-
             val language =
                 waitForView(allOf(withText(TEST_WORD_LANGUAGE_AR), isDisplayed()))
             language?.perform(click())
-
-            Thread.sleep(DELAY_2000)
 
             val description = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_map_language_description"))
             Assert.assertTrue(TEST_FAILED_LANGUAGE, description.text.contains(TEST_WORD_LANGUAGE_AR))
@@ -82,9 +73,8 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
         val cardMap = waitForView(allOf(withId(R.id.card_map), isDisplayed()))
         cardMap?.perform(click())
 
-        Thread.sleep(DELAY_2000)
+        waitForView(allOf(withId(R.id.cl_map_language), isDisplayed()))
         swipeUp()
-        Thread.sleep(DELAY_2000)
     }
 
     private fun swipeUp(): UiDevice? {
