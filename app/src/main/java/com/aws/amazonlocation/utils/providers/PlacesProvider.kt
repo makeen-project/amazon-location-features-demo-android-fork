@@ -21,11 +21,14 @@ import com.aws.amazonlocation.utils.SEARCH_MAX_SUGGESTION_RESULT
 import com.aws.amazonlocation.utils.Units.getApiKey
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.Units.meterToFeet
+import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
+import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeasurement
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.validateLatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.maplibre.android.geometry.LatLng
+import org.maplibre.geojson.Point
 
 class PlacesProvider(
     private var mMapHelper: MapHelper,
@@ -129,26 +132,43 @@ class PlacesProvider(
                 mList.add(mSearchSuggestionData)
             }
             suggestResponse?.resultItems?.forEach {
-                val mSearchSuggestionData: SearchSuggestionData =
-                    if (!it.place?.placeId.isNullOrEmpty()) {
-                        SearchSuggestionData(
-                            placeId = it.place!!.placeId,
-                            searchText = searchText,
-                            text = it.place?.address?.label,
-                            amazonLocationAddress = it.place?.address,
-                            distance = it.place?.distance?.toDouble(),
-                            position =
-                            it.place?.position?.let { doubles ->
-                                listOf(
-                                    doubles[0],
-                                    doubles[1],
+                liveLocation?.let { liveLocation ->
+                    if (!it.place?.position.isNullOrEmpty()) {
+                        it.place?.position?.let { position ->
+                            val distance = TurfMeasurement.distance(
+                                Point.fromLngLat(liveLocation.longitude, liveLocation.latitude),
+                                Point.fromLngLat(position[0], position[1]),
+                                TurfConstants.UNIT_METRES
+                            )
+
+                            if (!it.place?.placeId.isNullOrEmpty()) {
+                                mList.add(
+                                    SearchSuggestionData(
+                                        placeId = it.place!!.placeId,
+                                        searchText = searchText,
+                                        text = it.place?.address?.label,
+                                        amazonLocationAddress = it.place?.address,
+                                        distance = distance,
+                                        position = listOf(position[0], position[1]),
+                                    ),
                                 )
-                            },
-                        )
+                            } else {
+                                it.query?.let { query ->
+                                    mList.add(
+                                        SearchSuggestionData(text = it.title, queryId = query.queryId),
+                                    )
+                                }
+                            }
+                        }
                     } else {
-                        SearchSuggestionData(text = it.title, queryId = it.query?.queryId)
+                        it.query?.let { query ->
+                            mList.add(
+                                SearchSuggestionData(text = it.title, queryId = query.queryId),
+                            )
+                        }
                     }
-                mList.add(mSearchSuggestionData)
+                }
+
             }
             response.data = mList
             return response
