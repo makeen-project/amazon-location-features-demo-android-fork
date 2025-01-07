@@ -313,6 +313,16 @@
     <string name="label_copied_to_clipboard">Copied to clipboard</string>
     <string name="label_no_political_view">No political view</string>
     <string name="label_leave_now">Leave now</string>
-    <string name="label_depart_at">Depart at</string>
+    <string name="label_leave_at">Leave at</string>
     <string name="label_arrive_by">Arrive by</string>
+    <string name="label_you_ve_arrived">You’ve arrived!</string>
+    <string name="done">Done</string>
+    <string name="label_destination_will_be_on_the_right">Destination will be on the right</string>
+    <string name="label_destination_will_be_on_the_left">Destination will be on the left</string>
+    <string name="time">Time</string>
+    <string name="label_select_time">Select Time</string>
+    <string name="label_selected_time_cannot_be_in_the_past">Selected time cannot be in the past!</string>
+    <string name="text_switch_avoid">Avoid</string>
+    <string name="label_leave">Leave</string>
+    <string name="label_arrive">Arrive</string>
 </resources>

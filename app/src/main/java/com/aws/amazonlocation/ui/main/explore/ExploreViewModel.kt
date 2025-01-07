@@ -26,6 +26,7 @@ import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
 import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.convertToLocalTime
 import com.aws.amazonlocation.utils.getLanguageData
 import com.aws.amazonlocation.utils.getPoliticalData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -400,6 +401,24 @@ class ExploreViewModel
                             .summary
                             ?.distance
                             ?.toDouble()
+                    val getLastTime =
+                        if (legs.last().vehicleLegDetails != null) {
+                            legs.last()
+                                .vehicleLegDetails!!
+                                .arrival
+                                ?.time
+                        } else if (legs.last().pedestrianLegDetails != null) {
+                            legs.last()
+                                .pedestrianLegDetails!!
+                                .arrival
+                                ?.time
+                        } else if (legs.last().ferryLegDetails != null) {
+                            legs.last()
+                                .ferryLegDetails!!
+                                .arrival
+                                ?.time
+                        } else ""
+                    mNavigationResponse?.time = getLastTime?.let { convertToLocalTime(it) }
                     for (leg in legs) {
                         if (leg.vehicleLegDetails != null) {
                             leg.vehicleLegDetails?.travelSteps?.forEach {
@@ -409,6 +428,18 @@ class ExploreViewModel
                                         destinationAddress = it.instruction,
                                         distance = it.distance.toDouble(),
                                         duration = it.duration.toDouble(),
+                                        type = it.type.value,
+                                        routeTurnStepDetails = it.turnStepDetails,
+                                        routeContinueHighwayStepDetails = it.continueHighwayStepDetails,
+                                        routeContinueStepDetails = it.continueStepDetails,
+                                        routeEnterHighwayStepDetails = it.enterHighwayStepDetails,
+                                        routeExitStepDetails = it.exitStepDetails,
+                                        routeKeepStepDetails = it.keepStepDetails,
+                                        routeRampStepDetails = it.rampStepDetails,
+                                        routeRoundaboutEnterStepDetails = it.roundaboutEnterStepDetails,
+                                        routeRoundaboutExitStepDetails = it.roundaboutExitStepDetails,
+                                        routeRoundaboutPassStepDetails = it.roundaboutPassStepDetails,
+                                        routeUTurnStepDetails = it.uTurnStepDetails
                                     ),
                                 )
                             }
@@ -420,6 +451,13 @@ class ExploreViewModel
                                         destinationAddress = it.instruction,
                                         distance = it.distance.toDouble(),
                                         duration = it.duration.toDouble(),
+                                        type = it.type.value,
+                                        routeTurnStepDetails = it.turnStepDetails,
+                                        routeContinueStepDetails = it.continueStepDetails,
+                                        routeKeepStepDetails = it.keepStepDetails,
+                                        routeRoundaboutEnterStepDetails = it.roundaboutEnterStepDetails,
+                                        routeRoundaboutExitStepDetails = it.roundaboutExitStepDetails,
+                                        routeRoundaboutPassStepDetails = it.roundaboutPassStepDetails,
                                     ),
                                 )
                             }
@@ -431,6 +469,7 @@ class ExploreViewModel
                                         destinationAddress = it.instruction,
                                         distance = it.distance.toDouble(),
                                         duration = it.duration.toDouble(),
+                                        type = it.type.value,
                                     ),
                                 )
                             }

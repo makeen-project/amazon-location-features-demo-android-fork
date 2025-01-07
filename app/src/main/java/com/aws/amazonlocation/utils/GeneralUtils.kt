@@ -49,7 +49,13 @@ import com.aws.amazonlocation.data.response.PoliticalData
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.utils.DateFormat.DD_MM_HH_MM
+import com.aws.amazonlocation.utils.DateFormat.HH_MM
+import com.aws.amazonlocation.utils.DateFormat.YYYY_MM_DD_T_HH_MM_SS
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlinx.coroutines.channels.awaitClose
@@ -609,6 +615,29 @@ fun copyTextToClipboard(context: Context, text: String) {
     val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("label", text)
     clipboard.setPrimaryClip(clip)
+}
+
+
+fun convertToLocalTime(utcOffsetTime: String): String {
+    val inputFormat = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault())
+    inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+    val date: Date? = inputFormat.parse(utcOffsetTime)
+
+    val outputFormat = SimpleDateFormat(HH_MM, Locale.getDefault())
+    outputFormat.timeZone = TimeZone.getDefault()
+
+    return outputFormat.format(date)
+}
+
+fun formatToISO8601(date: Date): String {
+    val iso8601Format = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault())
+    return iso8601Format.format(date)
+}
+
+fun formatToDisplayDate(date: Date): String {
+    val friendlyFormat = SimpleDateFormat(DD_MM_HH_MM, Locale.getDefault())
+    return friendlyFormat.format(date)
 }
 
 fun getPoliticalData(context: Context): ArrayList<PoliticalData> {

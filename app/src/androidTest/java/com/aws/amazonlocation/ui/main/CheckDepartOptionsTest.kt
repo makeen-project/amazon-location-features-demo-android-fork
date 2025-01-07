@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -24,6 +25,8 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_DUE_TO_WORD_MISMATCHED
+import com.aws.amazonlocation.TEST_WORD_ARRIVE
 import com.aws.amazonlocation.TEST_WORD_AUBURN_SYDNEY
 import com.aws.amazonlocation.TEST_WORD_MANLY_BEACH_SYDNEY
 import com.aws.amazonlocation.WHILE_USING_THE_APP
@@ -41,23 +44,14 @@ import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
-class CheckRouteOptionsTest : BaseTestMainActivity() {
+class CheckDepartOptionsTest : BaseTestMainActivity() {
 
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Test
-    fun showCheckRouteOptionsTest() {
+    fun showCheckDepartOptionsTest() {
         try {
-            val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
-            if (btnContinueToApp.exists()) {
-                btnContinueToApp.click()
-            }
-            uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
-            uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
-            uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
-            uiDevice.findObject(By.text(ALLOW))?.click()
-            enableGPS(ApplicationProvider.getApplicationContext())
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+            checkLocationPermissionAndMapLoad()
 
             val cardDirectionTest =
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
@@ -120,13 +114,13 @@ class CheckRouteOptionsTest : BaseTestMainActivity() {
             )
             cardDepartOptions?.perform(click())
 
-            val clLeaveAt = waitForView(
+            val clArriveBy = waitForView(
                 CoreMatchers.allOf(
-                    withId(R.id.cl_leave_at),
+                    withId(R.id.cl_arrive_by),
                     isDisplayed()
                 )
             )
-            clLeaveAt?.perform(click())
+            clArriveBy?.perform(click())
 
             waitForView(
                 CoreMatchers.allOf(
@@ -134,9 +128,27 @@ class CheckRouteOptionsTest : BaseTestMainActivity() {
                     isDisplayed()
                 )
             )
+
+            val tvDepartOptions =
+                mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_depart_options)
+            Assert.assertTrue(TEST_FAILED_DUE_TO_WORD_MISMATCHED, tvDepartOptions.text.contains(TEST_WORD_ARRIVE, true))
         } catch (e: Exception) {
             failTest(221, e)
             Assert.fail(TEST_FAILED)
         }
+    }
+
+    private fun checkLocationPermissionAndMapLoad() {
+        val btnContinueToApp =
+            uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
+        if (btnContinueToApp.exists()) {
+            btnContinueToApp.click()
+        }
+        uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
+        uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
+        uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
+        uiDevice.findObject(By.text(ALLOW))?.click()
+        enableGPS(ApplicationProvider.getApplicationContext())
+        uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
     }
 }
