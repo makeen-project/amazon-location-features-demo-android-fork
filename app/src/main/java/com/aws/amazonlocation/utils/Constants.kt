@@ -87,7 +87,6 @@ const val CHANNEL_ID = "my_channel_simulation"
 const val CHANNEL_NAME = "simulation Notification Channel"
 const val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
 const val STRING_REPLACE_KEY = "**"
-const val PREFS_NAME_AUTH = "software.amazon.location.auth"
 const val DEFAULT_COUNTRY = "US"
 
 const val KEY_ID_TOKEN = "key_id_token"
@@ -135,6 +134,24 @@ const val LANGUAGE_CODE_HINDI = "hi"
 const val LANGUAGE_CODE_HEBREW_1 = "he"
 const val LANGUAGE_CODE_ZH_HANT= "zh-Hant"
 const val LANGUAGE_CODE_ZH= "zh"
+
+
+const val TURN_LEFT = "Left"
+const val TURN_RIGHT = "Right"
+const val TYPE_TURN = "Turn"
+const val TYPE_ARRIVE = "Arrive"
+const val TYPE_CONTINUE = "Continue"
+const val TYPE_CONTINUE_HIGHWAY = "ContinueHighway"
+const val TYPE_DEPART = "Depart"
+const val TYPE_ENTER_HIGHWAY = "EnterHighway"
+const val TYPE_EXIT = "Exit"
+const val TYPE_KEEP = "Keep"
+const val TYPE_RAMP = "Ramp"
+const val TYPE_ROUNDABOUT_ENTER = "RoundaboutEnter"
+const val TYPE_ROUNDABOUT_EXIT = "RoundaboutExit"
+const val TYPE_ROUNDABOUT_PASS = "RoundaboutPass"
+const val TYPE_U_TURN = "UTurn"
+const val TYPE_SDK_UNKNOWN = "SdkUnknown"
 
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
@@ -238,6 +255,10 @@ object TrackerCons {
 object DateFormat {
     const val MMM_DD_YYYY = "MMM dd, yyyy"
     const val HH_MM_AA = "HH:mm aa"
+    const val HH_MM = "HH:mm"
+    const val DD_MM_HH_MM = "dd/MM HH:mm"
+    const val YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ssXXX"
+
 }
 
 val simulationCollectionName = arrayListOf(
