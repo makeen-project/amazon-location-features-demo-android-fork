@@ -260,7 +260,7 @@
     <style name="CalenderViewCustom">
         <item name="colorControlActivated">@color/color_primary_green</item>
     </style>
-    <style name="CustomDatePickerTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
-        <item name="colorPrimary">@color/color_primary_green</item>
+    <style name="CalenderViewCustom">
+        <item name="colorControlActivated">@color/color_primary_green</item>
     </style>
 </resources>
