@@ -54,6 +54,31 @@ class ExploreVMCalculateDistance : BaseTest() {
         mExploreVM.mWalkCalculateDistanceResponse = null
         mExploreVM.mTruckCalculateDistanceResponse = null
         mExploreVM.mScooterCalculateDistanceResponse = null
+        mExploreVM.mIsAvoidTolls = false
+        mExploreVM.mIsAvoidFerries = false
+        mExploreVM.mIsAvoidDirtRoads = false
+        mExploreVM.mIsAvoidUTurn = false
+        mExploreVM.mIsAvoidTunnel = false
+        mExploreVM.mIsRouteOptionsOpened  = false
+        mExploreVM.mIsDepartOptionsOpened  = false
+        mExploreVM.mRouteFinish  = false
+        mExploreVM.mIsSwapClicked  = false
+        mExploreVM.mIsDirectionDataSet  = false
+        mExploreVM.mIsDirectionDataSetNew  = false
+        mExploreVM.mIsDirectionSheetHalfExpanded  = false
+        mExploreVM.mIsLocationAlreadyEnabled  = false
+        mExploreVM.mIsCurrentLocationClicked  = false
+        mExploreVM.mIsTrackingLocationClicked  = false
+        mExploreVM.isCalculateDriveApiError  = false
+        mExploreVM.isCalculateWalkApiError  = false
+        mExploreVM.isCalculateTruckApiError  = false
+        mExploreVM.isCalculateScooterApiError  = false
+        mExploreVM.isLocationUpdatedNeeded  = false
+        mExploreVM.isZooming  = false
+        mExploreVM.isDataSearchForDestination  = false
+        mExploreVM.isLiveLocationClick  = false
+        mExploreVM.mLastClickTime  = 0
+
     }
 
     @Test
@@ -87,8 +112,11 @@ class ExploreVMCalculateDistance : BaseTest() {
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
             Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, (result as? HandleResult.Success)?.response?.calculateRouteResult == Responses.RESPONSE_CALCULATE_DISTANCE_CAR)
             mExploreVM.calculateDistance(start.latitude, start.longitude, end.latitude, end.longitude, arrayListOf<AvoidanceOption>().apply {
-                add(AvoidanceOption.FERRIES)
-                add(AvoidanceOption.TOLL_ROADS)
+                if (mExploreVM.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mExploreVM.mIsAvoidFerries)  add(AvoidanceOption.FERRIES)
+                if (mExploreVM.mIsAvoidDirtRoads)  add(AvoidanceOption.DIRT_ROADS)
+                if (mExploreVM.mIsAvoidUTurn)  add(AvoidanceOption.U_TURNS)
+                if (mExploreVM.mIsAvoidTunnel)  add(AvoidanceOption.TUNNELS)
             }, DepartOption.LEAVE_NOW.name,"",true)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
