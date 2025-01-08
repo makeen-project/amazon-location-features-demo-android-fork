@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui
 
+import com.aws.amazonlocation.ui.main.ChangeMultipleDepartOptionsTest
 import com.aws.amazonlocation.ui.main.CheckDepartOptionsTest
 import com.aws.amazonlocation.ui.main.CheckGoButtonClickLiveNavigationTest
 import com.aws.amazonlocation.ui.main.CheckRouteEstimatedTimeAndDistanceTest
@@ -28,6 +29,7 @@ import org.junit.runners.Suite
     CheckRouteEstimatedTimeAndDistanceTest::class,
     CheckRouteOptionsTest::class,
     CheckDepartOptionsTest::class,
+    ChangeMultipleDepartOptionsTest::class,
     CheckRouteUserEnterMyLocationTest::class,
     RouteOptionShowingTest::class,
     RouteReverseBetweenFormToTest::class
