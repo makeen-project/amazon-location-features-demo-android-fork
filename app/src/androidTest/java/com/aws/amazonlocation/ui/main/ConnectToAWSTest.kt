@@ -46,22 +46,18 @@ class ConnectToAWSTest : BaseTestMainActivity() {
     @Test
     fun canConnectToAWSFromSettings() {
         try {
-            Thread.sleep(DELAY_2000)
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
-                Thread.sleep(DELAY_2000)
             }
+            Thread.sleep(DELAY_1000)
             uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
             uiDevice.findObject(By.text(ALLOW))?.click()
-            Thread.sleep(DELAY_2000)
             enableGPS(ApplicationProvider.getApplicationContext())
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
             val settingTabText = mActivityRule.activity.getString(R.string.menu_setting)
-
-            Thread.sleep(DELAY_2000)
 
             onView(
                 allOf(
@@ -69,9 +65,7 @@ class ConnectToAWSTest : BaseTestMainActivity() {
                     isDescendantOfA(withId(R.id.bottom_navigation_main)),
                     isDisplayed(),
                 ),
-            )
-                .perform(click())
-            Thread.sleep(DELAY_1000)
+            ).perform(click())
             Assert.assertEquals(true, bottomNavigation.menu.findItem(R.id.menu_settings).isChecked)
 
             onView(
@@ -79,43 +73,37 @@ class ConnectToAWSTest : BaseTestMainActivity() {
                     withId(R.id.cl_aws_cloudformation),
                     isDisplayed(),
                 ),
-            )
-                .perform(click())
-            Thread.sleep(DELAY_1000)
+            ).perform(click())
+
             onView(withId(R.id.edt_identity_pool_id)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.IDENTITY_POOL_ID),
                 closeSoftKeyboard(),
             )
-            Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_domain)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.USER_DOMAIN),
                 closeSoftKeyboard(),
             )
-            Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_pool_client_id)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.USER_POOL_CLIENT_ID),
                 closeSoftKeyboard(),
             )
-            Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_user_pool_id)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.USER_POOL_ID),
                 closeSoftKeyboard(),
             )
-            Thread.sleep(DELAY_1000)
             onView(withId(R.id.edt_web_socket_url)).perform(
                 nestedScrollTo(),
                 typeText(BuildConfig.WEB_SOCKET_URL),
                 closeSoftKeyboard(),
             )
-            Thread.sleep(DELAY_1000)
             val btnConnect =
                 onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
             btnConnect.perform(click())
-            Thread.sleep(DELAY_5000)
+            uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.sign_in))), DELAY_5000)
             val signIn =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.sign_in)))
             Assert.assertNotNull(signIn)

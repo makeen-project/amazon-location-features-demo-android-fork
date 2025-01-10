@@ -48,7 +48,6 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
     fun checkDefaultRouteOptionsTest() {
         try {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             goToDefaultRouteSettings()
 
@@ -115,19 +114,14 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
         explorer.click()
 
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-        Thread.sleep(DELAY_2000)
 
         val cardDirectionTest =
             onView(withId(R.id.card_direction)).check(ViewAssertions.matches(isDisplayed()))
         cardDirectionTest.perform(click())
 
-        Thread.sleep(DELAY_2000)
-
         val sourceEdt =
             waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
         sourceEdt?.perform(replaceText(SEARCH_TEST_WORD_1))
-
-        Thread.sleep(DELAY_2000)
 
         val suggestionListSrcRv =
             waitForView(
@@ -144,8 +138,6 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             ),
         )
 
-        Thread.sleep(DELAY_2000)
-
         val destinationEdt =
             waitForView(
                 CoreMatchers.allOf(
@@ -155,8 +147,6 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             )
         destinationEdt?.perform(click())
         destinationEdt?.perform(typeText(SEARCH_TEST_WORD_2))
-
-        Thread.sleep(DELAY_2000)
 
         val suggestionListDestRv =
             waitForView(
@@ -188,8 +178,6 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
                 ),
             )
         cardRoutingOption?.perform(click())
-
-        Thread.sleep(DELAY_2000)
 
         getInstrumentation().waitForIdleSync()
         getInstrumentation().runOnMainSync {

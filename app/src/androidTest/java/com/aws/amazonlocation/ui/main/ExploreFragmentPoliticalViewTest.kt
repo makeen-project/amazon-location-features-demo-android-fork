@@ -40,10 +40,8 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
     @Test
     fun testPoliticalViewChange() {
         try {
-            Thread.sleep(DELAY_2000)
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
 
-            Thread.sleep(DELAY_2000)
 
             goToMapStyles()
 
@@ -51,22 +49,16 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
                 onView(withId(R.id.cl_political_view)).check(matches(isDisplayed()))
             clPoliticalView.perform(click())
 
-            Thread.sleep(DELAY_2000)
-
             val etSearchCountry =
                 onView(withId(R.id.et_search_country)).check(matches(isDisplayed()))
             etSearchCountry.perform(click())
-
-            Thread.sleep(DELAY_1000)
             onView(withId(R.id.et_search_country)).perform(replaceText(TEST_WORD_ARG))
 
-            Thread.sleep(DELAY_1000)
+            uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.description_arg))), DELAY_5000)
 
             val rbCountry =
                 onView(withId(R.id.rb_country)).check(matches(isDisplayed()))
             rbCountry.perform(click())
-
-            Thread.sleep(DELAY_2000)
 
             val tvPoliticalDescription = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_political_description"))
             Assert.assertTrue(TEST_FAILED_COUNTRY, tvPoliticalDescription.text.contains(TEST_WORD_ARG))
@@ -80,9 +72,7 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
         val cardMap = waitForView(allOf(withId(R.id.card_map), isDisplayed()))
         cardMap?.perform(click())
 
-        Thread.sleep(DELAY_2000)
         swipeUp()
-        Thread.sleep(DELAY_2000)
     }
 
     private fun swipeUp(): UiDevice? {

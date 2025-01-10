@@ -5,6 +5,9 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
@@ -14,16 +17,17 @@ import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_COUNT_NOT_ZERO
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.waitForView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
 
@@ -37,12 +41,10 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
     fun showDeleteTrackingTest() {
         enableGPS(ApplicationProvider.getApplicationContext())
         uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-        Thread.sleep(DELAY_1000)
 
         val tracking = uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
         tracking.click()
 
-        Thread.sleep(DELAY_5000)
         uiDevice.wait(
             Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking))),
             DELAY_1000
@@ -51,7 +53,7 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
             uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking)))
         labelStartTracking?.click()
 
-        Thread.sleep(DELAY_15000)
+        waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
         uiDevice.wait(
             Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_stop_tracking))),
             DELAY_1000
@@ -81,7 +83,7 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
             val labelDeleteTrackingData =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_delete_tracking_data)))
             labelDeleteTrackingData?.click()
-            Thread.sleep(DELAY_1000)
+
             uiDevice.wait(
                 Until.hasObject(By.text(mActivityRule.activity.getString(R.string.ok))),
                 DELAY_1000

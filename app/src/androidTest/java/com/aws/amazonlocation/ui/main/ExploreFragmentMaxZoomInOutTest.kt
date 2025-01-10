@@ -12,9 +12,7 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_MAX_ZOOM_NOT_REACHED
@@ -40,7 +38,6 @@ class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
             enableGPS(ApplicationProvider.getApplicationContext())
             var mapbox: MapLibreMap? = null
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_1000)
 
             val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
             mapView.getMapAsync {
@@ -53,7 +50,6 @@ class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
                 if (map.exists()) {
                     map.pinchIn(50, 15)
                 }
-                Thread.sleep(DELAY_2000)
                 if (beforeZoomLevel != null) {
                     mapbox?.cameraPosition?.zoom?.let {
                         if (beforeZoomLevel == it) {
@@ -77,7 +73,6 @@ class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
         try {
             var mapbox: MapLibreMap? = null
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
             mapView.getMapAsync {
@@ -90,7 +85,6 @@ class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
                 if (map.exists()) {
                     onView(withId(R.id.mapView)).perform(ViewActions.doubleClick())
                 }
-                Thread.sleep(DELAY_2000)
                 if (beforeZoomLevel != null) {
                     mapbox?.cameraPosition?.zoom?.let {
                         if (beforeZoomLevel == it) {

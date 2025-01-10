@@ -14,14 +14,13 @@ import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_ROUTE_OPTION_NOT_VISIBLE
 import com.aws.amazonlocation.WHILE_USING_THE_APP
-import com.aws.amazonlocation.WHILE_USING_THE_APP_CAPS
 import com.aws.amazonlocation.WHILE_USING_THE_APP_ALLOW
+import com.aws.amazonlocation.WHILE_USING_THE_APP_CAPS
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
@@ -39,26 +38,21 @@ class SettingRouteOptionAvailableTest : BaseTestMainActivity() {
     @Test
     fun showSettingRouteOptionAvailableTest() {
         try {
-            Thread.sleep(DELAY_2000)
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
-                Thread.sleep(DELAY_2000)
             }
+            Thread.sleep(DELAY_1000)
             uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
             uiDevice.findObject(By.text(ALLOW))?.click()
-            Thread.sleep(DELAY_2000)
             enableGPS(ApplicationProvider.getApplicationContext())
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_1000)
 
-            val explorer =
+            val settings =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_setting)))
-            explorer.click()
-
-            Thread.sleep(DELAY_1000)
+            settings.click()
 
             val defaultRouteOption =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_default_route_options)))

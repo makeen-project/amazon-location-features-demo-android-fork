@@ -12,6 +12,7 @@ import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers
 import org.hamcrest.core.AllOf.allOf
 import org.junit.*
 
@@ -30,7 +31,6 @@ class SettingsFragmentChangeLanguageTest : BaseTestMainActivity() {
     fun checkChangeLanguage() {
         try {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             goToLanguage()
         } catch (e: Exception) {
@@ -48,18 +48,14 @@ class SettingsFragmentChangeLanguageTest : BaseTestMainActivity() {
                 isDisplayed()
             )
         ).perform(click())
-
-        Thread.sleep(DELAY_1000)
-
+        waitForView(CoreMatchers.allOf(withId(R.id.cl_language), isDisplayed()))
         onView(
             allOf(
                 withId(R.id.cl_language),
                 isDisplayed()
             )
         ).perform(click())
-
-        Thread.sleep(DELAY_1000)
-
+        waitForView(CoreMatchers.allOf(withId(R.id.rb_arabic), isDisplayed()))
         onView(
             allOf(
                 withId(R.id.rb_arabic),

@@ -19,10 +19,8 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_10000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_ADDRESS
@@ -66,7 +64,6 @@ class AnalyticsTest : BaseTestMainActivity() {
     fun checkAnalyticsContent() {
         try {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
             uiDevice.wait(
                 Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_places")),
                 DELAY_5000
@@ -85,9 +82,6 @@ class AnalyticsTest : BaseTestMainActivity() {
                 BottomSheetBehavior.from(clSearchSheet)
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
             uiDevice.wait(Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))), DELAY_5000)
-            // End - Search event check
-            Thread.sleep(DELAY_1000)
-            // Start - Screen change event test
             val settingTabText = mActivityRule.activity.getString(R.string.menu_setting)
             onView(
                 allOf(
@@ -107,14 +101,12 @@ class AnalyticsTest : BaseTestMainActivity() {
                 )
             ).perform(click())
 
-            Thread.sleep(DELAY_2000)
             onView(
                 allOf(
                     withId(R.id.ll_imperial),
                     isDisplayed()
                 )
             ).perform(click())
-            Thread.sleep(DELAY_2000)
 
             snackBarMsg = uiDevice.wait(Until.hasObject(By.text(EventType.MAP_UNIT_CHANGE)), DELAY_10000)
             Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg)

@@ -24,7 +24,6 @@ import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -56,16 +55,13 @@ class SearchContactInfoPOICardTest : BaseTestMainActivity() {
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
-                Thread.sleep(DELAY_2000)
             }
             uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
             uiDevice.findObject(By.text(ALLOW))?.click()
-            Thread.sleep(DELAY_2000)
             enableGPS(ApplicationProvider.getApplicationContext())
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
@@ -81,13 +77,10 @@ class SearchContactInfoPOICardTest : BaseTestMainActivity() {
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
                 rvSearchPlaceSuggestion.adapter?.itemCount?.let {
                     if (it >= 0) {
-                        Thread.sleep(DELAY_2000)
                         onView(withId(R.id.rv_search_places_suggestion))
                             .check(matches(hasDescendant(withText(TEST_WORD_DOMINO_PIZZA))))
-                        Thread.sleep(DELAY_2000)
                         onView(withId(R.id.rv_search_places_suggestion))
                             .perform(RecyclerViewActions.actionOnItem<ViewHolder>(hasDescendant(withText(TEST_WORD_DOMINO_PIZZA)), click()))
-                        Thread.sleep(DELAY_2000)
                         val btnDirection =
                             mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
                         if (btnDirection.visibility == View.VISIBLE) {
@@ -97,7 +90,6 @@ class SearchContactInfoPOICardTest : BaseTestMainActivity() {
                             )
                             val tvPlaceLink =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_place_link)
-                            Thread.sleep(DELAY_2000)
                             Assert.assertTrue(TEST_FAILED_PLACE_LINK_NOT_VISIBLE, tvPlaceLink.visibility == View.VISIBLE)
                         } else {
                             Assert.fail()

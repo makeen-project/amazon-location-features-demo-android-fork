@@ -15,7 +15,6 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
-import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
@@ -45,15 +44,12 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
         try {
             enableGPS(ApplicationProvider.getApplicationContext())
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_1000)
 
             val tracking = uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
             tracking.click()
-
-            Thread.sleep(DELAY_5000)
             uiDevice.wait(
                 Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking))),
-                DELAY_1000
+                DELAY_5000
             )
             val labelStartTracking =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.label_start_tracking)))
@@ -68,7 +64,6 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
                 val labelOk =
                     uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.ok)))
                 labelOk?.click()
-                Thread.sleep(DELAY_1000)
 
                 uiDevice.wait(
                     Until.hasObject(By.text(mActivityRule.activity.getString(R.string.ok))),

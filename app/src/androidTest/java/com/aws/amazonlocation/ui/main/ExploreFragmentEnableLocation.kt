@@ -11,9 +11,8 @@ import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
-import com.aws.amazonlocation.DELAY_4000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -41,18 +40,15 @@ class ExploreFragmentEnableLocation : BaseTestMainActivity() {
     @Test
     fun testMapEnableLocation() {
         try {
-            Thread.sleep(DELAY_2000)
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
-                Thread.sleep(DELAY_2000)
+                Thread.sleep(DELAY_1000)
                 try {
-                    Thread.sleep(DELAY_2000)
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
-                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapLibreMap? = null
@@ -60,7 +56,6 @@ class ExploreFragmentEnableLocation : BaseTestMainActivity() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Thread.sleep(DELAY_4000)
                     waitUntil(DELAY_5000, 25) {
                         mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true
                     }
@@ -71,12 +66,10 @@ class ExploreFragmentEnableLocation : BaseTestMainActivity() {
                 }
             } else {
                 try {
-                    Thread.sleep(DELAY_2000)
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
-                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapLibreMap? = null
@@ -84,7 +77,6 @@ class ExploreFragmentEnableLocation : BaseTestMainActivity() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Thread.sleep(DELAY_4000)
                     waitUntil(DELAY_5000, 25) {
                         mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true
                     }

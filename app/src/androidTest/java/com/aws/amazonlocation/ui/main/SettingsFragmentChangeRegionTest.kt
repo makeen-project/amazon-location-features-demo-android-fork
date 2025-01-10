@@ -39,7 +39,6 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
     fun checkChangeRegion() {
         try {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             goToRegion()
         } catch (e: Exception) {
@@ -58,8 +57,7 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
             )
         ).perform(click())
 
-        Thread.sleep(DELAY_1000)
-
+        waitForView(CoreMatchers.allOf(withId(R.id.cl_region), isDisplayed()))
         onView(
             allOf(
                 withId(R.id.cl_region),
@@ -67,8 +65,7 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
             )
         ).perform(click())
 
-        Thread.sleep(DELAY_1000)
-
+        waitForView(CoreMatchers.allOf(withId(R.id.rv_region), isDisplayed()))
         val listRv = waitForView(
             CoreMatchers.allOf(
                 withId(R.id.rv_region),
@@ -83,7 +80,6 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
             )
         )
         var rbRegionIsChecked = false
-        Thread.sleep(DELAY_1000)
         onView(withId(R.id.rv_region)).perform(
             RecyclerViewActions.scrollToPosition<RegionAdapter.RegionVH>(
                 2
@@ -110,7 +106,6 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
                 }
             )
         )
-        Thread.sleep(DELAY_1000)
         Assert.assertTrue(TEST_FAILED, rbRegionIsChecked)
     }
 }

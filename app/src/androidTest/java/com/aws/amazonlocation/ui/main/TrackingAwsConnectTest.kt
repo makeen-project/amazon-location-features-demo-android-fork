@@ -24,8 +24,6 @@ import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
-import com.aws.amazonlocation.DELAY_4000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -40,6 +38,7 @@ import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.scrollForView
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.waitForView
 import com.aws.amazonlocation.waitUntil
 import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -59,19 +58,16 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
     @Test
     fun showAwsConnectTest() {
         try {
-            Thread.sleep(DELAY_4000)
             enableGPS(ApplicationProvider.getApplicationContext())
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
-                Thread.sleep(DELAY_2000)
+                Thread.sleep(DELAY_1000)
                 try {
-                    Thread.sleep(DELAY_2000)
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
                     uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
                     uiDevice.findObject(By.text(ALLOW))?.click()
-                    Thread.sleep(DELAY_2000)
                     enableGPS(ApplicationProvider.getApplicationContext())
                     uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
                     var mapbox: MapLibreMap? = null
@@ -79,7 +75,6 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
                     mapView.getMapAsync {
                         mapbox = it
                     }
-                    Thread.sleep(DELAY_4000)
                     waitUntil(DELAY_5000, 25) {
                         mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true
                     }
@@ -90,7 +85,6 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
                 }
             }
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_1000)
 
             val tracking =
                 uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
@@ -110,7 +104,7 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
                     btnTryTracker.performClick()
                 }
             }
-            Thread.sleep(DELAY_1000)
+            waitForView(allOf(withId(R.id.edt_identity_pool_id), isDisplayed()))
             val appViews = UiScrollable(UiSelector().scrollable(true))
 
             val edtIdentityPoolId =
@@ -151,11 +145,9 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
             val btnConnect =
                 onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
             btnConnect.perform(click())
-            Thread.sleep(DELAY_5000)
-//            uiDevice.wait(
-//                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.you_are_connected))),
-//                DELAY_5000,
-//            )
+
+            waitForView(allOf(withId(R.id.tv_sign_in_required), isDisplayed()))
+//
             val targetContext: Context = getInstrumentation().targetContext.applicationContext
             val pm = PreferenceManager(targetContext)
             val mPoolId = pm.getValue(KEY_POOL_ID, "")

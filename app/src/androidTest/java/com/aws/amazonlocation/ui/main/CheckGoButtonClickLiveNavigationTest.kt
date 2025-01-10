@@ -23,6 +23,7 @@ import com.aws.amazonlocation.ALLOW
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
+import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.GO
 import com.aws.amazonlocation.R
@@ -111,6 +112,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
         if (btnContinueToApp.exists()) {
             btnContinueToApp.click()
         }
+        Thread.sleep(DELAY_1000)
         uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
         uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
         uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()

@@ -8,7 +8,6 @@ import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED
@@ -34,7 +33,6 @@ class ExploreFragmentMapCurrentLocationTest : BaseTestMainActivity() {
             enableGPS(ApplicationProvider.getApplicationContext())
             var mapbox: MapLibreMap? = null
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
             mapView.getMapAsync {

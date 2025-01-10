@@ -22,7 +22,6 @@ import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_20000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -49,8 +48,6 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
         try {
             enableGPS(ApplicationProvider.getApplicationContext())
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
-
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
@@ -65,13 +62,12 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
             if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
                 rvSearchPlaceSuggestion.adapter?.itemCount?.let {
                     if (it >= 0) {
-                        Thread.sleep(DELAY_2000)
                         onView(withId(R.id.rv_search_places_suggestion))
                             .check(matches(hasDescendant(withText(TEST_WORD_SHYAMAL_CROSS_ROAD))))
-                        Thread.sleep(DELAY_2000)
+
                         onView(withId(R.id.rv_search_places_suggestion))
                             .perform(RecyclerViewActions.actionOnItem<ViewHolder>(hasDescendant(withText(TEST_WORD_SHYAMAL_CROSS_ROAD)), click()))
-                        Thread.sleep(DELAY_2000)
+
                         val btnDirection =
                             mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_direction)
                         if (btnDirection.visibility == View.VISIBLE) {
@@ -81,7 +77,6 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
                             )
                             val tvDirectionTime =
                                 mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_direction_distance)
-                            Thread.sleep(DELAY_2000)
                             Assert.assertTrue(TEST_FAILED_DIRECTION_TIME_NOT_VISIBLE, tvDirectionTime.visibility == View.VISIBLE)
                         } else {
                             Assert.fail()

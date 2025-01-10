@@ -1,26 +1,28 @@
 package com.aws.amazonlocation.ui.main
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.view.View
 import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
+import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.rule.ActivityTestRule
-import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.*
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
 import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -30,15 +32,14 @@ import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.getRandom0_01To1_0
 import com.aws.amazonlocation.getRandom1To100
 import com.aws.amazonlocation.getRandomGeofenceName
-import dagger.hilt.android.testing.HiltAndroidRule
+import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlin.properties.Delegates
+import org.hamcrest.CoreMatchers
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
-import org.junit.Rule
 import org.junit.Test
-import java.util.*
-import kotlin.properties.Delegates
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -53,7 +54,6 @@ class GeofenceEditTest : BaseTestMainActivity() {
     fun editGeoFenceTest() {
         try {
             uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
 
             onView(
                 allOf(
@@ -61,8 +61,6 @@ class GeofenceEditTest : BaseTestMainActivity() {
                     isDisplayed(),
                 ),
             ).perform(click())
-
-            Thread.sleep(DELAY_1000)
 
             uiDevice.wait(Until.gone(By.res("${BuildConfig.APPLICATION_ID}:id/cl_search_loader_geofence_list")), DELAY_5000)
 
@@ -84,7 +82,6 @@ class GeofenceEditTest : BaseTestMainActivity() {
 
         if (emptyContainer.isVisible) {
             geofenceName = getRandomGeofenceName()
-            Thread.sleep(DELAY_1000)
             onView(
                 allOf(
                     withId(R.id.btn_add_geofence),
@@ -93,8 +90,7 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 ),
             ).perform(click())
 
-            Thread.sleep(DELAY_1000)
-
+            waitForView(CoreMatchers.allOf(withId(R.id.mapView), isDisplayed()))
             onView(
                 withId(R.id.mapView),
             ).perform(
@@ -104,18 +100,20 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 ),
             )
 
-            Thread.sleep(DELAY_1000)
-
             val seekbar = mActivityRule.activity.findViewById<SeekBar>(R.id.seekbar_geofence_radius)
             seekbar.progress = ((seekbar.max - seekbar.min) * getRandom0_01To1_0()).toInt()
 
-            Thread.sleep(DELAY_1000)
-
             onView(withId(R.id.edt_enter_geofence_name)).perform(typeText(geofenceName))
-            Thread.sleep(DELAY_1000)
+
             onView(withId(R.id.btn_add_geofence_save)).perform(click())
 
-            uiDevice.wait(Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/rv_geofence")), DELAY_5000)
+            waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.rv_geofence),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
+                )
+            )
 
             onView(withId(R.id.rv_geofence)).perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(geofenceName))))
         } else {
@@ -125,7 +123,13 @@ class GeofenceEditTest : BaseTestMainActivity() {
     }
 
     private fun editGeoFence() {
-        Thread.sleep(DELAY_1000)
+        waitForView(
+            CoreMatchers.allOf(
+                withId(R.id.rv_geofence),
+                isDisplayed(),
+                hasMinimumChildCount(1)
+            )
+        )
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
@@ -135,11 +139,10 @@ class GeofenceEditTest : BaseTestMainActivity() {
             ),
         )
 
-        Thread.sleep(DELAY_1000)
 
         val seekbar = mActivityRule.activity.findViewById<SeekBar>(R.id.seekbar_geofence_radius)
         seekbar.progress = ((seekbar.max - seekbar.min) * getRandom0_01To1_0()).toInt()
-        Thread.sleep(DELAY_1000)
+
         updatedRadius = seekbar.progress
 
         onView(withId(R.id.btn_add_geofence_save)).perform(click())
@@ -148,7 +151,13 @@ class GeofenceEditTest : BaseTestMainActivity() {
     }
 
     private fun verifyGeoFenceUpdate() {
-        Thread.sleep(DELAY_1000)
+        waitForView(
+            CoreMatchers.allOf(
+                withId(R.id.rv_geofence),
+                isDisplayed(),
+                hasMinimumChildCount(1)
+            )
+        )
         onView(withId(R.id.rv_geofence)).perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(hasDescendant(withText(geofenceName))))
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
@@ -158,7 +167,6 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 click(),
             ),
         )
-        Thread.sleep(DELAY_1000)
         val seekbar = mActivityRule.activity.findViewById<SeekBar>(R.id.seekbar_geofence_radius)
 
         if (seekbar.progress != updatedRadius) {
