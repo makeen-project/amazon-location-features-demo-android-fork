@@ -242,4 +242,17 @@
   <string name="label_schedule">جدول</string>
   <string name="label_copied_to_clipboard">تم نسخها إلى الحافظة</string>
   <string name="label_no_political_view">لا سياسي منظر</string>
+  <string name="label_leave_now">أجازة الآن</string>
+  <string name="label_leave_at">أجازة في</string>
+  <string name="label_arrive_by">يصل بواسطة</string>
+  <string name="label_you_ve_arrived">لديك وصلت!</string>
+  <string name="done">تم</string>
+  <string name="label_destination_will_be_on_the_right">الوجهة سوف هو في ال حق</string>
+  <string name="label_destination_will_be_on_the_left">الوجهة سوف هو في ال يسار</string>
+  <string name="time">الوقت</string>
+  <string name="label_select_time">حدد الوقت</string>
+  <string name="label_selected_time_cannot_be_in_the_past">تم اختياره وقت غير قادر هو في ال الماضي!</string>
+  <string name="text_switch_avoid">تجنب</string>
+  <string name="label_leave">أجازة</string>
+  <string name="label_arrive">يصل</string>
 </resources>

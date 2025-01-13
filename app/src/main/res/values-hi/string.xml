@@ -242,4 +242,17 @@
   <string name="label_schedule">शेड्यूल</string>
   <string name="label_copied_to_clipboard">कॉपी किया गया को क्लिपबोर्ड</string>
   <string name="label_no_political_view">नहीं राजनीतिक राय</string>
+  <string name="label_leave_now">लीव अभी</string>
+  <string name="label_leave_at">लीव पर</string>
+  <string name="label_arrive_by">पहुंचें द्वारा</string>
+  <string name="label_you_ve_arrived">आपने पहुंच गए!</string>
+  <string name="done">हो गया</string>
+  <string name="label_destination_will_be_on_the_right">डेस्टिनेशन होगा होना के ऊपर यह दाएँ</string>
+  <string name="label_destination_will_be_on_the_left">डेस्टिनेशन होगा होना के ऊपर यह छोड़ दिया है</string>
+  <string name="time">टाइम</string>
+  <string name="label_select_time">चुनें टाइम</string>
+  <string name="label_selected_time_cannot_be_in_the_past">चयनित पहर नहीं कर सकता होना में यह अतीत!</string>
+  <string name="text_switch_avoid">बचें</string>
+  <string name="label_leave">लीव</string>
+  <string name="label_arrive">पहुंचें</string>
 </resources>

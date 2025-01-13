@@ -242,4 +242,17 @@
   <string name="label_schedule">Cronograma</string>
   <string name="label_copied_to_clipboard">Copiado para prancheta</string>
   <string name="label_no_political_view">Não político olhar</string>
+  <string name="label_leave_now">Sair agora</string>
+  <string name="label_leave_at">Sair em</string>
+  <string name="label_arrive_by">Chegue de</string>
+  <string name="label_you_ve_arrived">Você tem chegou!</string>
+  <string name="done">Feito</string>
+  <string name="label_destination_will_be_on_the_right">Destino vai ser em a certo</string>
+  <string name="label_destination_will_be_on_the_left">Destino vai ser em a esquerdo</string>
+  <string name="time">Hora</string>
+  <string name="label_select_time">Selecione Hora</string>
+  <string name="label_selected_time_cannot_be_in_the_past">Selecionado horas não pode ser em a passado!</string>
+  <string name="text_switch_avoid">Evite</string>
+  <string name="label_leave">Sair</string>
+  <string name="label_arrive">Chegue</string>
 </resources>
