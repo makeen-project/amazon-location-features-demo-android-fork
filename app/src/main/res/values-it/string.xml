@@ -242,4 +242,17 @@
   <string name="label_schedule">Pianificazione</string>
   <string name="label_copied_to_clipboard">Copiato a appunti</string>
   <string name="label_no_political_view">No politico vista</string>
+  <string name="label_leave_now">Lasciare adesso</string>
+  <string name="label_leave_at">Lasciare al</string>
+  <string name="label_arrive_by">Arrivare da</string>
+  <string name="label_you_ve_arrived">Tu hai arrivato!</string>
+  <string name="done">Fatto</string>
+  <string name="label_destination_will_be_on_the_right">Destinazione volontà essere sul lo destra</string>
+  <string name="label_destination_will_be_on_the_left">Destinazione volontà essere sul lo sinistra</string>
+  <string name="time">Ora</string>
+  <string name="label_select_time">Seleziona Ora</string>
+  <string name="label_selected_time_cannot_be_in_the_past">Selezionato tempo Non posso essere nel lo passato!</string>
+  <string name="text_switch_avoid">Evitare</string>
+  <string name="label_leave">Lasciare</string>
+  <string name="label_arrive">Arrivare</string>
 </resources>

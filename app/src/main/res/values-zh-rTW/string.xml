@@ -242,4 +242,17 @@
   <string name="label_schedule">時間表</string>
   <string name="label_copied_to_clipboard">已複製 至 剪貼板</string>
   <string name="label_no_political_view">否 政治 檢視</string>
+  <string name="label_leave_now">離開 現在</string>
+  <string name="label_leave_at">離開 在</string>
+  <string name="label_arrive_by">到達 通過</string>
+  <string name="label_you_ve_arrived">你已經 到了！</string>
+  <string name="done">完成</string>
+  <string name="label_destination_will_be_on_the_right">目的地 將 是 上 該 對</string>
+  <string name="label_destination_will_be_on_the_left">目的地 將 是 上 該 剩下</string>
+  <string name="time">時間</string>
+  <string name="label_select_time">選擇 時間</string>
+  <string name="label_selected_time_cannot_be_in_the_past">已選 時間 不能 是 在 該 過去！</string>
+  <string name="text_switch_avoid">避免</string>
+  <string name="label_leave">離開</string>
+  <string name="label_arrive">到達</string>
 </resources>

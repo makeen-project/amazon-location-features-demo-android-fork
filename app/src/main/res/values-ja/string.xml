@@ -242,4 +242,17 @@
   <string name="label_schedule">スケジュール</string>
   <string name="label_copied_to_clipboard">コピーされました に クリップボード</string>
   <string name="label_no_political_view">いいえ 政治的 見る</string>
+  <string name="label_leave_now">退出 今</string>
+  <string name="label_leave_at">退出 で</string>
+  <string name="label_arrive_by">到着 によって</string>
+  <string name="label_you_ve_arrived">あなたは 到着しました！</string>
+  <string name="done">完了</string>
+  <string name="label_destination_will_be_on_the_right">目的地 だろう です オン その 右</string>
+  <string name="label_destination_will_be_on_the_left">目的地 だろう です オン その 左</string>
+  <string name="time">時間</string>
+  <string name="label_select_time">[選択] 時間</string>
+  <string name="label_selected_time_cannot_be_in_the_past">選択済み 時間 できない です に その 過去!</string>
+  <string name="text_switch_avoid">避ける</string>
+  <string name="label_leave">退出</string>
+  <string name="label_arrive">到着</string>
 </resources>
