@@ -6,14 +6,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import aws.sdk.kotlin.services.cognitoidentity.CognitoIdentityClient
 import aws.sdk.kotlin.services.cognitoidentity.model.GetIdRequest
 import aws.sdk.kotlin.services.cognitoidentity.model.ResourceNotFoundException
-import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.LanguageData
 import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.PoliticalData
-import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
-import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
 import com.aws.amazonlocation.utils.DateFormat.DD_MM_HH_MM
 import com.aws.amazonlocation.utils.DateFormat.HH_MM
 import com.aws.amazonlocation.utils.DateFormat.YYYY_MM_DD_T_HH_MM_SS
