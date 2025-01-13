@@ -908,7 +908,7 @@ class ExploreFragment :
                 mBottomSheetHelper,
                 object : MapStyleBottomSheetFragment.MapInterface {
                     override fun infoIconClick() {
-                        isFromMapStyle = true
+                        mViewModel.isFromMapStyle = true
                         hideMapStyleSheet()
                         setAttributionDataAndExpandSheet()
                     }
@@ -3708,8 +3708,8 @@ class ExploreFragment :
 
     fun hideAttribution() {
         mBottomSheetHelper.hideAttributeSheet()
-        if (isFromMapStyle) {
-            isFromMapStyle = false
+        if (mViewModel.isFromMapStyle) {
+            mViewModel.isFromMapStyle = false
             mBinding.cardMap.performClick()
         }
     }
