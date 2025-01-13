@@ -88,6 +88,7 @@ class ExploreViewModel
         var isCalculateTruckApiError: Boolean = false
         var isCalculateScooterApiError: Boolean = false
         var isLocationUpdatedNeeded: Boolean = false
+        var isFromMapStyle: Boolean = false
         var isZooming: Boolean = false
         var isDataSearchForDestination: Boolean = false
         var isLiveLocationClick: Boolean = false
@@ -403,21 +404,26 @@ class ExploreViewModel
                             ?.toDouble()
                     val getLastTime =
                         if (legs.last().vehicleLegDetails != null) {
-                            legs.last()
+                            legs
+                                .last()
                                 .vehicleLegDetails!!
                                 .arrival
                                 ?.time
                         } else if (legs.last().pedestrianLegDetails != null) {
-                            legs.last()
+                            legs
+                                .last()
                                 .pedestrianLegDetails!!
                                 .arrival
                                 ?.time
                         } else if (legs.last().ferryLegDetails != null) {
-                            legs.last()
+                            legs
+                                .last()
                                 .ferryLegDetails!!
                                 .arrival
                                 ?.time
-                        } else ""
+                        } else {
+                            ""
+                        }
                     mNavigationResponse?.time = getLastTime?.let { convertToLocalTime(it) }
                     for (leg in legs) {
                         if (leg.vehicleLegDetails != null) {
@@ -439,7 +445,7 @@ class ExploreViewModel
                                         routeRoundaboutEnterStepDetails = it.roundaboutEnterStepDetails,
                                         routeRoundaboutExitStepDetails = it.roundaboutExitStepDetails,
                                         routeRoundaboutPassStepDetails = it.roundaboutPassStepDetails,
-                                        routeUTurnStepDetails = it.uTurnStepDetails
+                                        routeUTurnStepDetails = it.uTurnStepDetails,
                                     ),
                                 )
                             }
@@ -602,9 +608,7 @@ class ExploreViewModel
         }
 
         fun setPoliticalListData(context: Context) {
-            val item =
-                getPoliticalData(context
-                    ),
+            val item = getPoliticalData(context)
 
             mPoliticalData.addAll(item)
 
@@ -617,7 +621,8 @@ class ExploreViewModel
                     it.countryName.contains(query, ignoreCase = true)
                 },
             )
-    fun setMapLanguageData(context: Context) {
+
+        fun setMapLanguageData(context: Context) {
             val item = getLanguageData(context)
 
             mMapLanguageData.clear()
