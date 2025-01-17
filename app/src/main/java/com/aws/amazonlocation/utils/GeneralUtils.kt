@@ -173,25 +173,25 @@ fun getLanguageCode(): String? {
 
 
 fun convertToLocalTime(utcOffsetTime: String): String {
-    val inputFormat = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault())
+    val inputFormat = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault() ?: Locale.US)
     inputFormat.timeZone = TimeZone.getTimeZone("UTC")
 
     val date: Date = inputFormat.parse(utcOffsetTime) as Date
 
-    val outputFormat = SimpleDateFormat(HH_MM, Locale.getDefault())
+    val outputFormat = SimpleDateFormat(HH_MM, Locale.getDefault() ?: Locale.US)
     outputFormat.timeZone = TimeZone.getDefault()
 
     return outputFormat.format(date)
 }
 
 fun formatToISO8601(date: Date): String {
-    val iso8601Format = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault())
+    val iso8601Format = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault() ?: Locale.US)
     return iso8601Format.format(date)
 }
 
 fun formatToDisplayDate(date: Date): String {
-    val friendlyFormat = SimpleDateFormat(DD_MM_HH_MM, Locale.getDefault())
-    return friendlyFormat.format(date)
+    val displayFormat = SimpleDateFormat(DD_MM_HH_MM, Locale.getDefault() ?: Locale.US)
+    return displayFormat.format(date)
 }
 
 fun getPoliticalData(context: Context): ArrayList<PoliticalData> {
