@@ -3954,6 +3954,16 @@ class ExploreFragment :
         mBottomSheetHelper.hideSearchBottomSheet(true)
         mBottomSheetHelper.hideDirectionSheet()
         bottomSheetDirectionSearch.apply {
+            calendar = Calendar.getInstance()
+            calDepart.minDate = calendar!!.timeInMillis
+            mViewModel.mSelectedDepartOption = DepartOption.LEAVE_NOW.name
+            tvPickedTime.text = buildString {
+                append(String.format("%02d", calendar!!.get(Calendar.HOUR_OF_DAY)))
+                append(":")
+                append(String.format("%02d", calendar!!.get(Calendar.MINUTE)))
+            }
+            setDepartOptionSelected(clLeaveNow, tvLeaveNow)
+            disableCalendar()
             mViewModel.mIsDirectionDataSet = true
             edtSearchDest.setText("")
             lifecycleScope.launch {
