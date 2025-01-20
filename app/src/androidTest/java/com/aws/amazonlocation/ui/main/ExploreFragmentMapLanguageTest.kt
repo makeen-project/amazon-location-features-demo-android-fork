@@ -42,7 +42,7 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
             val btnContinueToApp = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
             if (btnContinueToApp.exists()) {
                 btnContinueToApp.click()
-                Thread.sleep(DELAY_2000)
+                Thread.sleep(DELAY_1000)
             }
             uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
             uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()

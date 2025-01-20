@@ -260,7 +260,4 @@
     <style name="CalenderViewCustom">
         <item name="colorControlActivated">@color/color_primary_green</item>
     </style>
-    <style name="CalenderViewCustom">
-        <item name="colorControlActivated">@color/color_primary_green</item>
-    </style>
 </resources>

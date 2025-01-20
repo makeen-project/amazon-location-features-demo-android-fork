@@ -153,24 +153,6 @@ const val TYPE_ROUNDABOUT_PASS = "RoundaboutPass"
 const val TYPE_U_TURN = "UTurn"
 const val TYPE_SDK_UNKNOWN = "SdkUnknown"
 
-
-const val TURN_LEFT = "Left"
-const val TURN_RIGHT = "Right"
-const val TYPE_TURN = "Turn"
-const val TYPE_ARRIVE = "Arrive"
-const val TYPE_CONTINUE = "Continue"
-const val TYPE_CONTINUE_HIGHWAY = "ContinueHighway"
-const val TYPE_DEPART = "Depart"
-const val TYPE_ENTER_HIGHWAY = "EnterHighway"
-const val TYPE_EXIT = "Exit"
-const val TYPE_KEEP = "Keep"
-const val TYPE_RAMP = "Ramp"
-const val TYPE_ROUNDABOUT_ENTER = "RoundaboutEnter"
-const val TYPE_ROUNDABOUT_EXIT = "RoundaboutExit"
-const val TYPE_ROUNDABOUT_PASS = "RoundaboutPass"
-const val TYPE_U_TURN = "UTurn"
-const val TYPE_SDK_UNKNOWN = "SdkUnknown"
-
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
     Pair("US East (N. Virginia) us-east-1", "us-east-1"),
