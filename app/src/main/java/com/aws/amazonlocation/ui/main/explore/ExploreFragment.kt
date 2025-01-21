@@ -3919,6 +3919,9 @@ class ExploreFragment :
                     clearNavigationExitData()
                 }
             }
+            bottomSheetDirectionSearch.apply {
+                nsvDirection.smoothScrollTo(0, 0)
+            }
         }
     }
 
