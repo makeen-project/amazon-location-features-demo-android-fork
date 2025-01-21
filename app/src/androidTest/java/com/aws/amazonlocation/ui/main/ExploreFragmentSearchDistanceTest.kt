@@ -29,8 +29,10 @@ import com.aws.amazonlocation.actions.swipeLeft
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.failTest
+import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
 
@@ -65,12 +67,8 @@ class ExploreFragmentSearchDistanceTest : BaseTestMainActivity() {
                     TEST_WORD_TALWALKERS_SHYAMAL_CROSS_ROAD,
                 ),
             )
-            Thread.sleep(DELAY_15000)
-            onView(withId(R.id.rv_search_places_suggestion)).check(
-                matches(
-                    hasMinimumChildCount(1),
-                ),
-            )
+            waitForView(allOf(withId(R.id.rv_search_places_suggestion), isDisplayed(), hasMinimumChildCount(1)))
+
             val tvDistance = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_distance"))
             val distanceValue = tvDistance.text.split(" ")[0].toDouble()
             Assert.assertTrue(
