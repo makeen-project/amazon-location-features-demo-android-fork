@@ -5759,7 +5759,7 @@ class ExploreFragment :
                 mapLibreMap.cameraPosition.target?.let {
                     LatLng(
                         it.latitude,
-                        mapLibreMap.cameraPosition.target!!.longitude,
+                        it.longitude,
                     )
                 }
         }

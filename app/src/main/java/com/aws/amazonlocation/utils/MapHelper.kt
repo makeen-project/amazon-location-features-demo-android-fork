@@ -1064,7 +1064,7 @@ class MapHelper(
         }
     }
 
-    fun getLiveLocation(): LatLng? {
+    fun getLiveLocation(isDefaultLocationNeeded: Boolean = true): LatLng? {
         var mLatLng: LatLng? = null
         if (mMapLibreMap?.locationComponent?.isLocationComponentActivated == true) {
             mMapLibreMap?.locationComponent?.lastKnownLocation?.apply {
@@ -1075,6 +1075,8 @@ class MapHelper(
                     )
             }
         }
+        if (!isDefaultLocationNeeded) return mLatLng
+
         return if (mLatLng == null) {
             mDefaultLatLng
         } else {
