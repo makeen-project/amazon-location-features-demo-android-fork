@@ -71,8 +71,8 @@
   <string name="label_default_route_options">तयशुदा रास्ता विकल्पों</string>
   <string name="label_selected">• चुने गए</string>
   <string name="btn_go">जाओ</string>
-  <string name="label_walk">वॉक</string>
-  <string name="label_drive">ड्राइव</string>
+  <string name="label_walk">पैदल यात्री</string>
+  <string name="label_drive">कार</string>
   <string name="label_truck">ट्रक</string>
   <string name="label_scooter">स्कूटर</string>
   <string name="label_search_starting_point">खोजें शुरुआत में बिंदु</string>

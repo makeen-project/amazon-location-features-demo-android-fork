@@ -71,8 +71,8 @@
   <string name="label_default_route_options">기본값 노선 옵션</string>
   <string name="label_selected">• 선택됨</string>
   <string name="btn_go">이동</string>
-  <string name="label_walk">산책</string>
-  <string name="label_drive">드라이브</string>
+  <string name="label_walk">보행자</string>
+  <string name="label_drive">자동차</string>
   <string name="label_truck">트럭</string>
   <string name="label_scooter">스쿠터</string>
   <string name="label_search_starting_point">검색 시작 포인트</string>
