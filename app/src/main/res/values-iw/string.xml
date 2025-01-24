@@ -71,8 +71,8 @@
   <string name="label_default_route_options">ברירת מחדל מסלול אפשרויות</string>
   <string name="label_selected">• נבחר</string>
   <string name="btn_go">ללכת</string>
-  <string name="label_walk">ללכת</string>
-  <string name="label_drive">כונן</string>
+  <string name="label_walk">הולכי רגל</string>
+  <string name="label_drive">מכונית</string>
   <string name="label_truck">משאית</string>
   <string name="label_scooter">קַטנוֹעַ</string>
   <string name="label_search_starting_point">חיפוש מתחיל נקודה</string>

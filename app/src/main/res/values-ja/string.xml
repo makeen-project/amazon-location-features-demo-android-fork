@@ -71,8 +71,8 @@
   <string name="label_default_route_options">デフォルト ルート オプション</string>
   <string name="label_selected">• 選択済み</string>
   <string name="btn_go">行く</string>
-  <string name="label_walk">ウォーク</string>
-  <string name="label_drive">ドライブ</string>
+  <string name="label_walk">歩行者</string>
+  <string name="label_drive">車</string>
   <string name="label_truck">トラック</string>
   <string name="label_scooter">スクーター</string>
   <string name="label_search_starting_point">検索 開始 ポイント</string>

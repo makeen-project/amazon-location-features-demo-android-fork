@@ -71,8 +71,8 @@
   <string name="label_default_route_options">默认 路线 选项</string>
   <string name="label_selected">• 已选中</string>
   <string name="btn_go">走</string>
-  <string name="label_walk">步行</string>
-  <string name="label_drive">开车</string>
+  <string name="label_walk">行人</string>
+  <string name="label_drive">车</string>
   <string name="label_truck">卡车</string>
   <string name="label_scooter">小型摩托车</string>
   <string name="label_search_starting_point">搜寻 开始 点</string>
