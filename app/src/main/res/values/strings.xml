@@ -83,8 +83,8 @@
     <string name="label_default_route_options">Default route options</string>
     <string name="label_selected">• Selected</string>
     <string name="btn_go">Go</string>
-    <string name="label_walk">Walk</string>
-    <string name="label_drive">Drive</string>
+    <string name="label_walk">Pedestrian</string>
+    <string name="label_drive">Car</string>
     <string name="label_truck">Truck</string>
     <string name="label_scooter">Scooter</string>
     <string name="label_search_starting_point">Search starting point</string>

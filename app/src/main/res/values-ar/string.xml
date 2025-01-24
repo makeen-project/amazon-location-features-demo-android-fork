@@ -71,8 +71,8 @@
   <string name="label_default_route_options">إفتراضي طريق خيارات</string>
   <string name="label_selected">• تم اختيارها</string>
   <string name="btn_go">اذهب</string>
-  <string name="label_walk">المشي</string>
-  <string name="label_drive">قم بالقيادة</string>
+  <string name="label_walk">المشاة</string>
+  <string name="label_drive">سيارة</string>
   <string name="label_truck">شاحنة</string>
   <string name="label_scooter">سكوتر</string>
   <string name="label_search_starting_point">ابحث بدء نقطة</string>

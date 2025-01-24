@@ -71,8 +71,8 @@
   <string name="label_default_route_options">Padrão rota opções</string>
   <string name="label_selected">• Selecionado</string>
   <string name="btn_go">Vá</string>
-  <string name="label_walk">Caminhe</string>
-  <string name="label_drive">Dirija</string>
+  <string name="label_walk">Pedestre</string>
+  <string name="label_drive">Carro</string>
   <string name="label_truck">Caminhão</string>
   <string name="label_scooter">Patinete</string>
   <string name="label_search_starting_point">Pesquisar iniciando ponto</string>

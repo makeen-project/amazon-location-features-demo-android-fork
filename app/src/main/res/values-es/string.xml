@@ -71,8 +71,8 @@
   <string name="label_default_route_options">Predeterminado ruta opciones</string>
   <string name="label_selected">• Seleccionado</string>
   <string name="btn_go">Ve</string>
-  <string name="label_walk">Camina</string>
-  <string name="label_drive">Conducir</string>
+  <string name="label_walk">Peatón</string>
+  <string name="label_drive">Coche</string>
   <string name="label_truck">Camión</string>
   <string name="label_scooter">Scooter</string>
   <string name="label_search_starting_point">Buscar empezando punto</string>
