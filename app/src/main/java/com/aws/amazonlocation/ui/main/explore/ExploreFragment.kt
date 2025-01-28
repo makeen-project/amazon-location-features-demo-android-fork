@@ -86,7 +86,7 @@ import com.aws.amazonlocation.utils.CLICK_TIME_DIFFERENCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.DELAY_500
 import com.aws.amazonlocation.utils.Debouncer
-import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_10
+import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_BOTTOM_SHEET_LOAD
 import com.aws.amazonlocation.utils.EventType
@@ -999,7 +999,7 @@ class ExploreFragment :
                                 destinationLocation.latitude = latitude
                                 destinationLocation.longitude = longitude
                                 val distance = destinationLocation.distanceTo(latLng)
-                                if (distance < DISTANCE_IN_METER_10) {
+                                if (distance < DISTANCE_IN_METER_30) {
                                     mBottomSheetHelper.hideNavigationSheet()
                                     mBottomSheetHelper.expandNavigationCompleteSheet()
                                     mBinding.bottomSheetNavigationComplete.tvNavigationCompleteAddress.text =
@@ -1202,12 +1202,13 @@ class ExploreFragment :
                                 tvNavigationDot.show()
                             }
                             if (it.navigationList.isNotEmpty()) {
+                                val index = if (it.navigationList.size > 1) 1 else 0
                                 it.navigationList[0].distance?.let { distance ->
                                     setNavigationTimeDialog(
                                         distance,
-                                        it.navigationList[0].getAddress(),
-                                        it.navigationList[0].type ?: "",
-                                        it.navigationList[0]
+                                        it.navigationList[index].getAddress(),
+                                        it.navigationList[index].type.orEmpty(),
+                                        it.navigationList[index]
                                     )
                                 }
                             }
@@ -1658,16 +1659,15 @@ class ExploreFragment :
                                         }
                                     }
                                 }
-                                mNavigationListModel.first().let {
-                                    it.duration?.let { duration ->
-                                        it.destinationAddress?.let { description ->
-                                            setNavigationTimeDialog(
-                                                duration,
-                                                description,
-                                                mNavigationListModel[0].type,
-                                                mNavigationListModel[0]
-                                            )
-                                        }
+                                if (mNavigationListModel.isNotEmpty()) {
+                                    val index = if (mNavigationListModel.size > 1) 1 else 0
+                                    mNavigationListModel[0].distance?.let { duration ->
+                                        setNavigationTimeDialog(
+                                            duration,
+                                            mNavigationListModel[index].destinationAddress.orEmpty(),
+                                            mNavigationListModel[index].type,
+                                            mNavigationListModel[index]
+                                        )
                                     }
                                 }
                                 mViewModel.mNavigationResponse?.destinationAddress =
