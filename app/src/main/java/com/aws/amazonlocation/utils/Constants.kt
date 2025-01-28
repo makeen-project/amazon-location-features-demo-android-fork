@@ -198,7 +198,6 @@ object Credentials {
 object Distance {
     const val DISTANCE_IN_METER_30 = 30
     const val DISTANCE_IN_METER_20 = 20
-    const val DISTANCE_IN_METER_10 = 10
 }
 
 object MapCameraZoom {
