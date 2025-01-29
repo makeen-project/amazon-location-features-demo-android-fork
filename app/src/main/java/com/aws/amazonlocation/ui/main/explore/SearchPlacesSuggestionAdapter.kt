@@ -81,18 +81,14 @@ class SearchPlacesSuggestionAdapter(
             binding.apply {
                 tvPlaceName.text = data.text
                 binding.apply {
-                    if (data.isPlaceIndexForPosition) {
+                    if (data.isPlaceIndexForPosition || data.amazonLocationAddress?.label.isNullOrEmpty()) {
                         tvPlaceName.text = data.text
+                        tvDescription.hide()
                     } else {
-                        if (data.amazonLocationAddress?.label.isNullOrEmpty()) {
-                            tvPlaceName.text = data.text
-                            tvDescription.hide()
-                        } else {
-                            tvDescription.show()
-                        }
                         data.amazonLocationAddress?.label?.split(",")?.let { parts ->
                             tvPlaceName.text = parts.getOrNull(0) ?: data.text
                             tvDescription.text = parts.drop(1).joinToString(",").trim()
+                            tvDescription.show()
                         }
                     }
 
