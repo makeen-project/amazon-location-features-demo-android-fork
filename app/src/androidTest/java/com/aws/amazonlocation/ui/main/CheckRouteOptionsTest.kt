@@ -11,8 +11,6 @@ import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiDevice
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -31,12 +29,10 @@ import org.junit.Test
 @HiltAndroidTest
 class CheckRouteOptionsTest : BaseTestMainActivity() {
 
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Test
     fun showCheckRouteOptionsTest() {
         try {
-            checkLocationPermission(uiDevice)
+            checkLocationPermission()
 
             val cardDirectionTest =
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))

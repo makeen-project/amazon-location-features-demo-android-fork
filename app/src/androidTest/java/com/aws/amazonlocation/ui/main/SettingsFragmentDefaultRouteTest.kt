@@ -12,9 +12,6 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.utils.*
@@ -27,7 +24,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Throws(java.lang.Exception::class)
     override fun before() {
@@ -44,7 +40,7 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
     @Test
     fun checkDefaultRouteOptionsTest() {
         try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+            checkLocationPermission()
 
             goToDefaultRouteSettings()
 
@@ -53,7 +49,7 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
             checkDefaultRouteOptions(
                 avoidTollsShouldBe = true,
-                avoidFerriesShouldBe = true
+                avoidFerriesShouldBe = true,
             )
         } catch (_: Exception) {
             Assert.fail(TEST_FAILED)
@@ -68,18 +64,19 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             ),
         )
 
-        val explorer =
-            uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_setting)))
-        explorer.click()
+        waitForView(
+            allOf(
+                withText(mActivityRule.activity.getString(R.string.menu_setting)),
+                isDisplayed(),
+            ),
+        )?.perform(click())
 
-        val routeOptions =
-            waitForView(
-                allOf(
-                    withId(R.id.cl_route_option),
-                    isDisplayed(),
-                ),
-            )
-        routeOptions?.perform(click())
+        waitForView(
+            allOf(
+                withId(R.id.cl_route_option),
+                isDisplayed(),
+            ),
+        )?.perform(click())
     }
 
     private fun toggleSwitch(
@@ -95,13 +92,21 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
     private fun checkDefaultRouteOptions(
         avoidTollsShouldBe: Boolean,
-        avoidFerriesShouldBe: Boolean
+        avoidFerriesShouldBe: Boolean,
     ) {
-        val explorer =
-            uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_explore)))
-        explorer.click()
+        waitForView(
+            allOf(
+                withText(mActivityRule.activity.getString(R.string.menu_explore)),
+                isDisplayed(),
+            ),
+        )?.perform(click())
 
-        uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+        waitForView(
+            CoreMatchers.allOf(
+                withContentDescription(AMAZON_MAP_READY),
+                isDisplayed(),
+            ),
+        )
 
         val cardDirectionTest =
             onView(withId(R.id.card_direction)).check(ViewAssertions.matches(isDisplayed()))
@@ -168,15 +173,18 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
         cardRoutingOption?.perform(click())
 
         getInstrumentation().waitForIdleSync()
-        getInstrumentation().runOnMainSync {
-            val switchAvoidToll =
-                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_tools)
-            val switchAvoidFerry =
-                mActivityRule.activity.findViewById<SwitchCompat>(R.id.switch_avoid_ferries)
-            if (switchAvoidToll.isChecked != avoidTollsShouldBe ||
-                switchAvoidFerry.isChecked != avoidFerriesShouldBe
-            ) {
-                Assert.fail(TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED)
+
+        onView(withId(R.id.switch_avoid_tools)).check { view, _ ->
+            if (view is SwitchCompat) {
+                Assert.assertTrue(TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidTollsShouldBe)
+            }
+        }
+
+        onView(withId(R.id.switch_avoid_ferries)).check { view, _ ->
+            if (view is SwitchCompat) {
+                Assert.assertTrue(TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidFerriesShouldBe)
             }
         }
     }

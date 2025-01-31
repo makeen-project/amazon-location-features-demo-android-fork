@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -7,7 +8,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.utils.*
@@ -20,8 +20,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
-
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     private lateinit var preferenceManager: PreferenceManager
 
@@ -37,7 +35,7 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
     @Test
     fun testMapLanguageChangeTest() {
         try {
-            checkLocationPermission(uiDevice)
+            checkLocationPermission()
 
             goToMapStyles()
 
@@ -49,8 +47,18 @@ class ExploreFragmentMapLanguageTest : BaseTestMainActivity() {
                 waitForView(allOf(withText(TEST_WORD_LANGUAGE_AR), isDisplayed()))
             language?.perform(click())
 
-            val description = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/tv_map_language_description"))
-            Assert.assertTrue(TEST_FAILED_LANGUAGE, description.text.contains(TEST_WORD_LANGUAGE_AR))
+            val tvMapLanguageDescription = waitForView(
+                allOf(
+                    withId(R.id.tv_map_language_description),
+                    isDisplayed()
+                ),
+            )
+
+            tvMapLanguageDescription?.check { view, _ ->
+                if (view is AppCompatTextView) {
+                    Assert.assertTrue(TEST_FAILED_LANGUAGE, view.text.contains(TEST_WORD_LANGUAGE_AR))
+                }
+            }
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

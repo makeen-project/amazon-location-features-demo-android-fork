@@ -1,14 +1,9 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.isVisible
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -21,7 +16,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentContentTest : BaseTestMainActivity() {
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     private lateinit var bottomNavigation: BottomNavigationView
 
@@ -35,7 +29,7 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
     @Test
     fun checkContent() {
         try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+            checkLocationPermission()
 
             val settingsTabText = mActivityRule.activity.getString(R.string.menu_setting)
 
@@ -51,15 +45,9 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
                 Assert.fail(TEST_FAILED_NAVIGATION_TAB_SETTINGS_NOT_SELECTED)
             }
 
-            val mapStyle = mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_map_style)
-            val defaultRoute =
-                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_route_option)
-            val connectToAws =
-                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_aws_cloudformation)
-
-            if (!mapStyle.isVisible || !defaultRoute.isVisible || !connectToAws.isVisible) {
-                Assert.fail(TEST_FAILED_SETTINGS_ALL_OPTIONS_NOT_VISIBLE)
-            }
+            onView(withId(R.id.cl_map_style)).check(matches(isDisplayed()))
+            onView(withId(R.id.cl_route_option)).check(matches(isDisplayed()))
+            onView(withId(R.id.cl_aws_cloudformation)).check(matches(isDisplayed()))
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
