@@ -216,7 +216,7 @@ class PlacesProvider(
         getPlaceClient: GeoPlacesClient?,
     ): SearchSuggestionResponse? =
         try {
-            val liveLocation = mMapHelper.getLiveLocation()
+            val liveLocation = mMapHelper.getLiveLocation(isDefaultLocationNeeded = false)
             val request =
                 SearchTextRequest {
                     if (mText != null) this.queryText = mText
