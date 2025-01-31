@@ -8,8 +8,6 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiDevice
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
@@ -28,28 +26,33 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchLocationByGeocodeTest : BaseTestMainActivity() {
-
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Test
     fun showSearchLocationByGeocodeTest() {
         try {
-            checkLocationPermission(uiDevice)
+            checkLocationPermission()
 
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_GEOCODE))
-            waitForView(allOf(withId(R.id.rv_search_places_suggestion), isDisplayed(), hasMinimumChildCount(1)))
             val rvSearchPlaceSuggestion =
-                mActivityRule.activity.findViewById<RecyclerView>(R.id.rv_search_places_suggestion)
-            if (rvSearchPlaceSuggestion.adapter?.itemCount != null) {
-                rvSearchPlaceSuggestion.adapter?.itemCount?.let {
-                    Assert.assertTrue(TEST_FAILED_COUNT_NOT_GREATER_THAN_ZERO, it > 0)
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
+            var itemCount = 0
+            rvSearchPlaceSuggestion?.check { view, _ ->
+                if (view is RecyclerView) {
+                    itemCount = view.adapter?.itemCount ?: 0
+                } else {
+                    Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
                 }
-            } else {
-                Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
             }
+
+            Assert.assertTrue(TEST_FAILED_COUNT_NOT_GREATER_THAN_ZERO, itemCount > 0)
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

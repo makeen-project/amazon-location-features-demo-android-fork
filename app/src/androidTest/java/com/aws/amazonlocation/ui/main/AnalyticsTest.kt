@@ -12,28 +12,22 @@ import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
-import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_10000
-import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_5000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_ADDRESS
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_NO_MESSAGE_FOUND
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_MAP_NAME
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.waitForView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.hamcrest.CoreMatchers
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Test
@@ -41,8 +35,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class AnalyticsTest : BaseTestMainActivity() {
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -61,28 +53,27 @@ class AnalyticsTest : BaseTestMainActivity() {
     @Test
     fun checkAnalyticsContent() {
         try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            uiDevice.wait(
-                Until.hasObject(By.res("${BuildConfig.APPLICATION_ID}:id/edt_search_places")),
-                DELAY_5000,
-            )
+            checkLocationPermission()
             // Start - Search event check
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(ViewActions.replaceText(TEST_ADDRESS))
+            waitForView(CoreMatchers.allOf(withText(EventType.PLACE_SEARCH), isDisplayed()))
             var snackBarMsg =
-                uiDevice.wait(Until.hasObject(By.text(EventType.PLACE_SEARCH)), DELAY_10000)
-            Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg)
+                waitForView(CoreMatchers.allOf(withText(EventType.PLACE_SEARCH), isDisplayed()))
+            Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg != null)
             edtSearch.perform(ViewActions.closeSoftKeyboard())
             val clSearchSheet =
                 mActivityRule.activity.findViewById<ConstraintLayout>(R.id.bottom_sheet_search)
             val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =
                 BottomSheetBehavior.from(clSearchSheet)
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
-            uiDevice.wait(
-                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.menu_explore))),
-                DELAY_5000,
+            waitForView(
+                CoreMatchers.allOf(
+                    withText(mActivityRule.activity.getString(R.string.menu_explore)),
+                    isDisplayed(),
+                ),
             )
             val settingTabText = mActivityRule.activity.getString(R.string.menu_setting)
             onView(
@@ -93,8 +84,8 @@ class AnalyticsTest : BaseTestMainActivity() {
                 ),
             ).perform(click())
             snackBarMsg =
-                uiDevice.wait(Until.hasObject(By.text(EventType.SCREEN_OPEN)), DELAY_10000)
-            Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg)
+                waitForView(CoreMatchers.allOf(withText(EventType.SCREEN_OPEN), isDisplayed()))
+            Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg != null)
             // End - Screen change event test
             // Start - Map unit change event test
             onView(
@@ -112,9 +103,8 @@ class AnalyticsTest : BaseTestMainActivity() {
             ).perform(click())
 
             snackBarMsg =
-                uiDevice.wait(Until.hasObject(By.text(EventType.MAP_UNIT_CHANGE)), DELAY_10000)
-            Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg)
-            // End - Map unit change event test
+                waitForView(CoreMatchers.allOf(withText(EventType.MAP_UNIT_CHANGE), isDisplayed()))
+            Assert.assertTrue(TEST_FAILED_NO_MESSAGE_FOUND, snackBarMsg != null)
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

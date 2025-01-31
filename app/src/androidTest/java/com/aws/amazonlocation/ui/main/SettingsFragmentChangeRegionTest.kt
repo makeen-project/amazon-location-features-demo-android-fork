@@ -10,10 +10,6 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.ui.main.region.RegionAdapter
@@ -27,8 +23,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Throws(java.lang.Exception::class)
     override fun before() {
         super.before()
@@ -37,7 +31,7 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
     @Test
     fun checkChangeRegion() {
         try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+            checkLocationPermission()
 
             goToRegion()
         } catch (e: Exception) {
