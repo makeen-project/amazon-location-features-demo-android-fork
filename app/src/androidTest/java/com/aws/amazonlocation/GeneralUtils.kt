@@ -6,7 +6,10 @@ import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
@@ -17,6 +20,7 @@ import org.hamcrest.Matcher
 import org.junit.Assert
 import java.util.Calendar
 import kotlin.random.Random
+import org.hamcrest.CoreMatchers.allOf
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -42,7 +46,8 @@ fun enableGPS(context: Context) {
     }
 }
 
-fun checkLocationPermission(uiDevice: UiDevice) {
+fun checkLocationPermission() {
+    val uiDevice = UiDevice.getInstance(getInstrumentation())
     val btnContinueToApp =
         uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
     if (btnContinueToApp.exists()) {
@@ -54,7 +59,12 @@ fun checkLocationPermission(uiDevice: UiDevice) {
     uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
     uiDevice.findObject(By.text(ALLOW))?.click()
     enableGPS(ApplicationProvider.getApplicationContext())
-    uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+    waitForView(
+        allOf(
+            withContentDescription(AMAZON_MAP_READY),
+            isDisplayed(),
+        ),
+    )
 }
 
 @Suppress("DEPRECATION")

@@ -13,8 +13,6 @@ import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiDevice
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.GO
 import com.aws.amazonlocation.R

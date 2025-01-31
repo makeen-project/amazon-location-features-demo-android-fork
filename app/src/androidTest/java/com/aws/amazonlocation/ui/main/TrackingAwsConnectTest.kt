@@ -1,8 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
 import android.content.Context
-import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -10,15 +8,12 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiScrollable
 import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_1000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_INVALID_IDENTITY_POOL_ID
@@ -28,7 +23,6 @@ import com.aws.amazonlocation.scrollForView
 import com.aws.amazonlocation.utils.KEY_POOL_ID
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.waitForView
-import com.google.android.material.card.MaterialCardView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
@@ -39,31 +33,32 @@ import org.junit.Test
 @HiltAndroidTest
 class TrackingAwsConnectTest : BaseTestMainActivity() {
 
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Test
     fun showAwsConnectTest() {
         try {
-            checkLocationPermission(uiDevice)
+            checkLocationPermission()
 
-            val tracking =
-                uiDevice.findObject(By.text(mActivityRule.activity.getString(R.string.menu_tracking)))
-            tracking.click()
+            waitForView(
+                allOf(
+                    withText(mActivityRule.activity.getString(R.string.menu_tracking)),
+                    isDisplayed(),
+                ),
+            )?.perform(click())
 
-            uiDevice.wait(
-                Until.hasObject(By.text(mActivityRule.activity.getString(R.string.label_enable_tracking))),
-                DELAY_1000,
+            waitForView(
+                allOf(
+                    withText(mActivityRule.activity.getString(R.string.label_enable_tracking)),
+                    isDisplayed(),
+                ),
             )
 
-            val clEnableTracking =
-                mActivityRule.activity.findViewById<ConstraintLayout>(R.id.cl_enable_tracking)
-            if (clEnableTracking.visibility == View.VISIBLE) {
-                val btnTryTracker =
-                    mActivityRule.activity.findViewById<MaterialCardView>(R.id.btn_enable_tracking)
-                mActivityRule.activity.runOnUiThread {
-                    btnTryTracker.performClick()
-                }
-            }
+            waitForView(
+                allOf(
+                    withId(R.id.btn_enable_tracking),
+                    isDisplayed(),
+                ),
+            )?.perform(click())
+
             waitForView(allOf(withId(R.id.edt_identity_pool_id), isDisplayed()))
             val appViews = UiScrollable(UiSelector().scrollable(true))
 
