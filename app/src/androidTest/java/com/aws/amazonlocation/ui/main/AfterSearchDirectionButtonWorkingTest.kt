@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -17,6 +18,7 @@ import com.aws.amazonlocation.TEST_WORD_RIO_TINTO
 import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.waitForView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
