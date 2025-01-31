@@ -25,7 +25,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingSignInTest : BaseTestMainActivity() {
-
     @Test
     fun showSignInTest() {
         checkLocationPermission()

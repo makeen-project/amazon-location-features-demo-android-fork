@@ -16,7 +16,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentContentTest : BaseTestMainActivity() {
-
     private lateinit var bottomNavigation: BottomNavigationView
 
     @Throws(java.lang.Exception::class)

@@ -23,7 +23,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
-
     private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Test
@@ -39,7 +38,8 @@ class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
             var beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             var isMaxZoomInReach = false
             while (!isMaxZoomInReach) {
-                val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
+                val map =
+                    uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
                 if (map.exists()) {
                     map.pinchIn(50, 15)
                 }

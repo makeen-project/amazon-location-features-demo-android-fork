@@ -23,18 +23,27 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingStartTrackingTest : BaseTestMainActivity() {
-
     @Test
     fun showStartTrackingTest() {
         try {
             checkLocationPermission()
 
             val tracking =
-                waitForView(allOf(withText(mActivityRule.activity.getString(R.string.menu_tracking)), isDisplayed()))
+                waitForView(
+                    allOf(
+                        withText(mActivityRule.activity.getString(R.string.menu_tracking)),
+                        isDisplayed(),
+                    ),
+                )
             tracking?.perform(click())
 
             val labelStartTracking =
-                waitForView(allOf(withText(mActivityRule.activity.getString(R.string.label_start_tracking)), isDisplayed()))
+                waitForView(
+                    allOf(
+                        withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
+                        isDisplayed(),
+                    ),
+                )
             labelStartTracking?.perform(click())
 
             val rvTracking =

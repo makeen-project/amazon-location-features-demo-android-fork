@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
@@ -18,7 +17,6 @@ import com.aws.amazonlocation.TEST_WORD_RIO_TINTO
 import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.waitForView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
@@ -28,7 +26,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class AfterSearchDirectionButtonWorkingTest : BaseTestMainActivity() {
-
     @Test
     fun showAfterSearchDirectionButtonWorkingTest() {
         try {
@@ -43,7 +40,7 @@ class AfterSearchDirectionButtonWorkingTest : BaseTestMainActivity() {
                     allOf(
                         withId(R.id.rv_search_places_suggestion),
                         isDisplayed(),
-                        hasMinimumChildCount(1)
+                        hasMinimumChildCount(1),
                     ),
                 )
 
@@ -62,10 +59,10 @@ class AfterSearchDirectionButtonWorkingTest : BaseTestMainActivity() {
                     onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
                 cardDirectionTest.perform(click())
                 waitForView(
-                        allOf(
-                            withId(R.id.edt_search_direction),
-                            isDisplayed(),
-                        ),
+                    allOf(
+                        withId(R.id.edt_search_direction),
+                        isDisplayed(),
+                    ),
                 )
             } else {
                 Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)

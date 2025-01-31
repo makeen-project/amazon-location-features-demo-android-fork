@@ -19,7 +19,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentEnableLocation : BaseTestMainActivity() {
-
     @Test
     fun testMapEnableLocation() {
         try {

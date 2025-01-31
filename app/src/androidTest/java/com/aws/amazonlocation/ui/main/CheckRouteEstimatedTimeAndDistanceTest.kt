@@ -30,7 +30,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckRouteEstimatedTimeAndDistanceTest : BaseTestMainActivity() {
-
     @Test
     fun showRouteEstimatedTimeAndDistanceTest() {
         try {
@@ -40,16 +39,18 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTestMainActivity() {
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
             cardDirectionTest.perform(click())
 
-            val sourceEdt = waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
+            val sourceEdt =
+                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
             sourceEdt?.perform(click(), replaceText(TEST_WORD_CLOVERDALE_PERTH))
 
-            val suggestionListRvSrc = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
-            )
+            val suggestionListRvSrc =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             suggestionListRvSrc?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
@@ -57,21 +58,23 @@ class CheckRouteEstimatedTimeAndDistanceTest : BaseTestMainActivity() {
                 ),
             )
 
-            val destinationEdt = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.edt_search_dest),
-                    isDisplayed(),
-                ),
-            )
+            val destinationEdt =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.edt_search_dest),
+                        isDisplayed(),
+                    ),
+                )
             destinationEdt?.perform(click(), replaceText(TEST_WORD_KEWDALE_PERTH))
 
-            val suggestionListRvDest = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
-            )
+            val suggestionListRvDest =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             suggestionListRvDest?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,

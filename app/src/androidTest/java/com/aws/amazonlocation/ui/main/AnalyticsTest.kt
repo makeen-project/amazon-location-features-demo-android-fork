@@ -35,7 +35,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class AnalyticsTest : BaseTestMainActivity() {
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -73,8 +72,8 @@ class AnalyticsTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_explore)),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )
             val settingTabText = mActivityRule.activity.getString(R.string.menu_setting)
             onView(

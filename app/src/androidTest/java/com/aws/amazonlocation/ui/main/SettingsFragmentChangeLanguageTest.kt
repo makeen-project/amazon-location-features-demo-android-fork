@@ -15,7 +15,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentChangeLanguageTest : BaseTestMainActivity() {
-
     @Throws(java.lang.Exception::class)
     override fun before() {
         super.before()

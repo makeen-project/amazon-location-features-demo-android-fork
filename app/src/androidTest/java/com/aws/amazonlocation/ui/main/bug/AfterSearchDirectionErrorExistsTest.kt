@@ -27,11 +27,10 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class AfterSearchDirectionErrorExistsTest : BaseTestMainActivity() {
-
     @Test
     fun showAfterSearchDirectionErrorExistsTest() {
         try {
-           checkLocationPermission()
+            checkLocationPermission()
 
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))

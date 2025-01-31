@@ -24,7 +24,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
-
     @Throws(java.lang.Exception::class)
     override fun before() {
         val preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
@@ -176,15 +175,19 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
 
         onView(withId(R.id.switch_avoid_tools)).check { view, _ ->
             if (view is SwitchCompat) {
-                Assert.assertTrue(TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
-                    view.isChecked == avoidTollsShouldBe)
+                Assert.assertTrue(
+                    TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidTollsShouldBe,
+                )
             }
         }
 
         onView(withId(R.id.switch_avoid_ferries)).check { view, _ ->
             if (view is SwitchCompat) {
-                Assert.assertTrue(TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
-                    view.isChecked == avoidFerriesShouldBe)
+                Assert.assertTrue(
+                    TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidFerriesShouldBe,
+                )
             }
         }
     }

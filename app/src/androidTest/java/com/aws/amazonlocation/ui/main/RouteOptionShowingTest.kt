@@ -30,7 +30,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class RouteOptionShowingTest : BaseTestMainActivity() {
-
     @Test
     fun showRouteOptionShowingTest() {
         try {
@@ -40,28 +39,31 @@ class RouteOptionShowingTest : BaseTestMainActivity() {
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
             cardDirectionTest.perform(click())
 
-            val sourceEdt = waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
+            val sourceEdt =
+                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
             sourceEdt?.perform(click())
 
             val clMyLocation =
                 waitForView(CoreMatchers.allOf(withText(R.string.label_my_location), isDisplayed()))
             clMyLocation?.perform(click())
 
-            val destinationEdt = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.edt_search_dest),
-                    isDisplayed(),
-                ),
-            )
+            val destinationEdt =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.edt_search_dest),
+                        isDisplayed(),
+                    ),
+                )
             destinationEdt?.perform(click(), ViewActions.replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
 
-            val suggestionListRv = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
-            )
+            val suggestionListRv =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             suggestionListRv?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,

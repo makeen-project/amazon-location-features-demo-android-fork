@@ -21,25 +21,26 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingRouteOptionAvailableTest : BaseTestMainActivity() {
-
     @Test
     fun showSettingRouteOptionAvailableTest() {
         try {
             checkLocationPermission()
 
-            Espresso.onView(
-                allOf(
-                    withText(mActivityRule.activity.getString(R.string.menu_setting)),
-                    isDisplayed(),
-                ),
-            ).perform(click())
+            Espresso
+                .onView(
+                    allOf(
+                        withText(mActivityRule.activity.getString(R.string.menu_setting)),
+                        isDisplayed(),
+                    ),
+                ).perform(click())
 
-            Espresso.onView(
-                allOf(
-                    withText(mActivityRule.activity.getString(R.string.label_default_route_options)),
-                    isDisplayed(),
-                ),
-            ).perform(click())
+            Espresso
+                .onView(
+                    allOf(
+                        withText(mActivityRule.activity.getString(R.string.label_default_route_options)),
+                        isDisplayed(),
+                    ),
+                ).perform(click())
 
             waitForView(allOf(withId(R.id.tv_avoid_ferries), isDisplayed()), onNotFound = {
                 Assert.fail(TEST_FAILED_ROUTE_OPTION_NOT_VISIBLE)

@@ -30,7 +30,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
-
     @Test
     fun showRouteReverseBetweenFormToTest() {
         try {
@@ -40,28 +39,31 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
             cardDirectionTest.perform(click())
 
-            val sourceEdt = waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
+            val sourceEdt =
+                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
             sourceEdt?.perform(click())
 
             val clMyLocation =
                 waitForView(CoreMatchers.allOf(withText(R.string.label_my_location), isDisplayed()))
             clMyLocation?.perform(click())
 
-            val destinationEdt = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.edt_search_dest),
-                    isDisplayed(),
-                ),
-            )
+            val destinationEdt =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.edt_search_dest),
+                        isDisplayed(),
+                    ),
+                )
             destinationEdt?.perform(click(), ViewActions.replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
 
-            val suggestionListRv = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
-            )
+            val suggestionListRv =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             suggestionListRv?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
@@ -96,12 +98,13 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
                 }
             }
 
-            val swapBtn = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.iv_swap_location),
-                    isDisplayed(),
-                ),
-            )
+            val swapBtn =
+                waitForView(
+                    CoreMatchers.allOf(
+                        withId(R.id.iv_swap_location),
+                        isDisplayed(),
+                    ),
+                )
             swapBtn?.perform(click())
 
             onView(withId(R.id.edt_search_dest)).check { view, _ ->
@@ -115,8 +118,9 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
                     swappedOriginText.append(view.text.toString().trim())
                 }
             }
-            Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT,
-                originText.toString() == swappedDestinationText.toString() && destinationText.toString() == swappedOriginText.toString()
+            Assert.assertTrue(
+                TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT,
+                originText.toString() == swappedDestinationText.toString() && destinationText.toString() == swappedOriginText.toString(),
             )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")

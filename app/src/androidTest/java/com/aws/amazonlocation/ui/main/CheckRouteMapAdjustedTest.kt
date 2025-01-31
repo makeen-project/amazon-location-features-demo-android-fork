@@ -56,13 +56,14 @@ class CheckRouteMapAdjustedTest : BaseTestMainActivity() {
                 ),
             )
 
-            val rvSearchPlaceSuggestion = waitForView(
-                allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1)
-                ),
-            )
+            val rvSearchPlaceSuggestion =
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             var itemCount = 0
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {
@@ -86,13 +87,14 @@ class CheckRouteMapAdjustedTest : BaseTestMainActivity() {
                 ),
             )
 
-            val rvSearchPlaceSuggestionDirection = waitForView(
-                allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1)
-                ),
-            )
+            val rvSearchPlaceSuggestionDirection =
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             var itemCountDirection = 0
             rvSearchPlaceSuggestionDirection?.check { view, _ ->
                 if (view is RecyclerView) {

@@ -29,7 +29,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckRouteUserEnterMyLocationTest : BaseTestMainActivity() {
-
     @Test
     fun showRouteUserEnterMyLocationTest() {
         try {
@@ -46,21 +45,23 @@ class CheckRouteUserEnterMyLocationTest : BaseTestMainActivity() {
                 waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
             clMyLocation?.perform(click())
 
-            val destinationEdt = waitForView(
-                allOf(
-                    withId(R.id.edt_search_dest),
-                    isDisplayed(),
-                ),
-            )
+            val destinationEdt =
+                waitForView(
+                    allOf(
+                        withId(R.id.edt_search_dest),
+                        isDisplayed(),
+                    ),
+                )
             destinationEdt?.perform(click(), ViewActions.replaceText(TEST_WORD_SHYAMAL))
 
-            val suggestionListRv = waitForView(
-                allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
-            )
+            val suggestionListRv =
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             suggestionListRv?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,

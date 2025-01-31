@@ -17,7 +17,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsMapLanguageTest : BaseTestMainActivity() {
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -36,20 +35,21 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_language),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )?.perform(click())
 
         val language =
             waitForView(allOf(withText(TEST_WORD_LANGUAGE_BO), isDisplayed()))
         language?.perform(click())
 
-        val tvMapLanguageDescription = waitForView(
-            allOf(
-                withId(R.id.tv_map_language_description),
-                isDisplayed()
-            ),
-        )
+        val tvMapLanguageDescription =
+            waitForView(
+                allOf(
+                    withId(R.id.tv_map_language_description),
+                    isDisplayed(),
+                ),
+            )
 
         tvMapLanguageDescription?.check { view, _ ->
             if (view is AppCompatTextView) {
@@ -63,16 +63,15 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
             AllOf.allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )?.perform(click())
-
 
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_style),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )?.perform(click())
     }
 }

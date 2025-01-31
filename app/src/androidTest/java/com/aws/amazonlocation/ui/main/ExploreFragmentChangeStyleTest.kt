@@ -17,7 +17,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -53,10 +52,14 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
 
     private fun swipeUp(): UiDevice? {
         // Get the screen dimensions
-        val screenHeight = getInstrumentation().targetContext.resources.displayMetrics.heightPixels
+        val screenHeight =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.heightPixels
 
         // Set the starting point for the swipe (bottom-center of the screen)
-        val startX = getInstrumentation().targetContext.resources.displayMetrics.widthPixels / 2f
+        val startX =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.widthPixels / 2f
         val startY = screenHeight - 100 // Offset from the bottom of the screen
 
         // Set the ending point for the swipe (top-center of the screen)

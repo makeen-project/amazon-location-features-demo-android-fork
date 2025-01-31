@@ -15,7 +15,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMapLoadingTest : BaseTestMainActivity() {
-
     @Test
     fun testMapLoaded() {
         try {

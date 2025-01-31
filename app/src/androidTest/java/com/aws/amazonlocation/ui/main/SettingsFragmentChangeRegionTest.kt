@@ -23,7 +23,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
-
     @Throws(java.lang.Exception::class)
     override fun before() {
         super.before()
@@ -32,7 +31,7 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
     @Test
     fun checkChangeRegion() {
         try {
-           checkLocationPermission()
+            checkLocationPermission()
 
             goToRegion()
         } catch (e: Exception) {

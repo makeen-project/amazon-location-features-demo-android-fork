@@ -26,7 +26,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchByCategoriesTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchByCategoriesResultTest() {
         try {
@@ -42,7 +41,7 @@ class ExploreFragmentSearchByCategoriesTest : BaseTestMainActivity() {
                     allOf(
                         withId(R.id.rv_search_places_suggestion),
                         isDisplayed(),
-                        hasMinimumChildCount(1)
+                        hasMinimumChildCount(1),
                     ),
                 )
 

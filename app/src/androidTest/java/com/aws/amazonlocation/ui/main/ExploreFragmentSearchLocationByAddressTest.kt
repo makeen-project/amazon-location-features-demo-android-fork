@@ -23,7 +23,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchLocationByAddressTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchLocationByAddressTest() {
         try {
@@ -33,7 +32,13 @@ class ExploreFragmentSearchLocationByAddressTest : BaseTestMainActivity() {
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_ADDRESS))
-            waitForView(allOf(withId(R.id.rv_search_places_suggestion), isDisplayed(), hasMinimumChildCount(1)))
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion),
+                    isDisplayed(),
+                    hasMinimumChildCount(1),
+                ),
+            )
             onView(withId(R.id.rv_search_places_suggestion)).check(
                 matches(
                     hasMinimumChildCount(1),
