@@ -69,7 +69,7 @@ class PlacesProvider(
         getPlaceClient: GeoPlacesClient?,
     ): SearchSuggestionResponse {
         try {
-            val liveLocation = mMapHelper.getLiveLocation()
+            val liveLocation = mMapHelper.getLiveLocation(isDefaultLocationNeeded = false)
             var isLatLng = false
             var suggestResponse: SuggestResponse? = null
             var reverseGeocodeResponse: ReverseGeocodeResponse? = null
