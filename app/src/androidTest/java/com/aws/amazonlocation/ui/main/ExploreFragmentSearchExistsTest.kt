@@ -19,7 +19,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchExistsTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchExistsTest() {
         try {
@@ -37,7 +36,10 @@ class ExploreFragmentSearchExistsTest : BaseTestMainActivity() {
                     view.getLocationOnScreen(point)
 
                     val screenHeight = mActivityRule.activity.window.decorView.height / 2
-                    Assert.assertTrue(TEST_FAILED_HEIGHT_NOT_GREATER, point[1] + view.height > screenHeight)
+                    Assert.assertTrue(
+                        TEST_FAILED_HEIGHT_NOT_GREATER,
+                        point[1] + view.height > screenHeight,
+                    )
                 }
             }
         } catch (e: Exception) {

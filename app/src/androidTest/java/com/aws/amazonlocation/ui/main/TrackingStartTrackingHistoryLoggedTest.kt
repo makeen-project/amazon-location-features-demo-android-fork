@@ -22,7 +22,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
-
     @Test
     fun showStartTrackingHistoryLoggedTest() {
         try {
@@ -44,11 +43,13 @@ class TrackingStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 ),
             )?.perform(click())
 
-            val rvSearchPlaceSuggestion = waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
+            val rvSearchPlaceSuggestion =
+                waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {
-                    Assert.assertTrue(TEST_FAILED_NO_TRACKING_HISTORY,
-                        (view.adapter?.itemCount ?: 0) > itemCount
+                    Assert.assertTrue(
+                        TEST_FAILED_NO_TRACKING_HISTORY,
+                        (view.adapter?.itemCount ?: 0) > itemCount,
                     )
                 } else {
                     Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)

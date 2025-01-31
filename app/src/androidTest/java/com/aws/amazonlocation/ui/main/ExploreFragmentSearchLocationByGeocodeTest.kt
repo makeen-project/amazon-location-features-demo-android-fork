@@ -26,7 +26,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchLocationByGeocodeTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchLocationByGeocodeTest() {
         try {
@@ -36,13 +35,14 @@ class ExploreFragmentSearchLocationByGeocodeTest : BaseTestMainActivity() {
                 onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_GEOCODE))
-            val rvSearchPlaceSuggestion = waitForView(
-                allOf(
-                    withId(R.id.rv_search_places_suggestion),
-                    isDisplayed(),
-                    hasMinimumChildCount(1)
-                ),
-            )
+            val rvSearchPlaceSuggestion =
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             var itemCount = 0
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {

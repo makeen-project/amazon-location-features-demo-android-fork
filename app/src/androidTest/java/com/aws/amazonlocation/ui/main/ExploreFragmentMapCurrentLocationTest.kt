@@ -16,7 +16,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMapCurrentLocationTest : BaseTestMainActivity() {
-
     @Test
     fun testMapCheckCurrentLocation() {
         try {
@@ -27,7 +26,11 @@ class ExploreFragmentMapCurrentLocationTest : BaseTestMainActivity() {
             mapView.getMapAsync {
                 mapbox = it
             }
-            Assert.assertTrue(TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED, mapbox?.locationComponent?.isLocationComponentActivated == true && mapbox?.locationComponent?.isLocationComponentEnabled == true)
+            Assert.assertTrue(
+                TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED,
+                mapbox?.locationComponent?.isLocationComponentActivated == true &&
+                    mapbox?.locationComponent?.isLocationComponentEnabled == true,
+            )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

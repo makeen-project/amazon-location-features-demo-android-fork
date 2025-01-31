@@ -39,7 +39,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SearchResultComparisonTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchResultComparisonTest() {
         try {
@@ -51,7 +50,13 @@ class SearchResultComparisonTest : BaseTestMainActivity() {
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_WORD_RIO_TINTO))
             val listDataSearch = arrayListOf<String>()
             val rvSearchPlaceSuggestion =
-                waitForView(allOf(withId(R.id.rv_search_places_suggestion), isDisplayed(), hasMinimumChildCount(1)))
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             var itemCount = 0
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {
@@ -93,7 +98,8 @@ class SearchResultComparisonTest : BaseTestMainActivity() {
                     ),
                 )
 
-                val cardDirectionTest = waitForView(allOf(withId(R.id.card_direction), isDisplayed()))
+                val cardDirectionTest =
+                    waitForView(allOf(withId(R.id.card_direction), isDisplayed()))
                 cardDirectionTest?.perform(click())
                 val edtSearchDirection =
                     waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
@@ -105,7 +111,13 @@ class SearchResultComparisonTest : BaseTestMainActivity() {
                 )
 
                 val rvSearchPlaceDirection =
-                    waitForView(allOf(withId(R.id.rv_search_places_suggestion_direction), isDisplayed(), hasMinimumChildCount(1)))
+                    waitForView(
+                        allOf(
+                            withId(R.id.rv_search_places_suggestion_direction),
+                            isDisplayed(),
+                            hasMinimumChildCount(1),
+                        ),
+                    )
                 var itemCountInside = 0
                 rvSearchPlaceDirection?.check { view, _ ->
                     if (view is RecyclerView) {
@@ -124,8 +136,7 @@ class SearchResultComparisonTest : BaseTestMainActivity() {
                             RecyclerViewActions.actionOnItemAtPosition<SearchPlacesAdapter.SearchPlaceVH>(
                                 i,
                                 object : ViewAction {
-                                    override fun getConstraints(): Matcher<View> =
-                                        isAssignableFrom(TextView::class.java)
+                                    override fun getConstraints(): Matcher<View> = isAssignableFrom(TextView::class.java)
 
                                     override fun getDescription(): String = "Get data from RecyclerView item"
 

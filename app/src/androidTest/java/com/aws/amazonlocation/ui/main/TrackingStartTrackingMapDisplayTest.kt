@@ -33,7 +33,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
-
     @Test
     fun showStartTrackingTest() {
         try {
@@ -88,10 +87,10 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
                             CameraUpdateFactory.newLatLngZoom(
                                 LatLng(
                                     lastKnownLocation.latitude,
-                                    lastKnownLocation.longitude
+                                    lastKnownLocation.longitude,
                                 ),
-                                14.0
-                            )
+                                14.0,
+                            ),
                         )
 
                         it.locationComponent.forceLocationUpdate(lastKnownLocation)
@@ -100,15 +99,17 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
                 runBlocking {
                     delay(DELAY_3000) // Sleep for the specified delay time
                 }
-                val latLng = LatLng(
-                    mockLocation.latitude,
-                    mockLocation.longitude
-                )
+                val latLng =
+                    LatLng(
+                        mockLocation.latitude,
+                        mockLocation.longitude,
+                    )
                 (mActivityRule.activity as MainActivity).mTrackingUtils?.updateLatLngOnMap(
-                    latLng
+                    latLng,
                 )
             }
-            val rvSearchPlaceSuggestion = waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
+            val rvSearchPlaceSuggestion =
+                waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {
                     if (itemCount < (view.adapter?.itemCount ?: 0)) {

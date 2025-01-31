@@ -37,17 +37,26 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingGeofenceEnterTest : BaseTestMainActivity() {
-
     @Test
     fun showTrackingGeofenceEnterTest() {
         checkLocationPermission()
 
         val tracking =
-            waitForView(allOf(withText(mActivityRule.activity.getString(R.string.menu_tracking)), isDisplayed()))
+            waitForView(
+                allOf(
+                    withText(mActivityRule.activity.getString(R.string.menu_tracking)),
+                    isDisplayed(),
+                ),
+            )
         tracking?.perform(click())
 
         val labelStartTracking =
-            waitForView(allOf(withText(mActivityRule.activity.getString(R.string.label_start_tracking)), isDisplayed()))
+            waitForView(
+                allOf(
+                    withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
+                    isDisplayed(),
+                ),
+            )
         labelStartTracking?.perform(click())
         var mapbox: MapLibreMap? = null
         val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
@@ -70,10 +79,10 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
                         CameraUpdateFactory.newLatLngZoom(
                             LatLng(
                                 lastKnownLocation.latitude,
-                                lastKnownLocation.longitude
+                                lastKnownLocation.longitude,
                             ),
-                            14.0
-                        )
+                            14.0,
+                        ),
                     )
 
                     it.locationComponent.forceLocationUpdate(lastKnownLocation)
@@ -82,37 +91,42 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
             runBlocking {
                 delay(DELAY_3000) // Sleep for the specified delay time
             }
-            val latLng = LatLng(
-                mockLocation.latitude,
-                mockLocation.longitude
-            )
+            val latLng =
+                LatLng(
+                    mockLocation.latitude,
+                    mockLocation.longitude,
+                )
             (mActivityRule.activity as MainActivity).mTrackingUtils?.updateLatLngOnMap(
-                latLng
+                latLng,
             )
         }
         waitForView(allOf(withText(mActivityRule.activity.getString(R.string.ok)), isDisplayed()))
 
         val dialogText = getAlertDialogMessage()
-        Assert.assertTrue(TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG, dialogText.contains(TRACKING_ENTERED))
+        Assert.assertTrue(
+            TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG,
+            dialogText.contains(TRACKING_ENTERED),
+        )
     }
 
     private fun getAlertDialogMessage(): String {
         val appCompatTextViewMatcher = withId(android.R.id.message)
         var messageText = ""
-        onView(appCompatTextViewMatcher).perform(object : ViewAction {
-            override fun getDescription(): String {
-                return "get AlertDialog message"
-            }
+        onView(appCompatTextViewMatcher).perform(
+            object : ViewAction {
+                override fun getDescription(): String = "get AlertDialog message"
 
-            override fun getConstraints(): Matcher<View> {
-                return allOf(isDisplayed(), isAssignableFrom(TextView::class.java))
-            }
+                override fun getConstraints(): Matcher<View> = allOf(isDisplayed(), isAssignableFrom(TextView::class.java))
 
-            override fun perform(uiController: UiController?, view: View?) {
-                val textView = view as TextView?
-                messageText = textView?.text.toString()
-            }
-        })
+                override fun perform(
+                    uiController: UiController?,
+                    view: View?,
+                ) {
+                    val textView = view as TextView?
+                    messageText = textView?.text.toString()
+                }
+            },
+        )
         return messageText
     }
 }

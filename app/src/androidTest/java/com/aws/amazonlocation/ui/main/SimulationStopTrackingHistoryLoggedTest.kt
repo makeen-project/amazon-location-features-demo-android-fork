@@ -25,7 +25,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
-
     @Test
     fun showStopTrackingHistoryLoggedTest() {
         try {
@@ -102,17 +101,24 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
             spinnerChangeBus?.perform(click())
 
             val data =
-            waitForView(
-                allOf(
-                    withText(notificationData[2].name),
-                    isDisplayed(),
-                ),
-            )
+                waitForView(
+                    allOf(
+                        withText(notificationData[2].name),
+                        isDisplayed(),
+                    ),
+                )
             data?.perform(click())
 
             ivBackArrowChangeRoute?.perform(click())
 
-            val rvTrackingSimulation = waitForView(allOf(withId(R.id.rv_tracking_simulation), isDisplayed(), hasMinimumChildCount(1)))
+            val rvTrackingSimulation =
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_tracking_simulation),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             rvTrackingSimulation?.check { view, _ ->
                 if (view is RecyclerView) {
                     Assert.assertTrue(
@@ -130,10 +136,14 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
 
     private fun swipeUp(): UiDevice? {
         // Get the screen dimensions
-        val screenHeight = getInstrumentation().targetContext.resources.displayMetrics.heightPixels
+        val screenHeight =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.heightPixels
 
         // Set the starting point for the swipe (bottom-center of the screen)
-        val startX = getInstrumentation().targetContext.resources.displayMetrics.widthPixels / 2f
+        val startX =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.widthPixels / 2f
         val startY = screenHeight - 100 // Offset from the bottom of the screen
 
         // Set the ending point for the swipe (top-center of the screen)

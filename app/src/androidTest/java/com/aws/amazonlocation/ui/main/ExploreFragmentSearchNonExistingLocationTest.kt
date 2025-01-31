@@ -21,7 +21,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchNonExistingLocationTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchNonExistingResultTest() {
         try {

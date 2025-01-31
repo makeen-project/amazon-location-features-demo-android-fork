@@ -36,7 +36,10 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
     @Before
     fun setUp() {
         preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
-        preferenceManager.setValue(KEY_MAP_STYLE_NAME, mActivityRule.activity.getString(R.string.map_standard))
+        preferenceManager.setValue(
+            KEY_MAP_STYLE_NAME,
+            mActivityRule.activity.getString(R.string.map_standard),
+        )
     }
 
     @Test
@@ -68,13 +71,14 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
             onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
         edtSearch?.perform(click())
         onView(withId(R.id.edt_search_places))?.perform(replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
-        val rvSearchPlaceSuggestion = waitForView(
-            allOf(
-                withId(R.id.rv_search_places_suggestion),
-                isDisplayed(),
-                hasMinimumChildCount(1)
-            ),
-        )
+        val rvSearchPlaceSuggestion =
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion),
+                    isDisplayed(),
+                    hasMinimumChildCount(1),
+                ),
+            )
         var itemCount = 0
         rvSearchPlaceSuggestion?.check { view, _ ->
             if (view is RecyclerView) {
@@ -88,8 +92,8 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
             onView(withId(R.id.rv_search_places_suggestion))?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
-                    click()
-                )
+                    click(),
+                ),
             )
             waitForView(
                 allOf(
@@ -98,27 +102,29 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
                 ),
             )
 
-            val btnDirection = waitForView(
-                allOf(
-                    withId(R.id.btn_direction),
-                    isDisplayed(),
-                ),
-            )
+            val btnDirection =
+                waitForView(
+                    allOf(
+                        withId(R.id.btn_direction),
+                        isDisplayed(),
+                    ),
+                )
             btnDirection?.perform(click())
 
-            val cardDriveGo = waitForView(
-                allOf(
-                    withId(R.id.card_drive_go),
-                    isDisplayed(),
-                ),
-            )
+            val cardDriveGo =
+                waitForView(
+                    allOf(
+                        withId(R.id.card_drive_go),
+                        isDisplayed(),
+                    ),
+                )
             cardDriveGo?.perform(click())
 
             waitForView(
                 allOf(
                     withId(R.id.rv_navigation_list),
                     isDisplayed(),
-                    hasMinimumChildCount(1)
+                    hasMinimumChildCount(1),
                 ),
             )
         } else {

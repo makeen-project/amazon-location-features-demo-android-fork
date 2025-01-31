@@ -28,7 +28,6 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
-
     @Test
     @Retry
     fun testMapZoomIn() {
@@ -41,7 +40,14 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
                 mapbox = it
             }
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            onView(withId(R.id.mapView)).perform(pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut())
+            onView(withId(R.id.mapView)).perform(
+                pinchOut(),
+                pinchOut(),
+                pinchOut(),
+                pinchOut(),
+                pinchOut(),
+                pinchOut(),
+            )
             if (beforeZoomLevel != null) {
                 waitUntil(DELAY_3000, 25) {
                     mapbox?.cameraPosition?.zoom?.let {
@@ -73,7 +79,14 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
                 mapbox = it
             }
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            onView(withId(R.id.mapView)).perform(pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn())
+            onView(withId(R.id.mapView)).perform(
+                pinchIn(),
+                pinchIn(),
+                pinchIn(),
+                pinchIn(),
+                pinchIn(),
+                pinchIn(),
+            )
             if (beforeZoomLevel != null) {
                 waitUntil(DELAY_3000, 25) {
                     mapbox?.cameraPosition?.zoom?.let {
