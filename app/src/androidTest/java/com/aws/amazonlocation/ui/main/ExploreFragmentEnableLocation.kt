@@ -1,7 +1,5 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObjectNotFoundException
 import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.DELAY_5000
@@ -21,12 +19,11 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentEnableLocation : BaseTestMainActivity() {
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
 
     @Test
     fun testMapEnableLocation() {
         try {
-            checkLocationPermission(uiDevice)
+            checkLocationPermission()
             try {
                 var mapbox: MapLibreMap? = null
                 val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)

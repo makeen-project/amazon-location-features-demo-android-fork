@@ -1,7 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
@@ -12,20 +11,14 @@ import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
-import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.GO
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT
 import com.aws.amazonlocation.TEST_WORD_SHYAMAL_CROSS_ROAD
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.enableGPS
 import com.aws.amazonlocation.waitForView
 import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -38,13 +31,10 @@ import org.junit.Test
 @HiltAndroidTest
 class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
 
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Test
     fun showRouteReverseBetweenFormToTest() {
         try {
-            enableGPS(ApplicationProvider.getApplicationContext())
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
+            checkLocationPermission()
 
             val cardDirectionTest =
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
@@ -79,7 +69,6 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
                 ),
             )
 
-            // btnCarGo
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.card_drive_go),
@@ -90,16 +79,21 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
                 ),
             )
 
-            lateinit var originText: String
-            lateinit var destinationText: String
+            val originText = StringBuilder()
+            val destinationText = StringBuilder()
+            val swappedOriginText = StringBuilder()
+            val swappedDestinationText = StringBuilder()
 
-            getInstrumentation().runOnMainSync {
-                val edtSearchDirection =
-                    mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
-                val edtSearchDest =
-                    mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_dest)
-                originText = edtSearchDirection.text.toString().trim()
-                destinationText = edtSearchDest.text.toString().trim()
+            onView(withId(R.id.edt_search_direction)).check { view, _ ->
+                if (view is TextInputEditText) {
+                    originText.append(view.text.toString().trim())
+                }
+            }
+
+            onView(withId(R.id.edt_search_dest)).check { view, _ ->
+                if (view is TextInputEditText) {
+                    destinationText.append(view.text.toString().trim())
+                }
             }
 
             val swapBtn = waitForView(
@@ -110,15 +104,20 @@ class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
             )
             swapBtn?.perform(click())
 
-            getInstrumentation().runOnMainSync {
-                val edtSearchDirection =
-                    mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_direction)
-                val edtSearchDest =
-                    mActivityRule.activity.findViewById<TextInputEditText>(R.id.edt_search_dest)
-                val swappedOriginText = edtSearchDirection.text.toString().trim()
-                val swappedDestinationText = edtSearchDest.text.toString().trim()
-                Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT, originText == swappedDestinationText && destinationText == swappedOriginText)
+            onView(withId(R.id.edt_search_dest)).check { view, _ ->
+                if (view is TextInputEditText) {
+                    swappedDestinationText.append(view.text.toString().trim())
+                }
             }
+
+            onView(withId(R.id.edt_search_direction)).check { view, _ ->
+                if (view is TextInputEditText) {
+                    swappedOriginText.append(view.text.toString().trim())
+                }
+            }
+            Assert.assertTrue(TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT,
+                originText.toString() == swappedDestinationText.toString() && destinationText.toString() == swappedOriginText.toString()
+            )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
