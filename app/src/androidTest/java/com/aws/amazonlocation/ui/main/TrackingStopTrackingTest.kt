@@ -23,7 +23,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingStopTrackingTest : BaseTestMainActivity() {
-
     @Test
     fun showStopTrackingTest() {
         try {
@@ -45,7 +44,8 @@ class TrackingStopTrackingTest : BaseTestMainActivity() {
                 ),
             )?.perform(click())
 
-            val rvTracking = waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
+            val rvTracking =
+                waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
             var newItemCount = 0
             rvTracking?.check { view, _ ->
                 if (view is RecyclerView) {

@@ -22,7 +22,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchCollapseTest : BaseTestMainActivity() {
-
     @Test
     fun showSearchCollapseTest() {
         checkLocationPermission()
@@ -37,12 +36,13 @@ class ExploreFragmentSearchCollapseTest : BaseTestMainActivity() {
         edtSearch.perform(click())
         edtSearch.perform(ViewActions.closeSoftKeyboard())
 
-        val clSearchSheet = waitForView(
-            allOf(
-                withId(R.id.bottom_sheet_search),
-                isDisplayed()
-            ),
-        )
+        val clSearchSheet =
+            waitForView(
+                allOf(
+                    withId(R.id.bottom_sheet_search),
+                    isDisplayed(),
+                ),
+            )
         clSearchSheet?.check { view, _ ->
             if (view is ConstraintLayout) {
                 val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =

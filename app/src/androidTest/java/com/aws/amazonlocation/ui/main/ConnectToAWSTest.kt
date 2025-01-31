@@ -21,7 +21,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ConnectToAWSTest : BaseTestMainActivity() {
-
     @Throws(java.lang.Exception::class)
     override fun before() {
         val targetContext: Context = getInstrumentation().targetContext.applicationContext
@@ -82,7 +81,12 @@ class ConnectToAWSTest : BaseTestMainActivity() {
             val btnConnect =
                 onView(withId(R.id.btn_connect)).check(ViewAssertions.matches(isDisplayed()))
             btnConnect.perform(click())
-            waitForView(CoreMatchers.allOf(withText(mActivityRule.activity.getString(R.string.sign_in)), isDisplayed()))
+            waitForView(
+                CoreMatchers.allOf(
+                    withText(mActivityRule.activity.getString(R.string.sign_in)),
+                    isDisplayed(),
+                ),
+            )
         } catch (e: Exception) {
             Assert.fail(TEST_FAILED_CONNECT_TO_AWS_FROM_SETTINGS)
         }

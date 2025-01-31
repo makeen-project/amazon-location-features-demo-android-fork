@@ -30,7 +30,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SearchContactInfoPOICardTest : BaseTestMainActivity() {
-
     @Test
     fun searchContactInfoPOICardTest() {
         try {
@@ -49,7 +48,7 @@ class SearchContactInfoPOICardTest : BaseTestMainActivity() {
                     allOf(
                         withId(R.id.rv_search_places_suggestion),
                         isDisplayed(),
-                        hasMinimumChildCount(1)
+                        hasMinimumChildCount(1),
                     ),
                 )
 

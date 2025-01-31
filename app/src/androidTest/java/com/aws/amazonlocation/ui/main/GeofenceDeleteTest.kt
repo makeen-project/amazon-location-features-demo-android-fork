@@ -44,8 +44,8 @@ class GeofenceDeleteTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.cl_search_loader_geofence_list),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )
 
             createOrGetGeoFence()
@@ -62,15 +62,18 @@ class GeofenceDeleteTest : BaseTestMainActivity() {
                 CoreMatchers.allOf(
                     withId(R.id.rv_geofence),
                     isDisplayed(),
-                    hasMinimumChildCount(1)
-                )
+                    hasMinimumChildCount(1),
+                ),
             )
         rv?.check { view, _ ->
             if (view is RecyclerView) {
                 view.findViewHolderForAdapterPosition(0)?.let {
                     val holder = it
                     geofenceName =
-                        holder.itemView.findViewById<AppCompatTextView>(R.id.tv_geofence_address_type).text.toString()
+                        holder.itemView
+                            .findViewById<AppCompatTextView>(R.id.tv_geofence_address_type)
+                            .text
+                            .toString()
                 }
             }
         }
@@ -90,8 +93,8 @@ class GeofenceDeleteTest : BaseTestMainActivity() {
         waitForView(
             CoreMatchers.allOf(
                 withText(mActivityRule.activity.getString(R.string.add_geofence)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         )
     }
 }

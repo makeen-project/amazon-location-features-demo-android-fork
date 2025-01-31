@@ -32,7 +32,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingAwsConnectTest : BaseTestMainActivity() {
-
     @Test
     fun showAwsConnectTest() {
         try {

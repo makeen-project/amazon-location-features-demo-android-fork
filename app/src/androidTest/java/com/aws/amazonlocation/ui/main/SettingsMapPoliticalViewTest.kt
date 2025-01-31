@@ -20,7 +20,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -47,18 +46,24 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
         etSearchCountry.perform(click())
         onView(withId(R.id.et_search_country)).perform(replaceText(TEST_WORD_RUS))
 
-        waitForView(allOf(withText(mActivityRule.activity.getString(R.string.description_rus)), isDisplayed()))
+        waitForView(
+            allOf(
+                withText(mActivityRule.activity.getString(R.string.description_rus)),
+                isDisplayed(),
+            ),
+        )
 
         val rbCountry =
             onView(withId(R.id.rb_country)).check(matches(isDisplayed()))
         rbCountry.perform(click())
 
-        val tvPoliticalDescription = waitForView(
-            allOf(
-                withId(R.id.tv_political_description),
-                isDisplayed()
-            ),
-        )
+        val tvPoliticalDescription =
+            waitForView(
+                allOf(
+                    withId(R.id.tv_political_description),
+                    isDisplayed(),
+                ),
+            )
 
         tvPoliticalDescription?.check { view, _ ->
             if (view is AppCompatTextView) {
@@ -72,17 +77,15 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
             AllOf.allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
-        )
-            ?.perform(click())
+                isDisplayed(),
+            ),
+        )?.perform(click())
 
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_style),
-                isDisplayed()
-            )
-        )
-            ?.perform(click())
+                isDisplayed(),
+            ),
+        )?.perform(click())
     }
 }

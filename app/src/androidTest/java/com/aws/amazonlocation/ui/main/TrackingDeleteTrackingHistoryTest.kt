@@ -20,7 +20,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
-
     @Test
     fun showDeleteTrackingTest() {
         checkLocationPermission()
@@ -47,12 +46,13 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
             ),
         )?.perform(click())
 
-        val clPersistentBottomSheet = waitForView(
-            allOf(
-                withId(R.id.bottom_sheet_tracking),
-                isDisplayed()
-            ),
-        )
+        val clPersistentBottomSheet =
+            waitForView(
+                allOf(
+                    withId(R.id.bottom_sheet_tracking),
+                    isDisplayed(),
+                ),
+            )
         clPersistentBottomSheet?.check { view, _ ->
             if (view is ConstraintLayout) {
                 val mBottomSheetSearchPlaces: BottomSheetBehavior<ConstraintLayout> =

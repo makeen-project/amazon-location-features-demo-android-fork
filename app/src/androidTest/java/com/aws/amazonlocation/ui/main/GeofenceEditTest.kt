@@ -20,16 +20,15 @@ import com.aws.amazonlocation.getRandom0_01To1_0
 import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import kotlin.properties.Delegates
 import org.hamcrest.CoreMatchers
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Test
+import kotlin.properties.Delegates
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class GeofenceEditTest : BaseTestMainActivity() {
-
     private lateinit var geofenceName: String
     private var updatedRadius by Delegates.notNull<Int>()
 
@@ -48,8 +47,8 @@ class GeofenceEditTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.cl_search_loader_geofence_list),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )
 
             createOrGetGeoFence()
@@ -68,8 +67,8 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 CoreMatchers.allOf(
                     withId(R.id.rv_geofence),
                     isDisplayed(),
-                    hasMinimumChildCount(1)
-                )
+                    hasMinimumChildCount(1),
+                ),
             )
 
         rv?.check { view, _ ->
@@ -106,7 +105,7 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 CoreMatchers.allOf(
                     withId(R.id.seekbar_geofence_radius),
                     isDisplayed(),
-                )
+                ),
             )
 
         seekbar?.check { view, _ ->
@@ -123,8 +122,8 @@ class GeofenceEditTest : BaseTestMainActivity() {
             CoreMatchers.allOf(
                 withId(R.id.rv_geofence),
                 isDisplayed(),
-                hasMinimumChildCount(1)
-            )
+                hasMinimumChildCount(1),
+            ),
         )
     }
 
@@ -154,7 +153,7 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 CoreMatchers.allOf(
                     withId(R.id.seekbar_geofence_radius),
                     isDisplayed(),
-                )
+                ),
             )
         seekbar?.check { view, _ ->
             if (view is SeekBar) {

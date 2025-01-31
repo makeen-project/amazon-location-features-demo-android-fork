@@ -29,7 +29,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
-
     @Test
     fun showGoButtonClickLiveNavigationTest() {
         try {
@@ -49,13 +48,14 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
             val destinationEdt = waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
             destinationEdt?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
 
-            val suggestionListRv = waitForView(
-                allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
-            )
+            val suggestionListRv =
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion_direction),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             suggestionListRv?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
@@ -63,20 +63,27 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
                 ),
             )
 
-            val btnCarGo = waitForView(
-                allOf(
-                    withId(R.id.card_drive_go),
-                    hasDescendant(
-                        withText(GO),
+            val btnCarGo =
+                waitForView(
+                    allOf(
+                        withId(R.id.card_drive_go),
+                        hasDescendant(
+                            withText(GO),
+                        ),
+                        isDisplayed(),
                     ),
-                    isDisplayed(),
-                ),
-            )
+                )
             btnCarGo?.perform(click())
 
             Espresso.closeSoftKeyboard()
 
-            waitForView(allOf(withId(R.id.rv_navigation_list), isDisplayed(), hasMinimumChildCount(1)))
+            waitForView(
+                allOf(
+                    withId(R.id.rv_navigation_list),
+                    isDisplayed(),
+                    hasMinimumChildCount(1),
+                ),
+            )
 
             // btnExit
             waitForView(allOf(withId(R.id.btn_exit), isDisplayed())) {

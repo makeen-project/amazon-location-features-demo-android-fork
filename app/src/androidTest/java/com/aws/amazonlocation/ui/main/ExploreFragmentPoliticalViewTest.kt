@@ -1,7 +1,6 @@
 package com.aws.amazonlocation.ui.main
 
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -23,7 +22,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -61,12 +59,13 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
                 onView(withId(R.id.rb_country)).check(matches(isDisplayed()))
             rbCountry.perform(click())
 
-            val tvPoliticalDescription = waitForView(
-                allOf(
-                    withId(R.id.tv_political_description),
-                    isDisplayed()
-                ),
-            )
+            val tvPoliticalDescription =
+                waitForView(
+                    allOf(
+                        withId(R.id.tv_political_description),
+                        isDisplayed(),
+                    ),
+                )
 
             tvPoliticalDescription?.check { view, _ ->
                 if (view is AppCompatTextView) {
@@ -87,10 +86,14 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
 
     private fun swipeUp(): UiDevice? {
         // Get the screen dimensions
-        val screenHeight = getInstrumentation().targetContext.resources.displayMetrics.heightPixels
+        val screenHeight =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.heightPixels
 
         // Set the starting point for the swipe (bottom-center of the screen)
-        val startX = getInstrumentation().targetContext.resources.displayMetrics.widthPixels / 2f
+        val startX =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.widthPixels / 2f
         val startY = screenHeight - 100 // Offset from the bottom of the screen
 
         // Set the ending point for the swipe (top-center of the screen)

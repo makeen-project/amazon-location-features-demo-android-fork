@@ -26,7 +26,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class AfterSearchOutsideViewPortTest : BaseTestMainActivity() {
-
     @Test
     fun showAfterSearchDirectionErrorExistsTest() {
         try {
@@ -37,9 +36,14 @@ class AfterSearchOutsideViewPortTest : BaseTestMainActivity() {
             edtSearch.perform(click())
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_WORD_KLUANG))
 
-
             val rvSearchPlaceSuggestion =
-                waitForView(allOf(withId(R.id.rv_search_places_suggestion), isDisplayed(), hasMinimumChildCount(1)))
+                waitForView(
+                    allOf(
+                        withId(R.id.rv_search_places_suggestion),
+                        isDisplayed(),
+                        hasMinimumChildCount(1),
+                    ),
+                )
             var itemCount = 0
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {

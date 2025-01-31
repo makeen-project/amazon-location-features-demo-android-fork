@@ -26,7 +26,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchGeocodeReversedTest : BaseTestMainActivity() {
-
     @Test
     fun showGeocodeReverseTest() {
         try {
@@ -41,7 +40,7 @@ class ExploreFragmentSearchGeocodeReversedTest : BaseTestMainActivity() {
                     allOf(
                         withId(R.id.rv_search_places_suggestion),
                         isDisplayed(),
-                        hasMinimumChildCount(1)
+                        hasMinimumChildCount(1),
                     ),
                 )
 

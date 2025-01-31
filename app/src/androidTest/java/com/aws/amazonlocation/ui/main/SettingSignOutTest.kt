@@ -23,26 +23,27 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingSignOutTest : BaseTestMainActivity() {
-
     @Test
     fun showSettingSignInTest() {
         checkLocationPermission()
         val settingTabText = mActivityRule.activity.getString(R.string.menu_setting)
 
-        Espresso.onView(
-            AllOf.allOf(
-                withText(settingTabText),
-                isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed(),
-            ),
-        ).perform(click())
+        Espresso
+            .onView(
+                AllOf.allOf(
+                    withText(settingTabText),
+                    isDescendantOfA(withId(R.id.bottom_navigation_main)),
+                    isDisplayed(),
+                ),
+            ).perform(click())
 
-        Espresso.onView(
-            AllOf.allOf(
-                withId(R.id.cl_aws_cloudformation),
-                isDisplayed(),
-            ),
-        ).perform(click())
+        Espresso
+            .onView(
+                AllOf.allOf(
+                    withId(R.id.cl_aws_cloudformation),
+                    isDisplayed(),
+                ),
+            ).perform(click())
         val isTablet = mActivityRule.activity.resources.getBoolean(R.bool.is_tablet)
 
         if (!isTablet) {
@@ -64,7 +65,9 @@ class SettingSignOutTest : BaseTestMainActivity() {
         )?.perform(click())
 
         val btnLogOut =
-            Espresso.onView(withId(android.R.id.button1)).check(ViewAssertions.matches(isDisplayed()))
+            Espresso
+                .onView(withId(android.R.id.button1))
+                .check(ViewAssertions.matches(isDisplayed()))
         btnLogOut.perform(click())
 
         waitForView(

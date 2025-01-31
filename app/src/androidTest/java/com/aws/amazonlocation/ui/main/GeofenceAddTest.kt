@@ -32,7 +32,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class GeofenceAddTest : BaseTestMainActivity() {
-
     private var geofenceName = getRandomGeofenceName()
 
     @Test
@@ -50,25 +49,31 @@ class GeofenceAddTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.cl_search_loader_geofence_list),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )
-            if (onView(withId(R.id.cl_empty_geofence_list)).check(matches(isDisplayed())).runCatching { true }.getOrDefault(false)) {
+            if (onView(withId(R.id.cl_empty_geofence_list))
+                    .check(matches(isDisplayed()))
+                    .runCatching { true }
+                    .getOrDefault(false)
+            ) {
                 onView(withId(R.id.btn_add_geofence)).perform(click())
             } else {
                 onView(withId(R.id.card_add_geofence)).perform(click())
             }
             waitForView(CoreMatchers.allOf(withId(R.id.edt_add_geofence_search), isDisplayed()))
-            onView(withId(R.id.edt_add_geofence_search)).perform(clearText(), typeText(TEST_WORD_SHYAMAL_CROSS_ROAD))
-
+            onView(withId(R.id.edt_add_geofence_search)).perform(
+                clearText(),
+                typeText(TEST_WORD_SHYAMAL_CROSS_ROAD),
+            )
 
             val rvGeofenceSearchPlaces =
                 waitForView(
                     CoreMatchers.allOf(
                         withId(R.id.rv_geofence_search_places_suggestion),
                         isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
+                        hasMinimumChildCount(1),
+                    ),
                 )
 
             var itemCount = 0
@@ -91,8 +96,8 @@ class GeofenceAddTest : BaseTestMainActivity() {
                 waitForView(
                     CoreMatchers.allOf(
                         withId(R.id.seekbar_geofence_radius),
-                        isDisplayed()
-                    )
+                        isDisplayed(),
+                    ),
                 )
 
             seekbar?.check { view, _ ->
@@ -106,17 +111,16 @@ class GeofenceAddTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.btn_add_geofence_save),
-                    isDisplayed()
-                )
+                    isDisplayed(),
+                ),
             )?.perform(click())
-
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.rv_geofence),
                     isDisplayed(),
-                    hasMinimumChildCount(1)
-                )
+                    hasMinimumChildCount(1),
+                ),
             )
 
             onView(withId(R.id.rv_geofence)).perform(
