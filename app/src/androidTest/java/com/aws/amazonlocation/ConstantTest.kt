@@ -62,9 +62,6 @@ const val TEST_FAILED_NO_UPDATE_TRACKING_HISTORY = "Test failed due to tracking 
 const val TEST_FAILED_CONNECT_TO_AWS_FROM_SETTINGS = "Test failed for connect to aws from settings"
 const val NESTED_SCROLL_ERROR = "Nested scroll error"
 
-const val TEST_FAILED_SEARCH_FIELD_NOT_VISIBLE = "Test failed due to search field not visible"
-const val TEST_FAILED_EXIT_BUTTON_NOT_VISIBLE = "Test failed due to exit button not visible"
-const val TEST_FAILED_DISTANCE_OR_TIME_EMPTY = "Test failed due to distance or time empty"
 const val TEST_FAILED_DISTANCE_EMPTY = "Test failed due to distance is empty"
 const val TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED = "Test failed due to zoom level not changed"
 const val TEST_FAILED_INVALID_IDENTITY_POOL_ID = "Test failed due to invalid identity pool id"
