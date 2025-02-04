@@ -3231,8 +3231,7 @@ class ExploreFragment :
                         if (text.isNullOrEmpty()) {
                             mViewModel.mSearchDirectionDestinationData = null
                             hideViews(
-                                cardRoutingOption,
-                                cardDepartOptions,
+                                cardRouteDepartOptions,
                                 cardMapOption,
                                 cardListRoutesOption,
                                 layoutCardError.root,
@@ -3300,8 +3299,7 @@ class ExploreFragment :
                         if (text.isNullOrEmpty()) {
                             mViewModel.mSearchDirectionOriginData = null
                             hideViews(
-                                cardRoutingOption,
-                                cardDepartOptions,
+                                cardRouteDepartOptions,
                                 cardMapOption,
                                 cardListRoutesOption,
                                 layoutCardError.root,
@@ -3949,6 +3947,7 @@ class ExploreFragment :
                 clDriveLoader,
                 cardRoutingOption,
                 cardDepartOptions,
+                cardRouteDepartOptions,
                 cardMapOption,
                 clTruckLoader,
                 clScooterLoader,
@@ -4100,6 +4099,7 @@ class ExploreFragment :
                 cardListRoutesOption,
                 cardRoutingOption,
                 cardDepartOptions,
+                cardRouteDepartOptions,
                 cardMapOption,
             )
             if (activity?.checkLocationPermission() == true) {
@@ -4180,6 +4180,7 @@ class ExploreFragment :
                     showViews(
                         cardRoutingOption,
                         cardDepartOptions,
+                        cardRouteDepartOptions,
                         cardMapOption,
                         clTruckLoader,
                         clScooterLoader,
@@ -5474,17 +5475,16 @@ class ExploreFragment :
     private fun BottomSheetDirectionSearchBinding.cardRouteOptionShow() {
         hideViews(rvSearchPlacesDirection, rvSearchPlacesSuggestionDirection, clMyLocation.root)
         if (mViewModel.mTravelMode == RouteTravelMode.Car.value ||
-            mViewModel.mTravelMode == RouteTravelMode.Truck.value ||
-            mViewModel.mTravelMode == RouteTravelMode.Scooter.value
+            mViewModel.mTravelMode == RouteTravelMode.Truck.value
         ) {
             cardRoutingOption.show()
         }
-        showViews(cardMapOption, cardDepartOptions)
+        showViews(cardMapOption, cardDepartOptions, cardRouteDepartOptions)
     }
 
     private fun BottomSheetDirectionSearchBinding.cardRouteOptionHide() {
         showViews(rvSearchPlacesDirection, rvSearchPlacesSuggestionDirection)
-        hideViews(cardRoutingOption, cardMapOption, cardListRoutesOption, layoutCardError.root)
+        hideViews(cardRouteDepartOptions, cardMapOption, cardListRoutesOption, layoutCardError.root)
     }
 
     /**
