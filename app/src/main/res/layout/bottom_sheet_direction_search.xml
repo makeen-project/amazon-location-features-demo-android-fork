@@ -497,7 +497,7 @@
                                 android:layout_height="@dimen/dp_36"
                                 android:layout_marginTop="@dimen/dp_16"
                                 android:layout_marginEnd="@dimen/dp_16"
-                                app:cardBackgroundColor="@color/color_787880"
+                                app:cardBackgroundColor="@color/color_view_line"
                                 app:cardCornerRadius="@dimen/dp_6"
                                 app:cardElevation="@dimen/dp_0"
                                 app:cardUseCompatPadding="false"
@@ -543,7 +543,7 @@
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/tv_routing_option"
-                                style="@style/SP13BoldMediumBlackTextStyle"
+                                style="@style/SP14MediumBlackTextStyle"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
@@ -554,7 +554,6 @@
                                 android:singleLine="true"
                                 android:text="@string/label_route_options"
                                 android:textDirection="locale"
-                                android:textSize="@dimen/sp_14"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toStartOf="@id/barrier_avoid_options"
                                 app:layout_constraintStart_toStartOf="parent"
