@@ -41,6 +41,7 @@ import androidx.lifecycle.withStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import aws.sdk.kotlin.services.geoplaces.model.Address
 import aws.sdk.kotlin.services.georoutes.model.CalculateRoutesResponse
+import aws.sdk.kotlin.services.georoutes.model.Route
 import aws.sdk.kotlin.services.georoutes.model.RouteLeg
 import aws.sdk.kotlin.services.georoutes.model.RouteTravelMode
 import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
@@ -85,6 +86,8 @@ import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.CLICK_TIME_DIFFERENCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.DELAY_500
+import com.aws.amazonlocation.utils.DateFormat.HH_MM
+import com.aws.amazonlocation.utils.DateFormat.HH_MM_AA
 import com.aws.amazonlocation.utils.Debouncer
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations
@@ -1602,7 +1605,7 @@ class ExploreFragment :
                                             ?.time
                                     } else ""
                                 mViewModel.mNavigationResponse?.time =
-                                    getLastTime?.let { convertToLocalTime(it) }
+                                    getLastTime?.let { convertToLocalTime(it, HH_MM) }
                                 for (leg in legs) {
                                     if (leg.vehicleLegDetails != null) {
                                         leg.vehicleLegDetails?.travelSteps?.forEach {
@@ -1724,12 +1727,7 @@ class ExploreFragment :
                                 mViewModel.mCarData = it.calculateRouteResult
                                 mBinding.bottomSheetDirectionSearch.apply {
                                     mViewModel.mCarData?.routes?.get(0)?.legs?.let { legs ->
-                                        tvDriveSelected.show()
-                                        hideViews(
-                                            tvTruckSelected,
-                                            tvScooterSelected,
-                                            tvWalkSelected,
-                                        )
+                                        setSelectedMode()
                                         drawPolyLineOnMap(
                                             legs,
                                             isLineUpdate = false,
@@ -1744,12 +1742,7 @@ class ExploreFragment :
                                 mViewModel.mWalkingData = it.calculateRouteResult
                                 mBinding.bottomSheetDirectionSearch.apply {
                                     mViewModel.mWalkingData?.routes?.get(0)?.legs?.let { walkingData ->
-                                        tvWalkSelected.show()
-                                        hideViews(
-                                            tvTruckSelected,
-                                            tvScooterSelected,
-                                            tvDriveSelected,
-                                        )
+                                        setSelectedMode()
                                         drawPolyLineOnMap(
                                             walkingData,
                                             isLineUpdate = false,
@@ -1764,12 +1757,7 @@ class ExploreFragment :
                                 mViewModel.mTruckData = it.calculateRouteResult
                                 mBinding.bottomSheetDirectionSearch.apply {
                                     mViewModel.mTruckData?.routes?.get(0)?.legs?.let { truckData ->
-                                        tvTruckSelected.show()
-                                        hideViews(
-                                            tvWalkSelected,
-                                            tvDriveSelected,
-                                            tvScooterSelected,
-                                        )
+                                        setSelectedMode()
                                         drawPolyLineOnMap(
                                             truckData,
                                             isLineUpdate = false,
@@ -1784,12 +1772,7 @@ class ExploreFragment :
                                 mViewModel.mScooterData = it.calculateRouteResult
                                 mBinding.bottomSheetDirectionSearch.apply {
                                     mViewModel.mScooterData?.routes?.get(0)?.legs?.let { scooterData ->
-                                        tvScooterSelected.show()
-                                        hideViews(
-                                            tvWalkSelected,
-                                            tvDriveSelected,
-                                            tvTruckSelected,
-                                        )
+                                        setSelectedMode()
                                         drawPolyLineOnMap(
                                             scooterData,
                                             isLineUpdate = false,
@@ -2022,14 +2005,20 @@ class ExploreFragment :
                             requireContext(),
                             summary.duration,
                         )
+                    if (mViewModel.mSelectedDepartOption == DepartOption.ARRIVE_TIME.name) {
+                        tvScooterLeaveTime.show()
+                        val getTime = getFirstLegDepartTime(route)
+                        tvScooterLeaveTime.text = buildString {
+                            append(getString(R.string.label_leave_at))
+                            append(" ")
+                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                        }
+                    } else {
+                        tvScooterLeaveTime.hide()
+                    }
                 }
                 if (mViewModel.mTravelMode == RouteTravelMode.Scooter.value) {
-                    tvScooterSelected.show()
-                    hideViews(
-                        tvWalkSelected,
-                        tvDriveSelected,
-                        tvTruckSelected,
-                    )
+                    setSelectedMode()
                     route?.let { it1 ->
                         drawPolyLineOnMap(
                             it1.legs,
@@ -2073,13 +2062,20 @@ class ExploreFragment :
                             requireContext(),
                             summary.duration,
                         )
+                    if (mViewModel.mSelectedDepartOption == DepartOption.ARRIVE_TIME.name) {
+                        tvTruckLeaveTime.show()
+                        val getTime = getFirstLegDepartTime(route)
+                        tvTruckLeaveTime.text = buildString {
+                            append(getString(R.string.label_leave_at))
+                            append(" ")
+                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                        }
+                    } else {
+                        tvTruckLeaveTime.hide()
+                    }
                 }
                 if (mViewModel.mTravelMode == RouteTravelMode.Truck.value) {
-                    tvTruckSelected.show()
-                    hideViews(
-                        tvWalkSelected,
-                        tvDriveSelected,
-                    )
+                    setSelectedMode()
                     route?.let { it1 ->
                         drawPolyLineOnMap(
                             it1.legs,
@@ -2123,14 +2119,21 @@ class ExploreFragment :
                             requireContext(),
                             summary.duration,
                         )
+
+                    if (mViewModel.mSelectedDepartOption == DepartOption.ARRIVE_TIME.name) {
+                        tvWalkLeaveTime.show()
+                        val getTime = getFirstLegDepartTime(route)
+                        tvWalkLeaveTime.text = buildString {
+                            append(getString(R.string.label_leave_at))
+                            append(" ")
+                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                        }
+                    } else {
+                        tvWalkLeaveTime.hide()
+                    }
                 }
                 if (mViewModel.mTravelMode == RouteTravelMode.Pedestrian.value) {
-                    tvWalkSelected.show()
-                    hideViews(
-                        tvTruckSelected,
-                        tvDriveSelected,
-                        tvScooterSelected,
-                    )
+                    setSelectedMode()
                     route?.let { it1 ->
                         drawPolyLineOnMap(
                             it1.legs,
@@ -2185,12 +2188,7 @@ class ExploreFragment :
                         }
                     } else {
                         if (mViewModel.mTravelMode == RouteTravelMode.Car.value) {
-                            tvDriveSelected.show()
-                            hideViews(
-                                tvTruckSelected,
-                                tvWalkSelected,
-                                tvScooterSelected,
-                            )
+                            setSelectedMode()
                             route?.let { it1 ->
                                 drawPolyLineOnMap(
                                     it1.legs,
@@ -2229,10 +2227,44 @@ class ExploreFragment :
                                 requireContext(),
                                 summary.duration,
                             )
+                        if (mViewModel.mSelectedDepartOption == DepartOption.ARRIVE_TIME.name) {
+                            tvDriveLeaveTime.show()
+                            val getTime = getFirstLegDepartTime(route)
+                            tvDriveLeaveTime.text = buildString {
+                                append(getString(R.string.label_leave_at))
+                                append(" ")
+                                append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                            }
+                        } else {
+                            tvDriveLeaveTime.hide()
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun getFirstLegDepartTime(route: Route): String? {
+        val getTime =
+            if (route.legs.first().vehicleLegDetails != null) {
+                route.legs.first()
+                    .vehicleLegDetails!!
+                    .departure
+                    ?.time
+            } else if (route.legs.first().pedestrianLegDetails != null) {
+                route.legs.first()
+                    .pedestrianLegDetails!!
+                    .departure
+                    ?.time
+            } else if (route.legs.first().ferryLegDetails != null) {
+                route.legs.first()
+                    .ferryLegDetails!!
+                    .departure
+                    ?.time
+            } else {
+                ""
+            }
+        return getTime
     }
 
     private fun showCalculateRouteAPIError(value: String) {
@@ -2848,17 +2880,12 @@ class ExploreFragment :
                         }
                         mViewModel.mTravelMode = RouteTravelMode.Pedestrian.value
                         mViewModel.mWalkingData?.let {
-                            tvWalkSelected.show()
+                            setSelectedMode()
                             if (mViewModel.mIsRouteOptionsOpened) {
                                 mViewModel.mIsRouteOptionsOpened = false
                                 changeRouteListUI()
                             }
                             cardRoutingOption.hide()
-                            hideViews(
-                                tvDriveSelected,
-                                tvTruckSelected,
-                                tvScooterSelected,
-                            )
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.routes[0].legs,
@@ -2878,12 +2905,8 @@ class ExploreFragment :
                         }
                         mViewModel.mTravelMode = RouteTravelMode.Truck.value
                         mViewModel.mTruckData?.let {
-                            tvTruckSelected.show()
+                            setSelectedMode()
                             showViews(cardRoutingOption)
-                            hideViews(
-                                tvDriveSelected,
-                                tvWalkSelected,
-                            )
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.routes[0].legs,
@@ -2908,12 +2931,7 @@ class ExploreFragment :
                         }
                         cardRoutingOption.hide()
                         mViewModel.mScooterData?.let {
-                            tvScooterSelected.show()
-                            hideViews(
-                                tvDriveSelected,
-                                tvWalkSelected,
-                                tvTruckSelected,
-                            )
+                            setSelectedMode()
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.routes[0].legs,
@@ -3371,7 +3389,7 @@ class ExploreFragment :
                     tvPickedTime.text = displayDate.split(" ")[1]
                     timeDepart = isoDate
                     tvDepartOptions.text = buildString {
-                        append(getString(R.string.label_leave))
+                        append(getString(R.string.label_leave_at))
                         append(" ")
                         append(displayDate)
                     }
@@ -3387,7 +3405,7 @@ class ExploreFragment :
                     tvPickedTime.text = displayDate.split(" ")[1]
                     timeDepart = isoDate
                     tvDepartOptions.text = buildString {
-                        append(getString(R.string.label_arrive))
+                        append(getString(R.string.label_arrive_by))
                         append(" ")
                         append(displayDate)
                     }
@@ -3401,13 +3419,13 @@ class ExploreFragment :
                         onDateTimeSelected = { isoDate, displayDate ->
                             if (mViewModel.mSelectedDepartOption == DepartOption.DEPART_TIME.name) {
                                 tvDepartOptions.text = buildString {
-                                    append(getString(R.string.label_leave))
+                                    append(getString(R.string.label_leave_at))
                                     append(" ")
                                     append(displayDate)
                                 }
                             } else if (mViewModel.mSelectedDepartOption == DepartOption.ARRIVE_TIME.name) {
                                 tvDepartOptions.text = buildString {
-                                    append(getString(R.string.label_arrive))
+                                    append(getString(R.string.label_arrive_by))
                                     append(" ")
                                     append(displayDate)
                                 }
@@ -3431,7 +3449,7 @@ class ExploreFragment :
                         tvPickedTime.text = displayDate.split(" ")[1]
                         timeDepart = isoDate
                         tvDepartOptions.text = buildString {
-                            append(getString(R.string.label_leave))
+                            append(getString(R.string.label_leave_at))
                             append(" ")
                             append(displayDate)
                         }
@@ -3443,7 +3461,7 @@ class ExploreFragment :
                         tvPickedTime.text = displayDate.split(" ")[1]
                         timeDepart = isoDate
                         tvDepartOptions.text = buildString {
-                            append(getString(R.string.label_leave))
+                            append(getString(R.string.label_leave_at))
                             append(" ")
                             append(displayDate)
                         }
@@ -3715,9 +3733,8 @@ class ExploreFragment :
     private fun BottomSheetDirectionSearchBinding.setCarClickData() {
         mViewModel.mTravelMode = RouteTravelMode.Car.value
         mViewModel.mCarData?.let {
-            tvDriveSelected.show()
+            setSelectedMode()
             showViews(cardRoutingOption)
-            hideViews(tvTruckSelected, tvWalkSelected, tvScooterSelected)
             adjustMapBound()
             drawPolyLineOnMapCardClick(
                 it.routes[0].legs,
@@ -3727,6 +3744,108 @@ class ExploreFragment :
             )
         }
         recordTravelModeChange()
+    }
+
+    private fun BottomSheetDirectionSearchBinding.setSelectedMode() {
+        hideViews(tvDriveSelected, tvTruckSelected, tvWalkSelected, tvScooterSelected)
+        tvDriveMinute.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_medium_black
+            )
+        )
+        ivCar.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_medium_black))
+        tvWalkMinute.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_medium_black
+            )
+        )
+        ivWalk.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_medium_black))
+        tvTruckMinute.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_medium_black
+            )
+        )
+        ivTruck.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_medium_black))
+        tvScooterMinute.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_medium_black
+            )
+        )
+        ivScooter.setColorFilter(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.color_medium_black
+            )
+        )
+        when (mViewModel.mTravelMode) {
+            RouteTravelMode.Car.value -> {
+                tvDriveSelected.show()
+                tvDriveMinute.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+                ivCar.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+            }
+
+            RouteTravelMode.Pedestrian.value -> {
+                tvWalkSelected.show()
+                tvWalkMinute.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+                ivWalk.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+            }
+
+            RouteTravelMode.Truck.value -> {
+                tvTruckSelected.show()
+                tvTruckMinute.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+                ivTruck.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+            }
+
+            RouteTravelMode.Scooter.value -> {
+                tvScooterSelected.show()
+                tvScooterMinute.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+                ivScooter.setColorFilter(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.color_primary_green
+                    )
+                )
+            }
+        }
     }
 
     private fun recordTravelModeChange() {
@@ -3965,6 +4084,12 @@ class ExploreFragment :
             }
             setDepartOptionSelected(clLeaveNow, tvLeaveNow)
             disableCalendar()
+            tvDepartOptions.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_primary_green
+                )
+            )
             mViewModel.mIsDirectionDataSet = true
             edtSearchDest.setText("")
             lifecycleScope.launch {
@@ -4038,6 +4163,12 @@ class ExploreFragment :
                     }
                     setDepartOptionSelected(clLeaveNow, tvLeaveNow)
                     disableCalendar()
+                    tvDepartOptions.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.color_primary_green
+                        )
+                    )
                     tvDriveGo.text = getString(R.string.btn_go)
                     switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
                     switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
@@ -4129,26 +4260,23 @@ class ExploreFragment :
         if (checkedCount > 0) {
             tvRoutingOption.text =
                 buildString {
-                    append(getString(R.string.text_switch_avoid))
-                    append(" ")
                     append(checkedCount)
+                    append(" ")
+                    append(getString(R.string.text_switch_options))
                 }
-            if (!cardListRoutesOption.isVisible) {
-                tvRoutingOption.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.color_primary_green
-                    )
+            tvRoutingOption.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_primary_green
                 )
-            } else {
-                tvRoutingOption.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.color_medium_black
-                    )
-                )
-            }
+            )
         } else {
+            tvRoutingOption.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.color_medium_black
+                )
+            )
             tvRoutingOption.text = getString(R.string.label_route_options)
         }
     }
@@ -4743,9 +4871,6 @@ class ExploreFragment :
         if (mViewModel.mIsRouteOptionsOpened) {
             departOptionClose()
             ivUp.show()
-            cardRoutingOption.setCardBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.white),
-            )
             ivDown.hide()
             cardListRoutesOption.show()
         } else {
@@ -4757,30 +4882,6 @@ class ExploreFragment :
         if (mViewModel.mIsDepartOptionsOpened) {
             routeOptionClose()
             ivUpDepartOptions.show()
-            cardDepartOptions.setCardBackgroundColor(
-                ContextCompat.getColor(requireContext(), R.color.white),
-            )
-            if (tvRoutingOption.text.contains(getString(R.string.text_switch_avoid), false)) {
-                tvRoutingOption.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.color_primary_green
-                    )
-                )
-            } else {
-                tvRoutingOption.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.color_medium_black
-                    )
-                )
-            }
-            tvDepartOptions.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_medium_black
-                )
-            )
             ivDownDepartOptions.hide()
             cardListDepartOptions.show()
         } else {
@@ -4791,34 +4892,7 @@ class ExploreFragment :
     private fun BottomSheetDirectionSearchBinding.routeOptionClose() {
         mViewModel.mIsRouteOptionsOpened = false
         ivDown.show()
-        if (tvRoutingOption.text.contains(getString(R.string.text_switch_avoid), false)) {
-            tvRoutingOption.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_primary_green
-                )
-            )
-        } else {
-            tvRoutingOption.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_medium_black
-                )
-            )
-        }
-        cardRoutingOption.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_route_option_unselected,
-            ),
-        )
         hideViews(cardListRoutesOption, ivUp)
-        cardRoutingOption.radius =
-            TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                8f,
-                requireContext().resources.displayMetrics,
-            )
         cardMapOption.radius =
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -4830,34 +4904,7 @@ class ExploreFragment :
     private fun BottomSheetDirectionSearchBinding.departOptionClose() {
         mViewModel.mIsDepartOptionsOpened = false
         ivDownDepartOptions.show()
-        if (mViewModel.mSelectedDepartOption == DepartOption.LEAVE_NOW.name) {
-            tvDepartOptions.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_medium_black
-                )
-            )
-        } else {
-            tvDepartOptions.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.color_primary_green
-                )
-            )
-        }
-        cardDepartOptions.setCardBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.color_route_option_unselected,
-            ),
-        )
         hideViews(cardListDepartOptions, ivUpDepartOptions)
-        cardDepartOptions.radius =
-            TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                8f,
-                requireContext().resources.displayMetrics,
-            )
         cardMapOption.radius =
             TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -4961,11 +5008,8 @@ class ExploreFragment :
             mViewModel.mScooterData = null
             mViewModel.mTravelMode = RouteTravelMode.Car.value
             mBinding.bottomSheetDirectionSearch.apply {
-                tvDriveSelected.show()
+                setSelectedMode()
                 hideViews(
-                    tvScooterSelected,
-                    tvTruckSelected,
-                    tvWalkSelected,
                     layoutCardError.root,
                     layoutNoDataFound.root,
                 )
@@ -6133,7 +6177,7 @@ class ExploreFragment :
         calendar?.let { cal->
             val timePicker = MaterialTimePicker.Builder()
                 .setTitleText(getString(R.string.label_select_time))
-                .setTimeFormat(TimeFormat.CLOCK_24H)
+                .setTimeFormat(TimeFormat.CLOCK_12H)
                 .setHour(cal.get(Calendar.HOUR_OF_DAY))
                 .setMinute(cal.get(Calendar.MINUTE))
                 .build()

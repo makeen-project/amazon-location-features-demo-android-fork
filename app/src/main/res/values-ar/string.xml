@@ -252,7 +252,5 @@
   <string name="time">الوقت</string>
   <string name="label_select_time">حدد الوقت</string>
   <string name="label_selected_time_cannot_be_in_the_past">تم اختياره وقت غير قادر هو في ال الماضي!</string>
-  <string name="text_switch_avoid">تجنب</string>
-  <string name="label_leave">أجازة</string>
-  <string name="label_arrive">يصل</string>
+  <string name="text_switch_options">خيارات</string>
 </resources>

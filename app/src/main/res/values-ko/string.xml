@@ -252,7 +252,5 @@
   <string name="time">시간</string>
   <string name="label_select_time">선택 시간</string>
   <string name="label_selected_time_cannot_be_in_the_past">선택됨 시각 할 수 없다 있다 에서 그 과거!</string>
-  <string name="text_switch_avoid">피하십시오</string>
-  <string name="label_leave">떠나세요</string>
-  <string name="label_arrive">도착</string>
+  <string name="text_switch_options">옵션</string>
 </resources>
