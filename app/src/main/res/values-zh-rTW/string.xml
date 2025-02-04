@@ -250,7 +250,7 @@
   <string name="label_destination_will_be_on_the_right">目的地 將 是 上 該 對</string>
   <string name="label_destination_will_be_on_the_left">目的地 將 是 上 該 剩下</string>
   <string name="time">時間</string>
-  <string name="label_select_time">選擇 時間</string>
+  <string name="label_select_time">時間</string>
   <string name="label_selected_time_cannot_be_in_the_past">已選 時間 不能 是 在 該 過去！</string>
   <string name="text_switch_options">選項</string>
 </resources>

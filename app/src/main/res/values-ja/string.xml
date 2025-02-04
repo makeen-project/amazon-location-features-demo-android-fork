@@ -250,7 +250,7 @@
   <string name="label_destination_will_be_on_the_right">目的地 だろう です オン その 右</string>
   <string name="label_destination_will_be_on_the_left">目的地 だろう です オン その 左</string>
   <string name="time">時間</string>
-  <string name="label_select_time">[選択] 時間</string>
+  <string name="label_select_time">時間</string>
   <string name="label_selected_time_cannot_be_in_the_past">選択済み 時間 できない です に その 過去!</string>
   <string name="text_switch_options">[オプション]</string>
 </resources>

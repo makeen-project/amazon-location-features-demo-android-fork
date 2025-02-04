@@ -250,7 +250,7 @@
   <string name="label_destination_will_be_on_the_right">Destinazione volontà essere sul lo destra</string>
   <string name="label_destination_will_be_on_the_left">Destinazione volontà essere sul lo sinistra</string>
   <string name="time">Ora</string>
-  <string name="label_select_time">Seleziona Ora</string>
+  <string name="label_select_time">Ora</string>
   <string name="label_selected_time_cannot_be_in_the_past">Selezionato tempo Non posso essere nel lo passato!</string>
   <string name="text_switch_options">Opzioni</string>
 </resources>
