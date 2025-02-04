@@ -319,7 +319,7 @@
     <string name="label_destination_will_be_on_the_right">Destination will be on the right</string>
     <string name="label_destination_will_be_on_the_left">Destination will be on the left</string>
     <string name="time">Time</string>
-    <string name="label_select_time">Select Time</string>
+    <string name="label_select_time">Time</string>
     <string name="label_selected_time_cannot_be_in_the_past">Selected time cannot be in the past!</string>
     <string name="text_switch_options">Options</string>
 </resources>

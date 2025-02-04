@@ -250,7 +250,7 @@
   <string name="label_destination_will_be_on_the_right">डेस्टिनेशन होगा होना के ऊपर यह दाएँ</string>
   <string name="label_destination_will_be_on_the_left">डेस्टिनेशन होगा होना के ऊपर यह छोड़ दिया है</string>
   <string name="time">टाइम</string>
-  <string name="label_select_time">चुनें टाइम</string>
+  <string name="label_select_time">टाइम</string>
   <string name="label_selected_time_cannot_be_in_the_past">चयनित पहर नहीं कर सकता होना में यह अतीत!</string>
   <string name="text_switch_options">ऑप्शन्स</string>
 </resources>
