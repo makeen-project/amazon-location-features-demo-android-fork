@@ -172,13 +172,13 @@ fun getLanguageCode(): String? {
 }
 
 
-fun convertToLocalTime(utcOffsetTime: String): String {
+fun convertToLocalTime(utcOffsetTime: String, outputDateFormat: String): String {
     val inputFormat = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault() ?: Locale.US)
     inputFormat.timeZone = TimeZone.getTimeZone("UTC")
 
     val date: Date = inputFormat.parse(utcOffsetTime) as Date
 
-    val outputFormat = SimpleDateFormat(HH_MM, Locale.getDefault() ?: Locale.US)
+    val outputFormat = SimpleDateFormat(outputDateFormat, Locale.getDefault() ?: Locale.US)
     outputFormat.timeZone = TimeZone.getDefault()
 
     return outputFormat.format(date)

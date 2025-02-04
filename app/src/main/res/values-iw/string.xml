@@ -252,7 +252,5 @@
   <string name="time">זמן</string>
   <string name="label_select_time">בחר זמן</string>
   <string name="label_selected_time_cannot_be_in_the_past">נבחר זמן לא יכול להיות בתוך ה עבר!</string>
-  <string name="text_switch_avoid">הימנע</string>
-  <string name="label_leave">לעזוב</string>
-  <string name="label_arrive">להגיע</string>
+  <string name="text_switch_options">אופציות</string>
 </resources>

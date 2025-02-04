@@ -321,7 +321,5 @@
     <string name="time">Time</string>
     <string name="label_select_time">Select Time</string>
     <string name="label_selected_time_cannot_be_in_the_past">Selected time cannot be in the past!</string>
-    <string name="text_switch_avoid">Avoid</string>
-    <string name="label_leave">Leave</string>
-    <string name="label_arrive">Arrive</string>
+    <string name="text_switch_options">Options</string>
 </resources>

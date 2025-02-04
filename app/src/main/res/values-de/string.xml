@@ -252,7 +252,5 @@
   <string name="time">Zeit</string>
   <string name="label_select_time">Wählen Zeit</string>
   <string name="label_selected_time_cannot_be_in_the_past">Ausgewählt Zeit kann nicht Sein in die Vergangenheit!</string>
-  <string name="text_switch_avoid">Vermeiden</string>
-  <string name="label_leave">Verlassen</string>
-  <string name="label_arrive">Ankommen</string>
+  <string name="text_switch_options">Optionen</string>
 </resources>
