@@ -33,6 +33,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
@@ -1150,10 +1151,10 @@ class ExploreFragment :
                     handleResult
                         .onLoading {
                             clSearchLoaderNavigation.root.show()
-                            hideViews(tvDepartName, tvDepartAddress,tvNavigationDot, tvDestinationName, tvDestinationAddress, rvNavigationList)
+                            hideViews(tvDepartName, tvArrivalTime, tvDepartAddress,tvNavigationDot, tvDestinationName, tvDestinationAddress, rvNavigationList)
                         }.onSuccess {
                             clSearchLoaderNavigation.root.hide()
-                            rvNavigationList.show()
+                            showViews(tvArrivalTime, rvNavigationList)
                             mBinding.bottomSheetNavigation.apply {
                                 tvArrivalTime.text = it.time
                                 if (mViewModel.mSearchDirectionOriginData == null && mViewModel.mSearchDirectionDestinationData?.isDestination == true)  {
@@ -1479,8 +1480,9 @@ class ExploreFragment :
                                             mViewModel.mWalkingData = null
                                             mViewModel.mWalkCalculateDistanceResponse = null
                                             mViewModel.isCalculateWalkApiError = true
-                                            mBinding.bottomSheetDirectionSearch.clWalkLoader.hide()
-                                            mBinding.bottomSheetDirectionSearch.clWalk.show()
+                                            clWalkLoader.hide()
+                                            clWalk.show()
+                                            tvWalkLeaveTime.hide()
                                         }
 
                                         RouteTravelMode.Car.value -> {
@@ -1494,8 +1496,9 @@ class ExploreFragment :
                                             mViewModel.isCalculateDriveApiError = true
                                             mViewModel.mCarData = null
                                             mViewModel.mCarCalculateDistanceResponse = null
-                                            mBinding.bottomSheetDirectionSearch.clDriveLoader.hide()
-                                            mBinding.bottomSheetDirectionSearch.clDrive.show()
+                                            clDriveLoader.hide()
+                                            clDrive.show()
+                                            tvDriveLeaveTime.hide()
                                         }
 
                                         RouteTravelMode.Truck.value -> {
@@ -1509,8 +1512,9 @@ class ExploreFragment :
                                             mViewModel.mTruckData = null
                                             mViewModel.mTruckCalculateDistanceResponse = null
                                             mViewModel.isCalculateTruckApiError = true
-                                            mBinding.bottomSheetDirectionSearch.clTruckLoader.hide()
-                                            mBinding.bottomSheetDirectionSearch.clTruck.show()
+                                            clTruckLoader.hide()
+                                            clTruck.show()
+                                            tvTruckLeaveTime.hide()
                                         }
 
                                         RouteTravelMode.Scooter.value -> {
@@ -1524,8 +1528,9 @@ class ExploreFragment :
                                             mViewModel.mScooterData = null
                                             mViewModel.mScooterCalculateDistanceResponse = null
                                             mViewModel.isCalculateScooterApiError = true
-                                            mBinding.bottomSheetDirectionSearch.clScooterLoader.hide()
-                                            mBinding.bottomSheetDirectionSearch.clScooter.show()
+                                            clScooterLoader.hide()
+                                            clScooter.show()
+                                            tvScooterLeaveTime.hide()
                                         }
                                     }
                                 }
@@ -2868,6 +2873,7 @@ class ExploreFragment :
                             showError(getString(R.string.no_route_found))
                             return@setOnClickListener
                         }
+                        mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
                         setCarClickData()
                     }
                 }
@@ -2878,6 +2884,7 @@ class ExploreFragment :
                             showError(getString(R.string.no_route_found))
                             return@setOnClickListener
                         }
+                        mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
                         mViewModel.mTravelMode = RouteTravelMode.Pedestrian.value
                         mViewModel.mWalkingData?.let {
                             setSelectedMode()
@@ -2903,6 +2910,7 @@ class ExploreFragment :
                             showError(getString(R.string.no_route_found))
                             return@setOnClickListener
                         }
+                        mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
                         mViewModel.mTravelMode = RouteTravelMode.Truck.value
                         mViewModel.mTruckData?.let {
                             setSelectedMode()
@@ -2924,6 +2932,7 @@ class ExploreFragment :
                             showError(getString(R.string.no_route_found))
                             return@setOnClickListener
                         }
+                        mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
                         mViewModel.mTravelMode = RouteTravelMode.Scooter.value
                         if (mViewModel.mIsRouteOptionsOpened) {
                             mViewModel.mIsRouteOptionsOpened = false
@@ -4271,6 +4280,7 @@ class ExploreFragment :
                     R.color.color_primary_green
                 )
             )
+            tvRoutingOption.typeface = ResourcesCompat.getFont(requireContext(), R.font.amazon_ember_bold)
         } else {
             tvRoutingOption.setTextColor(
                 ContextCompat.getColor(
@@ -4279,6 +4289,7 @@ class ExploreFragment :
                 )
             )
             tvRoutingOption.text = getString(R.string.label_route_options)
+            tvRoutingOption.typeface = ResourcesCompat.getFont(requireContext(), R.font.amazon_ember_medium)
         }
     }
 
@@ -4604,6 +4615,7 @@ class ExploreFragment :
         mBinding.bottomSheetNavigation.apply {
             tvNavigationDistance.text = ""
             tvNavigationTime.text = ""
+            tvArrivalTime.text = ""
         }
         mMapHelper.addLiveLocationMarker(false)
         mBinding.tvDistance.text = ""
