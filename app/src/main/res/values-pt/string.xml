@@ -252,7 +252,5 @@
   <string name="time">Hora</string>
   <string name="label_select_time">Selecione Hora</string>
   <string name="label_selected_time_cannot_be_in_the_past">Selecionado horas não pode ser em a passado!</string>
-  <string name="text_switch_avoid">Evite</string>
-  <string name="label_leave">Sair</string>
-  <string name="label_arrive">Chegue</string>
+  <string name="text_switch_options">Opções</string>
 </resources>

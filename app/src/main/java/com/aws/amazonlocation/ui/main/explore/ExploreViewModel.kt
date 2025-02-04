@@ -25,6 +25,7 @@ import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
+import com.aws.amazonlocation.utils.DateFormat.HH_MM
 import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.convertToLocalTime
 import com.aws.amazonlocation.utils.getLanguageData
@@ -424,7 +425,7 @@ class ExploreViewModel
                         } else {
                             ""
                         }
-                    mNavigationResponse?.time = getLastTime?.let { convertToLocalTime(it) }
+                    mNavigationResponse?.time = getLastTime?.let { convertToLocalTime(it, HH_MM) }
                     for (leg in legs) {
                         if (leg.vehicleLegDetails != null) {
                             leg.vehicleLegDetails?.travelSteps?.forEach {
