@@ -90,6 +90,9 @@ import com.aws.amazonlocation.utils.DELAY_500
 import com.aws.amazonlocation.utils.DateFormat.HH_MM
 import com.aws.amazonlocation.utils.DateFormat.HH_MM_AA
 import com.aws.amazonlocation.utils.Debouncer
+import com.aws.amazonlocation.utils.Distance.DISTANCE_FOR_DRIVE_TRUCK
+import com.aws.amazonlocation.utils.Distance.DISTANCE_FOR_SCOOTER
+import com.aws.amazonlocation.utils.Distance.DISTANCE_FOR_WALK
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_BOTTOM_SHEET_LOAD
@@ -1003,7 +1006,15 @@ class ExploreFragment :
                                 destinationLocation.latitude = latitude
                                 destinationLocation.longitude = longitude
                                 val distance = destinationLocation.distanceTo(latLng)
-                                if (distance < DISTANCE_IN_METER_30) {
+                                val selectedRouteMinDistance =
+                                    when (mViewModel.mTravelMode) {
+                                        RouteTravelMode.Car.value -> DISTANCE_FOR_DRIVE_TRUCK
+                                        RouteTravelMode.Pedestrian.value -> DISTANCE_FOR_WALK
+                                        RouteTravelMode.Truck.value -> DISTANCE_FOR_DRIVE_TRUCK
+                                        RouteTravelMode.Scooter.value -> DISTANCE_FOR_SCOOTER
+                                        else -> DISTANCE_FOR_DRIVE_TRUCK
+                                    }
+                                if (distance < selectedRouteMinDistance) {
                                     mBottomSheetHelper.hideNavigationSheet()
                                     mBottomSheetHelper.expandNavigationCompleteSheet()
                                     mBinding.bottomSheetNavigationComplete.tvNavigationCompleteAddress.text =

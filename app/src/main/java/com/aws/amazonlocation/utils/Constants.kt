@@ -197,7 +197,9 @@ object Credentials {
 
 object Distance {
     const val DISTANCE_IN_METER_30 = 30
-    const val DISTANCE_IN_METER_20 = 20
+    const val DISTANCE_FOR_WALK = 15
+    const val DISTANCE_FOR_DRIVE_TRUCK = 50
+    const val DISTANCE_FOR_SCOOTER = 30
 }
 
 object MapCameraZoom {
