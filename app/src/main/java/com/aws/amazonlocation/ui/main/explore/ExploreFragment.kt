@@ -2892,7 +2892,6 @@ class ExploreFragment :
                                 mViewModel.mIsRouteOptionsOpened = false
                                 changeRouteListUI()
                             }
-                            cardRoutingOption.hide()
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.routes[0].legs,
@@ -2914,7 +2913,6 @@ class ExploreFragment :
                         mViewModel.mTravelMode = RouteTravelMode.Truck.value
                         mViewModel.mTruckData?.let {
                             setSelectedMode()
-                            showViews(cardRoutingOption)
                             adjustMapBound()
                             drawPolyLineOnMapCardClick(
                                 it.routes[0].legs,
@@ -2938,7 +2936,6 @@ class ExploreFragment :
                             mViewModel.mIsRouteOptionsOpened = false
                             changeRouteListUI()
                         }
-                        cardRoutingOption.hide()
                         mViewModel.mScooterData?.let {
                             setSelectedMode()
                             adjustMapBound()
@@ -3741,7 +3738,6 @@ class ExploreFragment :
         mViewModel.mTravelMode = RouteTravelMode.Car.value
         mViewModel.mCarData?.let {
             setSelectedMode()
-            showViews(cardRoutingOption)
             adjustMapBound()
             drawPolyLineOnMapCardClick(
                 it.routes[0].legs,
@@ -3954,8 +3950,6 @@ class ExploreFragment :
                 clMyLocation.root,
                 clSearchLoaderDirectionSearch.root,
                 clDriveLoader,
-                cardRoutingOption,
-                cardDepartOptions,
                 cardRouteDepartOptions,
                 cardMapOption,
                 clTruckLoader,
@@ -4106,8 +4100,6 @@ class ExploreFragment :
             }
             hideViews(
                 cardListRoutesOption,
-                cardRoutingOption,
-                cardDepartOptions,
                 cardRouteDepartOptions,
                 cardMapOption,
             )
@@ -4187,8 +4179,6 @@ class ExploreFragment :
                     checkedSwitchCount()
                     edtSearchDirection.setText(getString(R.string.label_my_location))
                     showViews(
-                        cardRoutingOption,
-                        cardDepartOptions,
                         cardRouteDepartOptions,
                         cardMapOption,
                         clTruckLoader,
@@ -5486,12 +5476,7 @@ class ExploreFragment :
 
     private fun BottomSheetDirectionSearchBinding.cardRouteOptionShow() {
         hideViews(rvSearchPlacesDirection, rvSearchPlacesSuggestionDirection, clMyLocation.root)
-        if (mViewModel.mTravelMode == RouteTravelMode.Car.value ||
-            mViewModel.mTravelMode == RouteTravelMode.Truck.value
-        ) {
-            cardRoutingOption.show()
-        }
-        showViews(cardMapOption, cardDepartOptions, cardRouteDepartOptions)
+        showViews(cardMapOption, cardRouteDepartOptions)
     }
 
     private fun BottomSheetDirectionSearchBinding.cardRouteOptionHide() {
