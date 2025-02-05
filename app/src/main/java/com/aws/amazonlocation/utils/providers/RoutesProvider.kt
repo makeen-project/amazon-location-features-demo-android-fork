@@ -21,7 +21,6 @@ import kotlinx.coroutines.withContext
 class RoutesProvider(
     private var mPreferenceManager: PreferenceManager,
 ) {
-
     suspend fun calculateRoute(
         latDeparture: Double?,
         lngDeparture: Double?,
@@ -30,7 +29,7 @@ class RoutesProvider(
         avoidanceOptions: ArrayList<AvoidanceOption>,
         departOption: String,
         travelMode: String?,
-        timeInput: String?= null,
+        timeInput: String? = null,
         mBaseActivity: BaseActivity?,
         getRoutesClient: GeoRoutesClient?,
     ): CalculateRoutesResponse? =
@@ -50,31 +49,29 @@ class RoutesProvider(
                     origin = listOfNotNull(lngDeparture, latDeparture)
                     destination = listOfNotNull(lngDestination, latDestination)
                     avoid =
-                        if (routeTravelMode != RouteTravelMode.Scooter && routeTravelMode != RouteTravelMode.Pedestrian) {
-                            RouteAvoidanceOptions {
-                                ferries =
-                                    AvoidanceOption.FERRIES
-                                        .takeIf { it in avoidanceOptions }
-                                        ?.let { true }
-                                tollRoads =
-                                    AvoidanceOption.TOLL_ROADS
-                                        .takeIf { it in avoidanceOptions }
-                                        ?.let { true }
-                                dirtRoads =
-                                    AvoidanceOption.DIRT_ROADS
-                                        .takeIf { it in avoidanceOptions }
-                                        ?.let { true }
-                                tunnels =
-                                    AvoidanceOption.TUNNELS
-                                        .takeIf { it in avoidanceOptions }
-                                        ?.let { true }
+                        RouteAvoidanceOptions {
+                            ferries =
+                                AvoidanceOption.FERRIES
+                                    .takeIf { it in avoidanceOptions }
+                                    ?.let { true }
+                            tollRoads =
+                                AvoidanceOption.TOLL_ROADS
+                                    .takeIf { it in avoidanceOptions }
+                                    ?.let { true }
+                            dirtRoads =
+                                AvoidanceOption.DIRT_ROADS
+                                    .takeIf { it in avoidanceOptions }
+                                    ?.let { true }
+                            tunnels =
+                                AvoidanceOption.TUNNELS
+                                    .takeIf { it in avoidanceOptions }
+                                    ?.let { true }
+                            if (routeTravelMode != RouteTravelMode.Scooter && routeTravelMode != RouteTravelMode.Pedestrian) {
                                 uTurns =
                                     AvoidanceOption.U_TURNS
                                         .takeIf { it in avoidanceOptions }
                                         ?.let { true }
                             }
-                        } else {
-                            null
                         }
                     legGeometryFormat = GeometryFormat.Simple
                     instructionsMeasurementSystem =
