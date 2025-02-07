@@ -119,6 +119,7 @@ import com.aws.amazonlocation.utils.MAP_STYLE_ATTRIBUTION
 import com.aws.amazonlocation.utils.MILES
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.STRING_FORMAT
+import com.aws.amazonlocation.utils.STRING_FORMAT_TIME
 import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.SimulationDialogInterface
 import com.aws.amazonlocation.utils.TURN_LEFT
@@ -381,11 +382,7 @@ class ExploreFragment :
                 mBaseActivity,
                 this@ExploreFragment,
             )
-            mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
-            mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
-            mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-            mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
-            mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
+            getUpdatedAvoidOptionValue()
             mBinding.bottomSheetDirectionSearch.switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             mBinding.bottomSheetDirectionSearch.switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             mBinding.bottomSheetDirectionSearch.switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
@@ -1054,13 +1051,7 @@ class ExploreFragment :
                                             latLng.longitude,
                                             mViewModel.mDestinationLatLng?.latitude,
                                             mViewModel.mDestinationLatLng?.longitude,
-                                            arrayListOf<AvoidanceOption>().apply {
-                                                if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                                                if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                                                if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                                                if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                                                if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                                            },
+                                            mViewModel.getAvoidanceOptions(),
                                             mViewModel.mSelectedDepartOption,
                                             timeInput = timeDepart,
                                             mViewModel.mTravelMode,
@@ -1613,31 +1604,20 @@ class ExploreFragment :
                                 mNavigationListModel.clear()
                                 mViewModel.mNavigationResponse = NavigationResponse()
                                 mViewModel.mNavigationResponse?.duration =
-                                    data.calculateRouteResult!!.routes[0]
-                                        .summary
+                                    data.calculateRouteResult?.routes?.get(0)?.summary
                                         ?.duration
                                         ?.let { getTime(requireContext(), it) }
                                 mViewModel.mNavigationResponse?.distance =
-                                    data.calculateRouteResult!!.routes[0]
-                                        .summary
+                                    data.calculateRouteResult?.routes?.get(0)?.summary
                                         ?.distance
                                         ?.toDouble()
                                 val getLastTime =
                                     if (legs.last().vehicleLegDetails != null) {
-                                        legs.last()
-                                            .vehicleLegDetails!!
-                                            .arrival
-                                            ?.time
+                                        legs.last().vehicleLegDetails?.arrival?.time
                                     } else if (legs.last().pedestrianLegDetails != null) {
-                                        legs.last()
-                                            .pedestrianLegDetails!!
-                                            .arrival
-                                            ?.time
+                                        legs.last().pedestrianLegDetails?.arrival?.time
                                     } else if (legs.last().ferryLegDetails != null) {
-                                        legs.last()
-                                            .ferryLegDetails!!
-                                            .arrival
-                                            ?.time
+                                        legs.last().ferryLegDetails?.arrival?.time
                                     } else ""
                                 mViewModel.mNavigationResponse?.time =
                                     getLastTime?.let { convertToLocalTime(it, HH_MM) }
@@ -1868,14 +1848,14 @@ class ExploreFragment :
                             } else {
                                 searchSuggestionData.text =
                                     String.format(
-                                        Locale.US,
+                                        Locale.getDefault(),
                                         STRING_FORMAT,
                                         response.latitude,
                                         response.longitude,
                                     )
                                 searchSuggestionData.searchText =
                                     String.format(
-                                        Locale.US,
+                                        Locale.getDefault(),
                                         STRING_FORMAT,
                                         response.latitude,
                                         response.longitude,
@@ -1893,28 +1873,28 @@ class ExploreFragment :
                                     Address {
                                         label =
                                             String.format(
-                                                Locale.US,
+                                                Locale.getDefault(),
                                                 STRING_FORMAT,
                                                 response.latitude,
                                                 response.longitude,
                                             )
                                         addressNumber =
                                             String.format(
-                                                Locale.US,
+                                                Locale.getDefault(),
                                                 STRING_FORMAT,
                                                 response.latitude,
                                                 response.longitude,
                                             )
                                         street =
                                             String.format(
-                                                Locale.US,
+                                                Locale.getDefault(),
                                                 STRING_FORMAT,
                                                 response.latitude,
                                                 response.longitude,
                                             )
                                         postalCode =
                                             String.format(
-                                                Locale.US,
+                                                Locale.getDefault(),
                                                 STRING_FORMAT,
                                                 response.latitude,
                                                 response.longitude,
@@ -2282,20 +2262,13 @@ class ExploreFragment :
     private fun getFirstLegDepartTime(route: Route): String? {
         val getTime =
             if (route.legs.first().vehicleLegDetails != null) {
-                route.legs.first()
-                    .vehicleLegDetails!!
-                    .departure
-                    ?.time
+                route.legs.first().vehicleLegDetails?.departure?.time
             } else if (route.legs.first().pedestrianLegDetails != null) {
                 route.legs.first()
-                    .pedestrianLegDetails!!
-                    .departure
-                    ?.time
+                    .pedestrianLegDetails?.departure?.time
             } else if (route.legs.first().ferryLegDetails != null) {
                 route.legs.first()
-                    .ferryLegDetails!!
-                    .departure
-                    ?.time
+                    .ferryLegDetails?.departure?.time
             } else {
                 ""
             }
@@ -3418,14 +3391,16 @@ class ExploreFragment :
                 }
                 clLeaveAt.setOnClickListener {
                     setCurrentDateAndTime()
-                    val displayDate = formatToDisplayDate(calendar!!.time)
-                    val isoDate = formatToISO8601(calendar!!.time)
-                    tvPickedTime.text = displayDate.split(" ")[1]
-                    timeDepart = isoDate
-                    tvDepartOptions.text = buildString {
-                        append(getString(R.string.label_leave_at))
-                        append(" ")
-                        append(displayDate)
+                    calendar?.let {
+                        val displayDate = formatToDisplayDate(it.time)
+                        val isoDate = formatToISO8601(it.time)
+                        tvPickedTime.text = displayDate.split(" ")[1]
+                        timeDepart = isoDate
+                        tvDepartOptions.text = buildString {
+                            append(getString(R.string.label_leave_at))
+                            append(" ")
+                            append(displayDate)
+                        }
                     }
                     mViewModel.mSelectedDepartOption = DepartOption.DEPART_TIME.name
                     setDepartOptionSelected(clLeaveAt, tvLeaveAt)
@@ -3434,14 +3409,16 @@ class ExploreFragment :
                 }
                 clArriveBy.setOnClickListener {
                     setCurrentDateAndTime()
-                    val displayDate = formatToDisplayDate(calendar!!.time)
-                    val isoDate = formatToISO8601(calendar!!.time)
-                    tvPickedTime.text = displayDate.split(" ")[1]
-                    timeDepart = isoDate
-                    tvDepartOptions.text = buildString {
-                        append(getString(R.string.label_arrive_by))
-                        append(" ")
-                        append(displayDate)
+                    calendar?.let {
+                        val displayDate = formatToDisplayDate(it.time)
+                        val isoDate = formatToISO8601(it.time)
+                        tvPickedTime.text = displayDate.split(" ")[1]
+                        timeDepart = isoDate
+                        tvDepartOptions.text = buildString {
+                            append(getString(R.string.label_arrive_by))
+                            append(" ")
+                            append(displayDate)
+                        }
                     }
                     mViewModel.mSelectedDepartOption = DepartOption.ARRIVE_TIME.name
                     setDepartOptionSelected(clArriveBy, tvArriveBy)
@@ -3478,26 +3455,30 @@ class ExploreFragment :
                     calendar?.set(Calendar.DAY_OF_MONTH, dayOfMonth)
                     if (mViewModel.mSelectedDepartOption == DepartOption.DEPART_TIME.name) {
                         setCurrentDateAndTime()
-                        val displayDate = formatToDisplayDate(calendar!!.time)
-                        val isoDate = formatToISO8601(calendar!!.time)
-                        tvPickedTime.text = displayDate.split(" ")[1]
-                        timeDepart = isoDate
-                        tvDepartOptions.text = buildString {
-                            append(getString(R.string.label_leave_at))
-                            append(" ")
-                            append(displayDate)
+                        calendar?.let {
+                            val displayDate = formatToDisplayDate(it.time)
+                            val isoDate = formatToISO8601(it.time)
+                            tvPickedTime.text = displayDate.split(" ")[1]
+                            timeDepart = isoDate
+                            tvDepartOptions.text = buildString {
+                                append(getString(R.string.label_leave_at))
+                                append(" ")
+                                append(displayDate)
+                            }
                         }
                         calculateRouteAllMode()
                     } else if (mViewModel.mSelectedDepartOption == DepartOption.ARRIVE_TIME.name) {
                         setCurrentDateAndTime()
-                        val displayDate = formatToDisplayDate(calendar!!.time)
-                        val isoDate = formatToISO8601(calendar!!.time)
-                        tvPickedTime.text = displayDate.split(" ")[1]
-                        timeDepart = isoDate
-                        tvDepartOptions.text = buildString {
-                            append(getString(R.string.label_leave_at))
-                            append(" ")
-                            append(displayDate)
+                        calendar?.let {
+                            val displayDate = formatToDisplayDate(it.time)
+                            val isoDate = formatToISO8601(it.time)
+                            tvPickedTime.text = displayDate.split(" ")[1]
+                            timeDepart = isoDate
+                            tvDepartOptions.text = buildString {
+                                append(getString(R.string.label_leave_at))
+                                append(" ")
+                                append(displayDate)
+                            }
                         }
                         calculateRouteAllMode()
                     }
@@ -3709,12 +3690,10 @@ class ExploreFragment :
         if (calendar == null) {
             calendar = Calendar.getInstance()
         }
-        tvPickedTime.text = buildString {
-            append(String.format("%02d", calendar!!.get(Calendar.HOUR_OF_DAY)))
-            append(":")
-            append(String.format("%02d", calendar!!.get(Calendar.MINUTE)))
+        calendar?.let {
+            tvPickedTime.text = String.format(Locale.getDefault(),STRING_FORMAT_TIME, it.get(Calendar.HOUR_OF_DAY), it.get(Calendar.MINUTE))
+            calDepart.setDate(it.timeInMillis, true, true)
         }
-        calDepart.setDate(calendar!!.timeInMillis, true, true)
     }
 
     private fun BottomSheetDirectionSearchBinding.setDepartOptionSelected(card: MaterialCardView, textView: AppCompatTextView) {
@@ -3945,11 +3924,7 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun openDirectionWithError() {
-        mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
-        mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
-        mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-        mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
-        mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
+        getUpdatedAvoidOptionValue()
         mBinding.bottomSheetDirectionSearch.apply {
             clearDirectionData()
             switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
@@ -4092,11 +4067,7 @@ class ExploreFragment :
     @SuppressLint("NotifyDataSetChanged")
     private fun FragmentExploreBinding.openDirectionBottomSheet() {
         notifyAdapters()
-        mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
-        mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
-        mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-        mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
-        mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
+        getUpdatedAvoidOptionValue()
         cardDirection.hide()
         bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root.hide()
         bottomSheetDirectionSearch.layoutNoDataFound.root.hide()
@@ -4107,12 +4078,10 @@ class ExploreFragment :
         mBottomSheetHelper.hideDirectionSheet()
         bottomSheetDirectionSearch.apply {
             calendar = Calendar.getInstance()
-            calDepart.minDate = calendar!!.timeInMillis
-            mViewModel.mSelectedDepartOption = DepartOption.LEAVE_NOW.name
-            tvPickedTime.text = buildString {
-                append(String.format("%02d", calendar!!.get(Calendar.HOUR_OF_DAY)))
-                append(":")
-                append(String.format("%02d", calendar!!.get(Calendar.MINUTE)))
+            calendar?.let {
+                calDepart.minDate = it.timeInMillis
+                mViewModel.mSelectedDepartOption = DepartOption.LEAVE_NOW.name
+                tvPickedTime.text = String.format(Locale.getDefault(), STRING_FORMAT_TIME, it.get(Calendar.HOUR_OF_DAY), it.get(Calendar.MINUTE))
             }
             setDepartOptionSelected(clLeaveNow, tvLeaveNow)
             disableCalendar()
@@ -4163,11 +4132,7 @@ class ExploreFragment :
 
     @SuppressLint("NotifyDataSetChanged")
     private fun routeOption() {
-        mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
-        mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
-        mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-        mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
-        mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
+        getUpdatedAvoidOptionValue()
         if (mViewModel.mCarData
                 ?.routes
                 ?.get(0)
@@ -4185,12 +4150,10 @@ class ExploreFragment :
                 mBinding.bottomSheetDirectionSearch.apply {
                     clearTruckAndWalkData()
                     calendar = Calendar.getInstance()
-                    calDepart.minDate = calendar!!.timeInMillis
-                    mViewModel.mSelectedDepartOption = DepartOption.LEAVE_NOW.name
-                    tvPickedTime.text = buildString {
-                        append(String.format("%02d", calendar!!.get(Calendar.HOUR_OF_DAY)))
-                        append(":")
-                        append(String.format("%02d", calendar!!.get(Calendar.MINUTE)))
+                    calendar?.let {
+                        calDepart.minDate = it.timeInMillis
+                        mViewModel.mSelectedDepartOption = DepartOption.LEAVE_NOW.name
+                        tvPickedTime.text = String.format(Locale.getDefault(), STRING_FORMAT_TIME, it.get(Calendar.HOUR_OF_DAY), it.get(Calendar.MINUTE))
                     }
                     setDepartOptionSelected(clLeaveNow, tvLeaveNow)
                     disableCalendar()
@@ -4247,14 +4210,7 @@ class ExploreFragment :
                         position?.get(1),
                     lngDestination =
                         position?.get(0),
-                    avoidanceOptions =
-                        arrayListOf<AvoidanceOption>().apply {
-                            if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                            if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                            if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                            if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                            if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                        },
+                    avoidanceOptions = mViewModel.getAvoidanceOptions(),
                     departOption = mViewModel.mSelectedDepartOption,
                     timeInput = timeDepart,
                     isWalkingAndTruckCall = true,
@@ -4268,6 +4224,14 @@ class ExploreFragment :
         } else {
             showError(getString(R.string.no_route_found))
         }
+    }
+
+    private fun getUpdatedAvoidOptionValue() {
+        mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
+        mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
+        mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+        mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
+        mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
     }
 
     private fun BottomSheetDirectionSearchBinding.checkedSwitchCount() {
@@ -5272,14 +5236,7 @@ class ExploreFragment :
                 positionDestination?.get(1),
             lngDestination =
                 positionDestination?.get(0),
-            avoidanceOptions =
-                arrayListOf<AvoidanceOption>().apply {
-                    if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                    if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                    if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                    if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                    if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                },
+            avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
             timeInput = timeDepart,
             isWalkingAndTruckCall = false,
@@ -5293,14 +5250,7 @@ class ExploreFragment :
                 positionDestination?.get(1),
             lngDestination =
                 positionDestination?.get(0),
-            avoidanceOptions =
-                arrayListOf<AvoidanceOption>().apply {
-                    if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                    if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                    if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                    if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                    if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                },
+            avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
             timeInput = timeDepart,
             isWalkingAndTruckCall = true,
@@ -5358,14 +5308,7 @@ class ExploreFragment :
             longitude = liveLocationLatLng?.longitude,
             latDestination = it.position?.get(1),
             lngDestination = it.position?.get(0),
-            avoidanceOptions =
-                arrayListOf<AvoidanceOption>().apply {
-                    if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                    if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                    if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                    if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                    if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                },
+            avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
             timeInput = timeDepart,
             isWalkingAndTruckCall = false,
@@ -5375,14 +5318,7 @@ class ExploreFragment :
             longitude = liveLocationLatLng?.longitude,
             latDestination = it.position?.get(1),
             lngDestination = it.position?.get(0),
-            avoidanceOptions =
-                arrayListOf<AvoidanceOption>().apply {
-                    if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                    if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                    if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                    if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                    if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                },
+            avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
             timeInput = timeDepart,
             isWalkingAndTruckCall = true,
@@ -5411,14 +5347,7 @@ class ExploreFragment :
             longitude = it.position?.get(0),
             latDestination = liveLocationLatLng?.latitude,
             lngDestination = liveLocationLatLng?.longitude,
-            avoidanceOptions =
-                arrayListOf<AvoidanceOption>().apply {
-                    if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                    if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                    if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                    if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                    if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                },
+            avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
             timeInput = timeDepart,
             isWalkingAndTruckCall = false,
@@ -5428,14 +5357,7 @@ class ExploreFragment :
             longitude = it.position?.get(0),
             latDestination = liveLocationLatLng?.latitude,
             lngDestination = liveLocationLatLng?.longitude,
-            avoidanceOptions =
-                arrayListOf<AvoidanceOption>().apply {
-                    if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                    if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                    if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                    if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                    if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                },
+            avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
             timeInput = timeDepart,
             isWalkingAndTruckCall = true,
@@ -5615,14 +5537,7 @@ class ExploreFragment :
                     longitude = liveLocationLatLng?.longitude,
                     latDestination = data.position?.get(1),
                     lngDestination = data.position?.get(0),
-                    avoidanceOptions =
-                        arrayListOf<AvoidanceOption>().apply {
-                            if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                            if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                            if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                            if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                            if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                        },
+                    avoidanceOptions = mViewModel.getAvoidanceOptions(),
                     departOption = mViewModel.mSelectedDepartOption,
                     timeInput = timeDepart,
                     isWalkingAndTruckCall = false,
@@ -5991,14 +5906,7 @@ class ExploreFragment :
                     longitude = liveLocationLatLng?.longitude,
                     latDestination = it?.position?.get(1),
                     lngDestination = it?.position?.get(0),
-                    avoidanceOptions =
-                        arrayListOf<AvoidanceOption>().apply {
-                            if (mViewModel.mIsAvoidFerries) add(AvoidanceOption.FERRIES)
-                            if (mViewModel.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
-                            if (mViewModel.mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                            if (mViewModel.mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                            if (mViewModel.mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
-                        },
+                    avoidanceOptions = mViewModel.getAvoidanceOptions(),
                     departOption = mViewModel.mSelectedDepartOption,
                     timeInput = timeDepart,
                     isWalkingAndTruckCall = false,
