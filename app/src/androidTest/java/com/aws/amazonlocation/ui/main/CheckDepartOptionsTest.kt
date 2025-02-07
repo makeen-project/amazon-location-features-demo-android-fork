@@ -18,6 +18,7 @@ import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DUE_TO_WORD_MISMATCHED
 import com.aws.amazonlocation.TEST_WORD_ARRIVE
 import com.aws.amazonlocation.TEST_WORD_AUBURN_SYDNEY
+import com.aws.amazonlocation.TEST_WORD_LEAVE_AT
 import com.aws.amazonlocation.TEST_WORD_MANLY_BEACH_SYDNEY
 import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
@@ -122,6 +123,20 @@ class CheckDepartOptionsTest : BaseTestMainActivity() {
             tvDepartOptions?.check { view, _ ->
                 if (view is AppCompatTextView) {
                     Assert.assertTrue(TEST_FAILED_DUE_TO_WORD_MISMATCHED, view.text.contains(TEST_WORD_ARRIVE, true))
+                } else {
+                    Assert.fail(TEST_FAILED)
+                }
+            }
+
+            val tvDriveLeaveTime = waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.tv_drive_leave_time),
+                    isDisplayed()
+                )
+            )
+            tvDriveLeaveTime?.check { view, _ ->
+                if (view is AppCompatTextView) {
+                    Assert.assertTrue(TEST_FAILED_DUE_TO_WORD_MISMATCHED, view.text.contains(TEST_WORD_LEAVE_AT, true))
                 } else {
                     Assert.fail(TEST_FAILED)
                 }
