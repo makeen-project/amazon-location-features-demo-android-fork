@@ -99,6 +99,7 @@ const val IOT_POLICY = "AmazonLocationIotPolicy"
 const val IOT_POLICY_UN_AUTH = "AmazonLocationIotPolicyUnauth"
 
 const val STRING_FORMAT = "%.2f, %.2f"
+const val STRING_FORMAT_TIME = "%02d:%02d"
 const val ATTRIBUTE_LIGHT = "Light"
 const val ATTRIBUTE_DARK = "Dark"
 

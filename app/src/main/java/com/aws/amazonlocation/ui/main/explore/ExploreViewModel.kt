@@ -630,4 +630,13 @@ class ExploreViewModel
 
             mMapLanguageData.addAll(item)
         }
+
+        fun getAvoidanceOptions(): ArrayList<AvoidanceOption> =
+            arrayListOf<AvoidanceOption>().apply {
+                if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
+                if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
+                if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
+                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+            }
     }
