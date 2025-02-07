@@ -257,7 +257,8 @@ object DateFormat {
     const val MMM_DD_YYYY = "MMM dd, yyyy"
     const val HH_MM_AA = "hh:mm aa"
     const val HH_MM = "HH:mm"
-    const val DD_MM_HH_MM = "MM/dd/yyyy hh:mm aa"
+    const val MM_DD_YYYY_HH_MM = "MM/dd/yyyy hh:mm aa"
+    const val MM_DD_HH_MM_AA = "MM/dd hh:mm aa"
     const val YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ssXXX"
 
 }

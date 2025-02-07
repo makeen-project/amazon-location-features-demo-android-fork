@@ -10,8 +10,7 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.LanguageData
 import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.PoliticalData
-import com.aws.amazonlocation.utils.DateFormat.DD_MM_HH_MM
-import com.aws.amazonlocation.utils.DateFormat.HH_MM
+import com.aws.amazonlocation.utils.DateFormat.MM_DD_YYYY_HH_MM
 import com.aws.amazonlocation.utils.DateFormat.YYYY_MM_DD_T_HH_MM_SS
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -190,7 +189,7 @@ fun formatToISO8601(date: Date): String {
 }
 
 fun formatToDisplayDate(date: Date): String {
-    val displayFormat = SimpleDateFormat(DD_MM_HH_MM, Locale.getDefault() ?: Locale.US)
+    val displayFormat = SimpleDateFormat(MM_DD_YYYY_HH_MM, Locale.getDefault() ?: Locale.US)
     return displayFormat.format(date)
 }
 
