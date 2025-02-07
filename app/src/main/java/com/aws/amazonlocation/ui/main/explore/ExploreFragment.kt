@@ -87,7 +87,7 @@ import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.CLICK_TIME_DIFFERENCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.DELAY_500
-import com.aws.amazonlocation.utils.DateFormat.MM_DD_HH_MM_AA
+import com.aws.amazonlocation.utils.DateFormat.HH_MM_AA
 import com.aws.amazonlocation.utils.DateFormat.HH_MM
 import com.aws.amazonlocation.utils.Debouncer
 import com.aws.amazonlocation.utils.Distance.DISTANCE_FOR_DRIVE_TRUCK
@@ -2024,7 +2024,7 @@ class ExploreFragment :
                         tvScooterLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
+                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
                         }
                     } else {
                         tvScooterLeaveTime.hide()
@@ -2081,7 +2081,7 @@ class ExploreFragment :
                         tvTruckLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
+                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
                         }
                     } else {
                         tvTruckLeaveTime.hide()
@@ -2139,7 +2139,7 @@ class ExploreFragment :
                         tvWalkLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
+                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
                         }
                     } else {
                         tvWalkLeaveTime.hide()
@@ -2246,7 +2246,7 @@ class ExploreFragment :
                             tvDriveLeaveTime.text = buildString {
                                 append(getString(R.string.label_leave_at))
                                 append(" ")
-                                append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
+                                append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
                             }
                         } else {
                             tvDriveLeaveTime.hide()
