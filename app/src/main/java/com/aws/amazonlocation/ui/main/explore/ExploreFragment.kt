@@ -87,7 +87,7 @@ import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.CLICK_TIME_DIFFERENCE
 import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.DELAY_500
-import com.aws.amazonlocation.utils.DateFormat.DD_MM_HH_MM
+import com.aws.amazonlocation.utils.DateFormat.MM_DD_HH_MM_AA
 import com.aws.amazonlocation.utils.DateFormat.HH_MM
 import com.aws.amazonlocation.utils.Debouncer
 import com.aws.amazonlocation.utils.Distance.DISTANCE_FOR_DRIVE_TRUCK
@@ -1480,6 +1480,11 @@ class ExploreFragment :
                                 bottomSheetDirectionSearch.apply {
                                     when (it.messageResource.toString()) {
                                         RouteTravelMode.Pedestrian.value -> {
+                                            setGOButtonState(
+                                                edtSearchDirection.text.toString(),
+                                                cardWalkGo,
+                                                clWalk,
+                                            )
                                             cardWalkGo.setCardBackgroundColor(
                                                 ContextCompat.getColor(
                                                     requireContext(),
@@ -1496,6 +1501,11 @@ class ExploreFragment :
                                         }
 
                                         RouteTravelMode.Car.value -> {
+                                            setGOButtonState(
+                                                edtSearchDirection.text.toString(),
+                                                cardDriveGo,
+                                                clDrive,
+                                            )
                                             cardDriveGo.setCardBackgroundColor(
                                                 ContextCompat.getColor(
                                                     requireContext(),
@@ -1512,6 +1522,11 @@ class ExploreFragment :
                                         }
 
                                         RouteTravelMode.Truck.value -> {
+                                            setGOButtonState(
+                                                edtSearchDirection.text.toString(),
+                                                cardTruckGo,
+                                                clTruck,
+                                            )
                                             cardTruckGo.setCardBackgroundColor(
                                                 ContextCompat.getColor(
                                                     requireContext(),
@@ -1528,6 +1543,11 @@ class ExploreFragment :
                                         }
 
                                         RouteTravelMode.Scooter.value -> {
+                                            setGOButtonState(
+                                                edtSearchDirection.text.toString(),
+                                                cardScooterGo,
+                                                clScooter,
+                                            )
                                             cardScooterGo.setCardBackgroundColor(
                                                 ContextCompat.getColor(
                                                     requireContext(),
@@ -2026,7 +2046,7 @@ class ExploreFragment :
                         tvScooterLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, DD_MM_HH_MM) })
+                            append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
                         }
                     } else {
                         tvScooterLeaveTime.hide()
@@ -2083,7 +2103,7 @@ class ExploreFragment :
                         tvTruckLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, DD_MM_HH_MM) })
+                            append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
                         }
                     } else {
                         tvTruckLeaveTime.hide()
@@ -2141,7 +2161,7 @@ class ExploreFragment :
                         tvWalkLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, DD_MM_HH_MM) })
+                            append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
                         }
                     } else {
                         tvWalkLeaveTime.hide()
@@ -2248,7 +2268,7 @@ class ExploreFragment :
                             tvDriveLeaveTime.text = buildString {
                                 append(getString(R.string.label_leave_at))
                                 append(" ")
-                                append(getTime?.let { convertToLocalTime(it, DD_MM_HH_MM) })
+                                append(getTime?.let { convertToLocalTime(it, MM_DD_HH_MM_AA) })
                             }
                         } else {
                             tvDriveLeaveTime.hide()
