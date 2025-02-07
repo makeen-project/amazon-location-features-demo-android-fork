@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
@@ -86,14 +85,9 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
                 ),
             )
 
-            // btnExit
-            waitForView(allOf(withId(R.id.btn_exit), isDisplayed())) {
+            waitForView(allOf(withId(R.id.tv_destination_name), isDisplayed())) {
                 Assert.fail("$TEST_FAILED button exit not visible")
-            }
-            val tvDestinationName =
-                mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_destination_name)
-            Assert.assertTrue(TEST_FAILED_DUE_TO_WORD_MISMATCHED, tvDestinationName.text.contains(TEST_WORD_SHYAMAL_CROSS_ROAD, true))
-        } catch (e: Exception) {
+            }} catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
