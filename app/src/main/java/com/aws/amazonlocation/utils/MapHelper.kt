@@ -28,7 +28,6 @@ import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
 import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
-import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_20
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1000
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1500
@@ -48,7 +47,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
-import org.maplibre.android.constants.MapLibreConstants
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.location.LocationComponentActivationOptions
@@ -283,14 +281,9 @@ class MapHelper(
                 if (mLastStoreLocation == null) {
                     mLastStoreLocation = result.lastLocation
                 } else {
-                    mLastStoreLocation?.let {
-                        val distance = result.lastLocation?.let { it1 -> it.distanceTo(it1) }
-                        if (distance != null) {
-                            if (distance > DISTANCE_IN_METER_20) {
-                                mLastStoreLocation = result.lastLocation
-                                mRouteInterface?.updateRoute(it, result.lastLocation?.bearing)
-                            }
-                        }
+                    result.lastLocation?.let {
+                        mLastStoreLocation = it
+                        mRouteInterface?.updateRoute(it, result.lastLocation?.bearing)
                     }
                 }
             }
@@ -1065,7 +1058,7 @@ class MapHelper(
         }
     }
 
-    fun getLiveLocation(): LatLng? {
+    fun getLiveLocation(isDefaultLocationNeeded: Boolean = true): LatLng? {
         var mLatLng: LatLng? = null
         if (mMapLibreMap?.locationComponent?.isLocationComponentActivated == true) {
             mMapLibreMap?.locationComponent?.lastKnownLocation?.apply {
@@ -1076,6 +1069,8 @@ class MapHelper(
                     )
             }
         }
+        if (!isDefaultLocationNeeded) return mLatLng
+
         return if (mLatLng == null) {
             mDefaultLatLng
         } else {
