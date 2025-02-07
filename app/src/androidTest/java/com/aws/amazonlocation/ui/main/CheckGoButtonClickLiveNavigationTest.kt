@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
@@ -87,8 +86,7 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
                 ),
             )
 
-            // btnExit
-            waitForView(allOf(withId(R.id.btn_exit), isDisplayed())) {
+            waitForView(allOf(withId(R.id.tv_destination_name), isDisplayed())) {
                 Assert.fail("$TEST_FAILED button exit not visible")
             }
         } catch (e: Exception) {

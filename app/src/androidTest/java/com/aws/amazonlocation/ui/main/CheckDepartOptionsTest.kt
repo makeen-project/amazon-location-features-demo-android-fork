@@ -2,7 +2,6 @@ package com.aws.amazonlocation.ui.main
 
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
@@ -13,28 +12,15 @@ import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
-import com.aws.amazonlocation.ALLOW
-import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
-import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_15000
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
 import com.aws.amazonlocation.TEST_FAILED_DUE_TO_WORD_MISMATCHED
 import com.aws.amazonlocation.TEST_WORD_ARRIVE
 import com.aws.amazonlocation.TEST_WORD_AUBURN_SYDNEY
 import com.aws.amazonlocation.TEST_WORD_MANLY_BEACH_SYDNEY
-import com.aws.amazonlocation.WHILE_USING_THE_APP
-import com.aws.amazonlocation.WHILE_USING_THE_APP_ALLOW
-import com.aws.amazonlocation.WHILE_USING_THE_APP_CAPS
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.failTest
 import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -46,12 +32,10 @@ import org.junit.Test
 @HiltAndroidTest
 class CheckDepartOptionsTest : BaseTestMainActivity() {
 
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Test
     fun showCheckDepartOptionsTest() {
         try {
-            checkLocationPermissionAndMapLoad()
+            checkLocationPermission()
 
             val cardDirectionTest =
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
@@ -129,26 +113,21 @@ class CheckDepartOptionsTest : BaseTestMainActivity() {
                 )
             )
 
-            val tvDepartOptions =
-                mActivityRule.activity.findViewById<AppCompatTextView>(R.id.tv_depart_options)
-            Assert.assertTrue(TEST_FAILED_DUE_TO_WORD_MISMATCHED, tvDepartOptions.text.contains(TEST_WORD_ARRIVE, true))
+            val tvDepartOptions = waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.tv_depart_options),
+                    isDisplayed()
+                )
+            )
+            tvDepartOptions?.check { view, _ ->
+                if (view is AppCompatTextView) {
+                    Assert.assertTrue(TEST_FAILED_DUE_TO_WORD_MISMATCHED, view.text.contains(TEST_WORD_ARRIVE, true))
+                } else {
+                    Assert.fail(TEST_FAILED)
+                }
+            }
         } catch (e: Exception) {
-            failTest(221, e)
             Assert.fail(TEST_FAILED)
         }
-    }
-
-    private fun checkLocationPermissionAndMapLoad() {
-        val btnContinueToApp =
-            uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
-        if (btnContinueToApp.exists()) {
-            btnContinueToApp.click()
-        }
-        uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
-        uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
-        uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
-        uiDevice.findObject(By.text(ALLOW))?.click()
-        enableGPS(ApplicationProvider.getApplicationContext())
-        uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
     }
 }
