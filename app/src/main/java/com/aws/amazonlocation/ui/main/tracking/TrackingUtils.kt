@@ -418,7 +418,7 @@ class TrackingUtils(
             tvStopTracking.show()
             cardStartTracking.isEnabled = true
         }
-        val latLng = mMapHelper?.getLiveLocation()
+        val latLng = mMapHelper?.getBestAvailableLocation()
         latLng?.let { updateLatLngOnMap(it) }
         mTrackingInterface?.updateBatch()
         val properties = listOf(
@@ -909,7 +909,7 @@ class TrackingUtils(
                 imageId++
             }
             if (coordinates.isEmpty()) {
-                val liveLocation = mMapHelper?.getLiveLocation()
+                val liveLocation = mMapHelper?.getBestAvailableLocation()
                 liveLocation?.let {
                     mMapHelper?.moveCameraToCurrentLocation(
                         LatLng(
@@ -944,7 +944,7 @@ class TrackingUtils(
     }
 
     private fun setCameraZoomLevel() {
-        val liveLocation = mMapHelper?.getLiveLocation()
+        val liveLocation = mMapHelper?.getBestAvailableLocation()
         liveLocation?.let {
             mMapHelper?.moveCameraToLocationTracker(
                 LatLng(
