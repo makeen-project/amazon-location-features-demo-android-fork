@@ -10,10 +10,6 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.ui.main.region.RegionAdapter
@@ -27,9 +23,6 @@ import org.junit.*
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
-
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Throws(java.lang.Exception::class)
     override fun before() {
         super.before()
@@ -38,13 +31,11 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
     @Test
     fun checkChangeRegion() {
         try {
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
+            checkLocationPermission()
 
             goToRegion()
         } catch (e: Exception) {
-            failTest(95, e)
-            Assert.fail(TEST_FAILED)
+            Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 
@@ -54,63 +45,56 @@ class SettingsFragmentChangeRegionTest : BaseTestMainActivity() {
             allOf(
                 withText(settingTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         ).perform(click())
 
-        Thread.sleep(DELAY_1000)
-
+        waitForView(CoreMatchers.allOf(withId(R.id.cl_region), isDisplayed()))
         onView(
             allOf(
                 withId(R.id.cl_region),
-                isDisplayed()
-            )
+                isDisplayed(),
+            ),
         ).perform(click())
 
-        Thread.sleep(DELAY_1000)
-
-        val listRv = waitForView(
-            CoreMatchers.allOf(
-                withId(R.id.rv_region),
-                isDisplayed(),
-                hasMinimumChildCount(1)
+        waitForView(CoreMatchers.allOf(withId(R.id.rv_region), isDisplayed()))
+        val listRv =
+            waitForView(
+                CoreMatchers.allOf(
+                    withId(R.id.rv_region),
+                    isDisplayed(),
+                    hasMinimumChildCount(1),
+                ),
             )
-        )
         listRv?.perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 2,
-                click()
-            )
+                click(),
+            ),
         )
         var rbRegionIsChecked = false
-        Thread.sleep(DELAY_1000)
         onView(withId(R.id.rv_region)).perform(
             RecyclerViewActions.scrollToPosition<RegionAdapter.RegionVH>(
-                2
+                2,
             ),
             RecyclerViewActions.actionOnItemAtPosition<RegionAdapter.RegionVH>(
                 2,
                 object : ViewAction {
-                    override fun getConstraints(): Matcher<View> {
-                        return isAssignableFrom(TextView::class.java)
-                    }
+                    override fun getConstraints(): Matcher<View> = isAssignableFrom(TextView::class.java)
 
-                    override fun getDescription(): String {
-                        return "Get data from RecyclerView item"
-                    }
+                    override fun getDescription(): String = "Get data from RecyclerView item"
 
                     override fun perform(
                         uiController: UiController?,
-                        view: View
+                        view: View,
                     ) {
                         val rbRegion =
                             view.findViewById<AppCompatRadioButton>(R.id.rb_region)
                         rbRegionIsChecked = rbRegion.isSelected
                     }
-                }
-            )
+                },
+            ),
         )
-        Thread.sleep(DELAY_1000)
         Assert.assertTrue(TEST_FAILED, rbRegionIsChecked)
     }
 }

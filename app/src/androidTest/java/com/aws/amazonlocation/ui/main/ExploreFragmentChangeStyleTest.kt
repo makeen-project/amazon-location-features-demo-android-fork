@@ -4,10 +4,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.*
 import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.utils.*
@@ -20,9 +17,6 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
-
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     private lateinit var preferenceManager: PreferenceManager
 
     @Throws(java.lang.Exception::class)
@@ -37,10 +31,7 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
     @Test
     fun testMapStyleChange() {
         try {
-            Thread.sleep(DELAY_2000)
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-
-            Thread.sleep(DELAY_2000)
+            checkLocationPermission()
 
             goToMapStyles()
 
@@ -49,26 +40,26 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
             waitForView(allOf(withContentDescription(MAP_3), isDisplayed()))?.perform(click())
             waitForView(allOf(withContentDescription(MAP_4), isDisplayed()))?.perform(click())
         } catch (e: Exception) {
-            failTest(147, e)
-            Assert.fail(TEST_FAILED)
+            Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 
     private fun goToMapStyles() {
         val cardMap = waitForView(allOf(withId(R.id.card_map), isDisplayed()))
         cardMap?.perform(click())
-
-        Thread.sleep(DELAY_2000)
         swipeUp()
-        Thread.sleep(DELAY_2000)
     }
 
     private fun swipeUp(): UiDevice? {
         // Get the screen dimensions
-        val screenHeight = getInstrumentation().targetContext.resources.displayMetrics.heightPixels
+        val screenHeight =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.heightPixels
 
         // Set the starting point for the swipe (bottom-center of the screen)
-        val startX = getInstrumentation().targetContext.resources.displayMetrics.widthPixels / 2f
+        val startX =
+            getInstrumentation()
+                .targetContext.resources.displayMetrics.widthPixels / 2f
         val startY = screenHeight - 100 // Offset from the bottom of the screen
 
         // Set the ending point for the swipe (top-center of the screen)
