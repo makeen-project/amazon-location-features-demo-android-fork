@@ -1586,8 +1586,7 @@ class ExploreFragment :
                                 }
                             }
                         }
-                        val mLatLng = mMapHelper.getBestAvailableLocation()
-                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
+                        mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), isZooming)
                         it.calculateRouteResult?.let { it1 ->
                             mMapHelper.clearOriginMarker()
                             fetchAddressFromLatLng(it1)
@@ -3136,7 +3135,6 @@ class ExploreFragment :
         if (activity?.checkLocationPermission() == true) {
             if (isGPSEnabled(requireContext())) {
                 var destinationLatLng: LatLng? = null
-                val originLatLng = mMapHelper.getBestAvailableLocation()
                 val position =  mViewModel.mSearchSuggestionData?.position
                 position?.let {
                     destinationLatLng =
@@ -3149,7 +3147,7 @@ class ExploreFragment :
                     destinationLatLng?.latitude?.let { it1 ->
                         destinationLatLng?.longitude?.let { it2 ->
                             mPlacesProvider.getDistance(
-                                originLatLng,
+                                mMapHelper.getBestAvailableLocation(),
                                 it1,
                                 it2,
                             )
@@ -3416,8 +3414,7 @@ class ExploreFragment :
                         isWalk = mTravelMode == RouteTravelMode.Pedestrian.value,
                         isLocationIcon = true,
                     )
-                    val mLatLng = mMapHelper.getBestAvailableLocation()
-                    mMapHelper.navigationZoomCamera(mLatLng, isZooming)
+                    mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), isZooming)
                     mMapHelper.clearOriginMarker()
                     isLocationUpdatedNeeded = true
                     fetchAddressFromLatLng(it)
@@ -3575,8 +3572,7 @@ class ExploreFragment :
             }
         }
         if(latLngList.size < 2) {
-            val mLatLng = mMapHelper.getBestAvailableLocation()
-            latLngList.add(mLatLng)
+            latLngList.add(mMapHelper.getBestAvailableLocation())
         }
         mMapHelper.adjustMapBounds(
             latLngList,
@@ -4071,8 +4067,7 @@ class ExploreFragment :
             }
             mBottomSheetHelper.hideDirectionSheet()
             mViewModel.mSearchSuggestionData = null
-            val mLatLng = mMapHelper.getBestAvailableLocation()
-            mMapHelper.moveCameraToLocation(mLatLng)
+            mMapHelper.moveCameraToLocation(mMapHelper.getBestAvailableLocation())
             mBaseActivity?.isTablet?.let {
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true  || mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true || mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked == true) {
                     return@let
@@ -5109,12 +5104,11 @@ class ExploreFragment :
     }
 
     override fun onScale(detector: StandardScaleGestureDetector) {
-        val mLatLng = mMapHelper.getBestAvailableLocation()
         mMapLibreMap?.easeCamera(
             CameraUpdateFactory.newCameraPosition(
                 CameraPosition
                     .Builder()
-                    .target(mLatLng)
+                    .target(mMapHelper.getBestAvailableLocation())
                     .build(),
             ),
             Durations.CAMERA_DURATION_1000,
@@ -5123,8 +5117,7 @@ class ExploreFragment :
 
     override fun onScaleEnd(detector: StandardScaleGestureDetector) {
         isZooming = false
-        val mLatLng = mMapHelper.getBestAvailableLocation()
-        mMapHelper.navigationZoomCamera(mLatLng, false)
+        mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), false)
     }
 
     override fun onMapStyleChanged(mapStyle: String) {

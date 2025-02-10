@@ -353,8 +353,7 @@ class MapHelper(
                             )
                         }
                     } else {
-                        val liveLocation = getBestAvailableLocation()
-                        list.add(liveLocation)
+                        list.add(getBestAvailableLocation())
                     }
                     adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
                 } else {
@@ -1274,8 +1273,7 @@ class MapHelper(
     fun checkLocationComponentEnable() {
         mMapLibreMap?.let {
             if (it.locationComponent.isLocationComponentActivated) {
-                val latLng = getBestAvailableLocation()
-                moveCameraToLocation(latLng)
+                moveCameraToLocation(getBestAvailableLocation())
             } else {
                 enableLocationComponent()
             }
