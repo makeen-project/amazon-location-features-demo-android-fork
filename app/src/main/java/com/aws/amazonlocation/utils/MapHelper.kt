@@ -48,7 +48,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
-import org.maplibre.android.constants.MapLibreConstants
 import org.maplibre.android.geometry.LatLng
 import org.maplibre.android.geometry.LatLngBounds
 import org.maplibre.android.location.LocationComponentActivationOptions
@@ -354,7 +353,7 @@ class MapHelper(
                             )
                         }
                     } else {
-                        getLiveLocation()?.let { list.add(it) }
+                        list.add(getBestAvailableLocation())
                     }
                     adjustMapBounds(list, appContext.resources.getDimension(R.dimen.dp_90).toInt())
                 } else {
@@ -1065,24 +1064,20 @@ class MapHelper(
         }
     }
 
-    fun getLiveLocation(isDefaultLocationNeeded: Boolean = true): LatLng? {
-        var mLatLng: LatLng? = null
-        if (mMapLibreMap?.locationComponent?.isLocationComponentActivated == true) {
-            mMapLibreMap?.locationComponent?.lastKnownLocation?.apply {
-                mLatLng =
-                    LatLng(
-                        latitude,
-                        longitude,
-                    )
-            }
-        }
-        if (!isDefaultLocationNeeded) return mLatLng
+    fun getLiveLocation(): LatLng? {
+        return mMapLibreMap?.locationComponent?.takeIf { it.isLocationComponentActivated }
+            ?.lastKnownLocation
+            ?.let { LatLng(it.latitude, it.longitude) }
+    }
 
-        return if (mLatLng == null) {
-            mDefaultLatLng
-        } else {
-            mLatLng
-        }
+    fun getDefaultLocation(): LatLng = mDefaultLatLng
+
+    /**
+     * Returns the best available location.
+     * It prioritizes the live location if available; otherwise, it falls back to the default location.
+     */
+    fun getBestAvailableLocation(): LatLng {
+        return getLiveLocation() ?: getDefaultLocation()
     }
 
     fun clearMarker() {
@@ -1278,10 +1273,7 @@ class MapHelper(
     fun checkLocationComponentEnable() {
         mMapLibreMap?.let {
             if (it.locationComponent.isLocationComponentActivated) {
-                getLiveLocation()
-                    ?.let { latLng ->
-                        moveCameraToLocation(latLng)
-                    }
+                moveCameraToLocation(getBestAvailableLocation())
             } else {
                 enableLocationComponent()
             }
