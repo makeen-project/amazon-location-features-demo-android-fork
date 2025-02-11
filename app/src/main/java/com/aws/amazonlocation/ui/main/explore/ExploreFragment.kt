@@ -1095,10 +1095,12 @@ class ExploreFragment :
                                                     mViewModel.mIsAvoidTunnel.toString(),
                                                 ),
                                             )
-                                        (activity as MainActivity).analyticsUtils?.recordEvent(
-                                            ROUTE_SEARCH,
-                                            properties,
-                                        )
+                                        activity?.let {
+                                            (it as MainActivity).analyticsUtils?.recordEvent(
+                                                ROUTE_SEARCH,
+                                                properties,
+                                            )
+                                        }
                                     }
                                 }
                             }
