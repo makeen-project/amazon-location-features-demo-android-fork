@@ -405,26 +405,12 @@ class ExploreViewModel
                             ?.toDouble()
                     val getLastTime =
                         if (legs.last().vehicleLegDetails != null) {
-                            legs
-                                .last()
-                                .vehicleLegDetails!!
-                                .arrival
-                                ?.time
+                            legs.last().vehicleLegDetails?.arrival?.time
                         } else if (legs.last().pedestrianLegDetails != null) {
-                            legs
-                                .last()
-                                .pedestrianLegDetails!!
-                                .arrival
-                                ?.time
+                            legs.last().pedestrianLegDetails?.arrival?.time
                         } else if (legs.last().ferryLegDetails != null) {
-                            legs
-                                .last()
-                                .ferryLegDetails!!
-                                .arrival
-                                ?.time
-                        } else {
-                            ""
-                        }
+                            legs.last().ferryLegDetails?.arrival?.time
+                        } else ""
                     mNavigationResponse?.time = getLastTime?.let { convertToLocalTime(it, HH_MM) }
                     for (leg in legs) {
                         if (leg.vehicleLegDetails != null) {
