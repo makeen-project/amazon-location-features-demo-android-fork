@@ -1,43 +1,29 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
 import com.aws.amazonlocation.AMAZON_MAP_READY
 import com.aws.amazonlocation.BaseTestMainActivity
-import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.DELAY_15000
-import com.aws.amazonlocation.DELAY_2000
+import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.enableGPS
-import com.aws.amazonlocation.failTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Assert
 import org.junit.Test
+import org.maplibre.android.maps.MapView
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMapLoadingTest : BaseTestMainActivity() {
-
-    private val uiDevice = UiDevice.getInstance(getInstrumentation())
-
     @Test
     fun testMapLoaded() {
         try {
-            enableGPS(ApplicationProvider.getApplicationContext())
-            uiDevice.wait(Until.hasObject(By.desc(AMAZON_MAP_READY)), DELAY_15000)
-            Thread.sleep(DELAY_2000)
-            val map = uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView"))
+            checkLocationPermission()
+            val map =
+                mActivityRule.activity.findViewById<MapView>(R.id.mapView)
             Assert.assertEquals(AMAZON_MAP_READY, map.contentDescription)
         } catch (e: Exception) {
-            failTest(56, e)
-            Assert.fail(TEST_FAILED)
+            Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
