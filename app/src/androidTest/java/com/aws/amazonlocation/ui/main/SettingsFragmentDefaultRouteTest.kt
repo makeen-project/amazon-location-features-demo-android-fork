@@ -204,5 +204,32 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
                 )
             }
         }
+
+        onView(withId(R.id.switch_avoid_dirt_roads)).check { view, _ ->
+            if (view is SwitchCompat) {
+                Assert.assertTrue(
+                    TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidDirtRoadShouldBe,
+                )
+            }
+        }
+
+        onView(withId(R.id.switch_avoid_tunnels)).check { view, _ ->
+            if (view is SwitchCompat) {
+                Assert.assertTrue(
+                    TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidTunnelsShouldBe,
+                )
+            }
+        }
+
+        onView(withId(R.id.switch_avoid_u_turn)).check { view, _ ->
+            if (view is SwitchCompat) {
+                Assert.assertTrue(
+                    TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,
+                    view.isChecked == avoidUTurnShouldBe,
+                )
+            }
+        }
     }
 }

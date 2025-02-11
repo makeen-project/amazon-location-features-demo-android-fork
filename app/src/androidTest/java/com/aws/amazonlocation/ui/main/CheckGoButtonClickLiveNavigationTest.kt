@@ -16,7 +16,6 @@ import com.aws.amazonlocation.BaseTestMainActivity
 import com.aws.amazonlocation.GO
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.TEST_FAILED
-import com.aws.amazonlocation.TEST_FAILED_DUE_TO_WORD_MISMATCHED
 import com.aws.amazonlocation.TEST_WORD_SHYAMAL_CROSS_ROAD
 import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
