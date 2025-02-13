@@ -1473,7 +1473,7 @@ class ExploreFragment :
                                 bottomSheetDirectionSearch.apply {
                                     when (it.messageResource.toString()) {
                                         RouteTravelMode.Pedestrian.value -> {
-                                            setGOButtonState(
+                                            setGoButtonState(
                                                 edtSearchDirection.text.toString(),
                                                 cardWalkGo,
                                                 clWalk,
@@ -1494,7 +1494,7 @@ class ExploreFragment :
                                         }
 
                                         RouteTravelMode.Car.value -> {
-                                            setGOButtonState(
+                                            setGoButtonState(
                                                 edtSearchDirection.text.toString(),
                                                 cardDriveGo,
                                                 clDrive,
@@ -1515,7 +1515,7 @@ class ExploreFragment :
                                         }
 
                                         RouteTravelMode.Truck.value -> {
-                                            setGOButtonState(
+                                            setGoButtonState(
                                                 edtSearchDirection.text.toString(),
                                                 cardTruckGo,
                                                 clTruck,
@@ -1536,7 +1536,7 @@ class ExploreFragment :
                                         }
 
                                         RouteTravelMode.Scooter.value -> {
-                                            setGOButtonState(
+                                            setGoButtonState(
                                                 edtSearchDirection.text.toString(),
                                                 cardScooterGo,
                                                 clScooter,
@@ -1997,7 +1997,7 @@ class ExploreFragment :
     private fun setScooterRouteData(it: CalculateDistanceResponse) {
         mBinding.bottomSheetDirectionSearch.apply {
             mViewModel.mScooterData?.routes?.get(0).let { route ->
-                setGOButtonState(
+                setGoButtonState(
                     edtSearchDirection.text.toString(),
                     cardScooterGo,
                     clScooter,
@@ -2054,7 +2054,7 @@ class ExploreFragment :
     private fun setTruckRouteData(it: CalculateDistanceResponse) {
         mBinding.bottomSheetDirectionSearch.apply {
             mViewModel.mTruckData?.routes?.get(0).let { route ->
-                setGOButtonState(
+                setGoButtonState(
                     edtSearchDirection.text.toString(),
                     cardTruckGo,
                     clTruck,
@@ -2111,7 +2111,7 @@ class ExploreFragment :
     private fun setWalkingRouteData(it: CalculateDistanceResponse) {
         mBinding.bottomSheetDirectionSearch.apply {
             mViewModel.mWalkingData?.routes?.get(0).let { route ->
-                setGOButtonState(
+                setGoButtonState(
                     edtSearchDirection.text.toString(),
                     cardWalkGo,
                     clWalk,
@@ -2219,7 +2219,7 @@ class ExploreFragment :
                         }
                     }
 
-                    setGOButtonState(
+                    setGoButtonState(
                         edtSearchDirection.text.toString(),
                         cardDriveGo,
                         clDrive,
@@ -2315,7 +2315,7 @@ class ExploreFragment :
         showViews(tvDirectionError2, ivInfo)
     }
 
-    private fun setGOButtonState(
+    private fun setGoButtonState(
         source: String,
         cardView: MaterialCardView,
         cl: ConstraintLayout,

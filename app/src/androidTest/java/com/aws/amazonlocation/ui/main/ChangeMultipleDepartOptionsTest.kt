@@ -38,46 +38,46 @@ class ChangeMultipleDepartOptionsTest : BaseTestMainActivity() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
+            val cardDirection =
                 onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            cardDirection.perform(click())
 
-            val sourceEdt = waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(replaceText(TEST_WORD_AUBURN_SYDNEY))
+            val edtSearchDirection = waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
+            edtSearchDirection?.perform(replaceText(TEST_WORD_AUBURN_SYDNEY))
 
-            val suggestionListRv = waitForView(
+            var rvSearchPlaces = waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.rv_search_places_suggestion_direction),
                     isDisplayed(),
                     hasMinimumChildCount(1)
                 )
             )
-            suggestionListRv?.perform(
+            rvSearchPlaces?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
                     click()
                 )
             )
 
-            val destinationEdt = waitForView(
+            val edtSearchDest = waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.edt_search_dest),
                     isDisplayed()
                 )
             )
-            destinationEdt?.perform(
+            edtSearchDest?.perform(
                 click(),
                 replaceText(TEST_WORD_MANLY_BEACH_SYDNEY)
             )
 
-            val suggestionListDestRv = waitForView(
+            rvSearchPlaces = waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.rv_search_places_suggestion_direction),
                     isDisplayed(),
                     hasMinimumChildCount(1)
                 )
             )
-            suggestionListDestRv?.perform(
+            rvSearchPlaces?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
                     click()
