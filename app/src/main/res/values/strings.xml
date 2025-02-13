@@ -69,7 +69,7 @@
     <string name="text_switch_avoid_tools">Avoid tolls</string>
     <string name="text_switch_avoid_ferries">Avoid ferries</string>
     <string name="text_switch_avoid_dirt_roads">Avoid dirt roads</string>
-    <string name="text_switch_avoid_u_turn">Avoid uTurn</string>
+    <string name="text_switch_avoid_u_turn">Avoid U-turn</string>
     <string name="text_switch_avoid_tunnels">Avoid tunnels</string>
 
     <!-- Dummy text-->
