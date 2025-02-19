@@ -386,8 +386,8 @@ class ExploreFragment :
             mBinding.bottomSheetDirectionSearch.switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             mBinding.bottomSheetDirectionSearch.switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             mBinding.bottomSheetDirectionSearch.switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-            mBinding.bottomSheetDirectionSearch.switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurn
-            mBinding.bottomSheetDirectionSearch.switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+            mBinding.bottomSheetDirectionSearch.switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+            mBinding.bottomSheetDirectionSearch.switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
             mBinding.bottomSheetDirectionSearch.apply { checkedSwitchCount() }
             mBottomSheetHelper.setNavigationBottomSheet(mBinding.bottomSheetNavigation)
             mBottomSheetHelper.setNavigationCompleteBottomSheet(
@@ -1088,11 +1088,11 @@ class ExploreFragment :
                                                 ),
                                                 Pair(
                                                     AnalyticsAttribute.AVOID_U_TURNS,
-                                                    mViewModel.mIsAvoidUTurn.toString(),
+                                                    mViewModel.mIsAvoidUTurns.toString(),
                                                 ),
                                                 Pair(
                                                     AnalyticsAttribute.AVOID_TUNNELS,
-                                                    mViewModel.mIsAvoidTunnel.toString(),
+                                                    mViewModel.mIsAvoidTunnels.toString(),
                                                 ),
                                             )
                                         activity?.let {
@@ -3168,7 +3168,7 @@ class ExploreFragment :
                     if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
-                        mViewModel.mIsAvoidUTurn = isChecked
+                        mViewModel.mIsAvoidUTurns = isChecked
                         checkedSwitchCount()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mViewModel.mSearchDirectionDestinationData?.let {
@@ -3190,7 +3190,7 @@ class ExploreFragment :
                     if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
-                        mViewModel.mIsAvoidTunnel = isChecked
+                        mViewModel.mIsAvoidTunnels = isChecked
                         checkedSwitchCount()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mViewModel.mSearchDirectionDestinationData?.let {
@@ -3925,8 +3925,8 @@ class ExploreFragment :
             switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-            switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurn
-            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+            switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
             checkedSwitchCount()
             tvDriveGo.text = getString(R.string.btn_go)
             mViewModel.mIsDirectionDataSet = true
@@ -4107,8 +4107,8 @@ class ExploreFragment :
             switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-            switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurn
-            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+            switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
             checkedSwitchCount()
             mPlaceList.clear()
             mAdapterDirection?.notifyDataSetChanged()
@@ -4159,8 +4159,8 @@ class ExploreFragment :
                     switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
                     switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
                     switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-                    switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurn
-                    switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+                    switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+                    switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
                     checkedSwitchCount()
                     edtSearchDirection.setText(getString(R.string.label_my_location))
                     showViews(
@@ -4222,8 +4222,8 @@ class ExploreFragment :
         mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
         mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-        mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURNS, false)
-        mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNELS, false)
+        mViewModel.mIsAvoidUTurns = mPreferenceManager.getValue(KEY_AVOID_U_TURNS, false)
+        mViewModel.mIsAvoidTunnels = mPreferenceManager.getValue(KEY_AVOID_TUNNELS, false)
     }
 
     private fun BottomSheetDirectionSearchBinding.checkedSwitchCount() {
@@ -4237,10 +4237,10 @@ class ExploreFragment :
         if (mViewModel.mIsAvoidDirtRoads) {
             checkedCount++
         }
-        if (mViewModel.mIsAvoidUTurn) {
+        if (mViewModel.mIsAvoidUTurns) {
             checkedCount++
         }
-        if (mViewModel.mIsAvoidTunnel) {
+        if (mViewModel.mIsAvoidTunnels) {
             checkedCount++
         }
         if (checkedCount > 0) {
@@ -4279,8 +4279,8 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.AVOID_FERRIES, mViewModel.mIsAvoidFerries.toString()),
                 Pair(AnalyticsAttribute.AVOID_TOLLS, mViewModel.mIsAvoidTolls.toString()),
                 Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mViewModel.mIsAvoidDirtRoads.toString()),
-                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurn.toString()),
-                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnel.toString()),
+                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurns.toString()),
+                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnels.toString()),
             )
         val propertiesTruck =
             listOf(
@@ -4290,8 +4290,8 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.AVOID_FERRIES, mViewModel.mIsAvoidFerries.toString()),
                 Pair(AnalyticsAttribute.AVOID_TOLLS, mViewModel.mIsAvoidTolls.toString()),
                 Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mViewModel.mIsAvoidDirtRoads.toString()),
-                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurn.toString()),
-                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnel.toString()),
+                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurns.toString()),
+                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnels.toString()),
             )
         val propertiesWalk =
             listOf(
@@ -4301,8 +4301,8 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.AVOID_FERRIES, mViewModel.mIsAvoidFerries.toString()),
                 Pair(AnalyticsAttribute.AVOID_TOLLS, mViewModel.mIsAvoidTolls.toString()),
                 Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mViewModel.mIsAvoidDirtRoads.toString()),
-                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurn.toString()),
-                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnel.toString()),
+                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurns.toString()),
+                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnels.toString()),
             )
         if (isWalkingAndTruckCall) {
             (activity as MainActivity).analyticsUtils?.recordEvent(ROUTE_SEARCH, propertiesTruck)

@@ -71,8 +71,8 @@ class ExploreViewModel
         var mIsAvoidTolls: Boolean = false
         var mIsAvoidFerries: Boolean = false
         var mIsAvoidDirtRoads: Boolean = false
-        var mIsAvoidUTurn: Boolean = false
-        var mIsAvoidTunnel: Boolean = false
+        var mIsAvoidUTurns: Boolean = false
+        var mIsAvoidTunnels: Boolean = false
         var mIsRouteOptionsOpened = false
         var mIsDepartOptionsOpened = false
         var mTravelMode: String = RouteTravelMode.Car.value
@@ -617,7 +617,7 @@ class ExploreViewModel
                 if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
                 if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
                 if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+                if (mIsAvoidUTurns) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnels) add(AvoidanceOption.TUNNELS)
             }
     }

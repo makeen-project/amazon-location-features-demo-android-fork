@@ -57,8 +57,8 @@ class ExploreVMCalculateDistance : BaseTest() {
         mExploreVM.mIsAvoidTolls = false
         mExploreVM.mIsAvoidFerries = false
         mExploreVM.mIsAvoidDirtRoads = false
-        mExploreVM.mIsAvoidUTurn = false
-        mExploreVM.mIsAvoidTunnel = false
+        mExploreVM.mIsAvoidUTurns = false
+        mExploreVM.mIsAvoidTunnels = false
         mExploreVM.mIsRouteOptionsOpened  = false
         mExploreVM.mIsDepartOptionsOpened  = false
         mExploreVM.mRouteFinish  = false
@@ -115,8 +115,8 @@ class ExploreVMCalculateDistance : BaseTest() {
                 if (mExploreVM.mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
                 if (mExploreVM.mIsAvoidFerries)  add(AvoidanceOption.FERRIES)
                 if (mExploreVM.mIsAvoidDirtRoads)  add(AvoidanceOption.DIRT_ROADS)
-                if (mExploreVM.mIsAvoidUTurn)  add(AvoidanceOption.U_TURNS)
-                if (mExploreVM.mIsAvoidTunnel)  add(AvoidanceOption.TUNNELS)
+                if (mExploreVM.mIsAvoidUTurns)  add(AvoidanceOption.U_TURNS)
+                if (mExploreVM.mIsAvoidTunnels)  add(AvoidanceOption.TUNNELS)
             }, DepartOption.LEAVE_NOW.name,"",true)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
