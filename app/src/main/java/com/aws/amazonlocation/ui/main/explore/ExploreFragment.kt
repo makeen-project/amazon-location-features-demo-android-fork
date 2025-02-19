@@ -103,8 +103,8 @@ import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_AVOID_DIRT_ROADS
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
-import com.aws.amazonlocation.utils.KEY_AVOID_TUNNEL
-import com.aws.amazonlocation.utils.KEY_AVOID_U_TURN
+import com.aws.amazonlocation.utils.KEY_AVOID_TUNNELS
+import com.aws.amazonlocation.utils.KEY_AVOID_U_TURNS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
@@ -147,7 +147,7 @@ import com.aws.amazonlocation.utils.Units.isGPSEnabled
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.attributionPattern
 import com.aws.amazonlocation.utils.checkLocationPermission
-import com.aws.amazonlocation.utils.convertToLocalTime
+import com.aws.amazonlocation.utils.formatToDisplayTime
 import com.aws.amazonlocation.utils.copyTextToClipboard
 import com.aws.amazonlocation.utils.formatToDisplayDate
 import com.aws.amazonlocation.utils.formatToISO8601
@@ -386,8 +386,8 @@ class ExploreFragment :
             mBinding.bottomSheetDirectionSearch.switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             mBinding.bottomSheetDirectionSearch.switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             mBinding.bottomSheetDirectionSearch.switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-            mBinding.bottomSheetDirectionSearch.switchAvoidUTurn.isChecked = mViewModel.mIsAvoidUTurn
-            mBinding.bottomSheetDirectionSearch.switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+            mBinding.bottomSheetDirectionSearch.switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+            mBinding.bottomSheetDirectionSearch.switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
             mBinding.bottomSheetDirectionSearch.apply { checkedSwitchCount() }
             mBottomSheetHelper.setNavigationBottomSheet(mBinding.bottomSheetNavigation)
             mBottomSheetHelper.setNavigationCompleteBottomSheet(
@@ -1053,7 +1053,7 @@ class ExploreFragment :
                                             mViewModel.mDestinationLatLng?.longitude,
                                             mViewModel.getAvoidanceOptions(),
                                             mViewModel.mSelectedDepartOption,
-                                            timeInput = timeDepart,
+                                            time = timeDepart,
                                             mViewModel.mTravelMode,
                                         )
                                         val isMetric =
@@ -1087,12 +1087,12 @@ class ExploreFragment :
                                                     mViewModel.mIsAvoidDirtRoads.toString(),
                                                 ),
                                                 Pair(
-                                                    AnalyticsAttribute.AVOID_U_TURN,
-                                                    mViewModel.mIsAvoidUTurn.toString(),
+                                                    AnalyticsAttribute.AVOID_U_TURNS,
+                                                    mViewModel.mIsAvoidUTurns.toString(),
                                                 ),
                                                 Pair(
-                                                    AnalyticsAttribute.AVOID_TUNNEL,
-                                                    mViewModel.mIsAvoidTunnel.toString(),
+                                                    AnalyticsAttribute.AVOID_TUNNELS,
+                                                    mViewModel.mIsAvoidTunnels.toString(),
                                                 ),
                                             )
                                         activity?.let {
@@ -1159,7 +1159,7 @@ class ExploreFragment :
                             clSearchLoaderNavigation.root.hide()
                             showViews(tvArrivalTime, rvNavigationList)
                             mBinding.bottomSheetNavigation.apply {
-                                tvArrivalTime.text = it.time
+                                tvArrivalTime.text = it.time ?: ""
                                 if (mViewModel.mSearchDirectionOriginData == null && mViewModel.mSearchDirectionDestinationData?.isDestination == true)  {
                                     tvDepartAddress.hide()
                                     showViews(tvDestinationName, tvDestinationAddress, tvDepartName)
@@ -1613,16 +1613,11 @@ class ExploreFragment :
                                     data.calculateRouteResult?.routes?.get(0)?.summary
                                         ?.distance
                                         ?.toDouble()
-                                val getLastTime =
-                                    if (legs.last().vehicleLegDetails != null) {
-                                        legs.last().vehicleLegDetails?.arrival?.time
-                                    } else if (legs.last().pedestrianLegDetails != null) {
-                                        legs.last().pedestrianLegDetails?.arrival?.time
-                                    } else if (legs.last().ferryLegDetails != null) {
-                                        legs.last().ferryLegDetails?.arrival?.time
-                                    } else ""
+                                val getLastTime = legs.last().vehicleLegDetails?.arrival?.time
+                                    ?: legs.last().pedestrianLegDetails?.arrival?.time
+                                    ?: legs.last().ferryLegDetails?.arrival?.time
                                 mViewModel.mNavigationResponse?.time =
-                                    getLastTime?.let { convertToLocalTime(it, HH_MM) }
+                                    getLastTime?.let { formatToDisplayTime(it, HH_MM) }
                                 for (leg in legs) {
                                     if (leg.vehicleLegDetails != null) {
                                         leg.vehicleLegDetails?.travelSteps?.forEach {
@@ -2028,7 +2023,7 @@ class ExploreFragment :
                         tvScooterLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                            append(getTime?.let { formatToDisplayTime(it, HH_MM_AA) })
                         }
                     } else {
                         tvScooterLeaveTime.hide()
@@ -2085,7 +2080,7 @@ class ExploreFragment :
                         tvTruckLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                            append(getTime?.let { formatToDisplayTime(it, HH_MM_AA) })
                         }
                     } else {
                         tvTruckLeaveTime.hide()
@@ -2143,7 +2138,7 @@ class ExploreFragment :
                         tvWalkLeaveTime.text = buildString {
                             append(getString(R.string.label_leave_at))
                             append(" ")
-                            append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                            append(getTime?.let { formatToDisplayTime(it, HH_MM_AA) })
                         }
                     } else {
                         tvWalkLeaveTime.hide()
@@ -2250,7 +2245,7 @@ class ExploreFragment :
                             tvDriveLeaveTime.text = buildString {
                                 append(getString(R.string.label_leave_at))
                                 append(" ")
-                                append(getTime?.let { convertToLocalTime(it, HH_MM_AA) })
+                                append(getTime?.let { formatToDisplayTime(it, HH_MM_AA) })
                             }
                         } else {
                             tvDriveLeaveTime.hide()
@@ -3171,11 +3166,11 @@ class ExploreFragment :
                     }
                 }
 
-                switchAvoidUTurn.setOnCheckedChangeListener { _, isChecked ->
+                switchAvoidUTurns.setOnCheckedChangeListener { _, isChecked ->
                     if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
-                        mViewModel.mIsAvoidUTurn = isChecked
+                        mViewModel.mIsAvoidUTurns = isChecked
                         checkedSwitchCount()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mViewModel.mSearchDirectionDestinationData?.let {
@@ -3197,7 +3192,7 @@ class ExploreFragment :
                     if (checkInternetConnection() && mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                         mMapHelper.removeMarkerAndLine()
                         clearDirectionData()
-                        mViewModel.mIsAvoidTunnel = isChecked
+                        mViewModel.mIsAvoidTunnels = isChecked
                         checkedSwitchCount()
                         if (edtSearchDirection.text.toString() == resources.getString(R.string.label_my_location)) {
                             mViewModel.mSearchDirectionDestinationData?.let {
@@ -3932,8 +3927,8 @@ class ExploreFragment :
             switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-            switchAvoidUTurn.isChecked = mViewModel.mIsAvoidUTurn
-            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+            switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
             checkedSwitchCount()
             tvDriveGo.text = getString(R.string.btn_go)
             mViewModel.mIsDirectionDataSet = true
@@ -4116,8 +4111,8 @@ class ExploreFragment :
             switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
             switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
             switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-            switchAvoidUTurn.isChecked = mViewModel.mIsAvoidUTurn
-            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+            switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+            switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
             checkedSwitchCount()
             mPlaceList.clear()
             mAdapterDirection?.notifyDataSetChanged()
@@ -4168,8 +4163,8 @@ class ExploreFragment :
                     switchAvoidTools.isChecked = mViewModel.mIsAvoidTolls
                     switchAvoidFerries.isChecked = mViewModel.mIsAvoidFerries
                     switchAvoidDirtRoads.isChecked = mViewModel.mIsAvoidDirtRoads
-                    switchAvoidUTurn.isChecked = mViewModel.mIsAvoidUTurn
-                    switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnel
+                    switchAvoidUTurns.isChecked = mViewModel.mIsAvoidUTurns
+                    switchAvoidTunnels.isChecked = mViewModel.mIsAvoidTunnels
                     checkedSwitchCount()
                     edtSearchDirection.setText(getString(R.string.label_my_location))
                     showViews(
@@ -4215,7 +4210,7 @@ class ExploreFragment :
                         position?.get(0),
                     avoidanceOptions = mViewModel.getAvoidanceOptions(),
                     departOption = mViewModel.mSelectedDepartOption,
-                    timeInput = timeDepart,
+                    time = timeDepart,
                     isWalkingAndTruckCall = true,
                 )
                 recordEventForAllMode(isWalkingAndTruckCall = false)
@@ -4233,8 +4228,8 @@ class ExploreFragment :
         mViewModel.mIsAvoidTolls = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
         mViewModel.mIsAvoidFerries = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
         mViewModel.mIsAvoidDirtRoads = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-        mViewModel.mIsAvoidUTurn = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
-        mViewModel.mIsAvoidTunnel = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
+        mViewModel.mIsAvoidUTurns = mPreferenceManager.getValue(KEY_AVOID_U_TURNS, false)
+        mViewModel.mIsAvoidTunnels = mPreferenceManager.getValue(KEY_AVOID_TUNNELS, false)
     }
 
     private fun BottomSheetDirectionSearchBinding.checkedSwitchCount() {
@@ -4248,10 +4243,10 @@ class ExploreFragment :
         if (mViewModel.mIsAvoidDirtRoads) {
             checkedCount++
         }
-        if (mViewModel.mIsAvoidUTurn) {
+        if (mViewModel.mIsAvoidUTurns) {
             checkedCount++
         }
-        if (mViewModel.mIsAvoidTunnel) {
+        if (mViewModel.mIsAvoidTunnels) {
             checkedCount++
         }
         if (checkedCount > 0) {
@@ -4290,8 +4285,8 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.AVOID_FERRIES, mViewModel.mIsAvoidFerries.toString()),
                 Pair(AnalyticsAttribute.AVOID_TOLLS, mViewModel.mIsAvoidTolls.toString()),
                 Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mViewModel.mIsAvoidDirtRoads.toString()),
-                Pair(AnalyticsAttribute.AVOID_U_TURN, mViewModel.mIsAvoidUTurn.toString()),
-                Pair(AnalyticsAttribute.AVOID_TUNNEL, mViewModel.mIsAvoidTunnel.toString()),
+                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurns.toString()),
+                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnels.toString()),
             )
         val propertiesTruck =
             listOf(
@@ -4301,8 +4296,8 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.AVOID_FERRIES, mViewModel.mIsAvoidFerries.toString()),
                 Pair(AnalyticsAttribute.AVOID_TOLLS, mViewModel.mIsAvoidTolls.toString()),
                 Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mViewModel.mIsAvoidDirtRoads.toString()),
-                Pair(AnalyticsAttribute.AVOID_U_TURN, mViewModel.mIsAvoidUTurn.toString()),
-                Pair(AnalyticsAttribute.AVOID_TUNNEL, mViewModel.mIsAvoidTunnel.toString()),
+                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurns.toString()),
+                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnels.toString()),
             )
         val propertiesWalk =
             listOf(
@@ -4312,8 +4307,8 @@ class ExploreFragment :
                 Pair(AnalyticsAttribute.AVOID_FERRIES, mViewModel.mIsAvoidFerries.toString()),
                 Pair(AnalyticsAttribute.AVOID_TOLLS, mViewModel.mIsAvoidTolls.toString()),
                 Pair(AnalyticsAttribute.AVOID_DIRT_ROADS, mViewModel.mIsAvoidDirtRoads.toString()),
-                Pair(AnalyticsAttribute.AVOID_U_TURN, mViewModel.mIsAvoidUTurn.toString()),
-                Pair(AnalyticsAttribute.AVOID_TUNNEL, mViewModel.mIsAvoidTunnel.toString()),
+                Pair(AnalyticsAttribute.AVOID_U_TURNS, mViewModel.mIsAvoidUTurns.toString()),
+                Pair(AnalyticsAttribute.AVOID_TUNNELS, mViewModel.mIsAvoidTunnels.toString()),
             )
         if (isWalkingAndTruckCall) {
             (activity as MainActivity).analyticsUtils?.recordEvent(ROUTE_SEARCH, propertiesTruck)
@@ -5230,7 +5225,7 @@ class ExploreFragment :
                 positionDestination?.get(0),
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            timeInput = timeDepart,
+            time = timeDepart,
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -5244,7 +5239,7 @@ class ExploreFragment :
                 positionDestination?.get(0),
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            timeInput = timeDepart,
+            time = timeDepart,
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -5302,7 +5297,7 @@ class ExploreFragment :
             lngDestination = it.position?.get(0),
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            timeInput = timeDepart,
+            time = timeDepart,
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -5312,7 +5307,7 @@ class ExploreFragment :
             lngDestination = it.position?.get(0),
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            timeInput = timeDepart,
+            time = timeDepart,
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -5341,7 +5336,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
             lngDestination = mLatLng.longitude,
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            timeInput = timeDepart,
+            time = timeDepart,
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -5351,7 +5346,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
             lngDestination = mLatLng.longitude,
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            timeInput = timeDepart,
+            time = timeDepart,
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -5531,7 +5526,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
                     lngDestination = data.position?.get(0),
                     avoidanceOptions = mViewModel.getAvoidanceOptions(),
                     departOption = mViewModel.mSelectedDepartOption,
-                    timeInput = timeDepart,
+                    time = timeDepart,
                     isWalkingAndTruckCall = false,
                 )
                 recordEventForAllMode(isWalkingAndTruckCall = false)
@@ -5902,7 +5897,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
                     lngDestination = it?.position?.get(0),
                     avoidanceOptions = mViewModel.getAvoidanceOptions(),
                     departOption = mViewModel.mSelectedDepartOption,
-                    timeInput = timeDepart,
+                    time = timeDepart,
                     isWalkingAndTruckCall = false,
                 )
                 recordEventForAllMode(isWalkingAndTruckCall = false)
@@ -6105,7 +6100,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
     ) {
         calendar?.let { cal->
             val timePicker = MaterialTimePicker.Builder()
-                .setTitleText(getString(R.string.label_select_time))
+                .setTitleText(getString(R.string.time))
                 .setTimeFormat(TimeFormat.CLOCK_12H)
                 .setHour(cal.get(Calendar.HOUR_OF_DAY))
                 .setMinute(cal.get(Calendar.MINUTE))

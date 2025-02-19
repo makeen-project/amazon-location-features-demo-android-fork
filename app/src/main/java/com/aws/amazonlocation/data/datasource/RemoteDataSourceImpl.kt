@@ -111,7 +111,7 @@ class RemoteDataSourceImpl(
         avoidanceOptions: ArrayList<AvoidanceOption>,
         departOption: String,
         travelMode: String?,
-        timeInput: String?,
+        time: String?,
         distanceInterface: DistanceInterface,
     ) {
         val calculateRoutesResponse = mRoutesProvider.calculateRoute(
@@ -122,7 +122,7 @@ class RemoteDataSourceImpl(
             avoidanceOptions,
             departOption,
             travelMode,
-            timeInput,
+            time,
             mLocationProvider.getBaseActivity(),
             mLocationProvider.getGeoRoutesClient()
         )

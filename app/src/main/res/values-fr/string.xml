@@ -61,7 +61,7 @@
   <string name="text_switch_avoid_tools">Éviter péages</string>
   <string name="text_switch_avoid_ferries">Éviter les ferries</string>
   <string name="text_switch_avoid_dirt_roads">Éviter poussière routes</string>
-  <string name="text_switch_avoid_u_turn">Éviter Turn</string>
+  <string name="text_switch_avoid_u_turns">Éviter demi-tours</string>
   <string name="text_switch_avoid_tunnels">Éviter tunnels</string>
   <string name="_2_min">2 minimum</string>
   <string name="label_search_destination">Rechercher Destination</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">Destination volonté être sur le droit</string>
   <string name="label_destination_will_be_on_the_left">Destination volonté être sur le parti</string>
   <string name="time">Heure</string>
-  <string name="label_select_time">Heure</string>
   <string name="label_selected_time_cannot_be_in_the_past">Sélectionné temps ne peut pas être dans le passé !</string>
   <string name="text_switch_options">Options</string>
 </resources>

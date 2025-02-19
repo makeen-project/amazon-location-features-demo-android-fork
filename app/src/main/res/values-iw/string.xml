@@ -60,7 +60,7 @@
   <string name="search_nearby">חיפוש בקרבת מקום</string>
   <string name="text_switch_avoid_tools">הימנע אגרות</string>
   <string name="text_switch_avoid_dirt_roads">הימנע עפר דרכים</string>
-  <string name="text_switch_avoid_u_turn">הימנע יוטורן</string>
+  <string name="text_switch_avoid_u_turns">הימנע סיבובי פרסה</string>
   <string name="text_switch_avoid_tunnels">הימנע מנהרות</string>
   <string name="text_switch_avoid_ferries">הימנע מעבורות</string>
   <string name="_2_min">2 דק\'</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">יעד צוואה להיות על ה ימין</string>
   <string name="label_destination_will_be_on_the_left">יעד צוואה להיות על ה להשאיר</string>
   <string name="time">זמן</string>
-  <string name="label_select_time">זמן</string>
   <string name="label_selected_time_cannot_be_in_the_past">נבחר זמן לא יכול להיות בתוך ה עבר!</string>
   <string name="text_switch_options">אופציות</string>
 </resources>

@@ -37,7 +37,7 @@ class LocationSearchUseCase @Inject constructor(private val mLocationSearchRepos
         avoidanceOptions: ArrayList<AvoidanceOption>,
         departOption: String,
         travelMode: String?,
-        timeInput: String?,
+        time: String?,
         distanceInterface: DistanceInterface
     ) = mLocationSearchRepository.
     calculateDistance(
@@ -48,7 +48,7 @@ class LocationSearchUseCase @Inject constructor(private val mLocationSearchRepos
         avoidanceOptions,
         departOption,
         travelMode,
-        timeInput,
+        time,
         distanceInterface
     )
 

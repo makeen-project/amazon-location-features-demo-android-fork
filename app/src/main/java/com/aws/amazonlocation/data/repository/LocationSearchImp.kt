@@ -41,7 +41,7 @@ class LocationSearchImp(private val mRemoteDataSource: RemoteDataSourceImpl) :
         avoidanceOptions: ArrayList<AvoidanceOption>,
         departOption: String,
         travelMode: String?,
-        timeInput: String?,
+        time: String?,
         distanceInterface: DistanceInterface
     ) {
         mRemoteDataSource.calculateRoute(
@@ -52,7 +52,7 @@ class LocationSearchImp(private val mRemoteDataSource: RemoteDataSourceImpl) :
             avoidanceOptions,
             departOption,
             travelMode,
-            timeInput,
+            time,
             distanceInterface
         )
     }
