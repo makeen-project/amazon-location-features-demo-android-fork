@@ -69,7 +69,7 @@ class PlacesProvider(
         getPlaceClient: GeoPlacesClient?,
     ): SearchSuggestionResponse {
         try {
-            val liveLocation = mMapHelper.getLiveLocation(isDefaultLocationNeeded = false)
+            val liveLocation = mMapHelper.getLiveLocation()
             var isLatLng = false
             var suggestResponse: SuggestResponse? = null
             var reverseGeocodeResponse: ReverseGeocodeResponse? = null
@@ -216,7 +216,7 @@ class PlacesProvider(
         getPlaceClient: GeoPlacesClient?,
     ): SearchSuggestionResponse? =
         try {
-            val liveLocation = mMapHelper.getLiveLocation(isDefaultLocationNeeded = false)
+            val liveLocation = mMapHelper.getLiveLocation()
             val request =
                 SearchTextRequest {
                     if (mText != null) this.queryText = mText
