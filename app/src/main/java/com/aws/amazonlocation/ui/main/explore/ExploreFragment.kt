@@ -96,7 +96,6 @@ import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POLITICAL_VIEW
-import com.aws.amazonlocation.utils.KEY_SELECTED_MAP_LANGUAGE
 import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.KEY_URL
 import com.aws.amazonlocation.utils.KILOMETERS
@@ -1587,9 +1586,7 @@ class ExploreFragment :
                                 }
                             }
                         }
-                        mMapHelper.getLiveLocation()?.let { mLatLng ->
-                            mMapHelper.navigationZoomCamera(mLatLng, isZooming)
-                        }
+                        mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), isZooming)
                         it.calculateRouteResult?.let { it1 ->
                             mMapHelper.clearOriginMarker()
                             fetchAddressFromLatLng(it1)
@@ -3138,7 +3135,6 @@ class ExploreFragment :
         if (activity?.checkLocationPermission() == true) {
             if (isGPSEnabled(requireContext())) {
                 var destinationLatLng: LatLng? = null
-                val originLatLng: LatLng? = mMapHelper.getLiveLocation()
                 val position =  mViewModel.mSearchSuggestionData?.position
                 position?.let {
                     destinationLatLng =
@@ -3147,29 +3143,27 @@ class ExploreFragment :
                             it[0],
                         )
                 }
-                originLatLng?.let {
-                    val distance =
-                        destinationLatLng?.latitude?.let { it1 ->
-                            destinationLatLng?.longitude?.let { it2 ->
-                                mPlacesProvider.getDistance(
-                                    it,
-                                    it1,
-                                    it2,
-                                )
-                            }
+                val distance =
+                    destinationLatLng?.latitude?.let { it1 ->
+                        destinationLatLng?.longitude?.let { it2 ->
+                            mPlacesProvider.getDistance(
+                                mMapHelper.getBestAvailableLocation(),
+                                it1,
+                                it2,
+                            )
                         }
-                    if (distance != null) {
-                        mBinding.bottomSheetDirection.tvDirectionError.show()
-                        hideViews(
-                            mBinding.bottomSheetDirection.tvDirectionError2,
-                            mBinding.bottomSheetDirection.ivInfo,
-                        )
-                        mBinding.bottomSheetDirection.tvDirectionError.text =
-                            getString(R.string.error_route)
-                    } else {
-                        mBinding.bottomSheetDirection.tvDirectionError.text =
-                            getString(R.string.error_route)
                     }
+                if (distance != null) {
+                    mBinding.bottomSheetDirection.tvDirectionError.show()
+                    hideViews(
+                        mBinding.bottomSheetDirection.tvDirectionError2,
+                        mBinding.bottomSheetDirection.ivInfo,
+                    )
+                    mBinding.bottomSheetDirection.tvDirectionError.text =
+                        getString(R.string.error_route)
+                } else {
+                    mBinding.bottomSheetDirection.tvDirectionError.text =
+                        getString(R.string.error_route)
                 }
             } else {
                 showLocationError()
@@ -3315,14 +3309,14 @@ class ExploreFragment :
                     mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
                 }
                 openDirectionSearch()
-                val liveLocationLatLng = mMapHelper.getLiveLocation()
+                val mLatLng = mMapHelper.getBestAvailableLocation()
                 isCalculateWalkApiError = false
                 isCalculateTruckApiError = false
                 isCalculateScooterApiError = false
                 val position =  mViewModel.mSearchSuggestionData?.position
                 mViewModel.calculateDistance(
-                    latitude = liveLocationLatLng?.latitude,
-                    longitude = liveLocationLatLng?.longitude,
+                    latitude = mLatLng.latitude,
+                    longitude = mLatLng.longitude,
                     latDestination =
                     position?.get(1),
                     lngDestination =
@@ -3420,9 +3414,7 @@ class ExploreFragment :
                         isWalk = mTravelMode == RouteTravelMode.Pedestrian.value,
                         isLocationIcon = true,
                     )
-                    mMapHelper.getLiveLocation()?.let { mLatLng ->
-                        mMapHelper.navigationZoomCamera(mLatLng, isZooming)
-                    }
+                    mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), isZooming)
                     mMapHelper.clearOriginMarker()
                     isLocationUpdatedNeeded = true
                     fetchAddressFromLatLng(it)
@@ -3580,7 +3572,7 @@ class ExploreFragment :
             }
         }
         if(latLngList.size < 2) {
-            mMapHelper.getLiveLocation()?.let { it1 -> latLngList.add(it1) }
+            latLngList.add(mMapHelper.getBestAvailableLocation())
         }
         mMapHelper.adjustMapBounds(
             latLngList,
@@ -3762,21 +3754,14 @@ class ExploreFragment :
                         )
                     }
             } else {
-                mMapHelper
-                    .getLiveLocation()
-                    ?.longitude
-                    ?.let {
-                        mMapHelper.getLiveLocation()?.latitude?.let { it1 ->
-                            fromLngLat(
-                                it,
-                                it1,
-                            )
-                        }
-                    }?.let {
-                        dotStartPoint.add(
-                            it,
-                        )
-                    }
+                val mLatLng = mMapHelper.getBestAvailableLocation()
+                fromLngLat(
+                    mLatLng.longitude, mLatLng.latitude,
+                )?.let {
+                    dotStartPoint.add(
+                        it,
+                    )
+                }
             }
         }
         if (isDestination) {
@@ -4082,9 +4067,7 @@ class ExploreFragment :
             }
             mBottomSheetHelper.hideDirectionSheet()
             mViewModel.mSearchSuggestionData = null
-            mMapHelper.getLiveLocation()?.let { it1 ->
-                mMapHelper.moveCameraToLocation(it1)
-            }
+            mMapHelper.moveCameraToLocation(mMapHelper.getBestAvailableLocation())
             mBaseActivity?.isTablet?.let {
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true  || mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true || mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked == true) {
                     return@let
@@ -4330,15 +4313,15 @@ class ExploreFragment :
     private fun BottomSheetDirectionSearchBinding.showCurrentLocationDestinationRoute(it: SearchSuggestionData) {
         setApiError()
         clearDirectionData()
-        val liveLocationLatLng: LatLng? =
+        val liveLocationLatLng: LatLng =
             if (isRunningTestLiveLocation || isRunningTest2LiveLocation || isRunningTest3LiveLocation) {
                 LatLng(22.995545, 72.534031)
             } else {
-                mMapHelper.getLiveLocation()
+                mMapHelper.getBestAvailableLocation()
             }
         mViewModel.calculateDistance(
-            latitude = liveLocationLatLng?.latitude,
-            longitude = liveLocationLatLng?.longitude,
+            latitude = liveLocationLatLng.latitude,
+            longitude = liveLocationLatLng.longitude,
             latDestination = it.position?.get(1),
             lngDestination = it.position?.get(0),
             isAvoidFerries = mIsAvoidFerries,
@@ -4346,8 +4329,8 @@ class ExploreFragment :
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
-            latitude = liveLocationLatLng?.latitude,
-            longitude = liveLocationLatLng?.longitude,
+            latitude = liveLocationLatLng.latitude,
+            longitude = liveLocationLatLng.longitude,
             latDestination = it.position?.get(1),
             lngDestination = it.position?.get(0),
             isAvoidFerries = mIsAvoidFerries,
@@ -4373,12 +4356,12 @@ class ExploreFragment :
     private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it: SearchSuggestionData) {
         setApiError()
         clearDirectionData()
-        val liveLocationLatLng = mMapHelper.getLiveLocation()
+        val mLatLng = mMapHelper.getBestAvailableLocation()
         mViewModel.calculateDistance(
             latitude = it.position?.get(1),
             longitude = it.position?.get(0),
-            latDestination = liveLocationLatLng?.latitude,
-            lngDestination = liveLocationLatLng?.longitude,
+            latDestination = mLatLng.latitude,
+            lngDestination = mLatLng.longitude,
             isAvoidFerries = mIsAvoidFerries,
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = false,
@@ -4386,8 +4369,8 @@ class ExploreFragment :
         mViewModel.calculateDistance(
             latitude = it.position?.get(1),
             longitude = it.position?.get(0),
-            latDestination = liveLocationLatLng?.latitude,
-            lngDestination = liveLocationLatLng?.longitude,
+            latDestination = mLatLng.latitude,
+            lngDestination = mLatLng.longitude,
             isAvoidFerries = mIsAvoidFerries,
             isAvoidTolls = mIsAvoidTolls,
             isWalkingAndTruckCall = true,
@@ -4412,16 +4395,14 @@ class ExploreFragment :
                             )
                         }
                     }?.let { latLng ->
-                        liveLocationLatLng?.latitude?.let { latitude ->
-                            mMapHelper.setDirectionMarker(
-                                latLng,
-                                latitude,
-                                liveLocationLatLng.longitude,
-                                requireActivity(),
-                                MarkerEnum.DIRECTION_ICON,
-                                "",
-                            )
-                        }
+                        mMapHelper.setDirectionMarker(
+                            latLng,
+                            mLatLng.latitude,
+                            mLatLng.longitude,
+                            requireActivity(),
+                            MarkerEnum.DIRECTION_ICON,
+                            "",
+                        )
                     }
             }
             mBottomSheetHelper.halfExpandDirectionSearchBottomSheet()
@@ -4555,7 +4536,7 @@ class ExploreFragment :
                 groupDistance.invisible()
                 hideViews(tvDirectionError, ivInfo)
                 tvDirectionError2.hide()
-                val liveLocationLatLng = mMapHelper.getLiveLocation()
+                val mLatLng = mMapHelper.getBestAvailableLocation()
                 isCalculateDriveApiError = false
                 if (data.placeId != null) {
                     data.placeId?.let {
@@ -4567,8 +4548,8 @@ class ExploreFragment :
                     setContactPlaceData(data)
                 }
                 mViewModel.calculateDistance(
-                    latitude = liveLocationLatLng?.latitude,
-                    longitude = liveLocationLatLng?.longitude,
+                    latitude = mLatLng.latitude,
+                    longitude = mLatLng.longitude,
                     latDestination = data.position?.get(1),
                     lngDestination = data.position?.get(0),
                     isAvoidFerries = mIsAvoidFerries,
@@ -4768,7 +4749,7 @@ class ExploreFragment :
                 mapLibreMap.cameraPosition.target?.let {
                     LatLng(
                         it.latitude,
-                        mapLibreMap.cameraPosition.target!!.longitude,
+                        it.longitude,
                     )
                 }
         }
@@ -4918,11 +4899,11 @@ class ExploreFragment :
         lifecycleScope.launch {
             delay(1000)
             mViewModel.mSearchSuggestionData.let {
-                val liveLocationLatLng = mMapHelper.getLiveLocation()
+                val mLatLng = mMapHelper.getBestAvailableLocation()
                 isCalculateDriveApiError = false
                 mViewModel.calculateDistance(
-                    latitude = liveLocationLatLng?.latitude,
-                    longitude = liveLocationLatLng?.longitude,
+                    latitude = mLatLng.latitude,
+                    longitude = mLatLng.longitude,
                     latDestination = it?.position?.get(1),
                     lngDestination = it?.position?.get(0),
                     isAvoidFerries = mIsAvoidFerries,
@@ -5123,24 +5104,20 @@ class ExploreFragment :
     }
 
     override fun onScale(detector: StandardScaleGestureDetector) {
-        mMapHelper.getLiveLocation()?.let { mLatLng ->
-            mMapLibreMap?.easeCamera(
-                CameraUpdateFactory.newCameraPosition(
-                    CameraPosition
-                        .Builder()
-                        .target(mLatLng)
-                        .build(),
-                ),
-                Durations.CAMERA_DURATION_1000,
-            )
-        }
+        mMapLibreMap?.easeCamera(
+            CameraUpdateFactory.newCameraPosition(
+                CameraPosition
+                    .Builder()
+                    .target(mMapHelper.getBestAvailableLocation())
+                    .build(),
+            ),
+            Durations.CAMERA_DURATION_1000,
+        )
     }
 
     override fun onScaleEnd(detector: StandardScaleGestureDetector) {
         isZooming = false
-        mMapHelper.getLiveLocation()?.let { mLatLng ->
-            mMapHelper.navigationZoomCamera(mLatLng, false)
-        }
+        mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), false)
     }
 
     override fun onMapStyleChanged(mapStyle: String) {
