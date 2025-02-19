@@ -1801,7 +1801,7 @@ class ExploreFragment :
                             }
                         }
 
-                        mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), isZooming)
+                        mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), mViewModel.isZooming)
 
                         it.calculateRouteResult?.let { it1 ->
                             mMapHelper.clearOriginMarker()
@@ -4201,9 +4201,9 @@ class ExploreFragment :
                 openDirectionSearch()
 
                 val mLatLng = mMapHelper.getBestAvailableLocation()
-                isCalculateWalkApiError = false
-                isCalculateTruckApiError = false
-                isCalculateScooterApiError = false
+                mViewModel.isCalculateWalkApiError = false
+                mViewModel.isCalculateTruckApiError = false
+                mViewModel.isCalculateScooterApiError = false
                 val position =  mViewModel.mSearchSuggestionData?.position
 
                 mViewModel.calculateDistance(
@@ -4370,7 +4370,7 @@ class ExploreFragment :
                         isWalk = mViewModel.mTravelMode == RouteTravelMode.Pedestrian.value,
                         isLocationIcon = true,
                     )
-                    mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), isZooming)
+                    mMapHelper.navigationZoomCamera(mMapHelper.getBestAvailableLocation(), mViewModel.isZooming)
                     mMapHelper.clearOriginMarker()
                     mViewModel.isLocationUpdatedNeeded = true
                     fetchAddressFromLatLng(it)
@@ -5341,7 +5341,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
             lngDestination = mLatLng.longitude,
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            time = timeDepart,
+            timeInput = timeDepart,
             isWalkingAndTruckCall = false,
         )
         mViewModel.calculateDistance(
@@ -5351,7 +5351,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
             lngDestination = mLatLng.longitude,
             avoidanceOptions = mViewModel.getAvoidanceOptions(),
             departOption = mViewModel.mSelectedDepartOption,
-            time = timeDepart,
+            timeInput = timeDepart,
             isWalkingAndTruckCall = true,
         )
         recordEventForAllMode(isWalkingAndTruckCall = true)
@@ -5513,7 +5513,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
                 tvDirectionError2.hide()
 
                 val mLatLng = mMapHelper.getBestAvailableLocation()
-                isCalculateDriveApiError = false
+                mViewModel.isCalculateDriveApiError = false
 
                 if (data.placeId != null) {
                     data.placeId?.let {
@@ -5893,7 +5893,7 @@ private fun BottomSheetDirectionSearchBinding.showCurrentLocationOriginRoute(it:
             mViewModel.mSearchSuggestionData.let {
 
                 val mLatLng = mMapHelper.getBestAvailableLocation()
-                isCalculateDriveApiError = false
+                mViewModel.isCalculateDriveApiError = false
 
                 mViewModel.calculateDistance(
                     latitude = mLatLng.latitude,
