@@ -11,8 +11,8 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.utils.KEY_AVOID_DIRT_ROADS
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
-import com.aws.amazonlocation.utils.KEY_AVOID_TUNNEL
-import com.aws.amazonlocation.utils.KEY_AVOID_U_TURN
+import com.aws.amazonlocation.utils.KEY_AVOID_TUNNELS
+import com.aws.amazonlocation.utils.KEY_AVOID_U_TURNS
 
 class RouteOptionFragment : BaseFragment() {
 
@@ -37,8 +37,8 @@ class RouteOptionFragment : BaseFragment() {
             switchAvoidTools.isChecked = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
             switchAvoidFerries.isChecked = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
             switchAvoidDirtRoads.isChecked = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
-            switchAvoidUTurn.isChecked = mPreferenceManager.getValue(KEY_AVOID_U_TURN, false)
-            switchAvoidTunnels.isChecked = mPreferenceManager.getValue(KEY_AVOID_TUNNEL, false)
+            switchAvoidUTurns.isChecked = mPreferenceManager.getValue(KEY_AVOID_U_TURNS, false)
+            switchAvoidTunnels.isChecked = mPreferenceManager.getValue(KEY_AVOID_TUNNELS, false)
 
             ivRouteOptionBack.setOnClickListener {
                 findNavController().popBackStack()
@@ -56,12 +56,12 @@ class RouteOptionFragment : BaseFragment() {
                 mPreferenceManager.setValue(KEY_AVOID_DIRT_ROADS, isChecked)
             }
 
-            switchAvoidUTurn.setOnCheckedChangeListener { _, isChecked ->
-                mPreferenceManager.setValue(KEY_AVOID_U_TURN, isChecked)
+            switchAvoidUTurns.setOnCheckedChangeListener { _, isChecked ->
+                mPreferenceManager.setValue(KEY_AVOID_U_TURNS, isChecked)
             }
 
             switchAvoidTunnels.setOnCheckedChangeListener { _, isChecked ->
-                mPreferenceManager.setValue(KEY_AVOID_TUNNEL, isChecked)
+                mPreferenceManager.setValue(KEY_AVOID_TUNNELS, isChecked)
             }
         }
     }

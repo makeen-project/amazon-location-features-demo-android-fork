@@ -159,6 +159,9 @@ class ExploreVMCalculateDistance : BaseTest() {
             mExploreVM.calculateDistance(null, null, null, null, arrayListOf<AvoidanceOption>().apply {
                 add(AvoidanceOption.FERRIES)
                 add(AvoidanceOption.TOLL_ROADS)
+                add(AvoidanceOption.U_TURNS)
+                add(AvoidanceOption.DIRT_ROADS)
+                add(AvoidanceOption.TUNNELS)
             }, DepartOption.LEAVE_NOW.name,"",true)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
@@ -187,6 +190,9 @@ class ExploreVMCalculateDistance : BaseTest() {
             mExploreVM.calculateDistance(null, null, null, null, arrayListOf<AvoidanceOption>().apply {
                 add(AvoidanceOption.FERRIES)
                 add(AvoidanceOption.TOLL_ROADS)
+                add(AvoidanceOption.U_TURNS)
+                add(AvoidanceOption.DIRT_ROADS)
+                add(AvoidanceOption.TUNNELS)
             }, DepartOption.LEAVE_NOW.name,"",false)
             var result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)

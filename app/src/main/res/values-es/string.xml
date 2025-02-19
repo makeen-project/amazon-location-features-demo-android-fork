@@ -61,7 +61,7 @@
   <string name="text_switch_avoid_tools">Evitar peajes</string>
   <string name="text_switch_avoid_ferries">Evitar transbordadores</string>
   <string name="text_switch_avoid_dirt_roads">Evitar suciedad carreteras</string>
-  <string name="text_switch_avoid_u_turn">Evitar Turno en U</string>
+  <string name="text_switch_avoid_u_turns">Evitar giros en U</string>
   <string name="text_switch_avoid_tunnels">Evitar túneles</string>
   <string name="_2_min">2 min</string>
   <string name="label_search_destination">Buscar Destino</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">Destino voluntad estar en la derecha</string>
   <string name="label_destination_will_be_on_the_left">Destino voluntad estar en la izquierda</string>
   <string name="time">Hora</string>
-  <string name="label_select_time">Hora</string>
   <string name="label_selected_time_cannot_be_in_the_past">Seleccionado tiempo no poder estar en la pasado!</string>
   <string name="text_switch_options">Opciones</string>
 </resources>

@@ -61,7 +61,7 @@
   <string name="text_switch_avoid_tools">تجنب رسوم</string>
   <string name="text_switch_avoid_ferries">تجنب العبارات</string>
   <string name="text_switch_avoid_dirt_roads">تجنب التراب طرق</string>
-  <string name="text_switch_avoid_u_turn">تجنب يوتورن</string>
+  <string name="text_switch_avoid_u_turns">تجنب المنعطفات</string>
   <string name="text_switch_avoid_tunnels">تجنب الأنفاق</string>
   <string name="_2_min">2 دقيقة</string>
   <string name="label_search_destination">ابحث الوجهة</string>
@@ -252,5 +252,4 @@
   <string name="time">الوقت</string>
   <string name="label_selected_time_cannot_be_in_the_past">تم اختياره وقت غير قادر هو في ال الماضي!</string>
   <string name="text_switch_options">خيارات</string>
-  <string name="label_select_time">الوقت</string>
 </resources>

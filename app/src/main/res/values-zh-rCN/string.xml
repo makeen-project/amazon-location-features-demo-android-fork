@@ -60,7 +60,7 @@
   <string name="search_nearby">搜寻 附近</string>
   <string name="text_switch_avoid_tools">避免 通行费</string>
   <string name="text_switch_avoid_dirt_roads">避免 污垢 道路</string>
-  <string name="text_switch_avoid_u_turn">避免 UTurn</string>
+  <string name="text_switch_avoid_u_turns">避免 掉头</string>
   <string name="text_switch_avoid_tunnels">避免 隧道</string>
   <string name="text_switch_avoid_ferries">避免 渡轮</string>
   <string name="_2_min">2 分钟</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">目的地 将 是 上 这 权利</string>
   <string name="label_destination_will_be_on_the_left">目的地 将 是 上 这 左边</string>
   <string name="time">时间</string>
-  <string name="label_select_time">时间</string>
   <string name="label_selected_time_cannot_be_in_the_past">已选中 时间 不能 是 在 这 过去！</string>
   <string name="text_switch_options">选项</string>
 </resources>

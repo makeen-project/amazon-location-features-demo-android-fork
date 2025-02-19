@@ -33,8 +33,8 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
         preferenceManager.removeValue(KEY_AVOID_TOLLS)
         preferenceManager.removeValue(KEY_AVOID_FERRIES)
         preferenceManager.removeValue(KEY_AVOID_DIRT_ROADS)
-        preferenceManager.removeValue(KEY_AVOID_U_TURN)
-        preferenceManager.removeValue(KEY_AVOID_TUNNEL)
+        preferenceManager.removeValue(KEY_AVOID_U_TURNS)
+        preferenceManager.removeValue(KEY_AVOID_TUNNELS)
 
         super.before()
     }
@@ -49,7 +49,7 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             toggleSwitch(R.id.switch_avoid_tools)
             toggleSwitch(R.id.switch_avoid_ferries)
             toggleSwitch(R.id.switch_avoid_dirt_roads)
-            toggleSwitch(R.id.switch_avoid_u_turn)
+            toggleSwitch(R.id.switch_avoid_u_turns)
             toggleSwitch(R.id.switch_avoid_tunnels)
 
             checkDefaultRouteOptions(
@@ -223,7 +223,7 @@ class SettingsFragmentDefaultRouteTest : BaseTestMainActivity() {
             }
         }
 
-        onView(withId(R.id.switch_avoid_u_turn)).check { view, _ ->
+        onView(withId(R.id.switch_avoid_u_turns)).check { view, _ ->
             if (view is SwitchCompat) {
                 Assert.assertTrue(
                     TEST_FAILED_DEFAULT_ROUTE_OPTIONS_NOT_LOADED,

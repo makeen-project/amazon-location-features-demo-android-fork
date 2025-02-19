@@ -63,8 +63,8 @@ import com.aws.amazonlocation.utils.KEY_AUTH_FETCH_TIME
 import com.aws.amazonlocation.utils.KEY_AVOID_DIRT_ROADS
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
-import com.aws.amazonlocation.utils.KEY_AVOID_TUNNEL
-import com.aws.amazonlocation.utils.KEY_AVOID_U_TURN
+import com.aws.amazonlocation.utils.KEY_AVOID_TUNNELS
+import com.aws.amazonlocation.utils.KEY_AVOID_U_TURNS
 import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_CODE
 import com.aws.amazonlocation.utils.KEY_EXPIRATION
@@ -285,9 +285,9 @@ class MainActivity :
         if (!isAppNotFirstOpened) {
             mPreferenceManager.setValue(KEY_AVOID_TOLLS, true)
             mPreferenceManager.setValue(KEY_AVOID_FERRIES, true)
-            mPreferenceManager.setValue(KEY_AVOID_TUNNEL, true)
+            mPreferenceManager.setValue(KEY_AVOID_TUNNELS, true)
             mPreferenceManager.setValue(KEY_AVOID_DIRT_ROADS, true)
-            mPreferenceManager.setValue(KEY_AVOID_U_TURN, true)
+            mPreferenceManager.setValue(KEY_AVOID_U_TURNS, true)
         }
         val inflater = mNavHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.nav_graph)

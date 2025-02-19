@@ -61,7 +61,7 @@
   <string name="text_switch_avoid_tools">Vermeiden Mautgebühren</string>
   <string name="text_switch_avoid_ferries">Vermeiden Fähren</string>
   <string name="text_switch_avoid_dirt_roads">Vermeiden Dreck Straßen</string>
-  <string name="text_switch_avoid_u_turn">Vermeiden Biegen Sie ab</string>
+  <string name="text_switch_avoid_u_turns">Vermeiden Kehrtwendungen</string>
   <string name="text_switch_avoid_tunnels">Vermeiden Tunnel</string>
   <string name="_2_min">2 Min.</string>
   <string name="label_search_destination">Suche Reiseziel</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">Reiseziel Testament Sein auf die Recht</string>
   <string name="label_destination_will_be_on_the_left">Reiseziel Testament Sein auf die links</string>
   <string name="time">Zeit</string>
-  <string name="label_select_time">Zeit</string>
   <string name="label_selected_time_cannot_be_in_the_past">Ausgewählt Zeit kann nicht Sein in die Vergangenheit!</string>
   <string name="text_switch_options">Optionen</string>
 </resources>
