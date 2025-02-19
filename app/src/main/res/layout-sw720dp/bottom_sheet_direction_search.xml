@@ -771,7 +771,7 @@
                                     android:ellipsize="end"
                                     android:maxLength="200"
                                     android:singleLine="true"
-                                    android:text="@string/text_switch_avoid_u_turn"
+                                    android:text="@string/text_switch_avoid_u_turns"
                                     android:textDirection="locale"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
@@ -779,7 +779,7 @@
 
 
                                 <androidx.appcompat.widget.SwitchCompat
-                                    android:id="@+id/switch_avoid_u_turn"
+                                    android:id="@+id/switch_avoid_u_turns"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginHorizontal="@dimen/dp_12"

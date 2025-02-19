@@ -69,7 +69,7 @@
     <string name="text_switch_avoid_tools">Avoid tolls</string>
     <string name="text_switch_avoid_ferries">Avoid ferries</string>
     <string name="text_switch_avoid_dirt_roads">Avoid dirt roads</string>
-    <string name="text_switch_avoid_u_turn">Avoid U-turn</string>
+    <string name="text_switch_avoid_u_turns">Avoid U-turns</string>
     <string name="text_switch_avoid_tunnels">Avoid tunnels</string>
 
     <!-- Dummy text-->
@@ -319,7 +319,6 @@
     <string name="label_destination_will_be_on_the_right">Destination will be on the right</string>
     <string name="label_destination_will_be_on_the_left">Destination will be on the left</string>
     <string name="time">Time</string>
-    <string name="label_select_time">Time</string>
     <string name="label_selected_time_cannot_be_in_the_past">Selected time cannot be in the past!</string>
     <string name="text_switch_options">Options</string>
 </resources>

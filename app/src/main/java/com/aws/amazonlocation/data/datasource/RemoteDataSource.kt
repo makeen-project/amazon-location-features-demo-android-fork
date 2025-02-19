@@ -42,7 +42,7 @@ interface RemoteDataSource {
         avoidanceOptions: ArrayList<AvoidanceOption>,
         departOption: String,
         travelMode: String?,
-        timeInput: String?,
+        time: String?,
         distanceInterface: DistanceInterface
     )
 

@@ -60,7 +60,7 @@
   <string name="search_nearby">검색 근처에</string>
   <string name="text_switch_avoid_tools">피하십시오 통행료</string>
   <string name="text_switch_avoid_dirt_roads">피하십시오 먼지 도로</string>
-  <string name="text_switch_avoid_u_turn">피하십시오 uTurn</string>
+  <string name="text_switch_avoid_u_turns">피하십시오 유턴</string>
   <string name="text_switch_avoid_tunnels">피하십시오 터널</string>
   <string name="text_switch_avoid_ferries">피하십시오 페리</string>
   <string name="_2_min">2 분</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">목적지 의지 있다 ...에 그 오른쪽</string>
   <string name="label_destination_will_be_on_the_left">목적지 의지 있다 ...에 그 왼쪽</string>
   <string name="time">시간</string>
-  <string name="label_select_time">시간</string>
   <string name="label_selected_time_cannot_be_in_the_past">선택됨 시각 할 수 없다 있다 에서 그 과거!</string>
   <string name="text_switch_options">옵션</string>
 </resources>

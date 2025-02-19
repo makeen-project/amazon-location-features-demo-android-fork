@@ -60,7 +60,7 @@
   <string name="search_nearby">Pesquisar nas proximidades</string>
   <string name="text_switch_avoid_tools">Evite cobra pedágio</string>
   <string name="text_switch_avoid_dirt_roads">Evite sujeira estradas</string>
-  <string name="text_switch_avoid_u_turn">Evite TuTurn</string>
+  <string name="text_switch_avoid_u_turns">Evite Inversão de marcha</string>
   <string name="text_switch_avoid_tunnels">Evite túneis</string>
   <string name="text_switch_avoid_ferries">Evite balsas</string>
   <string name="_2_min">2 min</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">Destino vai ser em a certo</string>
   <string name="label_destination_will_be_on_the_left">Destino vai ser em a esquerdo</string>
   <string name="time">Hora</string>
-  <string name="label_select_time">Hora</string>
   <string name="label_selected_time_cannot_be_in_the_past">Selecionado horas não pode ser em a passado!</string>
   <string name="text_switch_options">Opções</string>
 </resources>

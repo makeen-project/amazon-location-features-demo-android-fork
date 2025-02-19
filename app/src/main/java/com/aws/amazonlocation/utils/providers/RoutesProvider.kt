@@ -29,7 +29,7 @@ class RoutesProvider(
         avoidanceOptions: ArrayList<AvoidanceOption>,
         departOption: String,
         travelMode: String?,
-        timeInput: String? = null,
+        time: String? = null,
         mBaseActivity: BaseActivity?,
         getRoutesClient: GeoRoutesClient?,
     ): CalculateRoutesResponse? =
@@ -79,10 +79,10 @@ class RoutesProvider(
                     when (DepartOption.valueOf(departOption)) {
                         DepartOption.LEAVE_NOW -> departNow = true
                         DepartOption.DEPART_TIME -> {
-                            departureTime = timeInput
+                            departureTime = time
                         }
                         DepartOption.ARRIVE_TIME -> {
-                            arrivalTime = timeInput
+                            arrivalTime = time
                         }
                     }
                     this.travelMode = routeTravelMode

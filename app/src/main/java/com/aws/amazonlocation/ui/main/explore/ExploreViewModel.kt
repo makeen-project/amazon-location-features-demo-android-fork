@@ -27,7 +27,7 @@ import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
 import com.aws.amazonlocation.utils.DateFormat.HH_MM
 import com.aws.amazonlocation.utils.Units
-import com.aws.amazonlocation.utils.convertToLocalTime
+import com.aws.amazonlocation.utils.formatToDisplayTime
 import com.aws.amazonlocation.utils.getLanguageData
 import com.aws.amazonlocation.utils.getPoliticalData
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -71,8 +71,8 @@ class ExploreViewModel
         var mIsAvoidTolls: Boolean = false
         var mIsAvoidFerries: Boolean = false
         var mIsAvoidDirtRoads: Boolean = false
-        var mIsAvoidUTurn: Boolean = false
-        var mIsAvoidTunnel: Boolean = false
+        var mIsAvoidUTurns: Boolean = false
+        var mIsAvoidTunnels: Boolean = false
         var mIsRouteOptionsOpened = false
         var mIsDepartOptionsOpened = false
         var mTravelMode: String = RouteTravelMode.Car.value
@@ -217,7 +217,7 @@ class ExploreViewModel
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
             departOption: String,
-            timeInput: String?,
+            time: String?,
             isWalkingAndTruckCall: Boolean,
         ) {
             viewModelScope.launch(Dispatchers.IO) {
@@ -229,7 +229,7 @@ class ExploreViewModel
                         lngDestination,
                         avoidanceOptions,
                         departOption,
-                        timeInput,
+                        time,
                         RouteTravelMode.Pedestrian.value,
                     )
                     calculateDistanceFromMode(
@@ -239,7 +239,7 @@ class ExploreViewModel
                         lngDestination,
                         avoidanceOptions,
                         departOption,
-                        timeInput,
+                        time,
                         RouteTravelMode.Truck.value,
                     )
                     calculateDistanceFromMode(
@@ -249,7 +249,7 @@ class ExploreViewModel
                         lngDestination,
                         avoidanceOptions,
                         departOption,
-                        timeInput,
+                        time,
                         RouteTravelMode.Scooter.value,
                     )
                 } else {
@@ -260,7 +260,7 @@ class ExploreViewModel
                         lngDestination,
                         avoidanceOptions,
                         departOption,
-                        timeInput,
+                        time,
                         RouteTravelMode.Car.value,
                     )
                 }
@@ -274,7 +274,7 @@ class ExploreViewModel
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
             departOption: String,
-            timeInput: String?,
+            time: String?,
             travelMode: String?,
         ) {
             _calculateDistance.trySend(HandleResult.Loading)
@@ -288,7 +288,7 @@ class ExploreViewModel
                 avoidanceOptions,
                 departOption,
                 travelMode,
-                timeInput,
+                time,
                 object : DistanceInterface {
                     override fun distanceSuccess(success: CalculateRoutesResponse) {
                         _calculateDistance.trySend(
@@ -340,7 +340,7 @@ class ExploreViewModel
             lngDestination: Double?,
             avoidanceOptions: ArrayList<AvoidanceOption>,
             departOption: String,
-            timeInput: String?,
+            time: String?,
             travelMode: String?,
         ) {
             _updateCalculateDistance.trySend(HandleResult.Loading)
@@ -353,7 +353,7 @@ class ExploreViewModel
                     avoidanceOptions,
                     departOption,
                     travelMode,
-                    timeInput,
+                    time,
                     object : DistanceInterface {
                         override fun distanceSuccess(success: CalculateRoutesResponse) {
                             _updateCalculateDistance.trySend(
@@ -403,15 +403,10 @@ class ExploreViewModel
                             .summary
                             ?.distance
                             ?.toDouble()
-                    val getLastTime =
-                        if (legs.last().vehicleLegDetails != null) {
-                            legs.last().vehicleLegDetails?.arrival?.time
-                        } else if (legs.last().pedestrianLegDetails != null) {
-                            legs.last().pedestrianLegDetails?.arrival?.time
-                        } else if (legs.last().ferryLegDetails != null) {
-                            legs.last().ferryLegDetails?.arrival?.time
-                        } else ""
-                    mNavigationResponse?.time = getLastTime?.let { convertToLocalTime(it, HH_MM) }
+                    val getLastTime = legs.last().vehicleLegDetails?.arrival?.time
+                        ?: legs.last().pedestrianLegDetails?.arrival?.time
+                        ?: legs.last().ferryLegDetails?.arrival?.time
+                    mNavigationResponse?.time = getLastTime?.let { formatToDisplayTime(it, HH_MM) }
                     for (leg in legs) {
                         if (leg.vehicleLegDetails != null) {
                             leg.vehicleLegDetails?.travelSteps?.forEach {
@@ -622,7 +617,7 @@ class ExploreViewModel
                 if (mIsAvoidFerries) add(AvoidanceOption.FERRIES)
                 if (mIsAvoidTolls) add(AvoidanceOption.TOLL_ROADS)
                 if (mIsAvoidDirtRoads) add(AvoidanceOption.DIRT_ROADS)
-                if (mIsAvoidUTurn) add(AvoidanceOption.U_TURNS)
-                if (mIsAvoidTunnel) add(AvoidanceOption.TUNNELS)
+                if (mIsAvoidUTurns) add(AvoidanceOption.U_TURNS)
+                if (mIsAvoidTunnels) add(AvoidanceOption.TUNNELS)
             }
     }

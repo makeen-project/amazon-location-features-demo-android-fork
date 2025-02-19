@@ -60,7 +60,7 @@
   <string name="search_nearby">Cerca vicino</string>
   <string name="text_switch_avoid_tools">Evita pedaggi</string>
   <string name="text_switch_avoid_dirt_roads">Evitare sporco strade</string>
-  <string name="text_switch_avoid_u_turn">Evitare Turno a U</string>
+  <string name="text_switch_avoid_u_turns">Evitare inversioni a U</string>
   <string name="text_switch_avoid_tunnels">Evitare gallerie</string>
   <string name="text_switch_avoid_ferries">Evita traghetti</string>
   <string name="_2_min">2 min</string>
@@ -250,7 +250,6 @@
   <string name="label_destination_will_be_on_the_right">Destinazione volontà essere sul lo destra</string>
   <string name="label_destination_will_be_on_the_left">Destinazione volontà essere sul lo sinistra</string>
   <string name="time">Ora</string>
-  <string name="label_select_time">Ora</string>
   <string name="label_selected_time_cannot_be_in_the_past">Selezionato tempo Non posso essere nel lo passato!</string>
   <string name="text_switch_options">Opzioni</string>
 </resources>
