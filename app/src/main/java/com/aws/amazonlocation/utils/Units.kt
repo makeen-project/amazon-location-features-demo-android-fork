@@ -20,7 +20,12 @@ import java.util.concurrent.TimeUnit
 // SPDX-License-Identifier: MIT-0
 object Units {
 
-    fun getMetricsNew(context: Context, distance: Double, isMetric: Boolean, isMeterToFeetNeeded: Boolean): String {
+    fun getMetricsNew(
+        context: Context,
+        distance: Double,
+        isMetric: Boolean,
+        isMeterToFeetNeeded: Boolean
+    ): String {
         val formatter = NumberFormat.getNumberInstance(Locale.getDefault()).apply {
             maximumFractionDigits = 2
         }
@@ -28,7 +33,9 @@ object Units {
         return if (isMetric) {
             "${formatter.format(distance / 1000)} ${context.getString(R.string.label_km)}"
         } else {
-            "${formatter.format((if (isMeterToFeetNeeded) meterToFeet(distance) else distance) / 5280)} ${context.getString(R.string.label_mi)}"
+            "${formatter.format(
+                (if (isMeterToFeetNeeded) meterToFeet(distance) else distance) / 5280
+            )} ${context.getString(R.string.label_mi)}"
         }
     }
 
@@ -160,9 +167,9 @@ object Units {
         getAPIKey(
             mPreferenceManager?.getValue(
                 KEY_SELECTED_REGION,
-                regionDisplayName[0],
+                regionDisplayName[0]
             ) ?: regionDisplayName[0],
-            mPreferenceManager?.getValue(KEY_NEAREST_REGION, "") ?: "",
+            mPreferenceManager?.getValue(KEY_NEAREST_REGION, "") ?: ""
         )
 
     fun getRegion(mPreferenceManager: PreferenceManager?): String {
