@@ -2,7 +2,13 @@ package com.aws.amazonlocation.utils.units
 
 import android.content.Context
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
+import com.aws.amazonlocation.mock.UNIT_TIME_1_OUTPUT
+import com.aws.amazonlocation.mock.UNIT_TIME_2_OUTPUT
+import com.aws.amazonlocation.mock.UNIT_TIME_3_OUTPUT
+import com.aws.amazonlocation.mock.UNIT_TIME_SEC_1
+import com.aws.amazonlocation.mock.UNIT_TIME_SEC_2
+import com.aws.amazonlocation.mock.UNIT_TIME_SEC_3
 import com.aws.amazonlocation.utils.Units
 import org.junit.Assert
 import org.junit.Test
