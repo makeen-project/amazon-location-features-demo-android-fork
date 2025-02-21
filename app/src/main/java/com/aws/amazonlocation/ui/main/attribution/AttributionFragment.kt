@@ -49,7 +49,6 @@ class AttributionFragment : BaseFragment() {
             tvAttribution.text =
                 mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, "")
                     ?.replace(Regex(attributionPattern), "") ?: ""
-
         }
     }
     private fun initClick() {
@@ -59,7 +58,10 @@ class AttributionFragment : BaseFragment() {
                     Intent(
                         context,
                         WebViewActivity::class.java
-                    ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_SOFTWARE_ATTRIBUTION_URL)
+                    ).putExtra(
+                        KEY_URL,
+                        BuildConfig.BASE_DOMAIN + BuildConfig.AWS_SOFTWARE_ATTRIBUTION_URL
+                    )
                 )
             }
             btnLearnMore.setOnClickListener {

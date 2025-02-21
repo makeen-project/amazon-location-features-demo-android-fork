@@ -60,7 +60,9 @@ class SimulationBottomSheetFragment : BottomSheetDialogFragment() {
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
             val parentLayout =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheetDialog.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+                )
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
                 behaviour.isDraggable = false

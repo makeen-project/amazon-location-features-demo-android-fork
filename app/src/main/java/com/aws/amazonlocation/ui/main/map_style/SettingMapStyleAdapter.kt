@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.aws.amazonlocation.data.response.MapStyleData
 import com.aws.amazonlocation.databinding.ItemMapStyleBinding
 import com.aws.amazonlocation.ui.main.explore.MapStyleInnerAdapter
-import com.aws.amazonlocation.utils.hide
-import com.aws.amazonlocation.utils.show
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 

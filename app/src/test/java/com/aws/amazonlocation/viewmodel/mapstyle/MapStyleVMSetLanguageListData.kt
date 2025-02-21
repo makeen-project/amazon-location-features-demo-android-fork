@@ -49,8 +49,8 @@ class MapStyleVMSetLanguageListData : BaseTest() {
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_NO_OF_LANGUAGE_LOADED,
             mMapStyleViewModel.mMapLanguageData.last().value == languageData.value &&
-                    mMapStyleViewModel.mMapLanguageData.last().label == languageData.label&&
-                    mMapStyleViewModel.mMapLanguageData.last().isSelected == languageData.isSelected
+                mMapStyleViewModel.mMapLanguageData.last().label == languageData.label &&
+                mMapStyleViewModel.mMapLanguageData.last().isSelected == languageData.isSelected
         )
     }
 }
