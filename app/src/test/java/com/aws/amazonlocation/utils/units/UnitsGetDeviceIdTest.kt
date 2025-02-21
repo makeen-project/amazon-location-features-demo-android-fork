@@ -2,7 +2,8 @@ package com.aws.amazonlocation.utils.units
 
 import android.provider.Settings
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.DEVICE_ID
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.Units
 import org.junit.Assert
 import org.junit.Test
