@@ -25,7 +25,7 @@ class TrackingProvider {
             identityId!!.split(":").let { splitStringList ->
                 mutableMapOf(
                     "region" to splitStringList[0],
-                    "id" to splitStringList[1],
+                    "id" to splitStringList[1]
                 )
             }
 

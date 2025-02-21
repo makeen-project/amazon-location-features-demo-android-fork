@@ -224,7 +224,9 @@ fun Activity.hideKeyboard() {
 @ExcludeFromJacocoGeneratedReport
 fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
     val context = termsOfUse.context
-    val spannableString = SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString = SpannableString(
+        termsOfUse.text.toString().replace(STRING_REPLACE_KEY, "")
+    )
     if (termsOfUse.text.contains(STRING_REPLACE_KEY)) {
         val text = termsOfUse.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -283,7 +285,9 @@ fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
 
 fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString = SpannableString(
+        conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "")
+    )
     if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
         val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -353,7 +357,9 @@ fun changeClickHereColor(
     mCloudFormationClickHereInterface: CloudFormationInterface
 ) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString = SpannableString(
+        conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "")
+    )
     if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
         val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -368,11 +374,21 @@ fun changeClickHereColor(
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
                         when (conditionPrivacy.text.toString()) {
-                            context.resources.getString(R.string.how_to_connect_1_1).replace(STRING_REPLACE_KEY, "") -> {
-                                mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
+                            context.resources.getString(R.string.how_to_connect_1_1).replace(
+                                STRING_REPLACE_KEY,
+                                ""
+                            ) -> {
+                                mCloudFormationClickHereInterface.clickHere(
+                                    BuildConfig.CLOUD_FORMATION_URL
+                                )
                             }
-                            context.resources.getString(R.string.label_connected_title_1).replace(STRING_REPLACE_KEY, "") -> {
-                                mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
+                            context.resources.getString(R.string.label_connected_title_1).replace(
+                                STRING_REPLACE_KEY,
+                                ""
+                            ) -> {
+                                mCloudFormationClickHereInterface.clickHere(
+                                    Credentials.CLOUD_FORMATION_REMOVE_URL
+                                )
                             }
                         }
                     }
@@ -425,7 +441,9 @@ fun changeLearnMoreColor(
             spannableString.setSpan(
                 object : ClickableSpan() {
                     override fun onClick(widget: View) {
-                        mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_INFORMATION_LEARN_MORE)
+                        mCloudFormationClickHereInterface.clickHere(
+                            Credentials.CLOUD_INFORMATION_LEARN_MORE
+                        )
                     }
 
                     override fun updateDrawState(ds: TextPaint) {

@@ -133,9 +133,8 @@ const val LANGUAGE_CODE_ARABIC = "ar"
 const val LANGUAGE_CODE_HEBREW = "iw"
 const val LANGUAGE_CODE_HINDI = "hi"
 const val LANGUAGE_CODE_HEBREW_1 = "he"
-const val LANGUAGE_CODE_ZH_HANT= "zh-Hant"
-const val LANGUAGE_CODE_ZH= "zh"
-
+const val LANGUAGE_CODE_ZH_HANT = "zh-Hant"
+const val LANGUAGE_CODE_ZH = "zh"
 
 const val TURN_LEFT = "Left"
 const val TURN_RIGHT = "Right"
@@ -170,7 +169,11 @@ val regionMapList: MutableMap<String, String> = mutableMapOf(
 )
 
 val regionList = arrayListOf("us-east-1", "eu-west-1")
-val regionDisplayName = arrayListOf("Automatic", "Europe (Ireland) eu-west-1", "US-East (N. Virginia) us-east-1")
+val regionDisplayName = arrayListOf(
+    "Automatic",
+    "Europe (Ireland) eu-west-1",
+    "US-East (N. Virginia) us-east-1"
+)
 
 /**
  *  * Validate Latitude and Longitude from string.
@@ -260,7 +263,6 @@ object DateFormat {
     const val HH_MM = "HH:mm"
     const val MM_DD_YYYY_HH_MM = "MM/dd/yyyy hh:mm aa"
     const val YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ssXXX"
-
 }
 
 val simulationCollectionName = arrayListOf(
@@ -289,7 +291,7 @@ val simulationFields = mapOf(
     "DEFAULT_IDENTITY_POOL_ID_EU" to BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU,
     "DEFAULT_REGION" to BuildConfig.DEFAULT_REGION,
     "SIMULATION_WEB_SOCKET_URL" to BuildConfig.SIMULATION_WEB_SOCKET_URL,
-    "SIMULATION_WEB_SOCKET_URL_EU" to BuildConfig.SIMULATION_WEB_SOCKET_URL_EU,
+    "SIMULATION_WEB_SOCKET_URL_EU" to BuildConfig.SIMULATION_WEB_SOCKET_URL_EU
 )
 
 val analyticsFields = mapOf(

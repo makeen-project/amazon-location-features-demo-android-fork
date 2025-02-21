@@ -26,7 +26,7 @@ import org.maplibre.android.geometry.LatLng
 val isRunningTest: Boolean by lazy {
     try {
         val testProperty = System.getProperty("robolectric") != null ||
-                System.getProperty("android.injected.invoked.from.ide") == "true"
+            System.getProperty("android.injected.invoked.from.ide") == "true"
         testProperty
     } catch (e: ClassNotFoundException) {
         false
@@ -51,7 +51,9 @@ val isRunningTest2LiveLocation: Boolean by lazy {
 }
 val isRunningTest3LiveLocation: Boolean by lazy {
     try {
-        Class.forName("com.aws.amazonlocation.ui.main.ExploreFragmentMapFunctionWithoutAwsLoginTest")
+        Class.forName(
+            "com.aws.amazonlocation.ui.main.ExploreFragmentMapFunctionWithoutAwsLoginTest"
+        )
         true
     } catch (e: ClassNotFoundException) {
         false
@@ -128,7 +130,6 @@ suspend fun validateIdentityPoolId(mIdentityPoolId: String?, region: String?): B
         cognitoClient.use {
             it.getId(request)
         }
-
     } catch (e: ResourceNotFoundException) {
         return false
     } catch (e: IllegalArgumentException) {
@@ -170,7 +171,6 @@ fun getLanguageCode(): String? {
     return languageCode
 }
 
-
 fun formatToDisplayTime(utcOffsetTime: String, outputDateFormat: String): String {
     val inputFormat = SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS, Locale.getDefault() ?: Locale.US)
     inputFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -198,99 +198,102 @@ fun getPoliticalData(context: Context): ArrayList<PoliticalData> {
         PoliticalData(
             countryName = context.getString(R.string.label_no_political_view),
             description = "",
-            countryCode = "",
+            countryCode = ""
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_arg),
             description = context.getString(R.string.description_arg),
-            countryCode = context.getString(R.string.flag_arg),
+            countryCode = context.getString(R.string.flag_arg)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_cyp),
             description = context.getString(R.string.description_cyp),
-            countryCode = context.getString(R.string.flag_cyp),
+            countryCode = context.getString(R.string.flag_cyp)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_egy),
             description = context.getString(R.string.description_egy),
-            countryCode = context.getString(R.string.flag_egy),
+            countryCode = context.getString(R.string.flag_egy)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_geo),
             description = context.getString(R.string.description_geo),
-            countryCode = context.getString(R.string.flag_geo),
+            countryCode = context.getString(R.string.flag_geo)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_grc),
             description = context.getString(R.string.description_grc),
-            countryCode = context.getString(R.string.flag_grc),
+            countryCode = context.getString(R.string.flag_grc)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_ind),
             description = context.getString(R.string.description_ind),
-            countryCode = context.getString(R.string.flag_ind),
+            countryCode = context.getString(R.string.flag_ind)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_ken),
             description = context.getString(R.string.description_ken),
-            countryCode = context.getString(R.string.flag_ken),
+            countryCode = context.getString(R.string.flag_ken)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_mar),
             description = context.getString(R.string.description_mar),
-            countryCode = context.getString(R.string.flag_mar),
+            countryCode = context.getString(R.string.flag_mar)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_ps),
             description = context.getString(R.string.description_ps),
-            countryCode = context.getString(R.string.flag_ps),
+            countryCode = context.getString(R.string.flag_ps)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_rus),
             description = context.getString(R.string.description_rus),
-            countryCode = context.getString(R.string.flag_rus),
+            countryCode = context.getString(R.string.flag_rus)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_sdn),
             description = context.getString(R.string.description_sdn),
-            countryCode = context.getString(R.string.flag_sdn),
+            countryCode = context.getString(R.string.flag_sdn)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_srb),
             description = context.getString(R.string.description_srb),
-            countryCode = context.getString(R.string.flag_srb),
+            countryCode = context.getString(R.string.flag_srb)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_sur),
             description = context.getString(R.string.description_sur),
-            countryCode = context.getString(R.string.flag_sur),
+            countryCode = context.getString(R.string.flag_sur)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_syr),
             description = context.getString(R.string.description_syr),
-            countryCode = context.getString(R.string.flag_syr),
+            countryCode = context.getString(R.string.flag_syr)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_tur),
             description = context.getString(R.string.description_tur),
-            countryCode = context.getString(R.string.flag_tur),
+            countryCode = context.getString(R.string.flag_tur)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_tza),
             description = context.getString(R.string.description_tza),
-            countryCode = context.getString(R.string.flag_tza),
+            countryCode = context.getString(R.string.flag_tza)
         ),
         PoliticalData(
             countryName = context.getString(R.string.label_ury),
             description = context.getString(R.string.description_ury),
-            countryCode = context.getString(R.string.flag_ury),
-        ),
+            countryCode = context.getString(R.string.flag_ury)
+        )
     )
 }
 
 fun getLanguageData(context: Context): ArrayList<LanguageData> {
     return arrayListOf(
-        LanguageData(value = context.getString(R.string.label_no_map_language), label = context.getString(R.string.label_no_map_language),),
+        LanguageData(
+            value = context.getString(R.string.label_no_map_language),
+            label = context.getString(R.string.label_no_map_language)
+        ),
         LanguageData(value = "en", label = "English"),
         LanguageData(value = "ar", label = "العربية"),
         LanguageData(value = "as", label = "অসমীয়া"),
@@ -359,6 +362,6 @@ fun getLanguageData(context: Context): ArrayList<LanguageData> {
         LanguageData(value = "uz", label = "Oʻzbek"),
         LanguageData(value = "vi", label = "Tiếng Việt"),
         LanguageData(value = "zh", label = "简体中文"),
-        LanguageData(value = "zh-Hant", label = "繁體中文"),
+        LanguageData(value = "zh-Hant", label = "繁體中文")
     )
 }
