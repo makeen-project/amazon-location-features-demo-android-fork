@@ -73,11 +73,11 @@ import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
-import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
-import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
+import com.aws.amazonlocation.ui.main.mapStyle.MapStyleBottomSheetFragment
+import com.aws.amazonlocation.ui.main.mapStyle.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
 import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
 import com.aws.amazonlocation.utils.AnalyticsAttribute

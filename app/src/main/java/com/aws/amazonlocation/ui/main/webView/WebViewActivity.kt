@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.web_view
+package com.aws.amazonlocation.ui.main.webView
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap

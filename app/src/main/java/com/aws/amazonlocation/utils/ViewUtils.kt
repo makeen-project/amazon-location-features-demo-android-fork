@@ -43,7 +43,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import java.util.Locale
 import java.util.regex.Pattern
 import kotlinx.coroutines.channels.awaitClose

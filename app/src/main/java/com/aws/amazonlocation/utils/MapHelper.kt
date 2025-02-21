@@ -27,7 +27,7 @@ import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
-import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
+import com.aws.amazonlocation.ui.main.mapStyle.MapStyleChangeListener
 import com.aws.amazonlocation.utils.Distance.DISTANCE_IN_METER_30
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1000
 import com.aws.amazonlocation.utils.Durations.CAMERA_DURATION_1500

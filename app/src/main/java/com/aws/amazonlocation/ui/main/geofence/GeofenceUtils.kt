@@ -41,7 +41,7 @@ import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.NetworkConnectivityObserveInterface
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.geofenceDeleteDialog
-import com.aws.amazonlocation.utils.geofence_helper.GeofenceHelper
+import com.aws.amazonlocation.utils.geofenceHelper.GeofenceHelper
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideKeyboard

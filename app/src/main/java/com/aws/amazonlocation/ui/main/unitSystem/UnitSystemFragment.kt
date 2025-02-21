@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.unit_system
+package com.aws.amazonlocation.ui.main.unitSystem
 
 import android.os.Bundle
 import android.view.LayoutInflater
