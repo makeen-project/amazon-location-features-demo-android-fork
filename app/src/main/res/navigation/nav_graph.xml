@@ -27,13 +27,13 @@
 
     <fragment
         android:id="@+id/map_style_fragment"
-        android:name="com.aws.amazonlocation.ui.main.map_style.MapStyleFragment"
+        android:name="com.aws.amazonlocation.ui.main.mapStyle.MapStyleFragment"
         android:label="MapStyleFragment"
         tools:layout="@layout/fragment_map_style" />
 
     <fragment
         android:id="@+id/route_option_fragment"
-        android:name="com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment"
+        android:name="com.aws.amazonlocation.ui.main.routeOption.RouteOptionFragment"
         android:label="RouteOptionFragment"
         tools:layout="@layout/fragment_route_option" />
 
@@ -63,13 +63,13 @@
 
     <fragment
         android:id="@+id/terms_conditions_fragment"
-        android:name="com.aws.amazonlocation.ui.main.terms_condition.TermsAndConditionFragment"
+        android:name="com.aws.amazonlocation.ui.main.termsCondition.TermsAndConditionFragment"
         android:label="TermsAndConditionFragment"
         tools:layout="@layout/fragment_terms_and_condition" />
 
     <fragment
         android:id="@+id/unit_system_fragment"
-        android:name="com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment"
+        android:name="com.aws.amazonlocation.ui.main.unitSystem.UnitSystemFragment"
         android:label="UnitSystemFragment"
         tools:layout="@layout/fragment_unit_system" />
 
