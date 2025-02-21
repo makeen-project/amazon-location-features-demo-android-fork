@@ -3,7 +3,6 @@ on:
   workflow_dispatch:
   pull_request:
     branches: [ develop, main ]
-
 jobs:
   ktlint-check:
     name: KtLint Check
@@ -43,7 +42,7 @@ jobs:
         run: ./gradlew ktlintCheck
 
       - name: Upload KtLint Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ktlint-checkstyle-report
           path: app/build/reports/ktlint/**/*.xml
