@@ -16,7 +16,7 @@ import com.aws.amazonlocation.utils.show
 class PoliticalAdapter(
     private val politicalData: ArrayList<PoliticalData>,
     private val isRtl: Boolean,
-    var placeInterface: PoliticalInterface,
+    var placeInterface: PoliticalInterface
 ) :
     RecyclerView.Adapter<PoliticalAdapter.SearchPoliticalVH>() {
 
@@ -43,7 +43,7 @@ class PoliticalAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPoliticalVH {
         return SearchPoliticalVH(
-            ItemSearchCountryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemSearchCountryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -77,5 +77,4 @@ class PoliticalAdapter(
             )
         }
     }
-
 }

@@ -25,7 +25,6 @@ import com.aws.amazonlocation.ui.main.geofence.GeofenceUtils
 import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.tracking.TrackingUtils
-import com.aws.amazonlocation.utils.providers.LocationProvider
 import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.KEY_LOCATION_PERMISSION
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
@@ -35,16 +34,17 @@ import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.Units
+import com.aws.amazonlocation.utils.providers.LocationProvider
 import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -115,7 +115,7 @@ open class BaseActivity : AppCompatActivity() {
             Snackbar.make(
                 findViewById(R.id.nav_host_fragment),
                 error,
-                Snackbar.LENGTH_SHORT,
+                Snackbar.LENGTH_SHORT
             )
         val textView =
             snackBar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
@@ -139,7 +139,7 @@ open class BaseActivity : AppCompatActivity() {
                     Intent().apply {
                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         data = Uri.fromParts("package", packageName, null)
-                    },
+                    }
                 )
             }
         mAlertDialog = dialogBuilder.create()
@@ -162,13 +162,16 @@ open class BaseActivity : AppCompatActivity() {
             null
         }
 
-    fun getLocationPermissionCount(): Int = mPreferenceManager.getIntValue(KEY_LOCATION_PERMISSION, 0)
+    fun getLocationPermissionCount(): Int = mPreferenceManager.getIntValue(
+        KEY_LOCATION_PERMISSION,
+        0
+    )
 
     fun updateLocationPermission(isLocation: Boolean = false) {
         if (getLocationPermissionCount() <= 1) {
             mPreferenceManager.setValue(
                 KEY_LOCATION_PERMISSION,
-                if (isLocation) 2 else getLocationPermissionCount().plus(1),
+                if (isLocation) 2 else getLocationPermissionCount().plus(1)
             )
         }
     }
@@ -190,7 +193,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun handleException(
         exception: Exception,
-        message: String? = null,
+        message: String? = null
     ) {
         subTitle = ""
         when (exception) {
