@@ -51,9 +51,9 @@ class MapStyleVMSetPoliticalListData : BaseTest() {
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED,
             mMapStyleViewModel.mPoliticalData.last().countryName == testPoliticalData.countryName &&
-                    mMapStyleViewModel.mPoliticalData.last().description == testPoliticalData.description&&
-                    mMapStyleViewModel.mPoliticalData.last().countryCode == testPoliticalData.countryCode&&
-                    mMapStyleViewModel.mPoliticalData.last().isSelected == testPoliticalData.isSelected
+                mMapStyleViewModel.mPoliticalData.last().description == testPoliticalData.description &&
+                mMapStyleViewModel.mPoliticalData.last().countryCode == testPoliticalData.countryCode &&
+                mMapStyleViewModel.mPoliticalData.last().isSelected == testPoliticalData.isSelected
         )
 
         val result = mMapStyleViewModel.searchPoliticalData("test")

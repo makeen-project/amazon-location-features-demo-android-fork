@@ -36,7 +36,10 @@ class RouteOptionFragment : BaseFragment() {
         mBinding.apply {
             switchAvoidTools.isChecked = mPreferenceManager.getValue(KEY_AVOID_TOLLS, false)
             switchAvoidFerries.isChecked = mPreferenceManager.getValue(KEY_AVOID_FERRIES, false)
-            switchAvoidDirtRoads.isChecked = mPreferenceManager.getValue(KEY_AVOID_DIRT_ROADS, false)
+            switchAvoidDirtRoads.isChecked = mPreferenceManager.getValue(
+                KEY_AVOID_DIRT_ROADS,
+                false
+            )
             switchAvoidUTurns.isChecked = mPreferenceManager.getValue(KEY_AVOID_U_TURNS, false)
             switchAvoidTunnels.isChecked = mPreferenceManager.getValue(KEY_AVOID_TUNNELS, false)
 

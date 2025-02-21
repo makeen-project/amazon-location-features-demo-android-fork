@@ -37,10 +37,10 @@ import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.textChanges
+import kotlin.math.ceil
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlin.math.ceil
 
 class MapStyleFragment : BaseFragment() {
     private lateinit var layoutManager: GridLayoutManager
@@ -56,7 +56,7 @@ class MapStyleFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentMapStyleBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -69,7 +69,7 @@ class MapStyleFragment : BaseFragment() {
 
     override fun onViewCreated(
         view: View,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ) {
         if ((activity is MainActivity)) {
             isTablet = (activity as MainActivity).isTablet
@@ -102,8 +102,8 @@ class MapStyleFragment : BaseFragment() {
                         if (mapStyleInnerData.mapName == getString(R.string.map_satellite) ||
                             mapStyleInnerData.mapName ==
                             getString(
-                                R.string.map_hybrid,
-                            )
+                                    R.string.map_hybrid
+                                )
                         ) {
                             disableToggle()
                         } else {
@@ -130,7 +130,7 @@ class MapStyleFragment : BaseFragment() {
                     object : SettingMapStyleAdapter.MapInterface {
                         override fun mapStyleClick(
                             position: Int,
-                            innerPosition: Int,
+                            innerPosition: Int
                         ) {
                             if (checkInternetConnection()) {
                                 if (position != -1 && innerPosition != -1) {
@@ -138,14 +138,14 @@ class MapStyleFragment : BaseFragment() {
                                         mViewModel.mStyleList[position]
                                             .mapInnerData
                                             ?.get(
-                                                innerPosition,
+                                                innerPosition
                                             )?.mapName
                                     for (data in mViewModel.mStyleList) {
                                         data.mapInnerData.let {
                                             if (it != null) {
                                                 for (innerData in it) {
                                                     if (innerData.mapName.equals(
-                                                            selectedInnerData,
+                                                            selectedInnerData
                                                         )
                                                     ) {
                                                         if (innerData.isSelected) return
@@ -156,13 +156,13 @@ class MapStyleFragment : BaseFragment() {
                                     }
                                     selectedInnerData?.let { it1 ->
                                         changeStyle(
-                                            it1,
+                                            it1
                                         )
                                     }
                                 }
                             }
                         }
-                    },
+                    }
                 )
             rvMapStyle.adapter = mMapStyleAdapter
 
@@ -183,8 +183,8 @@ class MapStyleFragment : BaseFragment() {
                         setTextColor(
                             ContextCompat.getColor(
                                 requireContext(),
-                                R.color.color_primary_green,
-                            ),
+                                R.color.color_primary_green
+                            )
                         )
                     }
                 }
@@ -211,10 +211,13 @@ class MapStyleFragment : BaseFragment() {
                             mPoliticalAdapter?.notifyDataSetChanged()
 
                             val selectedItem = mViewModel.mPoliticalData.find { it.isSelected }
-                            if (selectedItem != null && selectedItem.countryName != getString(R.string.label_no_political_view)) {
+                            if (selectedItem != null && selectedItem.countryName != getString(
+                                    R.string.label_no_political_view
+                                )
+                            ) {
                                 mPreferenceManager.setValue(
                                     KEY_POLITICAL_VIEW,
-                                    selectedItem.countryName,
+                                    selectedItem.countryName
                                 )
                                 tvPoliticalDescription.apply {
                                     text =
@@ -226,20 +229,22 @@ class MapStyleFragment : BaseFragment() {
                                     setTextColor(
                                         ContextCompat.getColor(
                                             requireContext(),
-                                            R.color.color_primary_green,
-                                        ),
+                                            R.color.color_primary_green
+                                        )
                                     )
                                 }
                             } else {
                                 mPreferenceManager.setValue(KEY_POLITICAL_VIEW, "")
                                 tvPoliticalDescription.apply {
                                     text =
-                                        getString(R.string.label_map_representation_for_different_countries)
+                                        getString(
+                                            R.string.label_map_representation_for_different_countries
+                                        )
                                     setTextColor(
                                         ContextCompat.getColor(
                                             requireContext(),
-                                            R.color.color_hint_text,
-                                        ),
+                                            R.color.color_hint_text
+                                        )
                                     )
                                 }
                             }
@@ -247,7 +252,7 @@ class MapStyleFragment : BaseFragment() {
                             showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                             hideViews(clSearchPolitical, cardMapLanguage)
                         }
-                    },
+                    }
                 )
             rvPoliticalView.adapter = mPoliticalAdapter
 
@@ -256,13 +261,14 @@ class MapStyleFragment : BaseFragment() {
                 mViewModel.mMapLanguageData.find { it.value == language }?.let {
                     it.isSelected = true
                     tvMapLanguageDescription.apply {
-                        text = buildString{
+                        text = buildString {
                             append(it.label)
                             append(context.getString(R.string.label_is_selected))
                         }
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        setTextColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
-
                 }
             }
             if (selectedMapLanguage.isEmpty()) {
@@ -281,27 +287,43 @@ class MapStyleFragment : BaseFragment() {
                         mViewModel.mMapLanguageData[position].isSelected = true
                         mMapLanguageAdapter?.notifyDataSetChanged()
                         val selectedItem = mViewModel.mMapLanguageData.find { it.isSelected }
-                        if (selectedItem != null && selectedItem.label != getString(R.string.label_no_map_language)) {
-                            mPreferenceManager.setValue(KEY_SELECTED_MAP_LANGUAGE, selectedItem.value)
+                        if (selectedItem != null && selectedItem.label != getString(
+                                R.string.label_no_map_language
+                            )
+                        ) {
+                            mPreferenceManager.setValue(
+                                KEY_SELECTED_MAP_LANGUAGE,
+                                selectedItem.value
+                            )
                             tvMapLanguageDescription.apply {
                                 text = buildString {
                                     append(selectedItem.label)
                                     append(context.getString(R.string.label_is_selected))
                                 }
-                                setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                                setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.color_primary_green
+                                    )
+                                )
                             }
                         } else {
                             mPreferenceManager.setValue(KEY_SELECTED_MAP_LANGUAGE, "")
                             tvMapLanguageDescription.apply {
                                 text = getString(R.string.label_change_map_language)
-                                setTextColor(ContextCompat.getColor(requireContext(), R.color.color_hint_text))
+                                setTextColor(
+                                    ContextCompat.getColor(
+                                        requireContext(),
+                                        R.color.color_hint_text
+                                    )
+                                )
                             }
                         }
                         appCompatTextView2.text = getString(R.string.label_map_style)
                         showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                         hideViews(clSearchPolitical, cardMapLanguage)
                     }
-                },
+                }
             )
             rvMapLanguage.adapter = mMapLanguageAdapter
         }
@@ -323,7 +345,7 @@ class MapStyleFragment : BaseFragment() {
                             innerData.mapName?.let { it1 ->
                                 mPreferenceManager.setValue(
                                     KEY_MAP_STYLE_NAME,
-                                    it1,
+                                    it1
                                 )
                             }
                         }
@@ -331,7 +353,10 @@ class MapStyleFragment : BaseFragment() {
                 }
             }
         }
-        if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(R.string.map_hybrid)) {
+        if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(
+                R.string.map_hybrid
+            )
+        ) {
             disableToggle()
         } else {
             enableToggle()
@@ -345,8 +370,8 @@ class MapStyleFragment : BaseFragment() {
                 setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.color_hint_text,
-                    ),
+                        R.color.color_hint_text
+                    )
                 )
             }
             mViewModel.mPoliticalSearchData.forEach {
@@ -383,6 +408,7 @@ class MapStyleFragment : BaseFragment() {
         return ceil(calculatedColumn).toInt()
     }
 
+    @OptIn(kotlinx.coroutines.FlowPreview::class)
     @SuppressLint("NotifyDataSetChanged")
     private fun clickListener() {
         mBinding.apply {
@@ -415,7 +441,10 @@ class MapStyleFragment : BaseFragment() {
             }
             clPoliticalView.setOnClickListener {
                 val mapStyleName =
-                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                    mPreferenceManager.getValue(
+                        KEY_MAP_STYLE_NAME,
+                        getString(R.string.map_standard)
+                    )
                         ?: getString(R.string.map_standard)
                 if (mapStyleName == getString(R.string.map_satellite)) return@setOnClickListener
                 appCompatTextView2.text = getString(R.string.label_political_view)
@@ -457,6 +486,7 @@ class MapStyleFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearSelectionAndSetOriginalData(selectedCountry: String) {
         mViewModel.mPoliticalData.forEach {
             it.isSelected = false
