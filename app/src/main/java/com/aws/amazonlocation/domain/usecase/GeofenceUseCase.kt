@@ -29,7 +29,13 @@ class GeofenceUseCase @Inject constructor(private val mGeofenceRepository: Geofe
         latLng: LatLng?,
         mGeofenceInterface: GeofenceAPIInterface
     ) =
-        mGeofenceRepository.addGeofence(geofenceId, collectionName, radius, latLng, mGeofenceInterface)
+        mGeofenceRepository.addGeofence(
+            geofenceId,
+            collectionName,
+            radius,
+            latLng,
+            mGeofenceInterface
+        )
 
     suspend fun deleteGeofence(
         position: Int,
@@ -58,7 +64,12 @@ class GeofenceUseCase @Inject constructor(private val mGeofenceRepository: Geofe
         position: List<Double>,
         deviceId: String,
         batchLocationUpdateInterface: BatchLocationUpdateInterface
-    ) = mGeofenceRepository.batchUpdateDevicePosition(trackerName, position, deviceId, batchLocationUpdateInterface)
+    ) = mGeofenceRepository.batchUpdateDevicePosition(
+        trackerName,
+        position,
+        deviceId,
+        batchLocationUpdateInterface
+    )
 
     suspend fun evaluateGeofence(
         trackerName: String,
@@ -66,7 +77,13 @@ class GeofenceUseCase @Inject constructor(private val mGeofenceRepository: Geofe
         deviceId: String,
         identityId: String,
         batchLocationUpdateInterface: BatchLocationUpdateInterface
-    ) = mGeofenceRepository.evaluateGeofence(trackerName, position1, deviceId, identityId, batchLocationUpdateInterface)
+    ) = mGeofenceRepository.evaluateGeofence(
+        trackerName,
+        position1,
+        deviceId,
+        identityId,
+        batchLocationUpdateInterface
+    )
 
     suspend fun getLocationHistory(
         trackerName: String,
@@ -74,7 +91,13 @@ class GeofenceUseCase @Inject constructor(private val mGeofenceRepository: Geofe
         dateStart: Date,
         dateEnd: Date,
         historyInterface: LocationHistoryInterface
-    ) = mGeofenceRepository.getLocationHistory(trackerName, deviceId, dateStart, dateEnd, historyInterface)
+    ) = mGeofenceRepository.getLocationHistory(
+        trackerName,
+        deviceId,
+        dateStart,
+        dateEnd,
+        historyInterface
+    )
 
     suspend fun deleteLocationHistory(
         trackerName: String,

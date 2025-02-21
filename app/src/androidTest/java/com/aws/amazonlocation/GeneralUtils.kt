@@ -8,19 +8,17 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject
 import androidx.test.uiautomator.UiObjectNotFoundException
 import androidx.test.uiautomator.UiSelector
-import androidx.test.uiautomator.Until
-import org.hamcrest.Matcher
-import org.junit.Assert
 import java.util.Calendar
 import kotlin.random.Random
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matcher
+import org.junit.Assert
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -29,13 +27,13 @@ import org.hamcrest.CoreMatchers.allOf
 fun enableGPS(context: Context) {
     if (!isLocationEnabled(context)) {
         val uiDevice: UiDevice =
-            UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+            UiDevice.getInstance(getInstrumentation())
 
         val allowGpsBtn: UiObject = uiDevice.findObject(
             UiSelector()
                 .className("android.widget.Button").packageName("com.google.android.gms")
                 .resourceId("android:id/button1")
-                .clickable(true).checkable(false),
+                .clickable(true).checkable(false)
         )
         uiDevice.pressDelete()
         if (allowGpsBtn.exists() && allowGpsBtn.isEnabled) {
@@ -49,7 +47,9 @@ fun enableGPS(context: Context) {
 fun checkLocationPermission() {
     val uiDevice = UiDevice.getInstance(getInstrumentation())
     val btnContinueToApp =
-        uiDevice.findObject(UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app"))
+        uiDevice.findObject(
+            UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/btn_continue_to_app")
+        )
     if (btnContinueToApp.exists()) {
         btnContinueToApp.click()
     }
@@ -62,8 +62,8 @@ fun checkLocationPermission() {
     waitForView(
         allOf(
             withContentDescription(AMAZON_MAP_READY),
-            isDisplayed(),
-        ),
+            isDisplayed()
+        )
     )
 }
 
@@ -82,10 +82,6 @@ fun getRandomGeofenceName(): String {
     return "Geofence${Calendar.getInstance().timeInMillis}"
 }
 
-fun getRandom1To100(): Float {
-    return Random.nextDouble(1.0, 100.0).toFloat()
-}
-
 fun getRandom0_01To1_0(): Double {
     return Random.nextDouble(0.01, 1.0)
 }
@@ -102,7 +98,7 @@ val mockLocations = listOf(
     MockLocation(23.015137, 72.532712),
     MockLocation(23.014985, 72.532109),
     MockLocation(23.014748, 72.531518),
-    MockLocation(23.014630, 72.530917),
+    MockLocation(23.014630, 72.530917)
 )
 
 val mockLocationsExit = listOf(
@@ -111,7 +107,7 @@ val mockLocationsExit = listOf(
     MockLocation(23.013142, 72.523544),
     MockLocation(23.013152, 72.522846),
     MockLocation(23.012348, 72.522382),
-    MockLocation(23.011594, 72.522444),
+    MockLocation(23.011594, 72.522444)
 )
 
 fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
@@ -125,14 +121,19 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
     }
 }
 
-fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_3000, maxCount: Int = 60, onNotFound: (() -> Unit)? = null): ViewInteraction? {
+fun waitForView(
+    matcher: Matcher<View>,
+    waitTime: Long = DELAY_3000,
+    maxCount: Int = 60,
+    onNotFound: (() -> Unit)? = null
+): ViewInteraction? {
     var count = 0
     var found = false
     var interaction: ViewInteraction? = null
     var exception: Exception? = null
     while (!found) {
         interaction = Espresso.onView(
-            matcher,
+            matcher
         ).check { view, noViewFoundException ->
             exception = noViewFoundException
             found = exception == null && view != null
@@ -151,14 +152,18 @@ fun waitForView(matcher: Matcher<View>, waitTime: Long = DELAY_3000, maxCount: I
     return interaction
 }
 
-fun scrollForView(matcher: Matcher<View>, maxCount: Int = 20, onScrollRequested: (() -> Unit)? = null): ViewInteraction? {
+fun scrollForView(
+    matcher: Matcher<View>,
+    maxCount: Int = 20,
+    onScrollRequested: (() -> Unit)? = null
+): ViewInteraction? {
     var count = 0
     var found = false
     var interaction: ViewInteraction? = null
     var exception: Exception? = null
     while (!found) {
         interaction = Espresso.onView(
-            matcher,
+            matcher
         ).check { view, noViewFoundException ->
             exception = noViewFoundException
             found = exception == null && view != null

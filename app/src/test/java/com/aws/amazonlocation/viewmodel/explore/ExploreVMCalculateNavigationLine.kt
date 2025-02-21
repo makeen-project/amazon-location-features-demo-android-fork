@@ -51,8 +51,6 @@ class ExploreVMCalculateNavigationLine : BaseTest() {
 
     @Test
     fun calculateNavigationLineSuccess() = runTest {
-
-
         val param = Responses.RESPONSE_CALCULATE_DISTANCE_CAR
 
         val searchSuggestionData = getSearchSuggestionData()
@@ -76,9 +74,30 @@ class ExploreVMCalculateNavigationLine : BaseTest() {
 
     @Test
     fun calculateNavigationLineWalkSuccess() = runTest {
-
-
         val param = Responses.RESPONSE_CALCULATE_DISTANCE_WALKING
+
+        val searchSuggestionData = getSearchSuggestionData()
+
+        mExploreVM.mSearchSuggestionData = searchSuggestionData
+        mExploreVM.mSearchDirectionOriginData = searchSuggestionData
+        mExploreVM.mSearchDirectionDestinationData = searchSuggestionData
+        mExploreVM.mSearchDirectionDestinationData?.isDestination = true
+
+        mExploreVM.mNavigationData.test {
+            mExploreVM.calculateNavigationLine(context, param)
+            var result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+            result = awaitItem()
+            Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
+            val data = (result as HandleResult.Success).response
+            Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA_SIZE, data.navigationList.size == 2)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun calculateNavigationLineFerriesSuccess() = runTest {
+        val param = Responses.RESPONSE_CALCULATE_DISTANCE_FERRIES
 
         val searchSuggestionData = getSearchSuggestionData()
 
@@ -112,8 +131,8 @@ class ExploreVMCalculateNavigationLine : BaseTest() {
             searchSuggestionData.isDestination = true
             searchSuggestionData.placeId =
                 searchPlaceIndexForPositionResult.resultItems?.get(0)?.placeId
-            it.latitude?.let { lat->
-                it.longitude?.let { lng->
+            it.latitude?.let { lat ->
+                it.longitude?.let { lng ->
                     searchSuggestionData.position = listOf(lng, lat)
                 }
             }

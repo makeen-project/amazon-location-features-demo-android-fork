@@ -67,12 +67,20 @@ class TrackingVMGetLocationHistory : BaseTest() {
         val dates = getDateRange(TRACKING_HISTORY_START_DATE, TRACKING_HISTORY_END_DATE)
 
         mTrackingViewModel.mGetLocationHistoryList.test {
-            mTrackingViewModel.getLocationHistory(TrackerCons.TRACKER_COLLECTION, DEVICE_ID, dates.first, dates.second)
+            mTrackingViewModel.getLocationHistory(
+                TrackerCons.TRACKER_COLLECTION,
+                DEVICE_ID,
+                dates.first,
+                dates.second
+            )
             var result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
-            Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, (result as HandleResult.Success).response == Responses.RESPONSE_LOCATION_HISTORY.response)
+            Assert.assertTrue(
+                TEST_FAILED_DUE_TO_INCORRECT_DATA,
+                (result as HandleResult.Success).response == Responses.RESPONSE_LOCATION_HISTORY.response
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -92,15 +100,28 @@ class TrackingVMGetLocationHistory : BaseTest() {
         val dates = getDateRange(TRACKING_HISTORY_START_DATE, TRACKING_HISTORY_END_DATE)
 
         mTrackingViewModel.mGetLocationHistoryList.test {
-            mTrackingViewModel.getLocationHistory(TrackerCons.TRACKER_COLLECTION, DEVICE_ID, dates.first, dates.second)
+            mTrackingViewModel.getLocationHistory(
+                TrackerCons.TRACKER_COLLECTION,
+                DEVICE_ID,
+                dates.first,
+                dates.second
+            )
             var result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
-            mTrackingViewModel.getLocationHistory(TrackerCons.TRACKER_COLLECTION, DEVICE_ID, dates.first, dates.second)
+            mTrackingViewModel.getLocationHistory(
+                TrackerCons.TRACKER_COLLECTION,
+                DEVICE_ID,
+                dates.first,
+                dates.second
+            )
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_ERROR, result is HandleResult.Error)
-            Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE, (result as HandleResult.Error).exception.messageResource == MOCK_ERROR)
+            Assert.assertTrue(
+                TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE,
+                (result as HandleResult.Error).exception.messageResource == MOCK_ERROR
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }

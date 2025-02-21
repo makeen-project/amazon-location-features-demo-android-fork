@@ -2,7 +2,7 @@ package com.aws.amazonlocation.utils.turf
 
 import com.aws.amazonlocation.mock.TEST_DATA_LAT
 import com.aws.amazonlocation.mock.TEST_DATA_LNG
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfMeta
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,7 +26,8 @@ class TurfMetaCoordsMultiPolygonTest {
                         )
                     )
                 )
-            ), true
+            ),
+            true
         )
         Assert.assertTrue(pointList.isNotEmpty())
     }
@@ -44,7 +45,8 @@ class TurfMetaCoordsMultiPolygonTest {
                         )
                     )
                 )
-            ), false
+            ),
+            false
         )
         Assert.assertTrue(pointList.isNotEmpty())
     }

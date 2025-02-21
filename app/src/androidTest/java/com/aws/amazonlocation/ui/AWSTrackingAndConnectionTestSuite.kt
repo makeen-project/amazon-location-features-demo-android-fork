@@ -23,6 +23,6 @@ import org.junit.runners.Suite
     TrackingStartTrackingMapDisplayTest::class,
     TrackingDeleteTrackingHistoryTest::class,
     SettingSignOutTest::class,
-    SettingAWSDisconnectingTest::class,
+    SettingAWSDisconnectingTest::class
 )
 class AWSTrackingAndConnectionTestSuite

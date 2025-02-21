@@ -13,12 +13,12 @@ import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 import org.maplibre.android.geometry.LatLng
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -73,7 +73,9 @@ class GeofenceViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            _getGeofenceList.trySend(HandleResult.Success(geofenceData.geofenceList))
+                            _getGeofenceList.trySend(
+                                HandleResult.Success(geofenceData.geofenceList)
+                            )
                         }
                     }
                 }
@@ -139,7 +141,7 @@ class GeofenceViewModel @Inject constructor(
 
     fun geofenceSearchPlaceSuggestion(
         searchText: String,
-        latLng: LatLng?,
+        latLng: LatLng?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             mGetGeofenceUseCase.searchPlaceSuggestionList(
@@ -147,7 +149,9 @@ class GeofenceViewModel @Inject constructor(
                 latLng?.longitude,
                 searchText,
                 object : SearchPlaceInterface {
-                    override fun getSearchPlaceSuggestionResponse(suggestionResponse: SearchSuggestionResponse?) {
+                    override fun getSearchPlaceSuggestionResponse(
+                        suggestionResponse: SearchSuggestionResponse?
+                    ) {
                         _geofenceSearchForSuggestionsResultList.trySend(
                             HandleResult.Success(
                                 suggestionResponse!!

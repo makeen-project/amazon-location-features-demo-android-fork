@@ -42,7 +42,9 @@ class WelcomeBottomSheetFragment : BottomSheetDialogFragment() {
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
             val parentLayout =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheetDialog.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+                )
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
                 behaviour.isDraggable = false
@@ -51,11 +53,15 @@ class WelcomeBottomSheetFragment : BottomSheetDialogFragment() {
                 behaviour.isFitToContents = false
                 if (activity != null) {
                     if (!(activity as MainActivity).isTablet) {
-                        behaviour.expandedOffset = requireContext().resources.getDimension(R.dimen.dp_50).toInt()
+                        behaviour.expandedOffset = requireContext().resources.getDimension(
+                            R.dimen.dp_50
+                        ).toInt()
                     }
                 } else {
-                    activity?.let{ fragmentActivity ->
-                        behaviour.expandedOffset = fragmentActivity.resources.getDimension(R.dimen.dp_50).toInt()
+                    activity?.let { fragmentActivity ->
+                        behaviour.expandedOffset = fragmentActivity.resources.getDimension(
+                            R.dimen.dp_50
+                        ).toInt()
                     }
                 }
                 dialog.setCanceledOnTouchOutside(false)

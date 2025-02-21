@@ -36,7 +36,9 @@ class CustomSpinnerAdapter(context: Context, private val items: ArrayList<String
         textView.text = items[position]
 
         if (position == mSelectedIndex) {
-            view.setBackgroundColor(ContextCompat.getColor(context, R.color.color_selected_spinner_bg))
+            view.setBackgroundColor(
+                ContextCompat.getColor(context, R.color.color_selected_spinner_bg)
+            )
         } else {
             view.setBackgroundColor(Color.TRANSPARENT)
         }

@@ -1,7 +1,8 @@
 package com.aws.amazonlocation.utils.generalutils
 
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.Responses
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.getUserName
 import org.junit.Assert
 import org.junit.Test
@@ -20,7 +21,7 @@ class GeneralUtilsGetUserNameTest : BaseTest() {
         loginResponse.name = "Test Test"
         result = getUserName(loginResponse)
         expected = Responses.RESPONSE_SIGN_IN.name?.first()?.uppercase()
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == expected+"T")
+        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == expected + "T")
         loginResponse.name = null
         result = getUserName(loginResponse)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == null)

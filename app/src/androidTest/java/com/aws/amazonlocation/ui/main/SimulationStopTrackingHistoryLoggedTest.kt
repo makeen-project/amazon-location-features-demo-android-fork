@@ -34,30 +34,30 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             tracking?.perform(click())
 
             waitForView(
                 allOf(
                     withId(R.id.cl_enable_tracking),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
             waitForView(
                 allOf(
                     withId(R.id.cl_enable_tracking),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
             val btnTryTracker =
                 waitForView(
                     allOf(
                         withId(R.id.btn_try_tracker),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             btnTryTracker?.perform(click())
 
@@ -65,8 +65,8 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.label_start_simulation)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             labelStartSimulation?.perform(click())
             swipeUp()
@@ -75,8 +75,8 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withId(R.id.iv_back_arrow_change_route),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             ivBackArrowChangeRoute?.perform(click())
 
@@ -84,8 +84,8 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.label_stop_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             labelStopTracking?.perform(click())
 
@@ -95,8 +95,8 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withId(R.id.spinnerChangeBus),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             spinnerChangeBus?.perform(click())
 
@@ -104,8 +104,8 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(notificationData[2].name),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             data?.perform(click())
 
@@ -116,14 +116,14 @@ class SimulationStopTrackingHistoryLoggedTest : BaseTestMainActivity() {
                     allOf(
                         withId(R.id.rv_tracking_simulation),
                         isDisplayed(),
-                        hasMinimumChildCount(1),
-                    ),
+                        hasMinimumChildCount(1)
+                    )
                 )
             rvTrackingSimulation?.check { view, _ ->
                 if (view is RecyclerView) {
                     Assert.assertTrue(
                         TEST_FAILED_NO_TRACKING_HISTORY,
-                        (view.adapter?.itemCount ?: 0) == 0,
+                        (view.adapter?.itemCount ?: 0) == 0
                     )
                 } else {
                     Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)

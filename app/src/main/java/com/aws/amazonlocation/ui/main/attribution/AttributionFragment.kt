@@ -13,7 +13,7 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.FragmentAttributionBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import com.aws.amazonlocation.utils.KEY_URL
 import com.aws.amazonlocation.utils.MAP_STYLE_ATTRIBUTION
 import com.aws.amazonlocation.utils.attributionPattern
@@ -49,7 +49,6 @@ class AttributionFragment : BaseFragment() {
             tvAttribution.text =
                 mPreferenceManager.getValue(MAP_STYLE_ATTRIBUTION, "")
                     ?.replace(Regex(attributionPattern), "") ?: ""
-
         }
     }
     private fun initClick() {
@@ -59,7 +58,10 @@ class AttributionFragment : BaseFragment() {
                     Intent(
                         context,
                         WebViewActivity::class.java
-                    ).putExtra(KEY_URL, BuildConfig.BASE_DOMAIN + BuildConfig.AWS_SOFTWARE_ATTRIBUTION_URL)
+                    ).putExtra(
+                        KEY_URL,
+                        BuildConfig.BASE_DOMAIN + BuildConfig.AWS_SOFTWARE_ATTRIBUTION_URL
+                    )
                 )
             }
             btnLearnMore.setOnClickListener {

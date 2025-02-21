@@ -41,7 +41,12 @@ class SimulationTrackingListAdapter(
                         )
                     )
                     val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_4)
-                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+                    clNavigationItem.setPadding(
+                        clNavigationItem.paddingLeft,
+                        padding,
+                        clNavigationItem.paddingRight,
+                        padding
+                    )
                 } else {
                     tvBusStop.hide()
                     tvLatLng.setTextColor(
@@ -51,7 +56,12 @@ class SimulationTrackingListAdapter(
                         )
                     )
                     val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
-                    clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+                    clNavigationItem.setPadding(
+                        clNavigationItem.paddingLeft,
+                        padding,
+                        clNavigationItem.paddingRight,
+                        padding
+                    )
                 }
                 when (item.headerData) {
                     viewTopDotted.context.getString(R.string.label_position_start) -> {

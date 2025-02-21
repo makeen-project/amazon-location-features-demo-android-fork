@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.domain.`interface`
 
-import com.aws.amazonlocation.data.response.LoginResponse
 import okhttp3.Response
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.

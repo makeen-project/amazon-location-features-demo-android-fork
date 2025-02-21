@@ -13,14 +13,13 @@ import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
 import com.aws.amazonlocation.utils.ExcludeFromJacocoGeneratedReport
 import com.aws.amazonlocation.utils.simulationCollectionName
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.Date
-import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -71,7 +70,14 @@ class SimulationViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            _getGeofenceList.trySend(HandleResult.Success(SimulationGeofenceData(collectionName, geofenceData.geofenceList)))
+                            _getGeofenceList.trySend(
+                                HandleResult.Success(
+                                    SimulationGeofenceData(
+                                        collectionName,
+                                        geofenceData.geofenceList
+                                    )
+                                )
+                            )
                         }
                     }
                 }

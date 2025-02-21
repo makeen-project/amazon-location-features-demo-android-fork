@@ -26,6 +26,6 @@ import org.junit.runners.Suite
     ExploreFragmentPoliticalViewTest::class,
     SettingsMapPoliticalViewTest::class,
     ExploreFragmentMapLanguageTest::class,
-    SettingsMapLanguageTest::class,
+    SettingsMapLanguageTest::class
 )
 class MapStylesSettingAndExplorerFlowSuite

@@ -1,7 +1,6 @@
 package com.aws.amazonlocation.domain.`interface`
 
 import aws.sdk.kotlin.services.georoutes.model.CalculateRoutesResponse
-import aws.sdk.kotlin.services.location.model.CalculateRouteResponse
 import com.aws.amazonlocation.data.common.DataSourceException
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.

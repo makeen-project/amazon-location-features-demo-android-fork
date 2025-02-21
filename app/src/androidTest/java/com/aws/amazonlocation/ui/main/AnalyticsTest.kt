@@ -72,16 +72,16 @@ class AnalyticsTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_explore)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
             val settingTabText = mActivityRule.activity.getString(R.string.menu_setting)
             onView(
                 allOf(
                     withText(settingTabText),
                     isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
             snackBarMsg =
                 waitForView(CoreMatchers.allOf(withText(EventType.SCREEN_OPEN), isDisplayed()))
@@ -91,15 +91,15 @@ class AnalyticsTest : BaseTestMainActivity() {
             onView(
                 allOf(
                     withId(R.id.cl_unit_system),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
 
             onView(
                 allOf(
                     withId(R.id.ll_imperial),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
 
             snackBarMsg =

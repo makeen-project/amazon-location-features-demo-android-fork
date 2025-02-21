@@ -10,6 +10,7 @@ import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SignInInterface
+import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 import java.util.Date
 import org.maplibre.android.geometry.LatLng
 
@@ -22,7 +23,7 @@ interface RemoteDataSource {
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface,
+        searchPlace: SearchPlaceInterface
     )
 
     suspend fun searchPlaceIndexForText(
@@ -38,9 +39,10 @@ interface RemoteDataSource {
         lngDeparture: Double?,
         latDestination: Double?,
         lngDestination: Double?,
-        isAvoidFerries: Boolean?,
-        isAvoidTolls: Boolean?,
+        avoidanceOptions: ArrayList<AvoidanceOption>,
+        departOption: String,
         travelMode: String?,
+        time: String?,
         distanceInterface: DistanceInterface
     )
 
@@ -78,7 +80,7 @@ interface RemoteDataSource {
         position1: List<Double>? = null,
         deviceId: String,
         identityId: String,
-        mTrackingInterface: BatchLocationUpdateInterface,
+        mTrackingInterface: BatchLocationUpdateInterface
     )
 
     suspend fun getLocationHistory(

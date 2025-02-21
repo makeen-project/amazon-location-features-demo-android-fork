@@ -21,7 +21,7 @@ class SearchPlacesAdapter(
     private val mSearchPlaceList: ArrayList<SearchSuggestionData>,
     private val preferenceManager: PreferenceManager?,
     private var isForDirections: Boolean,
-    var mSearchPlaceInterface: SearchPlaceInterface,
+    var mSearchPlaceInterface: SearchPlaceInterface
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -41,7 +41,9 @@ class SearchPlacesAdapter(
                     groupDistance.hide()
                     tvRegion.hide()
                 } else {
-                    tvPlaceName.text = data.amazonLocationAddress?.label?.split(",")?.toTypedArray()?.get(0) ?: data.amazonLocationAddress?.label
+                    tvPlaceName.text = data.amazonLocationAddress?.label?.split(",")?.toTypedArray()?.get(
+                        0
+                    ) ?: data.amazonLocationAddress?.label
                 }
 
                 if (data.distance != null && preferenceManager != null) {
@@ -62,7 +64,11 @@ class SearchPlacesAdapter(
                 }
 
                 tvRegion.text =
-                    getRegion(data.amazonLocationAddress?.region?.name, data.amazonLocationAddress?.subRegion?.name, data.amazonLocationAddress?.country?.name)
+                    getRegion(
+                        data.amazonLocationAddress?.region?.name,
+                        data.amazonLocationAddress?.subRegion?.name,
+                        data.amazonLocationAddress?.country?.name
+                    )
 
                 binding.clMain.setOnClickListener {
                     mSearchPlaceInterface.placeClick(adapterPosition)
@@ -89,8 +95,12 @@ class SearchPlacesAdapter(
                     }
 
                     when {
-                        data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(R.drawable.icon_search)
-                        !data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(R.drawable.ic_map_pin)
+                        data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(
+                            R.drawable.icon_search
+                        )
+                        !data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(
+                            R.drawable.ic_map_pin
+                        )
                     }
                     clMain.setOnClickListener {
                         mSearchPlaceInterface.placeClick(adapterPosition)

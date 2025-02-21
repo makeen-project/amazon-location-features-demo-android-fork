@@ -38,8 +38,8 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             tracking?.perform(click())
 
@@ -47,16 +47,16 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             labelStartTracking?.perform(click())
 
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.ok)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
             var dialogText = getAlertDialogMessage()
@@ -64,27 +64,27 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.ok)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )?.perform(
-                    click(),
+                    click()
                 )
 
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.ok)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
                 dialogText = getAlertDialogMessage()
                 Assert.assertTrue(
                     TEST_FAILED_NOT_TRACKING_EXIT_DIALOG,
-                    dialogText.contains(TRACKING_EXITED),
+                    dialogText.contains(TRACKING_EXITED)
                 )
             } else if (dialogText.contains(TRACKING_EXITED)) {
                 Assert.assertTrue(
                     TEST_FAILED_NOT_TRACKING_EXIT_DIALOG,
-                    dialogText.contains(TRACKING_EXITED),
+                    dialogText.contains(TRACKING_EXITED)
                 )
             } else {
                 Assert.fail(TEST_FAILED)
@@ -101,16 +101,19 @@ class TrackingGeofenceExitTest : BaseTestMainActivity() {
             object : ViewAction {
                 override fun getDescription(): String = "get AlertDialog message"
 
-                override fun getConstraints(): Matcher<View> = allOf(isDisplayed(), isAssignableFrom(TextView::class.java))
+                override fun getConstraints(): Matcher<View> = allOf(
+                    isDisplayed(),
+                    isAssignableFrom(TextView::class.java)
+                )
 
                 override fun perform(
                     uiController: UiController?,
-                    view: View?,
+                    view: View?
                 ) {
                     val textView = view as TextView?
                     messageText = textView?.text.toString()
                 }
-            },
+            }
         )
         return messageText
     }

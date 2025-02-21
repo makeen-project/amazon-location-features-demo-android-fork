@@ -32,8 +32,8 @@ class TrackingStartTrackingTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             tracking?.perform(click())
 
@@ -41,8 +41,8 @@ class TrackingStartTrackingTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             labelStartTracking?.perform(click())
 

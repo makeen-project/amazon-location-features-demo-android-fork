@@ -54,10 +54,17 @@ class TrackingVMBatchUpdateDevicePositionTest : BaseTest() {
             callback.success(UpdateBatchLocationResponse(null, true))
         }
 
-        val position = listOf(GATE_WAY_OF_INDIA_LAT_LNG.longitude, GATE_WAY_OF_INDIA_LAT_LNG.latitude)
+        val position = listOf(
+            GATE_WAY_OF_INDIA_LAT_LNG.longitude,
+            GATE_WAY_OF_INDIA_LAT_LNG.latitude
+        )
 
         mTrackingViewModel.mGetUpdateDevicePosition.test {
-            mTrackingViewModel.batchUpdateDevicePosition(TrackerCons.TRACKER_COLLECTION, position, DEVICE_ID)
+            mTrackingViewModel.batchUpdateDevicePosition(
+                TrackerCons.TRACKER_COLLECTION,
+                position,
+                DEVICE_ID
+            )
             val result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
             cancelAndIgnoreRemainingEvents()

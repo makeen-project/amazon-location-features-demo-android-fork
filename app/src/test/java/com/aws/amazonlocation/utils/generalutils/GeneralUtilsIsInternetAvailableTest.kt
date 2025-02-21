@@ -2,7 +2,8 @@ package com.aws.amazonlocation.utils.generalutils
 
 import android.content.Context
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING
 import com.aws.amazonlocation.setConnectivity
 import com.aws.amazonlocation.utils.isInternetAvailable
 import com.aws.amazonlocation.utils.isRunningRemoteDataSourceImplTest
@@ -37,6 +38,9 @@ class GeneralUtilsIsInternetAvailableTest : BaseTest() {
         Assert.assertTrue(TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING, !isRunningTestLiveLocation)
         Assert.assertTrue(TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING, !isRunningTest2LiveLocation)
         Assert.assertTrue(TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING, !isRunningTest3LiveLocation)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING, !isRunningRemoteDataSourceImplTest)
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_ROBOLECTRIC_TEST_RUNNING,
+            !isRunningRemoteDataSourceImplTest
+        )
     }
 }

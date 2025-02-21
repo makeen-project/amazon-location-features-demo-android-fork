@@ -46,8 +46,8 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             val itemCount = 0
@@ -55,8 +55,8 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             var idCount = 0
@@ -87,10 +87,10 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
                             CameraUpdateFactory.newLatLngZoom(
                                 LatLng(
                                     lastKnownLocation.latitude,
-                                    lastKnownLocation.longitude,
+                                    lastKnownLocation.longitude
                                 ),
-                                14.0,
-                            ),
+                                14.0
+                            )
                         )
 
                         it.locationComponent.forceLocationUpdate(lastKnownLocation)
@@ -102,10 +102,10 @@ class TrackingStartTrackingMapDisplayTest : BaseTestMainActivity() {
                 val latLng =
                     LatLng(
                         mockLocation.latitude,
-                        mockLocation.longitude,
+                        mockLocation.longitude
                     )
                 (mActivityRule.activity as MainActivity).mTrackingUtils?.updateLatLngOnMap(
-                    latLng,
+                    latLng
                 )
             }
             val rvSearchPlaceSuggestion =

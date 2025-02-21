@@ -1,7 +1,7 @@
 package com.aws.amazonlocation.utils.units
 
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
@@ -19,6 +19,7 @@ class UnitsGetRegionTest : BaseTest() {
     private val context = RuntimeEnvironment.getApplication().applicationContext
 
     private val preferenceManager = PreferenceManager(context)
+
     @Test
     fun getRegionSuccess() {
         var result = Units.getRegion(preferenceManager)

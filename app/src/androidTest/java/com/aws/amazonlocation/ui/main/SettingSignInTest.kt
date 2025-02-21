@@ -38,15 +38,15 @@ class SettingSignInTest : BaseTestMainActivity() {
             AllOf.allOf(
                 withText(settingTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         ).perform(click())
 
         onView(
             AllOf.allOf(
                 withId(R.id.cl_aws_cloudformation),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         ).perform(click())
 
         val isTablet = mActivityRule.activity.resources.getBoolean(R.bool.is_tablet)
@@ -58,15 +58,15 @@ class SettingSignInTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText("Canada (Central) ca-central-1"),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.sign_in)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(allOf(withId(R.id.sign_in_web_view), isDisplayed()))
@@ -92,8 +92,8 @@ class SettingSignInTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.log_out)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )
     }
 }

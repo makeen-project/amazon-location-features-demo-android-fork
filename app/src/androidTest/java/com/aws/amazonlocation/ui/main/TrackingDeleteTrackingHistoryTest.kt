@@ -26,15 +26,15 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(allOf(withId(R.id.rv_tracking), isDisplayed(), hasMinimumChildCount(1)))
@@ -42,16 +42,16 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.label_stop_tracking)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         val clPersistentBottomSheet =
             waitForView(
                 allOf(
                     withId(R.id.bottom_sheet_tracking),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
         clPersistentBottomSheet?.check { view, _ ->
             if (view is ConstraintLayout) {
@@ -64,29 +64,29 @@ class TrackingDeleteTrackingHistoryTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withId(R.id.tv_delete_tracking_data),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.label_delete_tracking_data)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.ok)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             allOf(
                 withId(R.id.layout_no_data_found),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )
     }
 }
