@@ -44,14 +44,14 @@ class SettingAWSDisconnectingTest : BaseTestMainActivity() {
             AllOf.allOf(
                 withText(settingTabText),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         ).perform(click())
         onView(
             AllOf.allOf(
                 withId(R.id.cl_aws_cloudformation),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         ).perform(click())
 
         onView(withId(R.id.ns_cloud_formation)).perform(swipeUp())
@@ -59,8 +59,8 @@ class SettingAWSDisconnectingTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.disconnect_aws)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         val disconnectAws =

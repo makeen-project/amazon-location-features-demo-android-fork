@@ -30,8 +30,8 @@ class TrackingStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             val itemCount = 0
@@ -39,8 +39,8 @@ class TrackingStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             val rvSearchPlaceSuggestion =
@@ -49,7 +49,7 @@ class TrackingStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 if (view is RecyclerView) {
                     Assert.assertTrue(
                         TEST_FAILED_NO_TRACKING_HISTORY,
-                        (view.adapter?.itemCount ?: 0) > itemCount,
+                        (view.adapter?.itemCount ?: 0) > itemCount
                     )
                 } else {
                     Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)
