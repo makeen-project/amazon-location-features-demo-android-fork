@@ -6,12 +6,6 @@
     app:startDestination="@id/explore_fragment">
 
     <fragment
-        android:id="@+id/sign_in_fragment"
-        android:name="com.aws.amazonlocation.ui.main.signin.SignInFragment"
-        android:label="SignInFragment"
-        tools:layout="@layout/fragment_sign_in" />
-
-    <fragment
         android:id="@+id/explore_fragment"
         android:name="com.aws.amazonlocation.ui.main.explore.ExploreFragment"
         android:label="ExploreFragment"
@@ -36,12 +30,6 @@
         android:name="com.aws.amazonlocation.ui.main.routeOption.RouteOptionFragment"
         android:label="RouteOptionFragment"
         tools:layout="@layout/fragment_route_option" />
-
-    <fragment
-        android:id="@+id/aws_cloud_information_fragment"
-        android:name="com.aws.amazonlocation.ui.main.setting.AWSCloudInformationFragment"
-        android:label="AwsCloudInformationFragment"
-        tools:layout="@layout/fragment_aws_cloud_information" />
 
     <fragment
         android:id="@+id/attribution_fragment"

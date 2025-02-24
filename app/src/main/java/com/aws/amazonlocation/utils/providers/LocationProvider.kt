@@ -415,16 +415,9 @@ class LocationProvider(
     fun checkClientInitialize(): Boolean = locationClient != null
 
     fun checkSessionValid(activity: BaseActivity) {
-        val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-        if (mAuthStatus == AuthEnum.SIGNED_IN.name) {
-            if (isAuthTokenExpired()) {
-                activity.refreshToken()
-            }
-        } else {
-            if (!isUnAuthCredentialsValid(false)) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    async { initializeLocationCredentialsProvider(activity) }.await()
-                }
+        if (!isUnAuthCredentialsValid(false)) {
+            CoroutineScope(Dispatchers.IO).launch {
+                async { initializeLocationCredentialsProvider(activity) }.await()
             }
         }
     }
