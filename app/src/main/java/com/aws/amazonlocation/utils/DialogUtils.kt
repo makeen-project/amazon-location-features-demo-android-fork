@@ -10,24 +10,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 // SPDX-License-Identifier: MIT-0
 
-fun Context.signOutDialog(mSignOutInterface: SignOutInterface) {
-    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
-    mDialog.setTitle(this.resources.getString(R.string.logout))
-    mDialog.setMessage(this.resources.getString(R.string.are_you_sure_you_want_to_sign_out))
-    mDialog.setPositiveButton(
-        this.resources.getString(R.string.logout)
-    ) { dialog, _ ->
-        mSignOutInterface.logout(dialog, false)
-        dialog.dismiss()
-    }
-    mDialog.setNegativeButton(
-        this.resources.getString(R.string.cancel)
-    ) { dialog, _ ->
-        dialog.dismiss()
-    }
-    mDialog.show()
-}
-
 fun Context.geofenceDeleteDialog(
     position: Int,
     data: ListGeofenceResponseEntry,
@@ -60,29 +42,6 @@ fun Context.deleteTrackingDataDialog(
     ) { dialog, _ ->
         deleteTrackingDataInterface.deleteData(dialog)
         dialog.dismiss()
-    }
-    mDialog.setNegativeButton(
-        this.resources.getString(R.string.cancel)
-    ) { dialog, _ ->
-        dialog.dismiss()
-    }
-    mDialog.show()
-}
-
-fun Context.disconnectFromAWSDialog(
-    mDisconnectAWSInterface: DisconnectAWSInterface,
-    isLogoutRequired: Boolean
-) {
-    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
-    mDialog.setMessage(getString(R.string.are_you_sure_you_want_to_disconnect_aws))
-    mDialog.setPositiveButton(
-        this.resources.getString(R.string.disconnect_aws)
-    ) { dialog, _ ->
-        if (isLogoutRequired) {
-            mDisconnectAWSInterface.logoutAndDisconnectAWS(dialog)
-        } else {
-            mDisconnectAWSInterface.disconnectAWS(dialog)
-        }
     }
     mDialog.setNegativeButton(
         this.resources.getString(R.string.cancel)
@@ -170,27 +129,8 @@ fun Context.notificationPermission(notificationDialogInterface: NotificationDial
     mDialog.show()
 }
 
-interface EnableTrackerInterface {
-    fun continueToTracker(dialog: DialogInterface)
-    fun cancel()
-    fun viewTermsAndCondition(dialog: DialogInterface)
-}
-
-interface DisconnectAWSInterface {
-    fun disconnectAWS(dialog: DialogInterface)
-    fun logoutAndDisconnectAWS(dialog: DialogInterface)
-}
-
-interface SignOutInterface {
-    fun logout(dialog: DialogInterface, isDisconnectFromAWSRequired: Boolean)
-}
-
 interface GeofenceDeleteInterface {
     fun deleteGeofence(position: Int, data: ListGeofenceResponseEntry, dialog: DialogInterface)
-}
-
-interface ChangeDataProviderInterface {
-    fun changeDataProvider(dialog: DialogInterface)
 }
 
 interface DeleteTrackingDataInterface {
@@ -199,11 +139,6 @@ interface DeleteTrackingDataInterface {
 
 interface MessageInterface {
     fun onMessageClick(dialog: DialogInterface)
-}
-
-interface MapStyleRestartInterface {
-    fun onOkClick(dialog: DialogInterface, dontAskAgain: Boolean)
-    fun onLearnMoreClick(dialog: DialogInterface)
 }
 
 interface SimulationDialogInterface {

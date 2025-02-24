@@ -7,7 +7,6 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.provider.Settings
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -20,15 +19,12 @@ import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.ui.main.geofence.GeofenceBottomSheetHelper
 import com.aws.amazonlocation.ui.main.geofence.GeofenceUtils
-import com.aws.amazonlocation.ui.main.signin.SignInViewModel
 import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.tracking.TrackingUtils
 import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.KEY_LOCATION_PERMISSION
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
-import com.aws.amazonlocation.utils.KEY_REFRESH_TOKEN
 import com.aws.amazonlocation.utils.KEY_USER_DETAILS
 import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
@@ -51,13 +47,10 @@ import kotlinx.coroutines.runBlocking
 // SPDX-License-Identifier: MIT-0
 @AndroidEntryPoint
 open class BaseActivity : AppCompatActivity() {
-    var mIsUserLoggedIn: Boolean = false
     private var mAlertDialog: AlertDialog? = null
 
     @Inject
     lateinit var mPreferenceManager: PreferenceManager
-
-    lateinit var mGeofenceBottomSheetHelper: GeofenceBottomSheetHelper
 
     var mGeofenceUtils: GeofenceUtils? = null
 
@@ -72,7 +65,6 @@ open class BaseActivity : AppCompatActivity() {
     lateinit var mLocationProvider: LocationProvider
 
     private var subTitle = ""
-    val mSignInViewModel: SignInViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +92,6 @@ open class BaseActivity : AppCompatActivity() {
 
             val policy = ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
-            mGeofenceBottomSheetHelper = GeofenceBottomSheetHelper(this@BaseActivity)
             mGeofenceUtils = GeofenceUtils()
 
             val preference = PreferenceManager(applicationContext)
@@ -180,11 +171,6 @@ open class BaseActivity : AppCompatActivity() {
         mPreferenceManager.setValue(KEY_LOCATION_PERMISSION, 0)
     }
 
-    fun clearUserInFo() {
-        mIsUserLoggedIn = false
-        mPreferenceManager.removeValue(KEY_USER_DETAILS)
-    }
-
     fun bottomNavigationVisibility(isVisibility: Boolean) {
         if (this is MainActivity) {
             this.manageBottomNavigationVisibility(isVisibility)
@@ -231,12 +217,6 @@ open class BaseActivity : AppCompatActivity() {
             } else {
                 showErrorDialog(subTitle)
             }
-        }
-    }
-
-    fun refreshToken() {
-        if (!mPreferenceManager.getValue(KEY_REFRESH_TOKEN, "").isNullOrEmpty()) {
-            mSignInViewModel.refreshTokensWithOkHttp()
         }
     }
 

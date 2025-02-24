@@ -51,7 +51,6 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.common.onError
 import com.aws.amazonlocation.data.common.onLoading
 import com.aws.amazonlocation.data.common.onSuccess
-import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.GeofenceBottomSheetEnum
 import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.enum.RedirectionType
@@ -104,7 +103,6 @@ import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
 import com.aws.amazonlocation.utils.KEY_AVOID_TUNNELS
 import com.aws.amazonlocation.utils.KEY_AVOID_U_TURNS
-import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KEY_COLOR_SCHEMES
 import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
 import com.aws.amazonlocation.utils.KEY_POLITICAL_VIEW
@@ -119,7 +117,6 @@ import com.aws.amazonlocation.utils.MILES
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.STRING_FORMAT
 import com.aws.amazonlocation.utils.STRING_FORMAT_TIME
-import com.aws.amazonlocation.utils.SignOutInterface
 import com.aws.amazonlocation.utils.SimulationDialogInterface
 import com.aws.amazonlocation.utils.TURN_LEFT
 import com.aws.amazonlocation.utils.TURN_RIGHT
@@ -213,7 +210,6 @@ import org.maplibre.geojson.Point.fromLngLat
 class ExploreFragment :
     BaseFragment(),
     OnMapReadyCallback,
-    SignOutInterface,
     MapLibreMap.OnMapClickListener,
     MapHelper.IsMapLoadedInterface,
     MapLibreMap.OnScaleListener,
@@ -415,17 +411,7 @@ class ExploreFragment :
             )
             if (Units.checkInternetConnection(requireContext())) {
                 if (!mLocationProvider.checkClientInitialize()) {
-                    val mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-                    if (mAuthStatus == AuthEnum.SIGNED_IN.name) {
-                        if (mLocationProvider.isAuthTokenExpired()) {
-                            (activity as MainActivity).refreshToken()
-                        } else {
-                            async { (activity as MainActivity).initMobileClient() }.await()
-                            (activity as MainActivity).getTokenAndAttachPolicy()
-                        }
-                    } else {
-                        async { (activity as MainActivity).initMobileClient() }.await()
-                    }
+                    async { (activity as MainActivity).initMobileClient() }.await()
                 }
             }
             setMap(savedInstanceState)
@@ -5896,14 +5882,6 @@ class ExploreFragment :
     private fun setMap(savedInstanceState: Bundle?) {
         mBinding.mapView.onCreate(savedInstanceState)
         mBinding.mapView.getMapAsync(this)
-    }
-
-    override fun logout(
-        dialog: DialogInterface,
-        isDisconnectFromAWSRequired: Boolean
-    ) {
-        (activity as MainActivity).openSignOut()
-        dialog.dismiss()
     }
 
     override fun onMapReady(mapLibreMap: MapLibreMap) {
