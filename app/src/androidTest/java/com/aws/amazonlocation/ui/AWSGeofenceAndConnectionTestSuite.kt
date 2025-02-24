@@ -16,6 +16,6 @@ import org.junit.runners.Suite
     TrackingGeofenceExitTest::class,
     TrackingDeleteTrackingHistoryTest::class,
     GeofenceEditTest::class,
-    GeofenceDeleteTest::class,
+    GeofenceDeleteTest::class
 )
 class AWSGeofenceAndConnectionTestSuite

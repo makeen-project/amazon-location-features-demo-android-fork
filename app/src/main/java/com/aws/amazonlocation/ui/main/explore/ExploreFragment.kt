@@ -1125,22 +1125,6 @@ class ExploreFragment :
             }
         }
 
-    fun refreshAfterSignOut() {
-        val propertiesAws =
-            listOf(
-                Pair(
-                    AnalyticsAttribute.TRIGGERED_BY,
-                    AnalyticsAttributeValue.EXPLORER
-                )
-            )
-        (activity as MainActivity).analyticsUtils?.recordEvent(
-            EventType.SIGN_OUT_SUCCESSFUL,
-            propertiesAws
-        )
-        setUserProfile()
-        showError(getString(R.string.sign_out_successfully))
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     private fun initObserver() {
         mBinding.bottomSheetNavigation.apply {

@@ -21,7 +21,6 @@ import aws.sdk.kotlin.services.cognitoidentity.model.Credentials
 import aws.sdk.kotlin.services.iot.IotClient
 import aws.sdk.kotlin.services.iot.model.AttachPolicyRequest
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.TrackingEnum
 import com.aws.amazonlocation.databinding.ActivityMainBinding
 import com.aws.amazonlocation.ui.base.BaseActivity
@@ -44,7 +43,6 @@ import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
 import com.aws.amazonlocation.utils.KEY_AVOID_TUNNELS
 import com.aws.amazonlocation.utils.KEY_AVOID_U_TURNS
-import com.aws.amazonlocation.utils.KEY_CLOUD_FORMATION_STATUS
 import com.aws.amazonlocation.utils.KeyBoardUtils
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
@@ -86,7 +84,6 @@ class MainActivity :
     private lateinit var mNavHostFragment: NavHostFragment
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mNavController: NavController
-    private var mAuthStatus: String? = null
     private var mBottomSheetDialog: Dialog? = null
     private var alertDialog: Dialog? = null
     private var currentPage: String? = null
@@ -119,7 +116,6 @@ class MainActivity :
         }
     }
 
-
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +138,6 @@ class MainActivity :
         checkRtl()
         makeTransparentStatusBar()
         checkInternetObserver()
-        mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         mNavHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         mNavController = mNavHostFragment.navController
@@ -373,7 +368,6 @@ class MainActivity :
 
     fun getBottomNavHeight(): Int = mBinding.bottomNavigationMain.height
 
-
     private fun setSimulationIotPolicy() {
         val identityId = mLocationProvider.getIdentityId()
         if (identityId.isNullOrEmpty()) return
@@ -421,7 +415,6 @@ class MainActivity :
 
     private fun setBottomBar() {
         mBinding.bottomNavigationMain.setOnItemSelectedListener { item ->
-            mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
             when (item.itemId) {
                 R.id.menu_explore -> {
                     setExplorer()
@@ -437,25 +430,10 @@ class MainActivity :
                     }
 
                     mGeofenceUtils?.hideAllGeofenceBottomSheet()
-                    mAuthStatus =
-                        mPreferenceManager.getValue(
-                            KEY_CLOUD_FORMATION_STATUS,
-                            AuthEnum.DEFAULT.name
-                        )
-                    when (mAuthStatus) {
-                        AuthEnum.DEFAULT.name -> {
-                            hideSearchSheet(fragment)
-                            if (mTrackingUtils?.isTrackingSheetHidden() == true) {
-                                showTrackingPreview(fragment)
-                            }
-                        }
 
-                        else -> {
-                            hideSearchSheet(fragment)
-                            if (mTrackingUtils?.isTrackingSheetHidden() == true) {
-                                showTrackingPreview(fragment)
-                            }
-                        }
+                    hideSearchSheet(fragment)
+                    if (mTrackingUtils?.isTrackingSheetHidden() == true) {
+                        showTrackingPreview(fragment)
                     }
                     showAmazonLogo()
                 }
@@ -466,20 +444,7 @@ class MainActivity :
                         mNavController.navigate(R.id.explore_fragment)
                     }
                     mTrackingUtils?.hideTrackingBottomSheet()
-                    mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-                    if (!mAuthStatus.isNullOrEmpty()) {
-                        when (mAuthStatus) {
-                            AuthEnum.DEFAULT.name -> {
-                                hideSearchAndShowGeofence(fragment)
-                            }
-
-                            else -> {
-                                hideSearchAndShowGeofence(fragment)
-                            }
-                        }
-                    } else {
-                        hideSearchAndShowGeofence(fragment)
-                    }
+                    hideSearchAndShowGeofence(fragment)
                     showAmazonLogo()
                 }
 
