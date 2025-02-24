@@ -2,10 +2,8 @@ package com.aws.amazonlocation.di
 
 import android.content.Context
 import com.aws.amazonlocation.data.datasource.RemoteDataSourceImpl
-import com.aws.amazonlocation.data.repository.AuthImp
 import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.data.repository.LocationSearchImp
-import com.aws.amazonlocation.domain.repository.AuthRepository
 import com.aws.amazonlocation.domain.repository.GeofenceRepository
 import com.aws.amazonlocation.domain.repository.LocationSearchRepository
 import com.aws.amazonlocation.utils.BottomSheetHelper
@@ -67,27 +65,6 @@ object AppModule {
     @Provides
     @Singleton
     fun getTrackingProvider() = TrackingProvider()
-
-    @Provides
-    @Singleton
-    fun providesCommonRepositoryImp(
-        @ApplicationContext appContext: Context,
-        mLocationHelper: LocationProvider,
-        mPlacesProvider: PlacesProvider,
-        mRoutesProvider: RoutesProvider,
-        mGeofenceProvider: GeofenceProvider,
-        mTrackingProvider: TrackingProvider
-    ): AuthRepository =
-        AuthImp(
-            RemoteDataSourceImpl(
-                appContext,
-                mLocationHelper,
-                mPlacesProvider,
-                mRoutesProvider,
-                mGeofenceProvider,
-                mTrackingProvider
-            )
-        )
 
     @Provides
     @Singleton

@@ -15,6 +15,6 @@ import org.junit.runners.Suite
     TrackingDeleteTrackingHistoryTest::class,
     TrackingStartTrackingHistoryLoggedTest::class,
     TrackingStartTrackingMapDisplayTest::class,
-    TrackingDeleteTrackingHistoryTest::class,
+    TrackingDeleteTrackingHistoryTest::class
 )
 class AWSTrackingAndConnectionTestSuite

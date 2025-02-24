@@ -12,7 +12,6 @@ import com.aws.amazonlocation.domain.`interface`.LocationHistoryInterface
 import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
-import com.aws.amazonlocation.domain.`interface`.SignInInterface
 import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.isInternetAvailable
@@ -316,27 +315,6 @@ class RemoteDataSourceImpl(
                 mLocationProvider.getBaseActivity()
             )
         historyInterface.success(response)
-    }
-
-    override suspend fun fetchTokensWithOkHttp(
-        authorizationCode: String,
-        signInInterface: SignInInterface
-    ) {
-        val response = mLocationProvider.fetchTokensWithOkHttp(authorizationCode)
-        if (response != null) {
-            signInInterface.fetchTokensWithOkHttpSuccess("success", response)
-        } else {
-            signInInterface.fetchTokensWithOkHttpFailed("failed")
-        }
-    }
-
-    override suspend fun refreshTokensWithOkHttp(signInInterface: SignInInterface) {
-        val response = mLocationProvider.refreshTokensWithOkHttp()
-        if (response != null) {
-            signInInterface.refreshTokensWithOkHttpSuccess("success", response)
-        } else {
-            signInInterface.refreshTokensWithOkHttpFailed("failed")
-        }
     }
 
     override suspend fun getPlace(placeId: String, placeInterface: PlaceInterface) {

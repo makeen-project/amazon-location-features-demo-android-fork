@@ -21,7 +21,6 @@ import androidx.fragment.app.FragmentActivity
 import aws.sdk.kotlin.services.geoplaces.model.Address
 import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.enum.AuthEnum
 import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.response.SearchSuggestionData
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
@@ -162,22 +161,16 @@ class MapHelper(
 
     private fun setRegion() {
         region = ""
-        val mAuthStatus = mPreferenceManager?.getValue(KEY_CLOUD_FORMATION_STATUS, "")
-        if (mAuthStatus == AuthEnum.SIGNED_IN.name || mAuthStatus == AuthEnum.AWS_CONNECTED.name) {
-            region = mPreferenceManager?.getValue(KEY_USER_REGION, "")
-        }
-        if (region.isNullOrEmpty()) {
-            val defaultIdentityPoolId: String =
-                Units.getDefaultIdentityPoolId(
-                    mPreferenceManager?.getValue(
-                        KEY_SELECTED_REGION,
-                        regionDisplayName[0]
-                    ),
-                    mPreferenceManager?.getValue(KEY_NEAREST_REGION, "")
-                )
-            if (defaultIdentityPoolId == "null") return
-            region = defaultIdentityPoolId.split(":")[0]
-        }
+        val defaultIdentityPoolId: String =
+            Units.getDefaultIdentityPoolId(
+                mPreferenceManager?.getValue(
+                    KEY_SELECTED_REGION,
+                    regionDisplayName[0]
+                ),
+                mPreferenceManager?.getValue(KEY_NEAREST_REGION, "")
+            )
+        if (defaultIdentityPoolId == "null") return
+        region = defaultIdentityPoolId.split(":")[0]
     }
 
     fun updateStyle(

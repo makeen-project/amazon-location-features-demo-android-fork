@@ -9,7 +9,6 @@ import com.aws.amazonlocation.domain.`interface`.LocationHistoryInterface
 import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
-import com.aws.amazonlocation.domain.`interface`.SignInInterface
 import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 import java.util.Date
 import org.maplibre.android.geometry.LatLng
@@ -95,12 +94,6 @@ interface RemoteDataSource {
         trackerName: String,
         deviceId: String,
         historyInterface: LocationDeleteHistoryInterface
-    )
-
-    suspend fun fetchTokensWithOkHttp(authorizationCode: String, signInInterface: SignInInterface)
-
-    suspend fun refreshTokensWithOkHttp(
-        signInInterface: SignInInterface
     )
 
     suspend fun getPlace(
