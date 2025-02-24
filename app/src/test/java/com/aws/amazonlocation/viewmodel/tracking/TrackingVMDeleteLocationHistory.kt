@@ -67,7 +67,10 @@ class TrackingVMDeleteLocationHistory : BaseTest() {
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
-            Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, (result as HandleResult.Success).response == Responses.RESPONSE_DELETE_TRACKING_HISTORY.response)
+            Assert.assertTrue(
+                TEST_FAILED_DUE_TO_INCORRECT_DATA,
+                (result as HandleResult.Success).response == Responses.RESPONSE_DELETE_TRACKING_HISTORY.response
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }
@@ -94,7 +97,10 @@ class TrackingVMDeleteLocationHistory : BaseTest() {
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
             result = awaitItem()
             Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_ERROR, result is HandleResult.Error)
-            Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE, (result as HandleResult.Error).exception.messageResource == MOCK_ERROR)
+            Assert.assertTrue(
+                TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE,
+                (result as HandleResult.Error).exception.messageResource == MOCK_ERROR
+            )
             cancelAndIgnoreRemainingEvents()
         }
     }

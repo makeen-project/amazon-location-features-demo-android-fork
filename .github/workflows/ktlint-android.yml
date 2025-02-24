@@ -1,0 +1,48 @@
+name: KtLint Check
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ develop, main ]
+jobs:
+  ktlint-check:
+    name: KtLint Check
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby 3.3.5
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.5
+
+      - name: Setup Bundler
+        run: |
+          bundle config --local path ./vendor/bundle
+          bundle config --local deployment true
+          bundle install
+
+      - name: Setup Config
+        env:
+          custom_config: ${{ secrets.SECRETS }}
+        if: ${{ env.custom_config != '' }}
+        run: |
+          base64 -d <<< ${{ env.custom_config }} > custom.properties
+
+      - name: Ensure config files exist
+        run: |
+          touch custom.properties
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Run KtLint Check
+        run: ./gradlew ktlintCheck
+
+      - name: Upload KtLint Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ktlint-checkstyle-report
+          path: app/build/reports/ktlint/**/*.xml

@@ -1,12 +1,10 @@
 package com.aws.amazonlocation.domain.repository
 
-import aws.sdk.kotlin.services.georoutes.model.CalculateRoutesResponse
-import aws.sdk.kotlin.services.location.model.Step
 import com.aws.amazonlocation.domain.`interface`.DistanceInterface
-import com.aws.amazonlocation.domain.`interface`.NavigationDataInterface
 import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
+import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -17,7 +15,7 @@ interface LocationSearchRepository {
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface,
+        searchPlace: SearchPlaceInterface
     )
 
     suspend fun searchPlaceIndexForText(
@@ -33,9 +31,10 @@ interface LocationSearchRepository {
         lngDeparture: Double?,
         latDestination: Double?,
         lngDestination: Double?,
-        isAvoidFerries: Boolean?,
-        isAvoidTolls: Boolean?,
+        avoidanceOptions: ArrayList<AvoidanceOption>,
+        departOption: String,
         travelMode: String?,
+        time: String?,
         distanceInterface: DistanceInterface
     )
 

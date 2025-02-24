@@ -1,13 +1,13 @@
 package com.aws.amazonlocation.utils
 
 import com.aws.amazonlocation.BuildConfig
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withTimeout
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class LatencyChecker(private val client: OkHttpClient = defaultClient()) {
 

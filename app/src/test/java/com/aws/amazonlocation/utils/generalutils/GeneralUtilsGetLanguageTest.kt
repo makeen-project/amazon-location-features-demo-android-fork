@@ -2,7 +2,7 @@ package com.aws.amazonlocation.utils.generalutils
 
 import android.content.Context
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.setLocale
 import org.junit.Assert

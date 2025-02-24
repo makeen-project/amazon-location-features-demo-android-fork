@@ -45,8 +45,8 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
         tracking?.perform(click())
 
@@ -54,8 +54,8 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
         labelStartTracking?.perform(click())
         var mapbox: MapLibreMap? = null
@@ -79,10 +79,10 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
                         CameraUpdateFactory.newLatLngZoom(
                             LatLng(
                                 lastKnownLocation.latitude,
-                                lastKnownLocation.longitude,
+                                lastKnownLocation.longitude
                             ),
-                            14.0,
-                        ),
+                            14.0
+                        )
                     )
 
                     it.locationComponent.forceLocationUpdate(lastKnownLocation)
@@ -94,10 +94,10 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
             val latLng =
                 LatLng(
                     mockLocation.latitude,
-                    mockLocation.longitude,
+                    mockLocation.longitude
                 )
             (mActivityRule.activity as MainActivity).mTrackingUtils?.updateLatLngOnMap(
-                latLng,
+                latLng
             )
         }
         waitForView(allOf(withText(mActivityRule.activity.getString(R.string.ok)), isDisplayed()))
@@ -105,7 +105,7 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
         val dialogText = getAlertDialogMessage()
         Assert.assertTrue(
             TEST_FAILED_NOT_TRACKING_ENTERED_DIALOG,
-            dialogText.contains(TRACKING_ENTERED),
+            dialogText.contains(TRACKING_ENTERED)
         )
     }
 
@@ -116,16 +116,19 @@ class TrackingGeofenceEnterTest : BaseTestMainActivity() {
             object : ViewAction {
                 override fun getDescription(): String = "get AlertDialog message"
 
-                override fun getConstraints(): Matcher<View> = allOf(isDisplayed(), isAssignableFrom(TextView::class.java))
+                override fun getConstraints(): Matcher<View> = allOf(
+                    isDisplayed(),
+                    isAssignableFrom(TextView::class.java)
+                )
 
                 override fun perform(
                     uiController: UiController?,
-                    view: View?,
+                    view: View?
                 ) {
                     val textView = view as TextView?
                     messageText = textView?.text.toString()
                 }
-            },
+            }
         )
         return messageText
     }

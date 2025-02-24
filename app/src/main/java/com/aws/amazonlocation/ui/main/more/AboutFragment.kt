@@ -15,11 +15,9 @@ import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.about.VersionFragment
 import com.aws.amazonlocation.ui.main.attribution.AttributionFragment
-import com.aws.amazonlocation.ui.main.terms_condition.TermsAndConditionFragment
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
-import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.ui.main.termsCondition.TermsAndConditionFragment
+import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
-import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.KEY_URL
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
@@ -140,7 +138,9 @@ class AboutFragment : BaseFragment() {
                     findNavController().navigate(R.id.terms_conditions_fragment)
                 }
                 (activity as MainActivity).exitScreen()
-                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.TERMS_CONDITIONS)
+                (activity as MainActivity).setSelectedScreen(
+                    AnalyticsAttributeValue.TERMS_CONDITIONS
+                )
             }
             clHelp.setOnClickListener {
                 startActivity(

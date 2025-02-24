@@ -2,11 +2,18 @@ package com.aws.amazonlocation.ui.main.signin
 
 import android.app.Dialog
 import android.os.Bundle
-import android.view.*
+import android.view.KeyEvent
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.databinding.BottomSheetSigninConnectedBinding
 import com.aws.amazonlocation.domain.`interface`.SignInConnectInterface
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.KEY_POOL_ID
+import com.aws.amazonlocation.utils.KEY_RE_START_APP
+import com.aws.amazonlocation.utils.KEY_TAB_ENUM
+import com.aws.amazonlocation.utils.PreferenceManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -17,7 +24,9 @@ import javax.inject.Inject
 
 // SPDX-License-Identifier: MIT-0
 @AndroidEntryPoint
-class SignInConnectedBottomSheetFragment(private var mSignInConnectInterface: SignInConnectInterface) :
+class SignInConnectedBottomSheetFragment(
+    private var mSignInConnectInterface: SignInConnectInterface
+) :
     BottomSheetDialogFragment() {
 
     private lateinit var mBinding: BottomSheetSigninConnectedBinding
@@ -37,7 +46,9 @@ class SignInConnectedBottomSheetFragment(private var mSignInConnectInterface: Si
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
             val parentLayout =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheetDialog.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+                )
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
                 behaviour.isDraggable = false

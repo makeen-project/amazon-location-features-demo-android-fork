@@ -20,11 +20,11 @@ import com.aws.amazonlocation.getRandom0_01To1_0
 import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlin.properties.Delegates
 import org.hamcrest.CoreMatchers
 import org.hamcrest.core.AllOf.allOf
 import org.junit.Assert
 import org.junit.Test
-import kotlin.properties.Delegates
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
@@ -40,15 +40,15 @@ class GeofenceEditTest : BaseTestMainActivity() {
             onView(
                 allOf(
                     withId(R.id.card_geofence_map),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.cl_search_loader_geofence_list),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
             createOrGetGeoFence()
@@ -67,8 +67,8 @@ class GeofenceEditTest : BaseTestMainActivity() {
                 CoreMatchers.allOf(
                     withId(R.id.rv_geofence),
                     isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
+                    hasMinimumChildCount(1)
+                )
             )
 
         rv?.check { view, _ ->
@@ -89,23 +89,23 @@ class GeofenceEditTest : BaseTestMainActivity() {
             CoreMatchers.allOf(
                 withId(R.id.rv_geofence),
                 isDisplayed(),
-                hasMinimumChildCount(1),
-            ),
+                hasMinimumChildCount(1)
+            )
         )
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
-                    withText(geofenceName),
+                    withText(geofenceName)
                 ),
-                click(),
-            ),
+                click()
+            )
         )
         val seekbar =
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.seekbar_geofence_radius),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
         seekbar?.check { view, _ ->
@@ -122,8 +122,8 @@ class GeofenceEditTest : BaseTestMainActivity() {
             CoreMatchers.allOf(
                 withId(R.id.rv_geofence),
                 isDisplayed(),
-                hasMinimumChildCount(1),
-            ),
+                hasMinimumChildCount(1)
+            )
         )
     }
 
@@ -132,28 +132,28 @@ class GeofenceEditTest : BaseTestMainActivity() {
             CoreMatchers.allOf(
                 withId(R.id.rv_geofence),
                 isDisplayed(),
-                hasMinimumChildCount(1),
-            ),
+                hasMinimumChildCount(1)
+            )
         )
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                hasDescendant(withText(geofenceName)),
-            ),
+                hasDescendant(withText(geofenceName))
+            )
         )
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
-                    withText(geofenceName),
+                    withText(geofenceName)
                 ),
-                click(),
-            ),
+                click()
+            )
         )
         val seekbar =
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.seekbar_geofence_radius),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
         seekbar?.check { view, _ ->
             if (view is SeekBar) {

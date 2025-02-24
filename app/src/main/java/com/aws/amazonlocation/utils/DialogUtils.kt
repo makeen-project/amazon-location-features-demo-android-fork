@@ -149,7 +149,6 @@ fun Context.userSignOutDialog() {
     mDialog.show()
 }
 
-
 fun Context.simulationExit(simulationInterface: SimulationDialogInterface) {
     val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
     mDialog.setMessage(this.resources.getString(R.string.simulation_exit_title))

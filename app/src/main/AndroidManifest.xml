@@ -34,7 +34,7 @@
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="34">
         <activity
-            android:name=".ui.main.web_view.WebViewActivity"
+            android:name=".ui.main.webView.WebViewActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false"
             tools:ignore="LockedOrientationActivity" />

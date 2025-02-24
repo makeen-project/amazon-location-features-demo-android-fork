@@ -31,8 +31,8 @@ class TrackingStopTrackingTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             val itemCount = 0
@@ -40,8 +40,8 @@ class TrackingStopTrackingTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             val rvTracking =
@@ -57,13 +57,13 @@ class TrackingStopTrackingTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.label_stop_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             Assert.assertTrue(
                 TEST_FAILED_NO_UPDATE_TRACKING_HISTORY,
-                newItemCount > itemCount,
+                newItemCount > itemCount
             )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")

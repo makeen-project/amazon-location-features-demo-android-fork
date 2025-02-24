@@ -40,22 +40,22 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             waitForView(
                 allOf(
                     withText(mActivityRule.activity.getString(R.string.label_enable_tracking)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
             waitForView(
                 allOf(
                     withId(R.id.btn_enable_tracking),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             waitForView(allOf(withId(R.id.edt_identity_pool_id), isDisplayed()))
@@ -77,8 +77,8 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
                 scrollForView(
                     allOf(
                         withId(R.id.edt_user_pool_client_id),
-                        isCompletelyDisplayed(),
-                    ),
+                        isCompletelyDisplayed()
+                    )
                 ) {
                     appViews.scrollForward(2)
                 }
@@ -106,7 +106,7 @@ class TrackingAwsConnectTest : BaseTestMainActivity() {
             val mPoolId = pm.getValue(KEY_POOL_ID, "")
             Assert.assertTrue(
                 TEST_FAILED_INVALID_IDENTITY_POOL_ID,
-                mPoolId == BuildConfig.IDENTITY_POOL_ID,
+                mPoolId == BuildConfig.IDENTITY_POOL_ID
             )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")

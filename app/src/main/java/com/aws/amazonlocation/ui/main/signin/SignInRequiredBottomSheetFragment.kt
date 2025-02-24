@@ -20,7 +20,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 // SPDX-License-Identifier: MIT-0
 @AndroidEntryPoint
-class SignInRequiredBottomSheetFragment(private var mSignInRequiredInterface: SignInRequiredInterface) : BottomSheetDialogFragment() {
+class SignInRequiredBottomSheetFragment(
+    private var mSignInRequiredInterface: SignInRequiredInterface
+) : BottomSheetDialogFragment() {
 
     private lateinit var mBinding: BottomSheetSigninRequiredBinding
 
@@ -38,7 +40,9 @@ class SignInRequiredBottomSheetFragment(private var mSignInRequiredInterface: Si
             dialog.setOnShowListener {
                 val bottomSheetDialog = it as BottomSheetDialog
                 val parentLayout =
-                    bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                    bottomSheetDialog.findViewById<View>(
+                        com.google.android.material.R.id.design_bottom_sheet
+                    )
                 parentLayout?.let { layout ->
                     val behaviour = BottomSheetBehavior.from(layout)
                     behaviour.isDraggable = false

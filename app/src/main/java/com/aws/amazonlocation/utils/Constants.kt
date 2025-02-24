@@ -64,8 +64,11 @@ const val DELAY_LANGUAGE_3000 = 3000L
 const val CLICK_TIME_DIFFERENCE = 1500
 const val TIME_OUT = 20000L
 const val MQTT_CONNECT_TIME_OUT = 1000L
-const val KEY_AVOID_TOLLS = "Avoid Tolls"
-const val KEY_AVOID_FERRIES = "Avoid Ferries"
+const val KEY_AVOID_TOLLS = "key_avoid_tolls"
+const val KEY_AVOID_FERRIES = "key_avoid_ferries"
+const val KEY_AVOID_DIRT_ROADS = "key_avoid_dirt_roads"
+const val KEY_AVOID_U_TURNS = "key_avoid_u_turns"
+const val KEY_AVOID_TUNNELS = "key_avoid_tunnels"
 const val AWS_CLOUD_INFORMATION_FRAGMENT = "AwsCloudInformationFragment"
 const val SETTING_FRAGMENT = "SettingFragment"
 const val ABOUT_FRAGMENT = "AboutFragment"
@@ -84,7 +87,6 @@ const val CHANNEL_ID = "my_channel_simulation"
 const val CHANNEL_NAME = "simulation Notification Channel"
 const val GROUP_KEY_WORK_SIMULATION = BuildConfig.APPLICATION_ID + "SIMULATION"
 const val STRING_REPLACE_KEY = "**"
-const val PREFS_NAME_AUTH = "software.amazon.location.auth"
 const val DEFAULT_COUNTRY = "US"
 
 const val KEY_ID_TOKEN = "key_id_token"
@@ -97,6 +99,7 @@ const val IOT_POLICY = "AmazonLocationIotPolicy"
 const val IOT_POLICY_UN_AUTH = "AmazonLocationIotPolicyUnauth"
 
 const val STRING_FORMAT = "%.2f, %.2f"
+const val STRING_FORMAT_TIME = "%02d:%02d"
 const val ATTRIBUTE_LIGHT = "Light"
 const val ATTRIBUTE_DARK = "Dark"
 
@@ -130,8 +133,25 @@ const val LANGUAGE_CODE_ARABIC = "ar"
 const val LANGUAGE_CODE_HEBREW = "iw"
 const val LANGUAGE_CODE_HINDI = "hi"
 const val LANGUAGE_CODE_HEBREW_1 = "he"
-const val LANGUAGE_CODE_ZH_HANT= "zh-Hant"
-const val LANGUAGE_CODE_ZH= "zh"
+const val LANGUAGE_CODE_ZH_HANT = "zh-Hant"
+const val LANGUAGE_CODE_ZH = "zh"
+
+const val TURN_LEFT = "Left"
+const val TURN_RIGHT = "Right"
+const val TYPE_TURN = "Turn"
+const val TYPE_ARRIVE = "Arrive"
+const val TYPE_CONTINUE = "Continue"
+const val TYPE_CONTINUE_HIGHWAY = "ContinueHighway"
+const val TYPE_DEPART = "Depart"
+const val TYPE_ENTER_HIGHWAY = "EnterHighway"
+const val TYPE_EXIT = "Exit"
+const val TYPE_KEEP = "Keep"
+const val TYPE_RAMP = "Ramp"
+const val TYPE_ROUNDABOUT_ENTER = "RoundaboutEnter"
+const val TYPE_ROUNDABOUT_EXIT = "RoundaboutExit"
+const val TYPE_ROUNDABOUT_PASS = "RoundaboutPass"
+const val TYPE_U_TURN = "UTurn"
+const val TYPE_SDK_UNKNOWN = "SdkUnknown"
 
 val regionMapList: MutableMap<String, String> = mutableMapOf(
     Pair("US East (Ohio) us-east-2", "us-east-2"),
@@ -149,7 +169,11 @@ val regionMapList: MutableMap<String, String> = mutableMapOf(
 )
 
 val regionList = arrayListOf("us-east-1", "eu-west-1")
-val regionDisplayName = arrayListOf("Automatic", "Europe (Ireland) eu-west-1", "US-East (N. Virginia) us-east-1")
+val regionDisplayName = arrayListOf(
+    "Automatic",
+    "Europe (Ireland) eu-west-1",
+    "US-East (N. Virginia) us-east-1"
+)
 
 /**
  *  * Validate Latitude and Longitude from string.
@@ -177,8 +201,9 @@ object Credentials {
 
 object Distance {
     const val DISTANCE_IN_METER_30 = 30
-    const val DISTANCE_IN_METER_20 = 20
-    const val DISTANCE_IN_METER_10 = 10
+    const val DISTANCE_FOR_WALK = 15
+    const val DISTANCE_FOR_DRIVE_TRUCK = 50
+    const val DISTANCE_FOR_SCOOTER = 30
 }
 
 object MapCameraZoom {
@@ -234,7 +259,10 @@ object TrackerCons {
 
 object DateFormat {
     const val MMM_DD_YYYY = "MMM dd, yyyy"
-    const val HH_MM_AA = "HH:mm aa"
+    const val HH_MM_AA = "hh:mm aa"
+    const val HH_MM = "HH:mm"
+    const val MM_DD_YYYY_HH_MM = "MM/dd/yyyy hh:mm aa"
+    const val YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ssXXX"
 }
 
 val simulationCollectionName = arrayListOf(
@@ -263,7 +291,7 @@ val simulationFields = mapOf(
     "DEFAULT_IDENTITY_POOL_ID_EU" to BuildConfig.DEFAULT_IDENTITY_POOL_ID_EU,
     "DEFAULT_REGION" to BuildConfig.DEFAULT_REGION,
     "SIMULATION_WEB_SOCKET_URL" to BuildConfig.SIMULATION_WEB_SOCKET_URL,
-    "SIMULATION_WEB_SOCKET_URL_EU" to BuildConfig.SIMULATION_WEB_SOCKET_URL_EU,
+    "SIMULATION_WEB_SOCKET_URL_EU" to BuildConfig.SIMULATION_WEB_SOCKET_URL_EU
 )
 
 val analyticsFields = mapOf(
@@ -334,6 +362,9 @@ object AnalyticsAttribute {
     const val ACTION = "action"
     const val AVOID_FERRIES = "AvoidFerries"
     const val AVOID_TOLLS = "AvoidTolls"
+    const val AVOID_DIRT_ROADS = "AvoidDirtRoads"
+    const val AVOID_U_TURNS = "AvoidUTurns"
+    const val AVOID_TUNNELS = "AvoidTunnels"
     const val GEOFENCE_ID = "geofenceId"
     const val EVENT_TYPE = "eventType"
     const val ERROR = "error"

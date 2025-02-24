@@ -34,9 +34,9 @@ import kotlinx.coroutines.runBlocking
 
 class AnalyticsUtils(
     private val mLocationProvider: LocationProvider,
-    private val mPreferenceManager: PreferenceManager,
+    private val mPreferenceManager: PreferenceManager
 ) {
-    private var credentialProvider: CredentialsProvider?= null
+    private var credentialProvider: CredentialsProvider? = null
     private var pinpointClient: PinpointClient? = null
     private val platformType = "Android"
     private var endpointId: String = mPreferenceManager.getValue(KEY_END_POINT, "") ?: ""
@@ -60,7 +60,7 @@ class AnalyticsUtils(
     }
 
     private suspend fun createOrUpdateEndpoint() {
-        val country = if(!Locale.getDefault().country.isNullOrEmpty()) Locale.getDefault().country else DEFAULT_COUNTRY
+        val country = if (!Locale.getDefault().country.isNullOrEmpty()) Locale.getDefault().country else DEFAULT_COUNTRY
         val endpointRequest =
             UpdateEndpointRequest {
                 applicationId = BuildConfig.ANALYTICS_APP_ID
@@ -87,7 +87,7 @@ class AnalyticsUtils(
 
     fun recordEvent(
         event: String,
-        properties: List<Pair<String, String>> = emptyList(),
+        properties: List<Pair<String, String>> = emptyList()
     ) {
         if (BuildConfig.ANALYTICS_APP_ID == "null") return
         CoroutineScope(Dispatchers.IO).launch {
@@ -104,9 +104,9 @@ class AnalyticsUtils(
                                 EventSession(
                                     session.id,
                                     session.startTimestamp,
-                                    Instant.now().toString(),
-                                ),
-                            ),
+                                    Instant.now().toString()
+                                )
+                            )
                         )
                     } else {
                         listOf(EventInput(eventType = event, attributes = emptyMap()))
@@ -115,7 +115,7 @@ class AnalyticsUtils(
                 val mAuthStatus =
                     mPreferenceManager.getValue(
                         KEY_CLOUD_FORMATION_STATUS,
-                        AuthEnum.DEFAULT.name,
+                        AuthEnum.DEFAULT.name
                     )
                 var connectedStatus = AnalyticsAttribute.USER_AWS_ACCOUNT_CONNECTION_STATUS_NOT_CONNECTED
                 var authStatus = AnalyticsAttribute.USER_AWS_ACCOUNT_CONNECTION_STATUS_UNAUTHENTICATED
@@ -153,10 +153,10 @@ class AnalyticsUtils(
                 val finalEvents =
                     if (sessionStopEvent != null) {
                         events +
-                                EventInput(
-                                    EventTypeEnum.SESSION_END.eventType,
-                                    sessionStopEvent.attributes,
-                                )
+                            EventInput(
+                                EventTypeEnum.SESSION_END.eventType,
+                                sessionStopEvent.attributes
+                            )
                     } else {
                         events
                     }
@@ -190,10 +190,10 @@ class AnalyticsUtils(
                             }
                     }
                 pinpointClient?.putEvents(putEventsRequest)
-                if (sessionStopEvent != null){
+                if (sessionStopEvent != null) {
                     session = SessionData()
                 }
-            } catch (e:Exception) {
+            } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
@@ -224,7 +224,7 @@ class AnalyticsUtils(
 
     fun stopSession() {
         recordEvent(
-            EventTypeEnum.SESSION_STOP.eventType,
+            EventTypeEnum.SESSION_STOP.eventType
         )
     }
 }

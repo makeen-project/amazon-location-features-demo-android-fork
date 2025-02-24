@@ -77,9 +77,9 @@ class SignInViewModelTest : BaseTest() {
                             Request
                                 .Builder()
                                 .url("https://yourdomain.com/oauth2/token")
-                                .build(),
+                                .build()
                         ).body(
-                            responseBody.toResponseBody("application/json".toMediaTypeOrNull()),
+                            responseBody.toResponseBody("application/json".toMediaTypeOrNull())
                         ).build()
                 callback.fetchTokensWithOkHttpSuccess("success", response)
             }
@@ -87,17 +87,22 @@ class SignInViewModelTest : BaseTest() {
             signInViewModel.fetchTokenResponse.test {
                 signInViewModel.fetchTokensWithOkHttp("test")
                 var result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_LOADING,
+                    result is HandleResult.Loading
+                )
                 result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS,
+                    result is HandleResult.Success
+                )
                 Assert.assertTrue(
                     TEST_FAILED_DUE_TO_INCORRECT_DATA,
-                    (result as HandleResult.Success).response == "success",
+                    (result as HandleResult.Success).response == "success"
                 )
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 
     @Test
     fun fetchTokensWithOkHttpHttpFail() =
@@ -115,7 +120,7 @@ class SignInViewModelTest : BaseTest() {
                             Request
                                 .Builder()
                                 .url("https://yourdomain.com/oauth2/token")
-                                .build(),
+                                .build()
                         ).build()
                 callback.fetchTokensWithOkHttpSuccess("error", response)
             }
@@ -123,12 +128,18 @@ class SignInViewModelTest : BaseTest() {
             signInViewModel.fetchTokenResponse.test {
                 signInViewModel.fetchTokensWithOkHttp("test")
                 var result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_LOADING,
+                    result is HandleResult.Loading
+                )
                 result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Error)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS,
+                    result is HandleResult.Error
+                )
                 Assert.assertTrue(
                     TEST_FAILED_DUE_TO_INCORRECT_DATA,
-                    (result as HandleResult.Error).exception.messageResource == "fail",
+                    (result as HandleResult.Error).exception.messageResource == "fail"
                 )
                 cancelAndIgnoreRemainingEvents()
             }
@@ -145,17 +156,22 @@ class SignInViewModelTest : BaseTest() {
             signInViewModel.fetchTokenResponse.test {
                 signInViewModel.fetchTokensWithOkHttp("test")
                 var result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_LOADING,
+                    result is HandleResult.Loading
+                )
                 result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Error)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS,
+                    result is HandleResult.Error
+                )
                 Assert.assertTrue(
                     TEST_FAILED_DUE_TO_INCORRECT_DATA,
-                    (result as HandleResult.Error).exception.messageResource == "fail",
+                    (result as HandleResult.Error).exception.messageResource == "fail"
                 )
                 cancelAndIgnoreRemainingEvents()
             }
         }
-
 
     @Test
     fun refreshTokensWithOkHttpSuccess() =
@@ -181,9 +197,9 @@ class SignInViewModelTest : BaseTest() {
                             Request
                                 .Builder()
                                 .url("https://yourdomain.com/oauth2/token")
-                                .build(),
+                                .build()
                         ).body(
-                            responseBody.toResponseBody("application/json".toMediaTypeOrNull()),
+                            responseBody.toResponseBody("application/json".toMediaTypeOrNull())
                         ).build()
                 callback.refreshTokensWithOkHttpSuccess("success", response)
             }
@@ -191,12 +207,18 @@ class SignInViewModelTest : BaseTest() {
             signInViewModel.fetchTokenResponse.test {
                 signInViewModel.refreshTokensWithOkHttp()
                 var result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_LOADING,
+                    result is HandleResult.Loading
+                )
                 result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Success)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS,
+                    result is HandleResult.Success
+                )
                 Assert.assertTrue(
                     TEST_FAILED_DUE_TO_INCORRECT_DATA,
-                    (result as HandleResult.Success).response == "success",
+                    (result as HandleResult.Success).response == "success"
                 )
                 cancelAndIgnoreRemainingEvents()
             }
@@ -205,7 +227,7 @@ class SignInViewModelTest : BaseTest() {
     @Test
     fun refreshTokensWithOkHttpHttpFail() =
         runTest {
-            Mockito.`when`(mRemoteDataSourceImpl.refreshTokensWithOkHttp( any())).thenAnswer {
+            Mockito.`when`(mRemoteDataSourceImpl.refreshTokensWithOkHttp(any())).thenAnswer {
                 val callback: SignInInterface = it.arguments[0] as SignInInterface
 
                 val response =
@@ -218,7 +240,7 @@ class SignInViewModelTest : BaseTest() {
                             Request
                                 .Builder()
                                 .url("https://yourdomain.com/oauth2/token")
-                                .build(),
+                                .build()
                         ).build()
                 callback.refreshTokensWithOkHttpSuccess("error", response)
             }
@@ -226,12 +248,18 @@ class SignInViewModelTest : BaseTest() {
             signInViewModel.fetchTokenResponse.test {
                 signInViewModel.refreshTokensWithOkHttp()
                 var result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_LOADING,
+                    result is HandleResult.Loading
+                )
                 result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Error)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS,
+                    result is HandleResult.Error
+                )
                 Assert.assertTrue(
                     TEST_FAILED_DUE_TO_INCORRECT_DATA,
-                    (result as HandleResult.Error).exception.messageResource == "fail",
+                    (result as HandleResult.Error).exception.messageResource == "fail"
                 )
                 cancelAndIgnoreRemainingEvents()
             }
@@ -248,12 +276,18 @@ class SignInViewModelTest : BaseTest() {
             signInViewModel.fetchTokenResponse.test {
                 signInViewModel.refreshTokensWithOkHttp()
                 var result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_LOADING, result is HandleResult.Loading)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_LOADING,
+                    result is HandleResult.Loading
+                )
                 result = awaitItem()
-                Assert.assertTrue(TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS, result is HandleResult.Error)
+                Assert.assertTrue(
+                    TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS,
+                    result is HandleResult.Error
+                )
                 Assert.assertTrue(
                     TEST_FAILED_DUE_TO_INCORRECT_DATA,
-                    (result as HandleResult.Error).exception.messageResource == "fail",
+                    (result as HandleResult.Error).exception.messageResource == "fail"
                 )
                 cancelAndIgnoreRemainingEvents()
             }

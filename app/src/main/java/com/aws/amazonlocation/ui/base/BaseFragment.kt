@@ -5,11 +5,11 @@ import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.utils.providers.LocationProvider
-import com.aws.amazonlocation.utils.providers.PlacesProvider
 import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.MapHelper
 import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.providers.LocationProvider
+import com.aws.amazonlocation.utils.providers.PlacesProvider
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -48,7 +48,9 @@ abstract class BaseFragment : Fragment() {
             error,
             Snackbar.LENGTH_SHORT
         )
-        val textView = snackBar.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+        val textView = snackBar.view.findViewById<TextView>(
+            com.google.android.material.R.id.snackbar_text
+        )
         textView.maxLines = 10
         snackBar.show()
     }

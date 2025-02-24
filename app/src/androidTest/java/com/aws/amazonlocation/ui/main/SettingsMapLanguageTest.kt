@@ -3,10 +3,19 @@ package com.aws.amazonlocation.ui.main
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.*
-import com.aws.amazonlocation.*
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.aws.amazonlocation.BaseTestMainActivity
+import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_LANGUAGE
+import com.aws.amazonlocation.TEST_WORD_LANGUAGE_BO
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.IS_APP_FIRST_TIME_OPENED
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
@@ -35,8 +44,8 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_language),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         val language =
@@ -47,8 +56,8 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withId(R.id.tv_map_language_description),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
         tvMapLanguageDescription?.check { view, _ ->
@@ -63,15 +72,15 @@ class SettingsMapLanguageTest : BaseTestMainActivity() {
             AllOf.allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_style),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
     }
 }

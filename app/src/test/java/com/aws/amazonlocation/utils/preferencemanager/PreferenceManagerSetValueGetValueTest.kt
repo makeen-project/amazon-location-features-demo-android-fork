@@ -1,7 +1,20 @@
 package com.aws.amazonlocation.utils.preferencemanager
 
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.DELAY_1000
+import com.aws.amazonlocation.mock.PREF_MANAGER_KEY_BOOL
+import com.aws.amazonlocation.mock.PREF_MANAGER_KEY_DOUBLE
+import com.aws.amazonlocation.mock.PREF_MANAGER_KEY_INT
+import com.aws.amazonlocation.mock.PREF_MANAGER_KEY_LONG
+import com.aws.amazonlocation.mock.PREF_MANAGER_KEY_STRING
+import com.aws.amazonlocation.mock.PREF_MANAGER_KEY_STRING_SET
+import com.aws.amazonlocation.mock.PREF_MANAGER_VALUE_BOOL
+import com.aws.amazonlocation.mock.PREF_MANAGER_VALUE_DOUBLE
+import com.aws.amazonlocation.mock.PREF_MANAGER_VALUE_INT
+import com.aws.amazonlocation.mock.PREF_MANAGER_VALUE_LONG
+import com.aws.amazonlocation.mock.PREF_MANAGER_VALUE_STRING
+import com.aws.amazonlocation.mock.PREF_MANAGER_VALUE_STRING_SET
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.PreferenceManager
 import org.junit.Assert
 import org.junit.Test

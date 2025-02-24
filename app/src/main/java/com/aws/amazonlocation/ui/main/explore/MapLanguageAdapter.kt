@@ -14,7 +14,7 @@ import com.aws.amazonlocation.databinding.ItemMapLanguageBinding
 class MapLanguageAdapter(
     private val languageData: ArrayList<LanguageData>,
     private val isRtl: Boolean,
-    var placeInterface: MapLanguageInterface,
+    var placeInterface: MapLanguageInterface
 ) :
     RecyclerView.Adapter<MapLanguageAdapter.SearchPoliticalVH>() {
 
@@ -37,7 +37,7 @@ class MapLanguageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchPoliticalVH {
         return SearchPoliticalVH(
-            ItemMapLanguageBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemMapLanguageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
@@ -71,5 +71,4 @@ class MapLanguageAdapter(
             )
         }
     }
-
 }

@@ -30,16 +30,18 @@ class SettingRouteOptionAvailableTest : BaseTestMainActivity() {
                 .onView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.menu_setting)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 ).perform(click())
 
             Espresso
                 .onView(
                     allOf(
-                        withText(mActivityRule.activity.getString(R.string.label_default_route_options)),
-                        isDisplayed(),
-                    ),
+                        withText(
+                            mActivityRule.activity.getString(R.string.label_default_route_options)
+                        ),
+                        isDisplayed()
+                    )
                 ).perform(click())
 
             waitForView(allOf(withId(R.id.tv_avoid_ferries), isDisplayed()), onNotFound = {
