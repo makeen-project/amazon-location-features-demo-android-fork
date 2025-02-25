@@ -11,7 +11,6 @@ import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
-import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.show
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -29,15 +28,6 @@ class GeofenceUtils {
     private var mActivity: Activity? = null
     private var mGeofenceInterface: GeofenceInterface? = null
     private var isTablet = false
-    private var preferenceManager: PreferenceManager? = null
-
-    fun setMapBox(
-        activity: Activity,
-        prefrenceManager: PreferenceManager
-    ) {
-        this.mActivity = activity
-        this.preferenceManager = prefrenceManager
-    }
 
     fun isGeofenceListExpandedOrHalfExpand(): Boolean {
         return mBottomSheetGeofenceListBehavior?.state == BottomSheetBehavior.STATE_EXPANDED || mBottomSheetGeofenceListBehavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -116,8 +106,6 @@ class GeofenceUtils {
         mBottomSheetGeofenceListBehavior?.isDraggable = true
         mBottomSheetGeofenceListBehavior?.isFitToContents = false
         mBindingGeofenceList?.clEmptyGeofenceList?.post {
-
-
             mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         }
         mBindingGeofenceList?.clEmptyGeofenceList?.context?.let {

@@ -24,7 +24,6 @@ import com.aws.amazonlocation.ui.main.tracking.TrackingUtils
 import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.KEY_LOCATION_PERMISSION
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
-import com.aws.amazonlocation.utils.KEY_USER_DETAILS
 import com.aws.amazonlocation.utils.LatencyChecker
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
@@ -33,8 +32,6 @@ import com.aws.amazonlocation.utils.providers.LocationProvider
 import com.aws.amazonlocation.utils.regionList
 import com.aws.amazonlocation.utils.restartApplication
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.delay

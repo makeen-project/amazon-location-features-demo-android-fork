@@ -6,9 +6,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.enum.TrackingEnum
 import com.aws.amazonlocation.databinding.BottomSheetTrackingBinding
-import com.aws.amazonlocation.domain.`interface`.TrackingInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
@@ -34,14 +32,6 @@ class TrackingUtils(
     private var mBottomSheetTrackingBehavior: BottomSheetBehavior<ConstraintLayout>? = null
     private var mBindingTracking: BottomSheetTrackingBinding? = null
     private var mFragmentActivity: FragmentActivity? = null
-    private var mTrackingInterface: TrackingInterface? = null
-    private var mActivity: Activity? = null
-
-    fun setMapBox(
-        activity: Activity,
-    ) {
-        this.mActivity = activity
-    }
 
     fun isTrackingExpandedOrHalfExpand(): Boolean {
         return mBottomSheetTrackingBehavior?.state == BottomSheetBehavior.STATE_EXPANDED || mBottomSheetTrackingBehavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -60,41 +50,32 @@ class TrackingUtils(
         mBottomSheetTrackingBehavior?.isDraggable = true
     }
 
-    fun showTrackingBottomSheet(enableTracking: TrackingEnum) {
+    fun showTrackingBottomSheet() {
         mBottomSheetTrackingBehavior?.isHideable = false
-        when (enableTracking) {
-            TrackingEnum.ENABLE_TRACKING -> {
-                mBottomSheetTrackingBehavior?.isDraggable = true
-                mBottomSheetTrackingBehavior?.isFitToContents = false
-                mBindingTracking?.clEnableTracking?.context?.let {
-                    if ((activity as MainActivity).isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(
-                            R.dimen.dp_150
-                        )
-                    } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(
-                            R.dimen.dp_110
-                        )
-                    }
-                    mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-                }
-                mBindingTracking?.apply {
-                    clPersistentBottomSheet.show()
-                    clEnableTracking.show()
-                }
+        mBottomSheetTrackingBehavior?.isDraggable = true
+        mBottomSheetTrackingBehavior?.isFitToContents = false
+        mBindingTracking?.clEnableTracking?.context?.let {
+            if ((activity as MainActivity).isTablet) {
+                mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(
+                    R.dimen.dp_150
+                )
+            } else {
+                mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(
+                    R.dimen.dp_110
+                )
             }
-            TrackingEnum.TRACKING_HISTORY -> {
-                mTrackingInterface?.getCheckPermission()
-            }
+            mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        }
+        mBindingTracking?.apply {
+            clPersistentBottomSheet.show()
+            clEnableTracking.show()
         }
     }
 
     fun initTrackingView(
         fragmentActivity: FragmentActivity?,
-        bottomSheetGeofenceList: BottomSheetTrackingBinding,
-        mGeofenceInterface: TrackingInterface
+        bottomSheetGeofenceList: BottomSheetTrackingBinding
     ) {
-        this.mTrackingInterface = mGeofenceInterface
         this.mFragmentActivity = fragmentActivity
         this.mBindingTracking = bottomSheetGeofenceList
         initTrackingBottomSheet()

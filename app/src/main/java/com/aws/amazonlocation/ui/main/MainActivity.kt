@@ -5,13 +5,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Window
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -21,7 +18,6 @@ import aws.sdk.kotlin.services.cognitoidentity.model.Credentials
 import aws.sdk.kotlin.services.iot.IotClient
 import aws.sdk.kotlin.services.iot.model.AttachPolicyRequest
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.enum.TrackingEnum
 import com.aws.amazonlocation.databinding.ActivityMainBinding
 import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.ui.main.explore.ExploreFragment
@@ -37,7 +33,6 @@ import com.aws.amazonlocation.utils.Durations.DELAY_FOR_FRAGMENT_LOAD
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.IOT_POLICY_UN_AUTH
 import com.aws.amazonlocation.utils.IS_APP_FIRST_TIME_OPENED
-import com.aws.amazonlocation.utils.IS_LOCATION_TRACKING_ENABLE
 import com.aws.amazonlocation.utils.KEY_AVOID_DIRT_ROADS
 import com.aws.amazonlocation.utils.KEY_AVOID_FERRIES
 import com.aws.amazonlocation.utils.KEY_AVOID_TOLLS
@@ -79,7 +74,6 @@ class MainActivity :
     private var isSessionStarted: Boolean = false
     private var isMapStyleChangeCalled: Boolean = false
     private var isAppNotFirstOpened: Boolean = false
-    private var reStartApp: Boolean = false
     private var isSimulationPolicyAttached: Boolean = false
     private lateinit var mNavHostFragment: NavHostFragment
     private lateinit var mBinding: ActivityMainBinding
@@ -364,8 +358,6 @@ class MainActivity :
         mBinding.bottomNavigationMain.selectedItemId = R.id.menu_geofence
     }
 
-    fun getBottomNavHeight(): Int = mBinding.bottomNavigationMain.height
-
     private fun setSimulationIotPolicy() {
         val identityId = mLocationProvider.getIdentityId()
         if (identityId.isNullOrEmpty()) return
@@ -476,7 +468,7 @@ class MainActivity :
                 delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
             mBottomSheetHelper.hideSearchBottomSheet(true)
-            mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
+            mTrackingUtils?.showTrackingBottomSheet()
         }
     }
 
@@ -625,63 +617,6 @@ class MainActivity :
         return false
     }
 
-    private fun showGeofence() {
-        val fragment = mNavHostFragment.childFragmentManager.fragments[0]
-        if (fragment is ExploreFragment) {
-            if (!isTablet) {
-                fragment.hideDirectionAndCurrentLocationIcon()
-            }
-        }
-        lifecycleScope.launch {
-            if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
-            }
-            mBottomSheetHelper.hideSearchBottomSheet(true)
-        }
-        exitScreen()
-        setSelectedScreen(AnalyticsAttributeValue.GEOFENCES)
-    }
-
-    private fun showTracking() {
-        val fragment =
-            mNavHostFragment.childFragmentManager.fragments[0]
-        if (fragment is ExploreFragment) {
-            fragment.showDirectionAndCurrentLocationIcon()
-            if (!isTablet) {
-                fragment.hideMapStyleSheet()
-            }
-        }
-        lifecycleScope.launch {
-            if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
-            }
-            mBottomSheetHelper.hideSearchBottomSheet(true)
-            showTrackingBottomSheet()
-        }
-        exitScreen()
-        setSelectedScreen(AnalyticsAttributeValue.TRACKERS)
-    }
-
-    private fun checkMap(): Boolean {
-        showTracking()
-        mBinding.bottomNavigationMain.menu
-            .findItem(R.id.menu_tracking)
-            .isChecked = true
-        return false
-    }
-
-    private fun showTrackingBottomSheet() {
-        if (mPreferenceManager.getValue(
-                IS_LOCATION_TRACKING_ENABLE,
-                false
-            )
-        ) {
-            mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.TRACKING_HISTORY)
-        } else {
-            mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.ENABLE_TRACKING)
-        }
-    }
-
     fun manageBottomNavigationVisibility(isVisibility: Boolean = true) {
         mBinding.apply {
             if (isVisibility) {
@@ -706,27 +641,6 @@ class MainActivity :
                 .isChecked = true
         } else {
             isMapStyleChangeCalled = false
-        }
-    }
-
-    private fun showProgress() {
-        if (alertDialog != null && alertDialog?.isShowing == true) {
-            return
-        }
-        mBinding.apply {
-            runOnUiThread {
-                alertDialog = Dialog(this@MainActivity)
-                alertDialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                alertDialog?.setContentView(R.layout.dialog_progress)
-                alertDialog?.setCancelable(false)
-                alertDialog?.setCanceledOnTouchOutside(false)
-                alertDialog?.window!!.setBackgroundDrawable(
-                    ColorDrawable(
-                        ContextCompat.getColor(this@MainActivity, android.R.color.transparent)
-                    )
-                )
-                alertDialog?.show()
-            }
         }
     }
 

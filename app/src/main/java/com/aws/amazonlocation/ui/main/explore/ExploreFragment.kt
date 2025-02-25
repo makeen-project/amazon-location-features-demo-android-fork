@@ -45,7 +45,6 @@ import aws.sdk.kotlin.services.georoutes.model.CalculateRoutesResponse
 import aws.sdk.kotlin.services.georoutes.model.Route
 import aws.sdk.kotlin.services.georoutes.model.RouteLeg
 import aws.sdk.kotlin.services.georoutes.model.RouteTravelMode
-import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.common.onError
@@ -66,16 +65,12 @@ import com.aws.amazonlocation.databinding.FragmentExploreBinding
 import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.SimulationInterface
-import com.aws.amazonlocation.domain.`interface`.TrackingInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
-import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
 import com.aws.amazonlocation.ui.main.mapStyle.MapStyleBottomSheetFragment
 import com.aws.amazonlocation.ui.main.mapStyle.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
-import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
 import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
 import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
@@ -134,7 +129,6 @@ import com.aws.amazonlocation.utils.TYPE_ROUNDABOUT_PASS
 import com.aws.amazonlocation.utils.TYPE_SDK_UNKNOWN
 import com.aws.amazonlocation.utils.TYPE_TURN
 import com.aws.amazonlocation.utils.TYPE_U_TURN
-import com.aws.amazonlocation.utils.TrackerCons
 import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.Units.getDeviceId
 import com.aws.amazonlocation.utils.Units.getMetricsNew
@@ -182,7 +176,6 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import com.mapbox.android.gestures.StandardScaleGestureDetector
 import java.util.Calendar
-import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
@@ -224,8 +217,6 @@ class ExploreFragment :
     private var mSearchPlacesSuggestionAdapter: SearchPlacesSuggestionAdapter? = null
     private var mNavigationAdapter: NavigationAdapter? = null
     val mViewModel: ExploreViewModel by viewModels()
-    private val mGeofenceViewModel: GeofenceViewModel by viewModels()
-    private val mTrackingViewModel: TrackingViewModel by viewModels()
     private val mSimulationViewModel: SimulationViewModel by viewModels()
     private var mRedirectionType: String? = null
     private var timeDepart: String? = null
@@ -327,7 +318,7 @@ class ExploreFragment :
 
     fun hideKeyBoard() {
         mBaseActivity?.mGeofenceUtils?.let {
-           if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                 mBinding.apply {
                     bottomSheetDirectionSearch.apply {
                         if (!cardListRoutesOption.isVisible) {
@@ -397,8 +388,7 @@ class ExploreFragment :
 
             mBaseActivity?.mTrackingUtils?.initTrackingView(
                 activity,
-                mBinding.bottomSheetTracking,
-                mTrackingInterface
+                mBinding.bottomSheetTracking
             )
             if (Units.checkInternetConnection(requireContext())) {
                 if (!mLocationProvider.checkClientInitialize()) {
@@ -464,147 +454,10 @@ class ExploreFragment :
                     }
             }
         }
-
-
-        lifecycleScope.launch {
-            withStarted { }
-            mGeofenceViewModel.mAddGeofence.collect { handleResult ->
-                handleResult
-                    .onLoading {
-                    }.onSuccess {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES
-                                )
-                            )
-                        (activity as MainActivity).analyticsUtils?.recordEvent(
-                            EventType.GEOFENCE_CREATION_SUCCESSFUL,
-                            propertiesAws
-                        )
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            mBaseActivity?.bottomNavigationVisibility(true)
-                            showViews(mBinding.cardGeofenceMap, mBinding.cardMap)
-                            activity?.hideKeyboard()
-                        }
-                    }.onError {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES
-                                )
-                            )
-                        (activity as MainActivity).analyticsUtils?.recordEvent(
-                            EventType.GEOFENCE_CREATION_FAILED,
-                            propertiesAws
-                        )
-                        if (it.messageResource
-                            .toString()
-                            .contains(resources.getString(R.string.unable_to_execute_request))
-                        ) {
-                            showError(
-                                resources.getString(
-                                    R.string.check_your_internet_connection_and_try_again
-                                )
-                            )
-                        }
-                    }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mGeofenceViewModel.mDeleteGeofence.collect { handleResult ->
-                handleResult
-                    .onLoading {
-                    }.onSuccess {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES
-                                )
-                            )
-                        (activity as MainActivity).analyticsUtils?.recordEvent(
-                            EventType.GEOFENCE_DELETION_SUCCESSFUL,
-                            propertiesAws
-                        )
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            mGeofenceInterface.hideShowBottomNavigationBar(
-                                false,
-                                GeofenceBottomSheetEnum.NONE
-                            )
-                        }
-                    }.onError {
-                        val propertiesAws =
-                            listOf(
-                                Pair(
-                                    AnalyticsAttribute.TRIGGERED_BY,
-                                    AnalyticsAttributeValue.GEOFENCES
-                                )
-                            )
-                        (activity as MainActivity).analyticsUtils?.recordEvent(
-                            EventType.GEOFENCE_DELETION_FAILED,
-                            propertiesAws
-                        )
-                    }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mGeofenceViewModel.mGeofenceSearchForSuggestionsResultList.collect { handleResult ->
-                handleResult
-                    .onLoading {
-                    }.onSuccess {
-                        activity?.hideKeyboard()
-                    }.onError {
-                    }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mGeofenceViewModel.mGeofenceSearchLocationList.collect { handleResult ->
-                handleResult
-                    .onLoading {
-                    }.onSuccess {
-                        activity?.hideKeyboard()
-                    }.onError {
-                    }
-            }
-        }
     }
 
     private val mGeofenceInterface =
         object : GeofenceInterface {
-            override fun addGeofence(
-                geofenceId: String,
-                collectionName: String,
-                radius: Double?,
-                latLng: LatLng?
-            ) {
-                activity?.hideKeyboard()
-                mGeofenceViewModel.addGeofence(geofenceId, collectionName, radius, latLng)
-            }
-
-            override fun getGeofenceList(collectionName: String) {
-                mGeofenceViewModel.getGeofenceList(collectionName)
-            }
-
-            override fun deleteGeofence(
-                position: Int,
-                data: ListGeofenceResponseEntry
-            ) {
-                mGeofenceViewModel.deleteGeofence(position, data)
-            }
-
-            override fun geofenceSearchPlaceIndexForText(searchText: String) {
-                mGeofenceViewModel.geofenceSearchPlaceIndexForText(searchText, mViewModel.mLatLng)
-            }
-
             override fun hideShowBottomNavigationBar(
                 isHide: Boolean,
                 type: GeofenceBottomSheetEnum
@@ -628,10 +481,6 @@ class ExploreFragment :
                     }
                 }
             }
-
-            override fun openAddGeofenceBottomSheet(point: LatLng) {
-                mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
-            }
         }
 
     private val mSimulationInterface =
@@ -653,71 +502,6 @@ class ExploreFragment :
                         it
                     )
                 }
-            }
-        }
-
-    private val mTrackingInterface =
-        object : TrackingInterface {
-            override fun updateBatch(latLng: LatLng) {
-                latLng.let {
-                    val positionData = arrayListOf<Double>()
-                    positionData.add(it.longitude)
-                    positionData.add(it.latitude)
-                    mTrackingViewModel.batchUpdateDevicePosition(
-                        TrackerCons.TRACKER_COLLECTION,
-                        positionData,
-                        getDeviceId(requireContext())
-                    )
-                }
-            }
-
-            override fun updateBatch() {
-                activity?.hideKeyboard()
-                mMapHelper.setTrackingUpdateRoute(mTrackingUpDate)
-            }
-
-            override fun removeUpdateBatch() {
-                mMapHelper.removeTrackingLocationListener()
-            }
-
-            override fun getLocationHistory(
-                startDate: Date,
-                endDate: Date
-            ) {
-                mTrackingViewModel.getLocationHistory(
-                    TrackerCons.TRACKER_COLLECTION,
-                    getDeviceId(requireContext()),
-                    startDate,
-                    endDate
-                )
-            }
-
-            override fun getTodayLocationHistory(
-                startDate: Date,
-                endDate: Date
-            ) {
-                mTrackingViewModel.getLocationHistoryToday(
-                    TrackerCons.TRACKER_COLLECTION,
-                    getDeviceId(requireContext()),
-                    startDate,
-                    endDate
-                )
-            }
-
-            override fun getGeofenceList(collectionName: String) {
-                mTrackingViewModel.getGeofenceList(collectionName)
-            }
-
-            override fun getCheckPermission() {
-                mViewModel.mIsTrackingLocationClicked = true
-                checkLocationPermission(false)
-            }
-
-            override fun getDeleteTrackingData() {
-                mTrackingViewModel.deleteLocationHistory(
-                    TrackerCons.TRACKER_COLLECTION,
-                    getDeviceId(requireContext())
-                )
             }
         }
 
@@ -913,25 +697,6 @@ class ExploreFragment :
                             }
                         }
                     }
-                }
-            }
-        }
-
-    private val mTrackingUpDate =
-        object : UpdateTrackingInterface {
-            override fun updateRoute(
-                latLng: Location,
-                bearing: Float?
-            ) {
-                latLng.let {
-                    val positionData = arrayListOf<Double>()
-                    positionData.add(it.longitude)
-                    positionData.add(it.latitude)
-                    mTrackingViewModel.batchUpdateDevicePosition(
-                        TrackerCons.TRACKER_COLLECTION,
-                        positionData,
-                        getDeviceId(requireContext())
-                    )
                 }
             }
         }
@@ -5640,15 +5405,6 @@ class ExploreFragment :
             activity,
             mPreferenceManager
         )
-        activity?.let {
-            mBaseActivity?.mGeofenceUtils?.setMapBox(
-                it,
-                mPreferenceManager
-            )
-            mBaseActivity?.mTrackingUtils?.setMapBox(
-                it,
-            )
-        }
         mapLibreMap.uiSettings.isCompassEnabled = false
         this.mMapLibreMap = mapLibreMap
         mapLibreMap.addOnCameraIdleListener {
