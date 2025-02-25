@@ -241,8 +241,6 @@ class MainActivity :
                         mBottomSheetHelper.collapseDirectionSearch()
                     } else if (mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true) {
                         mGeofenceUtils?.collapseGeofenceList()
-                    } else if (mGeofenceUtils?.isAddGeofenceExpandedOrHalfExpand() == true) {
-                        mGeofenceUtils?.collapseAddGeofence()
                     } else if (mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true) {
                         mTrackingUtils?.collapseTracking()
                     } else {
@@ -451,7 +449,6 @@ class MainActivity :
                 R.id.menu_settings -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
                     mNavController.navigate(R.id.setting_fragment)
-                    mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
                     mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
@@ -462,7 +459,6 @@ class MainActivity :
                 R.id.menu_more -> {
                     mBottomSheetHelper.hideSearchBottomSheet(false)
                     mNavController.navigate(R.id.about_fragment)
-                    mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     mTrackingUtils?.hideTrackingBottomSheet()
                     mSimulationUtils?.hideSimulationBottomSheet()
                     hideAmazonLogo()
@@ -575,7 +571,6 @@ class MainActivity :
                 }
             }
         }
-        mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
         mSimulationUtils?.showSimulationBottomSheet()
         if (mNavHostFragment.childFragmentManager.fragments.isNotEmpty()) {
@@ -642,7 +637,6 @@ class MainActivity :
                 delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
             }
             mBottomSheetHelper.hideSearchBottomSheet(true)
-            mGeofenceUtils?.showGeofenceListBottomSheet(this@MainActivity)
         }
         exitScreen()
         setSelectedScreen(AnalyticsAttributeValue.GEOFENCES)

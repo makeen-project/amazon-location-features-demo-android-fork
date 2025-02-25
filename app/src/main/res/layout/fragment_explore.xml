@@ -319,10 +319,6 @@
         layout="@layout/bottom_sheet_geofence_list" />
 
     <include
-        android:id="@+id/bottom_sheet_add_geofence"
-        layout="@layout/bottom_sheet_add_geofence" />
-
-    <include
         android:id="@+id/bottom_sheet_tracking"
         layout="@layout/bottom_sheet_tracking" />
 
