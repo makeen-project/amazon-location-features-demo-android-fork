@@ -260,9 +260,6 @@ class ExploreFragment :
         mBinding.bottomSheetTracking.clPersistentBottomSheet.requestLayout()
         mBinding.bottomSheetGeofenceList.clGeofenceListMain.layoutParams.width = width
         mBinding.bottomSheetGeofenceList.clGeofenceListMain.requestLayout()
-        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.layoutParams.width =
-            width
-        mBinding.bottomSheetAddGeofence.clPersistentBottomSheetAddGeofence.requestLayout()
         mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
         mBinding.bottomSheetAttribution.clMain.requestLayout()
         val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
@@ -316,8 +313,6 @@ class ExploreFragment :
                     }
                     mBinding.bottomSheetDirectionSearch.viewKeyboardScroll.show()
                 }
-            } else if (it.geofenceBottomSheetVisibility()) {
-                mBaseActivity?.mGeofenceUtils?.expandAddGeofenceBottomSheet()
             } else if (mapStyleBottomSheetFragment?.isMapStyleExpandedOrHalfExpand() == true) {
                 mapStyleBottomSheetFragment?.expandMapStyleSheet()
             } else {
@@ -333,9 +328,7 @@ class ExploreFragment :
 
     fun hideKeyBoard() {
         mBaseActivity?.mGeofenceUtils?.let {
-            if (it.isAddGeofenceBottomSheetVisible()) {
-                mBaseActivity?.mGeofenceUtils?.collapseAddGeofenceBottomSheet()
-            } else if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+           if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
                 mBinding.apply {
                     bottomSheetDirectionSearch.apply {
                         if (!cardListRoutesOption.isVisible) {
@@ -400,7 +393,6 @@ class ExploreFragment :
             mBaseActivity?.mGeofenceUtils?.initGeofenceView(
                 activity,
                 mBinding.bottomSheetGeofenceList,
-                mBinding.bottomSheetAddGeofence,
                 mGeofenceInterface
             )
 
@@ -462,68 +454,6 @@ class ExploreFragment :
     private fun initGeofenceObserver() {
         lifecycleScope.launch {
             withStarted { }
-            mBinding.apply {
-                mGeofenceViewModel.mGetGeofenceList.collect { handleResult ->
-                    bottomSheetGeofenceList.apply {
-                        handleResult
-                            .onLoading {
-                                rvGeofence.hide()
-                                clSearchLoaderGeofenceList.root.show()
-                            }.onSuccess {
-                                val propertiesAws =
-                                    listOf(
-                                        Pair(
-                                            AnalyticsAttribute.TRIGGERED_BY,
-                                            AnalyticsAttributeValue.GEOFENCES
-                                        )
-                                    )
-                                (activity as MainActivity).analyticsUtils?.recordEvent(
-                                    EventType.GET_GEOFENCES_LIST_SUCCESSFUL,
-                                    propertiesAws
-                                )
-                                clSearchLoaderGeofenceList.root.hide()
-                                rvGeofence.show()
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    mBaseActivity?.mGeofenceUtils?.manageGeofenceListUI(it)
-                                }
-                            }.onError {
-                                val propertiesAws =
-                                    listOf(
-                                        Pair(
-                                            AnalyticsAttribute.TRIGGERED_BY,
-                                            AnalyticsAttributeValue.GEOFENCES
-                                        )
-                                    )
-                                (activity as MainActivity).analyticsUtils?.recordEvent(
-                                    EventType.GET_GEOFENCES_LIST_FAILED,
-                                    propertiesAws
-                                )
-                                clSearchLoaderGeofenceList.root.hide()
-                                rvGeofence.hide()
-                            }
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mTrackingViewModel.mGetGeofenceList.collect { handleResult ->
-                handleResult
-                    .onLoading {
-                        mBinding.bottomSheetGeofenceList.clSearchLoaderGeofenceList.root
-                            .show()
-                    }.onSuccess {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            mBaseActivity?.mTrackingUtils?.manageGeofenceListUI(it)
-                        }
-                    }.onError {
-                    }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
             mSimulationViewModel.mGetGeofenceList.collect { handleResult ->
                 handleResult
                     .onLoading {
@@ -536,67 +466,6 @@ class ExploreFragment :
             }
         }
 
-        lifecycleScope.launch {
-            withStarted { }
-            mBinding.apply {
-                mTrackingViewModel.mGetLocationHistoryList.collect { handleResult ->
-                    handleResult
-                        .onLoading {
-                            bottomSheetTracking.clSearchLoaderSheetTracking.root.show()
-                        }.onSuccess {
-                            lifecycleScope.launch(Dispatchers.Main) {
-                                mBaseActivity?.mTrackingUtils?.locationHistoryListUI(it)
-                            }
-                        }.onError {
-                            bottomSheetTracking.clSearchLoaderSheetTracking.root.hide()
-                        }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mTrackingViewModel.mGetLocationHistoryTodayList.collect { handleResult ->
-                handleResult
-                    .onLoading {}
-                    .onSuccess {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            mBaseActivity?.mTrackingUtils?.locationHistoryTodayListUI(it)
-                        }
-                    }.onError {
-                    }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mTrackingViewModel.mGetUpdateDevicePosition.collect { handleResult ->
-                handleResult
-                    .onLoading {}
-                    .onSuccess {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            mBaseActivity?.mTrackingUtils?.getTodayData()
-                        }
-                    }.onError {
-                    }
-            }
-        }
-
-        lifecycleScope.launch {
-            withStarted { }
-            mBinding.apply {
-                mTrackingViewModel.mDeleteLocationHistoryList.collect { handleResult ->
-                    handleResult
-                        .onLoading {
-                        }.onSuccess {
-                            lifecycleScope.launch(Dispatchers.Main) {
-                                mBaseActivity?.mTrackingUtils?.deleteTrackingData()
-                            }
-                        }.onError {
-                        }
-                }
-            }
-        }
 
         lifecycleScope.launch {
             withStarted { }
@@ -616,7 +485,6 @@ class ExploreFragment :
                             propertiesAws
                         )
                         lifecycleScope.launch(Dispatchers.Main) {
-                            mBaseActivity?.mGeofenceUtils?.mangeAddGeofenceUI(requireActivity())
                             mBaseActivity?.bottomNavigationVisibility(true)
                             showViews(mBinding.cardGeofenceMap, mBinding.cardMap)
                             activity?.hideKeyboard()
@@ -669,14 +537,6 @@ class ExploreFragment :
                                 false,
                                 GeofenceBottomSheetEnum.NONE
                             )
-                            it.position?.let { position ->
-                                activity?.runOnUiThread {
-                                    mBaseActivity?.mGeofenceUtils?.notifyGeofenceList(
-                                        position,
-                                        requireActivity()
-                                    )
-                                }
-                            }
                         }
                     }.onError {
                         val propertiesAws =
@@ -700,15 +560,6 @@ class ExploreFragment :
                 handleResult
                     .onLoading {
                     }.onSuccess {
-                        val mText =
-                            mBinding.bottomSheetAddGeofence.edtAddGeofenceSearch.text
-                                .toString()
-                                .replace(", ", ",")
-                        if (!it.text.isNullOrEmpty() && it.text == mText) {
-                            mBaseActivity?.mGeofenceUtils?.updateGeofenceSearchSuggestionList(
-                                it.data
-                            )
-                        }
                         activity?.hideKeyboard()
                     }.onError {
                     }
@@ -721,12 +572,6 @@ class ExploreFragment :
                 handleResult
                     .onLoading {
                     }.onSuccess {
-                        val mText =
-                            mBinding.bottomSheetAddGeofence.edtAddGeofenceSearch.text
-                                .toString()
-                        if (!it.text.isNullOrEmpty() && it.text == mText) {
-                            mBaseActivity?.mGeofenceUtils?.updateGeofenceSearchPlaceList(it.data)
-                        }
                         activity?.hideKeyboard()
                     }.onError {
                     }
@@ -778,10 +623,6 @@ class ExploreFragment :
                     when (type) {
                         GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET -> {
                             mBaseActivity?.mGeofenceUtils?.emptyGeofenceBottomSheetAddBtn()
-                        }
-
-                        GeofenceBottomSheetEnum.ADD_GEOFENCE_BOTTOM_SHEET -> {
-                            mBaseActivity?.mGeofenceUtils?.addGeofenceCloseBtn(requireActivity())
                         }
 
                         else -> {}
@@ -865,8 +706,6 @@ class ExploreFragment :
             }
 
             override fun getGeofenceList(collectionName: String) {
-                mBinding.bottomSheetTracking.layoutNoDataFound.root
-                    .hide()
                 mTrackingViewModel.getGeofenceList(collectionName)
             }
 
@@ -1886,22 +1725,6 @@ class ExploreFragment :
                             }
                             setDirectionData(searchSuggestionData, true)
                             return@onSuccess
-                        }
-                        response.reverseGeocodeResponse?.let { searchPlaceIndexForPositionResult ->
-                            if (searchPlaceIndexForPositionResult.resultItems?.isNotEmpty() == true) {
-                                val label =
-                                    searchPlaceIndexForPositionResult.resultItems?.get(0)?.title
-                                if (label != null) {
-                                    if (label.contains(",")) {
-                                        val index = label.indexOf(",")
-                                        val result: String =
-                                            index.let { it1 -> label.substring(0, it1) }
-                                        mBaseActivity?.mGeofenceUtils?.setSearchText(result)
-                                    } else {
-                                        mBaseActivity?.mGeofenceUtils?.setSearchText(label)
-                                    }
-                                }
-                            }
                         }
                     }.onError {
                         showError(it.messageResource.toString())
@@ -3569,9 +3392,6 @@ class ExploreFragment :
                 bottomSheetGeofenceList.ivAmazonInfoGeofenceList?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetAddGeofence.ivAmazonInfoAddGeofence?.setOnClickListener {
-                    setAttributionDataAndExpandSheet()
-                }
                 bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
@@ -3719,43 +3539,6 @@ class ExploreFragment :
                         sheetDirectionTvDirectionStreet.text.toString()
                     )
                     showError(getString(R.string.label_copied_to_clipboard))
-                }
-            }
-
-            bottomSheetAddGeofence.edtAddGeofenceSearch
-                .textChanges()
-                .debounce(CLICK_DEBOUNCE)
-                .onEach { text ->
-                    if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
-                        if (text
-                            .toString()
-                            .isEmpty()
-                        ) {
-                            mMapLibreMap?.removeOnMapClickListener(this@ExploreFragment)
-                            mBaseActivity?.mGeofenceUtils?.showAddGeofenceDefaultUI()
-                        }
-                        if (bottomSheetAddGeofence.edtAddGeofenceSearch.hasFocus()) {
-                            val dataToSearch = text.toString().replace(", ", ",")
-                            if (dataToSearch.isNotEmpty()) {
-                                mGeofenceViewModel.geofenceSearchPlaceSuggestion(
-                                    dataToSearch,
-                                    mViewModel.mLatLng
-                                )
-                            }
-                        }
-                    }
-                }.launchIn(lifecycleScope)
-
-            bottomSheetAddGeofence.edtAddGeofenceSearch.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    notifyAdapters()
-                    mGeofenceViewModel.geofenceSearchPlaceIndexForText(
-                        bottomSheetAddGeofence.edtAddGeofenceSearch.text.toString(),
-                        mViewModel.mLatLng
-                    )
-                    true
-                } else {
-                    false
                 }
             }
         }
@@ -5861,14 +5644,10 @@ class ExploreFragment :
         activity?.let {
             mBaseActivity?.mGeofenceUtils?.setMapBox(
                 it,
-                mapLibreMap,
-                mMapHelper,
                 mPreferenceManager
             )
             mBaseActivity?.mTrackingUtils?.setMapBox(
                 it,
-                mapLibreMap,
-                mMapHelper
             )
         }
         mapLibreMap.uiSettings.isCompassEnabled = false
@@ -5948,7 +5727,6 @@ class ExploreFragment :
         if (mViewModel.mIsTrackingLocationClicked) {
             mViewModel.mIsTrackingLocationClicked = false
             mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
-            mBaseActivity?.mTrackingUtils?.locationPermissionAdded()
         } else {
             if (mViewModel.mIsCurrentLocationClicked) {
                 mBaseActivity?.resetLocationPermission()
@@ -6178,7 +5956,6 @@ class ExploreFragment :
             ) {
                 if (activity is MainActivity) {
                     (activity as MainActivity).moveToExploreScreen()
-                    (activity as MainActivity).mGeofenceUtils?.hideAllGeofenceBottomSheet()
                     (activity as MainActivity).mTrackingUtils?.hideTrackingBottomSheet()
                 }
             }
@@ -6211,11 +5988,6 @@ class ExploreFragment :
                     Pair(AnalyticsAttribute.DISTANCE_UNIT, if (isMetric) KILOMETERS else MILES)
                 )
             (activity as MainActivity).analyticsUtils?.recordEvent(ROUTE_SEARCH, properties)
-            return true
-        }
-        if (mBaseActivity?.mGeofenceUtils?.isAddGeofenceBottomSheetVisible() == true) {
-            mBaseActivity?.mGeofenceUtils?.mapClick(point)
-            mViewModel.getAddressLineFromLatLng(point.longitude, point.latitude)
             return true
         }
         return false
@@ -6354,7 +6126,6 @@ class ExploreFragment :
             logoResId
         )
         mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
-        mBinding.bottomSheetAddGeofence.imgAmazonLogoAddGeofence?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
         mBaseActivity?.mSimulationUtils?.setImageIcon(logoResId)
         if (mapStyleBottomSheetFragment != null && mapStyleBottomSheetFragment?.isVisible == true) {
