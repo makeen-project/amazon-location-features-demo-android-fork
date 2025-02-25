@@ -19,7 +19,6 @@ import com.aws.amazonlocation.mock.TEST_DATA_LAT
 import com.aws.amazonlocation.mock.TEST_DATA_LNG
 import com.aws.amazonlocation.mock.TEST_FAILED_ADD_GEOFENCE_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_CALCULATE_DISTANCE_DATA
-import com.aws.amazonlocation.mock.TEST_FAILED_LOGIN_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_MAP_STYLE_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_MAP_STYLE_INNER_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_NAVIGATION_DATA
