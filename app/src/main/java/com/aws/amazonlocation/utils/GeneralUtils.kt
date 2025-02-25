@@ -8,7 +8,6 @@ import aws.sdk.kotlin.services.cognitoidentity.model.GetIdRequest
 import aws.sdk.kotlin.services.cognitoidentity.model.ResourceNotFoundException
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.response.LanguageData
-import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.PoliticalData
 import com.aws.amazonlocation.utils.DateFormat.MM_DD_YYYY_HH_MM
 import com.aws.amazonlocation.utils.DateFormat.YYYY_MM_DD_T_HH_MM_SS
@@ -74,25 +73,6 @@ fun validateLatLng(searchText: String): LatLng? {
     return if (pattern.matcher(searchText).matches()) {
         val latLng = searchText.split(",").toTypedArray()
         LatLng(latLng[0].trim().toDouble(), latLng[1].trim().toDouble())
-    } else {
-        null
-    }
-}
-
-fun getUserName(mLoginResponse: LoginResponse?): String? {
-    return if (mLoginResponse != null) {
-        val nameArray = mLoginResponse.name?.split(" ")?.toTypedArray()
-        if (nameArray != null) {
-            if (nameArray.size >= 2) {
-                val firstName = nameArray[0].first().uppercase()
-                val lastName = nameArray[1].first().uppercase()
-                "$firstName$lastName"
-            } else {
-                nameArray[0].first().uppercase()
-            }
-        } else {
-            null
-        }
     } else {
         null
     }

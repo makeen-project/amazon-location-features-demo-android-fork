@@ -25,7 +25,6 @@ import com.aws.amazonlocation.mock.TEST_FAILED_MAP_STYLE_INNER_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_NAVIGATION_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_SEARCH_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_SEARCH_SUGGESTION_DATA
-import com.aws.amazonlocation.mock.TEST_FAILED_SIGN_OUT_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_TRACKING_HISTORY_DATA
 import com.aws.amazonlocation.mock.TEST_FAILED_UPDATE_BATCH_DATA
 import java.util.Date
@@ -46,17 +45,6 @@ class ResponseDataTest {
         navigationData.region = ""
         navigationData.country = ""
         Assert.assertTrue(TEST_FAILED_NAVIGATION_DATA, navigationData.getAddress() == TEST_DATA)
-    }
-
-    @Test
-    fun loginDataTest() {
-        val loginResponse = Responses.RESPONSE_SIGN_IN
-        loginResponse.idToken = loginResponse.idToken
-        loginResponse.name = loginResponse.name
-        loginResponse.provider = loginResponse.provider
-        loginResponse.success = loginResponse.success
-        loginResponse.email = loginResponse.email
-        Assert.assertTrue(TEST_FAILED_LOGIN_DATA, loginResponse.email == null)
     }
 
     @Test
@@ -129,17 +117,6 @@ class ResponseDataTest {
             TEST_FAILED_ADD_GEOFENCE_DATA,
             addGeofenceResponse.errorMessage == NO_DATA_FOUND
         )
-    }
-
-    @Test
-    fun signOutDataTest() {
-        val addGeofenceResponse = SignOutData(
-            message = null,
-            isDisconnectFromAWSRequired = false
-        )
-        addGeofenceResponse.message = NO_DATA_FOUND
-        addGeofenceResponse.isDisconnectFromAWSRequired = false
-        Assert.assertTrue(TEST_FAILED_SIGN_OUT_DATA, addGeofenceResponse.message == NO_DATA_FOUND)
     }
 
     @Test

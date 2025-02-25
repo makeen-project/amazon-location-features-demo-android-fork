@@ -17,7 +17,6 @@ import aws.sdk.kotlin.services.cognitoidentity.model.ResourceNotFoundException
 import aws.sdk.kotlin.services.location.model.LocationException
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceUtils
 import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
@@ -144,14 +143,6 @@ open class BaseActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun getUserInfo(): LoginResponse? =
-        if (!mPreferenceManager.getValue(KEY_USER_DETAILS, "").isNullOrEmpty()) {
-            val type = object : TypeToken<LoginResponse>() {}.type
-            Gson().fromJson(mPreferenceManager.getValue(KEY_USER_DETAILS, ""), type)
-        } else {
-            null
-        }
 
     fun getLocationPermissionCount(): Int = mPreferenceManager.getIntValue(
         KEY_LOCATION_PERMISSION,

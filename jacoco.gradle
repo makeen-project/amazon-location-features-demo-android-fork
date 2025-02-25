@@ -51,7 +51,6 @@ ext.excludes = [
         '**/*RoutesProvider*',
         '**/*TrackingProvider*',
         '**/*AwsAuthorizationHeader*',
-        '**/*AwsSignerInterceptor*',
         '**/*Hashing*',
         '**/*RemoteDataSourceImpl*',
         '**/*AnalyticsUtils*',

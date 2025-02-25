@@ -51,11 +51,9 @@ import aws.sdk.kotlin.services.location.model.GetDevicePositionHistoryResponse
 import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
 import aws.smithy.kotlin.runtime.time.Instant
 import aws.smithy.kotlin.runtime.time.fromEpochMilliseconds
-import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.data.response.DeleteLocationHistoryResponse
 import com.aws.amazonlocation.data.response.GeofenceData
 import com.aws.amazonlocation.data.response.LocationHistoryResponse
-import com.aws.amazonlocation.data.response.LoginResponse
 import com.aws.amazonlocation.data.response.NavigationData
 import com.aws.amazonlocation.data.response.SearchResponse
 import com.aws.amazonlocation.data.response.SearchSuggestionData
@@ -858,14 +856,5 @@ object Responses {
         GeofenceData(
             message = null,
             geofenceList = arrayListOf()
-        )
-
-    val RESPONSE_SIGN_IN =
-        LoginResponse(
-            name = BuildConfig.USER_LOGIN_NAME,
-            email = null,
-            success = SIGN_IN_SUCCESS,
-            provider = "cognito-idp.us-east-1.amazonaws.com/us-east-1_48VeDo2Uw",
-            idToken = "Mock Token"
         )
 }

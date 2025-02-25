@@ -82,18 +82,6 @@ fun Context.locationPermissionDialog() {
     mDialog.show()
 }
 
-fun Context.userSignOutDialog() {
-    val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
-    mDialog.setTitle(this.resources.getString(R.string.label_warning))
-    mDialog.setMessage(this.resources.getString(R.string.label_session_expired))
-    mDialog.setPositiveButton(
-        this.resources.getString(R.string.ok)
-    ) { dialog, _ ->
-        dialog.dismiss()
-    }
-    mDialog.show()
-}
-
 fun Context.simulationExit(simulationInterface: SimulationDialogInterface) {
     val mDialog = MaterialAlertDialogBuilder(this, R.style.LogOutStyle)
     mDialog.setMessage(this.resources.getString(R.string.simulation_exit_title))
