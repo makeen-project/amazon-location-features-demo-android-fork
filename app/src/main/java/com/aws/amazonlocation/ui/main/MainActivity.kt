@@ -819,27 +819,4 @@ class MainActivity :
             }
         }
     }
-
-    fun showSignInRequiredSheet() {
-        reStartApp = true
-        if (mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true) {
-            mGeofenceUtils?.hideAllGeofenceBottomSheet()
-            mBinding.bottomNavigationMain.selectedItemId = R.id.menu_geofence
-        } else if (mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true) {
-            mTrackingUtils?.hideTrackingBottomSheet()
-            mBinding.bottomNavigationMain.selectedItemId = R.id.menu_tracking
-        }
-    }
-
-    fun initClient(isAfterSignOut: Boolean = false) {
-        if (!isAfterSignOut) {
-            try {
-                mLocationProvider.clearCredentials()
-            } catch (_: Exception) {
-            }
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            async { initMobileClient() }.await()
-        }
-    }
 }

@@ -137,54 +137,6 @@ fun Activity.makeTransparentStatusBar() {
     }
 }
 
-fun changeConditionPrivacyColor(conditionPrivacy: AppCompatTextView) {
-    val mContext = conditionPrivacy.context
-    val mSpannableString = SpannableString(conditionPrivacy.text.toString())
-    val mCondition =
-        Pattern.compile(
-            mContext.resources.getString(R.string.condition_of_use).lowercase(Locale.ROOT)
-        )
-    val mPrivacy =
-        Pattern.compile(
-            mContext.resources.getString(R.string.privacy_notice).lowercase(Locale.ROOT)
-        )
-    val mConditionOfUse =
-        mCondition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
-    val mPrivacyNotice = mPrivacy.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
-    while (mConditionOfUse.find()) {
-        mSpannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    mContext,
-                    R.color.color_primary_green
-                )
-            ),
-            mConditionOfUse.start(),
-            mConditionOfUse.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    while (mPrivacyNotice.find()) {
-        mSpannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    mContext,
-                    R.color.color_primary_green
-                )
-            ),
-            mPrivacyNotice.start(),
-            mPrivacyNotice.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-    conditionPrivacy.setText(
-        mSpannableString,
-        TextView.BufferType.SPANNABLE
-    )
-    conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
-}
-
 @CheckResult
 fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {

@@ -31,8 +31,6 @@ const val INVALID_LAT_STRING = "$INVALID_LAT, $VALID_LNG"
 
 const val STANDARD = "Standard"
 
-const val SIGN_IN_SUCCESS = "Sign in Successfully"
-
 const val TRACKING_HISTORY_START_DATE = "Thu Apr 14 00:00:00 GMT+05:30 2022"
 const val TRACKING_HISTORY_END_DATE = "Fri Apr 14 23:59:59 GMT+05:30 2023"
 const val TRACKING_HISTORY_TODAY_START_DATE = "Fri Apr 14 00:00:00 GMT+05:30 2023"
@@ -66,7 +64,6 @@ const val TEST_FAILED_SEARCH_SUGGESTION_DATA = "Search suggestion data not match
 const val TEST_FAILED_SEARCH_DATA = "Search data not match"
 const val TEST_FAILED_UPDATE_BATCH_DATA = "Update batch Location data not match"
 const val TEST_FAILED_ADD_GEOFENCE_DATA = "Add geofence data not match"
-const val TEST_FAILED_SIGN_OUT_DATA = "Sign out data not match"
 const val TEST_FAILED_CALCULATE_DISTANCE_DATA = "Calculate distance data not match"
 const val TEST_FAILED_TRACKING_HISTORY_DATA = "Tracking history data not match"
 const val TEST_FAILED_MAP_STYLE_INNER_DATA = "Map style inner data not match"

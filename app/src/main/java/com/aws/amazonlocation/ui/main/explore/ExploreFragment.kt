@@ -150,7 +150,6 @@ import com.aws.amazonlocation.utils.formatToISO8601
 import com.aws.amazonlocation.utils.getKeyboardHeight
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.getRegion
-import com.aws.amazonlocation.utils.getUserName
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideKeyboard
 import com.aws.amazonlocation.utils.hideViews
@@ -416,7 +415,6 @@ class ExploreFragment :
             }
             setMap(savedInstanceState)
             initSimulationView()
-            setUserProfile()
             if ((activity as MainActivity).isAppNotFirstOpened()) {
                 checkPermission()
             }
@@ -953,32 +951,6 @@ class ExploreFragment :
                     }
                 }
             )
-    }
-
-    fun setUserProfile() {
-        mBinding.bottomSheetSearch.apply {
-            val userName = getUserName(mBaseActivity?.getUserInfo())
-            if (userName.isNullOrEmpty()) {
-                tvUserProfile.hide()
-                ivUserProfile.show()
-                cardUserProfile.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.white
-                    )
-                )
-            } else {
-                ivUserProfile.hide()
-                tvUserProfile.show()
-                tvUserProfile.text = userName
-                cardUserProfile.setCardBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.yellow
-                    )
-                )
-            }
-        }
     }
 
     private val mRouteUpDate =
