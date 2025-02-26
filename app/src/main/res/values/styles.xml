@@ -39,12 +39,6 @@
         <item name="android:fontFamily">@font/amazon_ember_medium</item>
     </style>
 
-    <style name="SP12WhiteEmberBoldTextStyle">
-        <item name="android:textSize">@dimen/sp_12</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:fontFamily">@font/amazon_ember_bold</item>
-    </style>
-
     <style name="SP13HintRegularTextStyle">
         <item name="android:textSize">@dimen/sp_13</item>
         <item name="android:textColor">@color/color_hint_text</item>
@@ -185,20 +179,6 @@
         <item name="buttonBarPositiveButtonStyle">@style/LogoutBtnStyle</item>
         <!-- Log out cancel button -->
         <item name="buttonBarNegativeButtonStyle">@style/LogoutCancelBtnStyle</item>
-    </style>
-
-    <style name="EnableTrackerAlertStyle" parent="@style/ThemeOverlay.MaterialComponents.Light">
-        <!-- Title -->
-        <item name="materialAlertDialogTitleTextStyle">@style/LogoutTitleStyle</item>
-        <!-- Body -->
-        <item name="materialAlertDialogBodyTextStyle">
-            @style/LogoutMessageStyle
-        </item>
-        <!-- Log out button -->
-        <item name="buttonBarPositiveButtonStyle">@style/LogoutBtnStyle</item>
-        <!-- Log out cancel button -->
-        <item name="buttonBarNegativeButtonStyle">@style/LogoutBtnStyle</item>
-        <item name="buttonBarNeutralButtonStyle">@style/LogoutCancelBtnStyle</item>
     </style>
 
     <style name="LogoutTitleStyle" parent="@style/MaterialAlertDialog.MaterialComponents.Title.Text">

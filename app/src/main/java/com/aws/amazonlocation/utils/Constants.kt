@@ -9,7 +9,6 @@ import com.google.android.gms.location.Priority
 // SPDX-License-Identifier: MIT-0
 
 const val KEY_BOARD_HEIGHT = 500
-const val KEY_USER_DETAILS = "user_details"
 const val KEY_LOCATION_PERMISSION = "location_permission"
 const val SEARCH_MAX_RESULT = 15
 const val SEARCH_MAX_SUGGESTION_RESULT = 10
@@ -27,7 +26,6 @@ const val KEY_USER_POOL_ID = "KEY_USER_POOL_ID"
 const val KEY_USER_DOMAIN = "KEY_USER_DOMAIN"
 const val KEY_USER_REGION = "KEY_USER_REGION"
 const val KEY_USER_POOL_CLIENT_ID = "KEY_USER_POOL_CLIENT_ID"
-const val WEB_SOCKET_URL = "web_socket_url"
 const val KEY_CLOUD_FORMATION_STATUS = "KEY_CLOUD_FORMATION_STATUS"
 const val KEY_UNIT_SYSTEM = "KEY_UNIT_SYSTEM"
 const val KEY_SELECTED_REGION = "KEY_SELECTED_REGION"
@@ -147,18 +145,15 @@ val regionDisplayName = arrayListOf(
  */
 const val attributionPattern = "<a[^>]*>|</a>"
 
-const val GEOFENCE_NAME_REG_EXP = "^[-._\\p{L}\\p{N}]+\$"
 const val userPoolIdPattern = "[\\w-]+_[0-9a-zA-Z]+"
 const val userPoolClientId = "[\\w+]+"
 const val regionPattern = "^[a-zA-Z-]+-\\d+$"
 const val LAT_LNG_REGEX_PATTERN = "^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$"
 
 const val LOCATION_AWS_PREFIX = "location.aws.com.demo."
-const val LOCATION_TRACKERS_PREFIX = "trackers."
 const val LOCATION_GEOFENCE_S_PREFIX = "geofences."
 
 object Distance {
-    const val DISTANCE_IN_METER_30 = 30
     const val DISTANCE_FOR_WALK = 15
     const val DISTANCE_FOR_DRIVE_TRUCK = 50
     const val DISTANCE_FOR_SCOOTER = 30
@@ -168,7 +163,6 @@ object MapCameraZoom {
     const val SIMULATION_CAMERA_ZOOM_1 = 10.0
     const val NAVIGATION_CAMERA_ZOOM = 14.0
     const val DEFAULT_CAMERA_ZOOM = 14.0
-    const val TRACKING_CAMERA_ZOOM = 14.0
     const val MAX_ZOOM = 22.0
     const val MIN_ZOOM = 2.0
 }
@@ -177,9 +171,6 @@ object Durations {
     const val DEFAULT_INTERVAL_IN_MILLISECONDS = 500L
     const val CAMERA_DURATION_1500 = 1500
     const val CAMERA_DURATION_1000 = 1000
-    const val CAMERA_BOTTOM_PADDING = 800
-    const val CAMERA_TOP_RIGHT_LEFT_PADDING = 225
-    const val CAMERA_RIGHT_PADDING = 180
     const val DEFAULT_RADIUS = 80
     const val DELAY_FOR_FRAGMENT_LOAD = 500L
     const val DELAY_FOR_BOTTOM_SHEET_LOAD = 500L
@@ -187,36 +178,13 @@ object Durations {
 
 object GeofenceCons {
     const val GEOFENCE_COLLECTION = LOCATION_AWS_PREFIX + LOCATION_GEOFENCE_S_PREFIX + "GeofenceCollection"
-    const val CIRCLE_CENTER_SOURCE_ID = "CIRCLE_CENTER_SOURCE_ID"
-    const val CIRCLE_CENTER_ICON_ID = "CIRCLE_CENTER_ICON_ID"
     const val CIRCLE_CENTER_LAYER_ID = "CIRCLE_CENTER_LAYER_ID"
     const val TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID =
         "TURF_CALCULATION_FILL_LAYER_GEOJSON_SOURCE_ID"
     const val TURF_CALCULATION_FILL_LAYER_ID = "TURF_CALCULATION_FILL_LAYER_ID"
-
-    const val TURF_CALCULATION_LINE_LAYER_GEO_JSON_SOURCE_ID =
-        "TURF_CALCULATION_LINE_LAYER_GEOJSON_SOURCE_ID"
-    const val TURF_CALCULATION_LINE_LAYER_ID = "TURF_CALCULATION_LINE_LAYER_ID"
-    const val RADIUS_SEEKBAR_MAX = 10000
-    const val RADIUS_SEEKBAR_DIFFERENCE = 1
-
-    const val CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID = "CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID"
-    const val CIRCLE_DRAGGABLE_VISIBLE_ICON_ID = "CIRCLE_DRAGGABLE_VISIBLE_ICON_ID"
-    const val CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID = "CIRCLE_DRAGGABLE_VISIBLE_LAYER_ID"
-
-    const val CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID = "CIRCLE_DRAGGABLE_INVISIBLE_ICON_ID"
-
-    const val CIRCLE_DRAGGABLE_BEARING = 90.0
-
-    const val GEOFENCE_MIN_RADIUS = 10
-}
-
-object TrackerCons {
-    const val TRACKER_COLLECTION = LOCATION_AWS_PREFIX + LOCATION_TRACKERS_PREFIX + "Tracker"
 }
 
 object DateFormat {
-    const val MMM_DD_YYYY = "MMM dd, yyyy"
     const val HH_MM_AA = "hh:mm aa"
     const val MM_DD_YYYY_HH_MM = "MM/dd/yyyy hh:mm aa"
     const val YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ssXXX"
@@ -269,10 +237,6 @@ object EventType {
     const val MAP_UNIT_CHANGE = "MAP_UNIT_CHANGE"
 
     // Tracker and Geofence
-    const val GEOFENCE_CREATION_SUCCESSFUL = "GEOFENCE_CREATION_SUCCESSFUL"
-    const val GEOFENCE_CREATION_FAILED = "GEOFENCE_CREATION_FAILED"
-    const val GEOFENCE_DELETION_SUCCESSFUL = "GEOFENCE_DELETION_SUCCESSFUL"
-    const val GEOFENCE_DELETION_FAILED = "GEOFENCE_DELETION_FAILED"
     const val START_TRACKING = "START_TRACKING"
     const val STOP_TRACKING = "STOP_TRACKING"
     const val CHANGE_BUS_TRACKING_HISTORY = "CHANGE_BUS_TRACKING_HISTORY"
@@ -308,8 +272,6 @@ object AnalyticsAttribute {
 }
 object AnalyticsAttributeValue {
     const val EXPLORER = "Explorer"
-    const val TRACKERS = "Trackers"
-    const val GEOFENCES = "Geofences"
     const val SETTINGS = "Settings"
     const val ABOUT = "About"
     const val SIMULATION = "Simulation"

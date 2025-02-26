@@ -1,7 +1,6 @@
 package com.aws.amazonlocation.ui.main.geofence
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
@@ -25,7 +24,6 @@ class GeofenceUtils {
 
     private var mBindingGeofenceList: BottomSheetGeofenceListBinding? = null
     private var mFragmentActivity: FragmentActivity? = null
-    private var mActivity: Activity? = null
     private var mGeofenceInterface: GeofenceInterface? = null
     private var isTablet = false
 
@@ -109,7 +107,7 @@ class GeofenceUtils {
             mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         }
         mBindingGeofenceList?.clEmptyGeofenceList?.context?.let {
-            if ((mActivity as MainActivity).isTablet) {
+            if ((mFragmentActivity as MainActivity).isTablet) {
                 mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(
                     R.dimen.dp_150
                 )
@@ -129,7 +127,7 @@ class GeofenceUtils {
 
     private fun openSimulationWelcome() {
         val simulationBottomSheetFragment = SimulationBottomSheetFragment()
-        (mActivity as MainActivity).supportFragmentManager.let {
+        (mFragmentActivity as MainActivity).supportFragmentManager.let {
             simulationBottomSheetFragment.show(it, WelcomeBottomSheetFragment::javaClass.name)
         }
     }

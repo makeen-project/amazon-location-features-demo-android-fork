@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/screen_size"
     android:layout_height="match_parent"
     android:clickable="true"
@@ -125,37 +124,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/iv_direction"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btn_add_geofence"
-                android:layout_width="@dimen/dp_0"
-                android:layout_height="@dimen/dp_48"
-                android:layout_marginHorizontal="@dimen/dp_16"
-                android:layout_marginTop="@dimen/dp_8"
-                android:paddingHorizontal="@dimen/dp_16"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="@dimen/dp_8"
-                app:cardElevation="@dimen/dp_0"
-                app:cardUseCompatPadding="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_try_geofence">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_enable_geofence"
-                    style="@style/SP16BoldMediumBlackTextStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/label_enable_live_geofences"
-                    android:textAllCaps="false"
-                    android:textColor="@color/color_medium_black"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </com.google.android.material.card.MaterialCardView>

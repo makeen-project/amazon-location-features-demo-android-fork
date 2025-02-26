@@ -45,7 +45,7 @@ ext.excludes = [
         '**/*TextWatcher*',
         '**/*GeofenceUtils*',
         '**/*LocationProvider*',
-        '**/*GeofenceProvider*',
+        '**/*SimulationProvider*',
         '**/*PlacesProvider*',
         '**/*RoutesProvider*',
         '**/*TrackingProvider*',

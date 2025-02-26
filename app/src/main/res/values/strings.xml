@@ -46,45 +46,22 @@
 
     <!-- Geofencing text-->
     <string name="add_geo_fence_1">Add a geofence to get notified when your device enters or exits it</string>
-    <string name="add_geofence">Add Geofence</string>
-    <string name="add">Add</string>
-    <string name="radius">Radius</string>
-    <string name="name">Name</string>
-    <string name="type_geofence_name">Type Geofence Name</string>
-    <string name="save">Save</string>
-    <string name="geofence_name_exists">Geofence name already exists</string>
-    <string name="please_enter_geofence_name">Please enter geofence name</string>
-    <string name="invalid_name">Contain only characters (A–Z,a–z,0–9),hyphens(-),periods(.), &amp; underscores(_)</string>
-    <string name="are_you_sure_want_to_delete_geofence">Are you sure you want to delete geofence?</string>
-    <string name="delete">Delete</string>
-    <string name="edit_geofence">Edit Geofence</string>
+
     <string name="label_map_style">Map Style</string>
     <string name="map_standard" translatable="false">Standard</string>
     <string name="map_monochrome" translatable="false">Monochrome</string>
     <string name="map_hybrid" translatable="false">Hybrid</string>
     <string name="map_satellite" translatable="false">Satellite</string>
     <string name="map_style">Map style</string>
-    <string name="label_tracking_history">Tracking History</string>
-    <string name="label_tracking_your_activity">Tracking your device location</string>
-    <string name="label_enable_tracking">Enable Live Trackers</string>
     <string name="label_enable_tracking_detail">Enabling the feature will allow you to track your device and get notified when the device enters or exits any of your geofences.</string>
-    <string name="label_check_your_internet_connection_and_try_again">Check your internet connection and try again</string>
     <string name="label_not_tracking_your_activity">Not tracking your device location</string>
     <string name="label_start_tracking">Start Tracking</string>
     <string name="label_stop_tracking">Stop Tracking</string>
-    <string name="label_today">Today</string>
-    <string name="label_tracking_data_storage">Tracking Data Storage</string>
-    <string name="label_delete_tracking_data">Delete Tracking Data</string>
-    <string name="tv_tracking_data_storage_1">We only display data for the last 3 paths that you track with Amazon Location.</string>
     <string name="label_position_start">start</string>
     <string name="label_position_end">end</string>
     <string name="label_position_data">data</string>
     <string name="amazon_location_can_t_reach_the_internet">Amazon Location can\'t reach the internet</string>
     <string name="check_your_internet_connection_and_try_again">Check your internet connection and try again</string>
-    <string name="unable_to_execute_request">Unable to execute HTTP request:</string>
-    <string name="label_position_loader">Loader</string>
-    <string name="label_are_you_sure_delete_data">Are you sure you want to delete tracking data?</string>
-    <string name="no_tracking_history_found">No tracking history available</string>
     <string name="reconnect_with_aws_account">Stack is corrupted, switching back to default stack</string>
     <string name="error_route">Route not found.</string>
     <string name="no_route_found">No route found</string>
@@ -123,10 +100,6 @@
     <string name="label_style_search_error_des">Make sure your search is spelled correctly and try again, make sure you have applied the appropriate filter or remove the filter and try again</string>
     <string name="label_clear_filters">Clear filters</string>
     <string name="label_try_trackers_amp_geofences_simulation"><![CDATA[Try Trackers & Geofences simulation]]></string>
-    <string name="label_requires_connection_to_aws_cloudformation">Requires connection to AWS CloudFormation</string>
-    <string name="label_enable_live_geofences">Enable Live Geofences</string>
-    <string name="label_trackers_amp_geofences_simulation"><![CDATA[Trackers & Geofences simulation]]></string>
-    <string name="label_explore_the_power_of_trackers_amp_geofences"><![CDATA[Explore the power of Trackers & Geofences]]></string>
     <string name="label_simulation">Simulation</string>
     <string name="label_trackers_and_geofences">Trackers and Geofences</string>
     <string name="label_des">Enter the tracking simulation to view the path across Vancouver streets that crosses geofences</string>
@@ -153,8 +126,6 @@
     <string name="label_geofence">geofence</string>
     <string name="simulation_notification_permission">For smooth simulation experience please allow notification permission from settings.</string>
     <string name="label_language">Language</string>
-    <string name="label_tracker_entered">Tracker entered</string>
-    <string name="label_tracker_exited">Tracker exited</string>
     <string name="label_deutsch" translatable="false">Deutsch</string>
     <string name="label_espa_ol" translatable="false">Español</string>
     <string name="label_english" translatable="false">English</string>
