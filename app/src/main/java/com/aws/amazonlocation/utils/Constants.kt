@@ -237,7 +237,7 @@ object EventType {
     const val ROUTE_OPTION_CHANGED = "ROUTE_OPTION_CHANGED"
     const val MAP_UNIT_CHANGE = "MAP_UNIT_CHANGE"
 
-    // Tracker and Geofence
+    // Simulation
     const val START_TRACKING = "START_TRACKING"
     const val STOP_TRACKING = "STOP_TRACKING"
     const val CHANGE_BUS_TRACKING_HISTORY = "CHANGE_BUS_TRACKING_HISTORY"

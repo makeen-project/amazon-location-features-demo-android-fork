@@ -35,7 +35,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.withStarted
@@ -50,7 +49,6 @@ import com.aws.amazonlocation.R
 import com.aws.amazonlocation.data.common.onError
 import com.aws.amazonlocation.data.common.onLoading
 import com.aws.amazonlocation.data.common.onSuccess
-import com.aws.amazonlocation.data.enum.GeofenceBottomSheetEnum
 import com.aws.amazonlocation.data.enum.MarkerEnum
 import com.aws.amazonlocation.data.enum.RedirectionType
 import com.aws.amazonlocation.data.enum.SearchApiEnum
@@ -62,7 +60,6 @@ import com.aws.amazonlocation.data.response.SearchSuggestionResponse
 import com.aws.amazonlocation.databinding.BottomSheetDirectionBinding
 import com.aws.amazonlocation.databinding.BottomSheetDirectionSearchBinding
 import com.aws.amazonlocation.databinding.FragmentExploreBinding
-import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
 import com.aws.amazonlocation.domain.`interface`.MarkerClickInterface
 import com.aws.amazonlocation.domain.`interface`.SimulationInterface
 import com.aws.amazonlocation.domain.`interface`.UpdateRouteInterface
@@ -142,7 +139,6 @@ import com.aws.amazonlocation.utils.copyTextToClipboard
 import com.aws.amazonlocation.utils.formatToDisplayDate
 import com.aws.amazonlocation.utils.formatToDisplayTime
 import com.aws.amazonlocation.utils.formatToISO8601
-import com.aws.amazonlocation.utils.getKeyboardHeight
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.getRegion
 import com.aws.amazonlocation.utils.hide
@@ -249,8 +245,8 @@ class ExploreFragment :
         mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.requestLayout()
         mBinding.bottomSheetTracking.clPersistentBottomSheet.layoutParams.width = width
         mBinding.bottomSheetTracking.clPersistentBottomSheet.requestLayout()
-        mBinding.bottomSheetGeofenceList.clGeofenceListMain.layoutParams.width = width
-        mBinding.bottomSheetGeofenceList.clGeofenceListMain.requestLayout()
+        mBinding.bottomSheetTrySimulation.clGeofenceListMain.layoutParams.width = width
+        mBinding.bottomSheetTrySimulation.clGeofenceListMain.requestLayout()
         mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
         mBinding.bottomSheetAttribution.clMain.requestLayout()
         val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
@@ -289,29 +285,6 @@ class ExploreFragment :
                     bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.layoutDirection =
                         View.LAYOUT_DIRECTION_RTL
                     bottomSheetAttribution.clMain.layoutDirection = View.LAYOUT_DIRECTION_RTL
-                }
-            }
-        }
-    }
-
-    fun showKeyBoard() {
-        mBaseActivity?.mGeofenceUtils?.let {
-            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                mBottomSheetHelper.expandDirectionSearchSheet(this@ExploreFragment)
-                getKeyboardHeight(requireActivity()) { keyboardHeight ->
-                    mBinding.bottomSheetDirectionSearch.viewKeyboardScroll.updateLayoutParams {
-                        height = keyboardHeight
-                    }
-                    mBinding.bottomSheetDirectionSearch.viewKeyboardScroll.show()
-                }
-            } else if (mapStyleBottomSheetFragment?.isMapStyleExpandedOrHalfExpand() == true) {
-                mapStyleBottomSheetFragment?.expandMapStyleSheet()
-            } else {
-                if (mBottomSheetHelper.isSearchSheetOpen && !mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
-                    mBottomSheetHelper.expandSearchBottomSheet()
-                } else if (mBinding.bottomSheetSearch.edtSearchPlaces.hasFocus() && mBottomSheetHelper.isSearchBottomSheetHalfExpand()) {
-                    mBottomSheetHelper.expandSearchBottomSheet()
-                } else {
                 }
             }
         }
@@ -381,10 +354,9 @@ class ExploreFragment :
                 this@ExploreFragment,
                 mBaseActivity
             )
-            mBaseActivity?.mGeofenceUtils?.initGeofenceView(
+            mBaseActivity?.mGeofenceUtils?.initTrySimulationView(
                 activity,
-                mBinding.bottomSheetGeofenceList,
-                mGeofenceInterface
+                mBinding.bottomSheetTrySimulation
             )
 
             mBaseActivity?.mTrackingUtils?.initTrackingView(
@@ -408,7 +380,7 @@ class ExploreFragment :
             setSearchPlaceAdapter()
             setSearchPlaceSuggestionAdapter()
             initObserver()
-            initGeofenceObserver()
+            initSimulationObserver()
             clickListener()
 
             val connectivityManager =
@@ -441,7 +413,7 @@ class ExploreFragment :
         )
     }
 
-    private fun initGeofenceObserver() {
+    private fun initSimulationObserver() {
         lifecycleScope.launch {
             withStarted { }
             mSimulationViewModel.mGetGeofenceList.collect { handleResult ->
@@ -456,33 +428,6 @@ class ExploreFragment :
             }
         }
     }
-
-    private val mGeofenceInterface =
-        object : GeofenceInterface {
-            override fun hideShowBottomNavigationBar(
-                isHide: Boolean,
-                type: GeofenceBottomSheetEnum
-            ) {
-                lifecycleScope.launch {
-                    mBinding.apply {
-                        if (!isHide) {
-                            showViews(cardGeofenceMap, cardMap)
-                        } else {
-                            hideViews(cardGeofenceMap, cardMap)
-                        }
-                    }
-                    mBaseActivity?.bottomNavigationVisibility(!isHide)
-                    delay(100)
-                    when (type) {
-                        GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET -> {
-                            mBaseActivity?.mGeofenceUtils?.emptyGeofenceBottomSheetAddBtn()
-                        }
-
-                        else -> {}
-                    }
-                }
-            }
-        }
 
     private val mSimulationInterface =
         object : SimulationInterface {
@@ -3154,7 +3099,7 @@ class ExploreFragment :
                 bottomSheetNavigationComplete.ivAmazonInfoNavigationComplete.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetGeofenceList.ivAmazonInfoGeofenceList?.setOnClickListener {
+                bottomSheetTrySimulation.ivAmazonInfoGeofenceList?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
                 bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
@@ -5602,11 +5547,6 @@ class ExploreFragment :
         }
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mBinding.mapView.onLowMemory()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         gpsActivityResult.unregister()
@@ -5881,7 +5821,7 @@ class ExploreFragment :
         mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(
             logoResId
         )
-        mBinding.bottomSheetGeofenceList.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
+        mBinding.bottomSheetTrySimulation.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
         mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
         mBaseActivity?.mSimulationUtils?.setImageIcon(logoResId)
         if (mapStyleBottomSheetFragment != null && mapStyleBottomSheetFragment?.isVisible == true) {

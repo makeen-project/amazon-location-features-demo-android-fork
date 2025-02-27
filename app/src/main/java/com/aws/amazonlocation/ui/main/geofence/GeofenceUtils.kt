@@ -1,12 +1,10 @@
 package com.aws.amazonlocation.ui.main.geofence
 
-import android.annotation.SuppressLint
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentActivity
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.databinding.BottomSheetGeofenceListBinding
-import com.aws.amazonlocation.domain.`interface`.GeofenceInterface
+import com.aws.amazonlocation.databinding.BottomSheetTrySimulationBinding
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
@@ -16,15 +14,13 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
-@SuppressLint("NotifyDataSetChanged")
 class GeofenceUtils {
 
     var isChangeDataProviderClicked: Boolean = false
     private var mBottomSheetGeofenceListBehavior: BottomSheetBehavior<ConstraintLayout>? = null
 
-    private var mBindingGeofenceList: BottomSheetGeofenceListBinding? = null
+    private var trySimulationBinding: BottomSheetTrySimulationBinding? = null
     private var mFragmentActivity: FragmentActivity? = null
-    private var mGeofenceInterface: GeofenceInterface? = null
     private var isTablet = false
 
     fun isGeofenceListExpandedOrHalfExpand(): Boolean {
@@ -35,23 +31,17 @@ class GeofenceUtils {
         mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
-    fun initGeofenceView(
+    fun initTrySimulationView(
         fragmentActivity: FragmentActivity?,
-        bottomSheetGeofenceList: BottomSheetGeofenceListBinding,
-        mGeofenceInterface: GeofenceInterface
+        trySimulationBinding: BottomSheetTrySimulationBinding
     ) {
-        this.mGeofenceInterface = mGeofenceInterface
         this.mFragmentActivity = fragmentActivity
-        this.mBindingGeofenceList = bottomSheetGeofenceList
+        this.trySimulationBinding = trySimulationBinding
         initGeofenceListBottomSheet()
     }
 
-    fun emptyGeofenceBottomSheetAddBtn() {
-        mBindingGeofenceList?.clEmptyGeofenceList?.show()
-    }
-
     private fun initGeofenceListBottomSheet() {
-        mBindingGeofenceList?.apply {
+        trySimulationBinding?.apply {
             mBottomSheetGeofenceListBehavior = BottomSheetBehavior.from(root)
             mBottomSheetGeofenceListBehavior?.isHideable = true
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
@@ -99,14 +89,14 @@ class GeofenceUtils {
     }
 
     fun showGeofenceBeforeLogin() {
-        mBindingGeofenceList?.clEmptyGeofenceList?.show()
+        trySimulationBinding?.clEmptyGeofenceList?.show()
         mBottomSheetGeofenceListBehavior?.isHideable = false
         mBottomSheetGeofenceListBehavior?.isDraggable = true
         mBottomSheetGeofenceListBehavior?.isFitToContents = false
-        mBindingGeofenceList?.clEmptyGeofenceList?.post {
+        trySimulationBinding?.clEmptyGeofenceList?.post {
             mBottomSheetGeofenceListBehavior?.halfExpandedRatio = 0.55f
         }
-        mBindingGeofenceList?.clEmptyGeofenceList?.context?.let {
+        trySimulationBinding?.clEmptyGeofenceList?.context?.let {
             if ((mFragmentActivity as MainActivity).isTablet) {
                 mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(
                     R.dimen.dp_150
