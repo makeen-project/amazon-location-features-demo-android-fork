@@ -315,8 +315,8 @@
         layout="@layout/bottom_sheet_navigation_complete" />
 
     <include
-        android:id="@+id/bottom_sheet_geofence_list"
-        layout="@layout/bottom_sheet_geofence_list" />
+        android:id="@+id/bottom_sheet_try_simulation"
+        layout="@layout/bottom_sheet_try_simulation" />
 
     <include
         android:id="@+id/bottom_sheet_tracking"

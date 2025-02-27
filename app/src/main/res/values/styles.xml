@@ -51,12 +51,6 @@
         <item name="android:fontFamily">@font/inter_regular</item>
     </style>
 
-    <style name="SP13MediumBlack1InterSemiBoldTextStyle">
-        <item name="android:textSize">@dimen/sp_13</item>
-        <item name="android:textColor">@color/color_medium_black_1</item>
-        <item name="android:fontFamily">@font/inter_semi_bold</item>
-    </style>
-
     <style name="SP13BoldMediumBlackTextStyle">
         <item name="android:textSize">@dimen/sp_13</item>
         <item name="android:textColor">@color/color_medium_black</item>

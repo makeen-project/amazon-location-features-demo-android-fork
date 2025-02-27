@@ -38,13 +38,22 @@ class SimulationListAdapter :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SimulationHistoryData) = binding.apply {
             item.devicePositionData?.let {
-                tvLatLng.text = String.format("%7f, %7f", it.latitude, it.longitude)
+                tvLatLng.text = String.format(
+                    Locale.getDefault(),
+                    "%7f, %7f",
+                    it.latitude,
+                    it.longitude
+                )
                 val date = convertToCustomFormat(it.receivedTime)
                 tvTime.text = date
             }
             if (item.isBusStopData) {
                 tvBusStop.show()
-                tvBusStop.text = String.format("Bus stop number %d", item.busStopCount)
+                tvBusStop.text = String.format(
+                    Locale.getDefault(),
+                    "Bus stop number %d",
+                    item.busStopCount
+                )
                 tvLatLng.setTextColor(
                     ContextCompat.getColor(
                         tvLatLng.context,

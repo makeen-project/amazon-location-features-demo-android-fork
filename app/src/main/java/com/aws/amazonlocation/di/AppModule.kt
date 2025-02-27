@@ -59,7 +59,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun getGeofenceProvider() = SimulationProvider()
+    fun getSimulationProvider() = SimulationProvider()
 
     @Provides
     @Singleton
@@ -68,7 +68,7 @@ object AppModule {
         mLocationProvider: LocationProvider,
         mPlacesProvider: PlacesProvider,
         mRoutesProvider: RoutesProvider,
-        mGeofenceProvider: SimulationProvider
+        mSimulationProvider: SimulationProvider
     ): LocationSearchRepository =
         LocationSearchImp(
             RemoteDataSourceImpl(
@@ -76,7 +76,7 @@ object AppModule {
                 mLocationProvider,
                 mPlacesProvider,
                 mRoutesProvider,
-                mGeofenceProvider
+                mSimulationProvider
             )
         )
 
@@ -87,7 +87,7 @@ object AppModule {
         mLocationProvider: LocationProvider,
         mPlacesProvider: PlacesProvider,
         mRoutesProvider: RoutesProvider,
-        mGeofenceProvider: SimulationProvider
+        mSimulationProvider: SimulationProvider
     ): SimulationRepository =
         GeofenceImp(
             RemoteDataSourceImpl(
@@ -95,7 +95,7 @@ object AppModule {
                 mLocationProvider,
                 mPlacesProvider,
                 mRoutesProvider,
-                mGeofenceProvider
+                mSimulationProvider
             )
         )
 }
