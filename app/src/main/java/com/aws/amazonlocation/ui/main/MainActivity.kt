@@ -140,8 +140,18 @@ class MainActivity :
             checkSession()
         }
         if (mBinding.signInWebView.visibility == View.VISIBLE) {
-            hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
-            showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+            hideViews(
+                mBinding.signInWebView,
+                mBinding.ivBackMain,
+                mBinding.viewBottom,
+                mBinding.appCompatTextView
+            )
+            showViews(
+                mBinding.bottomNavigationMain,
+                mBinding.navHostFragment,
+                mBinding.imgAmazonLogo,
+                mBinding.ivAmazonInfo
+            )
         }
         isSessionStarted = false
         hideProgress()
@@ -171,7 +181,7 @@ class MainActivity :
 
     private fun handleAuthorizationCode(
         method: String,
-        authCode: String?,
+        authCode: String?
     ) {
         if (method == SIGN_IN) {
             if (authCode != null) {
@@ -194,7 +204,7 @@ class MainActivity :
                 mPreferenceManager.removeValue(KEY_EXPIRATION)
                 mPreferenceManager.setValue(
                     KEY_CLOUD_FORMATION_STATUS,
-                    AuthEnum.AWS_CONNECTED.name,
+                    AuthEnum.AWS_CONNECTED.name
                 )
                 when (val fragment = mNavHostFragment.childFragmentManager.fragments[0]) {
                     is ExploreFragment -> {
@@ -202,7 +212,7 @@ class MainActivity :
                         val mapStyleNameDisplay =
                             mPreferenceManager.getValue(
                                 KEY_MAP_STYLE_NAME,
-                                getString(R.string.map_standard),
+                                getString(R.string.map_standard)
                             )
                                 ?: getString(R.string.map_standard)
                         changeMapStyle(mapStyleNameDisplay)
@@ -225,7 +235,7 @@ class MainActivity :
                     listOf(
                         Pair(
                             AnalyticsAttribute.TRIGGERED_BY,
-                            if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS,
+                            if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS
                         )
                     )
                 analyticsUtils?.recordEvent(EventType.SIGN_OUT_FAILED, propertiesAws)
@@ -242,7 +252,7 @@ class MainActivity :
             listOf(
                 Pair(
                     AnalyticsAttribute.TRIGGERED_BY,
-                    if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS,
+                    if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS
                 )
             )
         analyticsUtils?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
@@ -253,7 +263,7 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         isSessionStarted = true
         window.setSoftInputMode(
-            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN,
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
         )
         isTablet = resources.getBoolean(R.bool.is_tablet)
         if (!isTablet) {
@@ -337,7 +347,7 @@ class MainActivity :
                         fragment.hideKeyBoard()
                     }
                 }
-            },
+            }
         )
         lifecycleScope.launch {
             delay(DELAY_LANGUAGE_3000)
@@ -355,8 +365,18 @@ class MainActivity :
                 override fun handleOnBackPressed() {
                     val fragment = mNavHostFragment.childFragmentManager.fragments[0]
                     if (mBinding.signInWebView.visibility == View.VISIBLE) {
-                        hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
-                        showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+                        hideViews(
+                            mBinding.signInWebView,
+                            mBinding.ivBackMain,
+                            mBinding.viewBottom,
+                            mBinding.appCompatTextView
+                        )
+                        showViews(
+                            mBinding.bottomNavigationMain,
+                            mBinding.navHostFragment,
+                            mBinding.imgAmazonLogo,
+                            mBinding.ivAmazonInfo
+                        )
                         mBottomSheetDialog?.show()
                     } else if (mNavController.currentDestination?.label == AWS_CLOUD_INFORMATION_FRAGMENT) {
                         mNavController.popBackStack()
@@ -403,7 +423,7 @@ class MainActivity :
                         }
                     }
                 }
-            },
+            }
         )
     }
 
@@ -418,14 +438,14 @@ class MainActivity :
                         mIsUserLoggedIn = true
                         if (mPreferenceManager.getValue(
                                 KEY_CLOUD_FORMATION_STATUS,
-                                "",
+                                ""
                             ) != AuthEnum.SIGNED_IN.name
                         ) {
                             mLocationProvider.clearCredentials()
                         }
                         mPreferenceManager.setValue(
                             KEY_CLOUD_FORMATION_STATUS,
-                            AuthEnum.SIGNED_IN.name,
+                            AuthEnum.SIGNED_IN.name
                         )
                         mBottomSheetDialog?.dismiss()
                         async { mLocationProvider.generateNewAuthCredentials() }.await()
@@ -435,8 +455,8 @@ class MainActivity :
                             listOf(
                                 Pair(
                                     AnalyticsAttribute.TRIGGERED_BY,
-                                    if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS,
-                                ),
+                                    if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS
+                                )
                             )
                         analyticsUtils?.recordEvent(EventType.SIGN_IN_SUCCESSFUL, propertiesAws)
                     }.onError { it ->
@@ -449,8 +469,8 @@ class MainActivity :
                                 listOf(
                                     Pair(
                                         AnalyticsAttribute.TRIGGERED_BY,
-                                        if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS,
-                                    ),
+                                        if (fragment is ExploreFragment) AnalyticsAttributeValue.EXPLORER else AnalyticsAttributeValue.SETTINGS
+                                    )
                                 )
                             analyticsUtils?.recordEvent(EventType.SIGN_IN_FAILED, propertiesAws)
                         }
@@ -460,12 +480,12 @@ class MainActivity :
     }
 
     fun changeMapStyle(
-        mapStyleNameDisplay: String,
+        mapStyleNameDisplay: String
     ) {
         val fragment = mNavHostFragment.childFragmentManager.fragments[0]
         if (fragment is ExploreFragment) {
             fragment.mapStyleChange(
-                mapStyleNameDisplay,
+                mapStyleNameDisplay
             )
         }
     }
@@ -482,19 +502,39 @@ class MainActivity :
             object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
-                    request: WebResourceRequest?,
+                    request: WebResourceRequest?
                 ): Boolean {
                     when (request?.url?.host) {
                         SIGN_OUT -> {
                             handleAuthorizationCode(SIGN_OUT, null)
-                            hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
-                            showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+                            hideViews(
+                                mBinding.signInWebView,
+                                mBinding.ivBackMain,
+                                mBinding.viewBottom,
+                                mBinding.appCompatTextView
+                            )
+                            showViews(
+                                mBinding.bottomNavigationMain,
+                                mBinding.navHostFragment,
+                                mBinding.imgAmazonLogo,
+                                mBinding.ivAmazonInfo
+                            )
                         }
                         SIGN_IN -> {
                             val authorizationCode = request.url?.getQueryParameter(KEY_CODE)
                             handleAuthorizationCode(SIGN_IN, authorizationCode)
-                            hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
-                            showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+                            hideViews(
+                                mBinding.signInWebView,
+                                mBinding.ivBackMain,
+                                mBinding.viewBottom,
+                                mBinding.appCompatTextView
+                            )
+                            showViews(
+                                mBinding.bottomNavigationMain,
+                                mBinding.navHostFragment,
+                                mBinding.imgAmazonLogo,
+                                mBinding.ivAmazonInfo
+                            )
                         }
                         else -> {
                             mBinding.signInWebView.loadUrl(request?.url.toString())
@@ -514,7 +554,12 @@ class MainActivity :
         showProgress()
         mBottomSheetDialog?.hide()
         showViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom)
-        hideViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+        hideViews(
+            mBinding.bottomNavigationMain,
+            mBinding.navHostFragment,
+            mBinding.imgAmazonLogo,
+            mBinding.ivAmazonInfo
+        )
         mBinding.appCompatTextView.invisible()
         val mUserDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
         val mUserPoolClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
@@ -529,7 +574,12 @@ class MainActivity :
     fun openSignOut() {
         showProgress()
         showViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom)
-        hideViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+        hideViews(
+            mBinding.bottomNavigationMain,
+            mBinding.navHostFragment,
+            mBinding.imgAmazonLogo,
+            mBinding.ivAmazonInfo
+        )
         mBinding.appCompatTextView.invisible()
         val mUserDomain = mPreferenceManager.getValue(KEY_USER_DOMAIN, "")
         val mUserPoolClientId = mPreferenceManager.getValue(KEY_USER_POOL_CLIENT_ID, "")
@@ -581,19 +631,19 @@ class MainActivity :
                         R.id.bottom_navigation_main,
                         ConstraintSet.END,
                         ConstraintSet.PARENT_ID,
-                        ConstraintSet.END,
+                        ConstraintSet.END
                     )
                     constraintSet.connect(
                         R.id.img_amazon_logo,
                         ConstraintSet.END,
                         R.id.bottom_navigation_main,
-                        ConstraintSet.START,
+                        ConstraintSet.START
                     )
                     constraintSet.connect(
                         R.id.iv_amazon_info,
                         ConstraintSet.END,
                         R.id.img_amazon_logo,
-                        ConstraintSet.START,
+                        ConstraintSet.START
                     )
 
                     constraintSet.applyTo(clMain)
@@ -604,13 +654,13 @@ class MainActivity :
 
     fun setSelectedScreen(screen: String) {
         currentPage = screen
-        val properties = listOf(Pair(AnalyticsAttribute.SCREEN_NAME, screen),)
+        val properties = listOf(Pair(AnalyticsAttribute.SCREEN_NAME, screen))
         analyticsUtils?.recordEvent(EventType.SCREEN_OPEN, properties)
     }
 
     fun exitScreen() {
         currentPage?.let {
-            val properties = listOf(Pair(AnalyticsAttribute.SCREEN_NAME, it),)
+            val properties = listOf(Pair(AnalyticsAttribute.SCREEN_NAME, it))
             analyticsUtils?.recordEvent(EventType.SCREEN_CLOSE, properties)
         }
     }
@@ -630,8 +680,18 @@ class MainActivity :
                 }
             }
             ivBackMain.setOnClickListener {
-                hideViews(mBinding.signInWebView, mBinding.ivBackMain, mBinding.viewBottom, mBinding.appCompatTextView)
-                showViews(mBinding.bottomNavigationMain, mBinding.navHostFragment, mBinding.imgAmazonLogo, mBinding.ivAmazonInfo)
+                hideViews(
+                    mBinding.signInWebView,
+                    mBinding.ivBackMain,
+                    mBinding.viewBottom,
+                    mBinding.appCompatTextView
+                )
+                showViews(
+                    mBinding.bottomNavigationMain,
+                    mBinding.navHostFragment,
+                    mBinding.imgAmazonLogo,
+                    mBinding.ivAmazonInfo
+                )
                 mBottomSheetDialog?.show()
             }
         }
@@ -663,7 +723,7 @@ class MainActivity :
                         region = mRegion
                         credentialsProvider =
                             createCredentialsProviderForPolicy(
-                                mLocationProvider.getCredentials(),
+                                mLocationProvider.getCredentials()
                             )
                     }
 
@@ -717,7 +777,7 @@ class MainActivity :
                     region = identityId.split(":")[0]
                     credentialsProvider =
                         createCredentialsProviderForPolicy(
-                            mLocationProvider.getCredentials(),
+                            mLocationProvider.getCredentials()
                         )
                 }
 
@@ -731,19 +791,19 @@ class MainActivity :
     }
 
     private fun createCredentialsProviderForPolicy(
-        credentials: Credentials?,
+        credentials: Credentials?
     ): aws.smithy.kotlin.runtime.auth.awscredentials.CredentialsProvider {
         if (credentials?.accessKeyId == null || credentials.sessionToken == null || credentials.secretKey == null) {
             throw Exception(
-                "Credentials not found",
+                "Credentials not found"
             )
         }
         return aws.sdk.kotlin.runtime.auth.credentials.StaticCredentialsProvider(
             aws.smithy.kotlin.runtime.auth.awscredentials.Credentials.invoke(
                 accessKeyId = credentials.accessKeyId!!,
                 secretAccessKey = credentials.secretKey!!,
-                sessionToken = credentials.sessionToken,
-            ),
+                sessionToken = credentials.sessionToken
+            )
         )
     }
 
@@ -784,7 +844,7 @@ class MainActivity :
                     mAuthStatus =
                         mPreferenceManager.getValue(
                             KEY_CLOUD_FORMATION_STATUS,
-                            AuthEnum.DEFAULT.name,
+                            AuthEnum.DEFAULT.name
                         )
                     when (mAuthStatus) {
                         AuthEnum.DEFAULT.name -> {
@@ -799,11 +859,11 @@ class MainActivity :
                                 reStartApp = false
                                 mPreferenceManager.removeValue(KEY_RE_START_APP)
                                 mGeofenceBottomSheetHelper.signInConnectedBottomSheet(
-                                    mSignInConnectInterface,
+                                    mSignInConnectInterface
                                 )
                             } else {
                                 mGeofenceBottomSheetHelper.signInRequiredBottomSheet(
-                                    mSignInRequiredInterface,
+                                    mSignInRequiredInterface
                                 )
                             }
                         }
@@ -845,11 +905,11 @@ class MainActivity :
                                     reStartApp = false
                                     mPreferenceManager.removeValue(KEY_RE_START_APP)
                                     mGeofenceBottomSheetHelper.signInConnectedBottomSheet(
-                                        mSignInConnectInterface,
+                                        mSignInConnectInterface
                                     )
                                 } else {
                                     mGeofenceBottomSheetHelper.signInRequiredBottomSheet(
-                                        mSignInRequiredInterface,
+                                        mSignInRequiredInterface
                                     )
                                 }
                             }
@@ -924,14 +984,14 @@ class MainActivity :
     fun showGeofenceCloudFormation() {
         mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
             TabEnum.TAB_GEOFENCE,
-            mCloudFormationInterface,
+            mCloudFormationInterface
         )
     }
 
     fun openCloudFormation() {
         mGeofenceBottomSheetHelper.cloudFormationBottomSheet(
             TabEnum.TAB_TRACKING,
-            mCloudFormationInterface,
+            mCloudFormationInterface
         )
     }
 
@@ -1113,7 +1173,7 @@ class MainActivity :
     private fun showTrackingBottomSheet() {
         if (mPreferenceManager.getValue(
                 IS_LOCATION_TRACKING_ENABLE,
-                false,
+                false
             )
         ) {
             mTrackingUtils?.showTrackingBottomSheet(TrackingEnum.TRACKING_HISTORY)
@@ -1143,7 +1203,9 @@ class MainActivity :
             SignInConnectInterface {
             override fun signIn(dialog: Dialog?) {
                 mBottomSheetDialog = dialog
-                val propertiesAws = listOf(Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER),)
+                val propertiesAws = listOf(
+                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+                )
                 analyticsUtils?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
                 openSignIn()
             }
@@ -1158,7 +1220,9 @@ class MainActivity :
         object : SignInRequiredInterface {
             override fun signInClick(dialog: Dialog?) {
                 mBottomSheetDialog = dialog
-                val propertiesAws = listOf(Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER),)
+                val propertiesAws = listOf(
+                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.EXPLORER)
+                )
                 analyticsUtils?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
                 openSignIn()
             }
@@ -1200,8 +1264,8 @@ class MainActivity :
                 alertDialog?.setCanceledOnTouchOutside(false)
                 alertDialog?.window!!.setBackgroundDrawable(
                     ColorDrawable(
-                        ContextCompat.getColor(this@MainActivity, android.R.color.transparent),
-                    ),
+                        ContextCompat.getColor(this@MainActivity, android.R.color.transparent)
+                    )
                 )
                 alertDialog?.show()
             }

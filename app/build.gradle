@@ -3,8 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
+    id 'org.jlleitschuh.gradle.ktlint' version "11.6.1"
 }
-apply from : '../git-hooks.gradle'
+apply from: '../git-hooks.gradle'
 
 android {
     namespace 'com.aws.amazonlocation'
@@ -18,33 +19,50 @@ android {
         versionCode 44
         versionName "1.1.0"
         testInstrumentationRunner "com.aws.amazonlocation.AmazonLocationRunner"
-        buildConfigField 'String', 'ATTRIBUTION_LEARN_MORE_HERE_URL',"\"https://legal.here.com/en-gb/terms/general-content-supplier-terms-and-notices\""
-        buildConfigField 'String', 'ATTRIBUTION_LEARN_MORE_ESRI_URL',"\"https://www.esri.com/en-us/legal/terms/data-attributions\""
-        buildConfigField 'String', 'BASE_DOMAIN',"\"https://location.aws.com\""
-        buildConfigField 'String', 'AWS_TERMS_URL',"\"/demo/terms\""
-        buildConfigField 'String', 'CLOUD_FORMATION_READ_MORE_URL',"\"/demo/help\""
-        buildConfigField 'String', 'AWS_SOFTWARE_ATTRIBUTION_URL',"\"/demo/software-attributions\""
-        buildConfigField 'String', 'AWS_CUSTOMER_AGREEMENT',"\"https://aws.amazon.com/agreement/\""
-        buildConfigField 'String', 'AWS_ACCEPTABLE_USE_POLICY',"\"https://aws.amazon.com/aup/\""
-        buildConfigField 'String', 'AWS_PRIVACY_NOTICE',"\"https://aws.amazon.com/privacy/\""
-        buildConfigField 'String', 'AWS_NEAREST_REGION_CHECK_URL',"\"https://dynamodb.%s.amazonaws.com/\""
+        buildConfigField 'String', 'ATTRIBUTION_LEARN_MORE_HERE_URL',
+                "\"https://legal.here.com/en-gb/terms/general-content-supplier-terms-and-notices\""
+        buildConfigField 'String', 'ATTRIBUTION_LEARN_MORE_ESRI_URL',
+                "\"https://www.esri.com/en-us/legal/terms/data-attributions\""
+        buildConfigField 'String', 'BASE_DOMAIN', "\"https://location.aws.com\""
+        buildConfigField 'String', 'AWS_TERMS_URL', "\"/demo/terms\""
+        buildConfigField 'String', 'CLOUD_FORMATION_READ_MORE_URL', "\"/demo/help\""
+        buildConfigField 'String', 'AWS_SOFTWARE_ATTRIBUTION_URL', "\"/demo/software-attributions\""
+        buildConfigField 'String', 'AWS_CUSTOMER_AGREEMENT', "\"https://aws.amazon.com/agreement/\""
+        buildConfigField 'String', 'AWS_ACCEPTABLE_USE_POLICY', "\"https://aws.amazon.com/aup/\""
+        buildConfigField 'String', 'AWS_PRIVACY_NOTICE', "\"https://aws.amazon.com/privacy/\""
+        buildConfigField 'String', 'AWS_NEAREST_REGION_CHECK_URL',
+                "\"https://dynamodb.%s.amazonaws.com/\""
 
-        buildConfigField 'String', 'API_KEY_EU_CENTRAL',"\"${customConfig.getProperty("API_KEY_EU_CENTRAL")}\""
-        buildConfigField 'String', 'API_KEY_US_EAST',"\"${customConfig.getProperty("API_KEY_US_EAST")}\""
-        buildConfigField 'String', 'DEFAULT_IDENTITY_POOL_ID',"\"${customConfig.getProperty("DEFAULT_IDENTITY_POOL_ID")}\""
-        buildConfigField 'String', 'DEFAULT_REGION',"\"${customConfig.getProperty("DEFAULT_REGION")}\""
-        buildConfigField 'String', 'IDENTITY_POOL_ID',"\"${customConfig.getProperty("IDENTITY_POOL_ID")}\""
-        buildConfigField 'String', 'USER_DOMAIN',"\"${customConfig.getProperty("USER_DOMAIN")}\""
-        buildConfigField 'String', 'USER_POOL_CLIENT_ID',"\"${customConfig.getProperty("USER_POOL_CLIENT_ID")}\""
-        buildConfigField 'String', 'USER_POOL_ID',"\"${customConfig.getProperty("USER_POOL_ID")}\""
-        buildConfigField 'String', 'WEB_SOCKET_URL',"\"${customConfig.getProperty("WEB_SOCKET_URL")}\""
-        buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL',"\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL")}\""
-        buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL_EU',"\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL_EU")}\""
-        buildConfigField 'String', 'USER_LOGIN_NAME',"\"${customConfig.getProperty("USER_LOGIN_NAME")}\""
-        buildConfigField 'String', 'USER_LOGIN_PASSWORD',"\"${customConfig.getProperty("USER_LOGIN_PASSWORD")}\""
-        buildConfigField 'String', 'ANALYTICS_IDENTITY_POOL_ID',"\"${customConfig.getProperty("ANALYTICS_IDENTITY_POOL_ID")}\""
-        buildConfigField 'String', 'ANALYTICS_APP_ID',"\"${customConfig.getProperty("ANALYTICS_APP_ID")}\""
-        buildConfigField 'String', 'DEFAULT_IDENTITY_POOL_ID_EU',"\"${customConfig.getProperty("DEFAULT_IDENTITY_POOL_ID_EU")}\""
+        buildConfigField 'String', 'API_KEY_EU_CENTRAL',
+                "\"${customConfig.getProperty("API_KEY_EU_CENTRAL")}\""
+        buildConfigField 'String', 'API_KEY_US_EAST',
+                "\"${customConfig.getProperty("API_KEY_US_EAST")}\""
+        buildConfigField 'String', 'DEFAULT_IDENTITY_POOL_ID',
+                "\"${customConfig.getProperty("DEFAULT_IDENTITY_POOL_ID")}\""
+        buildConfigField 'String', 'DEFAULT_REGION',
+                "\"${customConfig.getProperty("DEFAULT_REGION")}\""
+        buildConfigField 'String', 'IDENTITY_POOL_ID',
+                "\"${customConfig.getProperty("IDENTITY_POOL_ID")}\""
+        buildConfigField 'String', 'USER_DOMAIN', "\"${customConfig.getProperty("USER_DOMAIN")}\""
+        buildConfigField 'String', 'USER_POOL_CLIENT_ID',
+                "\"${customConfig.getProperty("USER_POOL_CLIENT_ID")}\""
+        buildConfigField 'String', 'USER_POOL_ID', "\"${customConfig.getProperty("USER_POOL_ID")}\""
+        buildConfigField 'String', 'WEB_SOCKET_URL',
+                "\"${customConfig.getProperty("WEB_SOCKET_URL")}\""
+        buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL',
+                "\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL")}\""
+        buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL_EU',
+                "\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL_EU")}\""
+        buildConfigField 'String', 'USER_LOGIN_NAME',
+                "\"${customConfig.getProperty("USER_LOGIN_NAME")}\""
+        buildConfigField 'String', 'USER_LOGIN_PASSWORD',
+                "\"${customConfig.getProperty("USER_LOGIN_PASSWORD")}\""
+        buildConfigField 'String', 'ANALYTICS_IDENTITY_POOL_ID',
+                "\"${customConfig.getProperty("ANALYTICS_IDENTITY_POOL_ID")}\""
+        buildConfigField 'String', 'ANALYTICS_APP_ID',
+                "\"${customConfig.getProperty("ANALYTICS_APP_ID")}\""
+        buildConfigField 'String', 'DEFAULT_IDENTITY_POOL_ID_EU',
+                "\"${customConfig.getProperty("DEFAULT_IDENTITY_POOL_ID_EU")}\""
     }
     signingConfigs {
         release {
@@ -56,26 +74,29 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField 'String', 'CLOUD_FORMATION_URL', '"https://%s.console.aws.amazon.com/cloudformation/home?region=%s#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/main-cf-template.yaml"'
+            buildConfigField 'String', 'CLOUD_FORMATION_URL',
+                    '"https://%s.console.aws.amazon.com/cloudformation/home?region=%s#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/main-cf-template.yaml"'
             signingConfig signingConfigs.debug
             testCoverageEnabled true
         }
         release {
-            buildConfigField 'String', 'CLOUD_FORMATION_URL', '"https://%s.console.aws.amazon.com/cloudformation/home?region=%s#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/main-cf-template.yaml"'
+            buildConfigField 'String', 'CLOUD_FORMATION_URL',
+                    '"https://%s.console.aws.amazon.com/cloudformation/home?region=%s#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/main-cf-template.yaml"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
         unsigned {
-            buildConfigField 'String', 'CLOUD_FORMATION_URL', '"https://%s.console.aws.amazon.com/cloudformation/home?region=%s#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/main-cf-template.yaml"'
+            buildConfigField 'String', 'CLOUD_FORMATION_URL',
+                    '"https://%s.console.aws.amazon.com/cloudformation/home?region=%s#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-demo-resources.s3.amazonaws.com/main-cf-template.yaml"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
                     'proguard-rules.pro'
             debuggable false
         }
         buildTypes.each {
-            it.resValue 'string', 'AMAZON_LOCATION_SCHEMA',"\"amazonlocationdemo\""
+            it.resValue 'string', 'AMAZON_LOCATION_SCHEMA', "\"amazonlocationdemo\""
         }
     }
     compileOptions {
@@ -103,7 +124,18 @@ android {
         exclude "lib/armeabi/**"
     }
     lint {
-        disable 'IconLauncherShape', 'Overdraw', 'IconDensities', 'IconDipSize', 'IconDuplicatesConfig'
+        disable 'IconLauncherShape', 'Overdraw', 'IconDensities', 'IconDipSize',
+                'IconDuplicatesConfig'
+    }
+}
+
+ktlint {
+    android = true // Enable Android-specific linting rules
+    ignoreFailures = false // Fail the build if KtLint finds any issues
+    disabledRules = ["max-line-length"]
+    reporters {
+        reporter("plain") // Output KtLint results in plain text format
+        reporter("html") // Output KtLint results in HTML format
     }
 }
 
