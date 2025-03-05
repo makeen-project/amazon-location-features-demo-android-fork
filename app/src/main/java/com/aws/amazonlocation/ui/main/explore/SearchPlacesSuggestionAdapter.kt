@@ -20,7 +20,7 @@ class SearchPlacesSuggestionAdapter(
     private val mSearchPlaceList: ArrayList<SearchSuggestionData>,
     private val preferenceManager: PreferenceManager?,
     private var isForDirections: Boolean,
-    var mSearchPlaceSuggestionInterface: SearchPlaceSuggestionInterface,
+    var mSearchPlaceSuggestionInterface: SearchPlaceSuggestionInterface
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -32,7 +32,11 @@ class SearchPlacesSuggestionAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: SearchSuggestionData) {
             binding.apply {
-                val region = getRegion(data.amazonLocationAddress?.region?.name, data.amazonLocationAddress?.subRegion?.name, data.amazonLocationAddress?.country?.name)
+                val region = getRegion(
+                    data.amazonLocationAddress?.region?.name,
+                    data.amazonLocationAddress?.subRegion?.name,
+                    data.amazonLocationAddress?.country?.name
+                )
 
                 if (region.isEmpty()) {
                     tvRegion.text = tvRegion.context.resources.getString(R.string.search_nearby)
@@ -65,8 +69,12 @@ class SearchPlacesSuggestionAdapter(
                 }
 
                 when {
-                    data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(R.drawable.icon_search)
-                    !data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(R.drawable.ic_map_pin)
+                    data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(
+                        R.drawable.icon_search
+                    )
+                    !data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(
+                        R.drawable.ic_map_pin
+                    )
                 }
                 clMain.setOnClickListener {
                     mSearchPlaceSuggestionInterface.suggestedPlaceClick(adapterPosition)
@@ -93,8 +101,12 @@ class SearchPlacesSuggestionAdapter(
                     }
 
                     when {
-                        data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(R.drawable.icon_search)
-                        !data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(R.drawable.ic_map_pin)
+                        data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(
+                            R.drawable.icon_search
+                        )
+                        !data.placeId.isNullOrEmpty() -> ivSearchLocation.setImageResource(
+                            R.drawable.ic_map_pin
+                        )
                     }
                     clMain.setOnClickListener {
                         mSearchPlaceSuggestionInterface.suggestedPlaceClick(adapterPosition)

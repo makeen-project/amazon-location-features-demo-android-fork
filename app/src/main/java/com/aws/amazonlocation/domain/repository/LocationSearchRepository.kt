@@ -1,10 +1,10 @@
 package com.aws.amazonlocation.domain.repository
 
-import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 import com.aws.amazonlocation.domain.`interface`.DistanceInterface
 import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
+import com.aws.amazonlocation.ui.main.explore.AvoidanceOption
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -15,7 +15,7 @@ interface LocationSearchRepository {
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface,
+        searchPlace: SearchPlaceInterface
     )
 
     suspend fun searchPlaceIndexForText(

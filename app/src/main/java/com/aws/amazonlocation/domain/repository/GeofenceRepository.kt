@@ -34,7 +34,7 @@ interface GeofenceRepository {
         lat: Double?,
         lng: Double?,
         searchText: String,
-        searchPlace: SearchPlaceInterface,
+        searchPlace: SearchPlaceInterface
     )
 
     suspend fun searchPlaceIndexForText(

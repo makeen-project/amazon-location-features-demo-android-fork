@@ -34,14 +34,14 @@ import com.aws.amazonlocation.utils.showViews
 // SPDX-License-Identifier: MIT-0
 class NavigationAdapter(
     private val mNavigationList: ArrayList<NavigationData>,
-    private val preferenceManager: PreferenceManager,
+    private val preferenceManager: PreferenceManager
 ) : RecyclerView.Adapter<NavigationAdapter.NavigationVH>() {
     inner class NavigationVH(
-        val binding: ItemNavigationRouteListBinding,
+        val binding: ItemNavigationRouteListBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
             data: NavigationData,
-            isLastItem: Boolean,
+            isLastItem: Boolean
         ) {
             binding.apply {
                 tvNavigationAddress.text = data.getAddress()
@@ -54,7 +54,7 @@ class NavigationAdapter(
                                 tvNavigationAddress.context,
                                 distance,
                                 isMetric,
-                                true,
+                                true
                             )
                         }
                 }
@@ -62,9 +62,17 @@ class NavigationAdapter(
                     when (it) {
                         TYPE_TURN -> {
                             data.routeTurnStepDetails?.let { routeTurnStepDetails ->
-                                if (routeTurnStepDetails.steeringDirection?.value.equals(TURN_LEFT, true,)) {
+                                if (routeTurnStepDetails.steeringDirection?.value.equals(
+                                        TURN_LEFT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_left)
-                                } else if (routeTurnStepDetails.steeringDirection?.value.equals(TURN_RIGHT, true,)) {
+                                } else if (routeTurnStepDetails.steeringDirection?.value.equals(
+                                        TURN_RIGHT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_right)
                                 }
                             }
@@ -88,9 +96,17 @@ class NavigationAdapter(
 
                         TYPE_ENTER_HIGHWAY -> {
                             data.routeEnterHighwayStepDetails?.let { highwayStepDetails ->
-                                if (highwayStepDetails.steeringDirection?.value.equals(TURN_LEFT, true)) {
+                                if (highwayStepDetails.steeringDirection?.value.equals(
+                                        TURN_LEFT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_ramp_left)
-                                } else if (highwayStepDetails.steeringDirection?.value.equals(TURN_RIGHT, true)) {
+                                } else if (highwayStepDetails.steeringDirection?.value.equals(
+                                        TURN_RIGHT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_ramp_right)
                                 }
                             }
@@ -102,7 +118,7 @@ class NavigationAdapter(
                                     ivNavigationIcon.setImageResource(R.drawable.ic_exit_left)
                                 } else if (exitStepDetails.steeringDirection?.value.equals(
                                         TURN_RIGHT,
-                                        true,
+                                        true
                                     )
                                 ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_exit_right)
@@ -118,7 +134,11 @@ class NavigationAdapter(
                             data.routeRampStepDetails?.let { rampStepDetails ->
                                 if (rampStepDetails.steeringDirection?.value.equals(TURN_LEFT, true)) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_ramp_left)
-                                } else if (rampStepDetails.steeringDirection?.value.equals(TURN_RIGHT, true)) {
+                                } else if (rampStepDetails.steeringDirection?.value.equals(
+                                        TURN_RIGHT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_ramp_right)
                                 }
                             }
@@ -131,9 +151,17 @@ class NavigationAdapter(
                         TYPE_ROUNDABOUT_EXIT -> {
                             data.routeRoundaboutExitStepDetails?.let { exitStepDetails ->
                                 if (exitStepDetails.steeringDirection?.value.equals(TURN_LEFT, true)) {
-                                    ivNavigationIcon.setImageResource(R.drawable.ic_roundabout_exit_left)
-                                } else if (exitStepDetails.steeringDirection?.value.equals(TURN_RIGHT, true)) {
-                                    ivNavigationIcon.setImageResource(R.drawable.ic_roundabout_exit_right)
+                                    ivNavigationIcon.setImageResource(
+                                        R.drawable.ic_roundabout_exit_left
+                                    )
+                                } else if (exitStepDetails.steeringDirection?.value.equals(
+                                        TURN_RIGHT,
+                                        true
+                                    )
+                                ) {
+                                    ivNavigationIcon.setImageResource(
+                                        R.drawable.ic_roundabout_exit_right
+                                    )
                                 }
                             }
                         }
@@ -141,18 +169,34 @@ class NavigationAdapter(
                         TYPE_ROUNDABOUT_PASS -> {
                             data.routeRoundaboutPassStepDetails?.let { passStepDetails ->
                                 if (passStepDetails.steeringDirection?.value.equals(TURN_LEFT, true)) {
-                                    ivNavigationIcon.setImageResource(R.drawable.ic_roundabout_pass_left)
-                                } else if (passStepDetails.steeringDirection?.value.equals(TURN_RIGHT, true)) {
-                                    ivNavigationIcon.setImageResource(R.drawable.ic_roundabout_pass_right)
+                                    ivNavigationIcon.setImageResource(
+                                        R.drawable.ic_roundabout_pass_left
+                                    )
+                                } else if (passStepDetails.steeringDirection?.value.equals(
+                                        TURN_RIGHT,
+                                        true
+                                    )
+                                ) {
+                                    ivNavigationIcon.setImageResource(
+                                        R.drawable.ic_roundabout_pass_right
+                                    )
                                 }
                             }
                         }
 
                         TYPE_U_TURN -> {
                             data.routeUTurnStepDetails?.let { uTurnStepDetails ->
-                                if (uTurnStepDetails.steeringDirection?.value.equals(TURN_LEFT, true)) {
+                                if (uTurnStepDetails.steeringDirection?.value.equals(
+                                        TURN_LEFT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_uturn_left)
-                                } else if (uTurnStepDetails.steeringDirection?.value.equals(TURN_RIGHT, true)) {
+                                } else if (uTurnStepDetails.steeringDirection?.value.equals(
+                                        TURN_RIGHT,
+                                        true
+                                    )
+                                ) {
                                     ivNavigationIcon.setImageResource(R.drawable.ic_uturn_right)
                                 }
                             }
@@ -170,11 +214,15 @@ class NavigationAdapter(
                 if (isLastItem) {
                     if (data.getAddress().contains(TURN_LEFT, true)) {
                         tvDestination.text =
-                            tvDestination.context.getString(R.string.label_destination_will_be_on_the_left)
+                            tvDestination.context.getString(
+                                R.string.label_destination_will_be_on_the_left
+                            )
                         showViews(ivDestination, tvDestination)
                     } else if (data.getAddress().contains(TURN_RIGHT, true)) {
                         tvDestination.text =
-                            tvDestination.context.getString(R.string.label_destination_will_be_on_the_right)
+                            tvDestination.context.getString(
+                                R.string.label_destination_will_be_on_the_right
+                            )
                         showViews(ivDestination, tvDestination)
                     } else {
                         hideViews(ivDestination, tvDestination)
@@ -188,19 +236,19 @@ class NavigationAdapter(
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int,
+        viewType: Int
     ): NavigationVH =
         NavigationVH(
             ItemNavigationRouteListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false,
-            ),
+                false
+            )
         )
 
     override fun onBindViewHolder(
         holder: NavigationVH,
-        position: Int,
+        position: Int
     ) {
         holder.setIsRecyclable(false)
         holder.bind(mNavigationList[position], position == mNavigationList.size - 1)
