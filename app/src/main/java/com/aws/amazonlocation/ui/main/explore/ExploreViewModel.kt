@@ -25,7 +25,7 @@ import com.aws.amazonlocation.domain.`interface`.PlaceInterface
 import com.aws.amazonlocation.domain.`interface`.SearchDataInterface
 import com.aws.amazonlocation.domain.`interface`.SearchPlaceInterface
 import com.aws.amazonlocation.domain.usecase.LocationSearchUseCase
-import com.aws.amazonlocation.utils.DateFormat.HH_MM
+import com.aws.amazonlocation.utils.DateFormat.HH_MM_AA
 import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.formatToDisplayTime
 import com.aws.amazonlocation.utils.getLanguageData
@@ -406,7 +406,7 @@ class ExploreViewModel
                     val getLastTime = legs.last().vehicleLegDetails?.arrival?.time
                         ?: legs.last().pedestrianLegDetails?.arrival?.time
                         ?: legs.last().ferryLegDetails?.arrival?.time
-                    mNavigationResponse?.time = getLastTime?.let { formatToDisplayTime(it, HH_MM) }
+                    mNavigationResponse?.time = getLastTime?.let { formatToDisplayTime(it, HH_MM_AA) }
                     for (leg in legs) {
                         if (leg.vehicleLegDetails != null) {
                             leg.vehicleLegDetails?.travelSteps?.forEach {
