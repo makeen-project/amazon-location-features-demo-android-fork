@@ -3210,20 +3210,29 @@ class ExploreFragment :
                     }
                 }
                 edtSearchDest.setOnFocusChangeListener { _, hasFocus ->
+                    ivCloseDestination.visibility = if (hasFocus && !edtSearchDest.text.isNullOrEmpty()) View.VISIBLE else View.GONE
                     if (hasFocus) {
                         mViewModel.isDataSearchForDestination = true
+                    } else if (edtSearchDest.text.toString() == getString(R.string.label_my_location) ||
+                        (!rvSearchPlacesDirection.isVisible && !rvSearchPlacesSuggestionDirection.isVisible)) {
+                        ivCloseDestination.hide()
                     }
                 }
                 edtSearchDirection.setOnFocusChangeListener { _, hasFocus ->
+                    ivCloseDirection.visibility = if (hasFocus && !edtSearchDirection.text.isNullOrEmpty()) View.VISIBLE else View.GONE
+
                     if (hasFocus) {
                         mViewModel.isDataSearchForDestination = false
+                    } else if (edtSearchDirection.text.toString() == getString(R.string.label_my_location) ||
+                        (!rvSearchPlacesDirection.isVisible && !rvSearchPlacesSuggestionDirection.isVisible)) {
+                        ivCloseDirection.hide()
                     }
                 }
                 edtSearchDest
                     .textChanges()
                     .debounce(DELAY_500)
                     .onEach { text ->
-                        updateDirectionSearchUI(text.isNullOrEmpty())
+                        updateDirectionSearchUI(text.isNullOrEmpty(), isFromDestination = true)
                         if (text
                                 ?.trim()
                                 .toString()
@@ -3291,7 +3300,7 @@ class ExploreFragment :
                     .textChanges()
                     .debounce(DELAY_500)
                     .onEach { text ->
-                        updateDirectionSearchUI(text.isNullOrEmpty())
+                        updateDirectionSearchUI(text.isNullOrEmpty(), isFromDestination = false)
                         if (text
                                 ?.trim()
                                 .toString()
@@ -3485,7 +3494,7 @@ class ExploreFragment :
                 }
                 bottomSheetDirectionSearch.ivAmazonInfoDirectionSearchSheet.setOnClickListener {
                     setAttributionDataAndExpandSheet()
-                }
+            }
                 bottomSheetDirection.ivAmazonInfoDirection?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
@@ -3537,6 +3546,26 @@ class ExploreFragment :
                 bottomSheetSearch.edtSearchPlaces.setText("")
                 mMapHelper.clearMarker()
                 clearSearchList()
+            }
+
+            bottomSheetDirectionSearch.ivCloseDirection.setOnClickListener {
+                bottomSheetDirectionSearch.edtSearchDirection.setText("")
+                hideViews(
+                    bottomSheetDirectionSearch.rvSearchPlacesDirection,
+                    bottomSheetDirectionSearch.rvSearchPlacesSuggestionDirection,
+                    bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root,
+                )
+                notifyDirectionAdapters()
+            }
+
+            bottomSheetDirectionSearch.ivCloseDestination.setOnClickListener {
+                bottomSheetDirectionSearch.edtSearchDest.setText("")
+                hideViews(
+                    bottomSheetDirectionSearch.rvSearchPlacesDirection,
+                    bottomSheetDirectionSearch.rvSearchPlacesSuggestionDirection,
+                    bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root,
+                )
+                notifyDirectionAdapters()
             }
 
             bottomSheetSearch.edtSearchPlaces.setOnFocusChangeListener { _, hasFocus ->
@@ -4118,7 +4147,7 @@ class ExploreFragment :
             mAdapterDirection?.notifyDataSetChanged()
             mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
             if (!edtSearchDest.hasFocus()) {
-                edtSearchDirection.requestFocus()
+                edtSearchDest.requestFocus()
             }
             mBaseActivity?.showKeyboard()
         }
@@ -4411,6 +4440,7 @@ class ExploreFragment :
                         .isNotEmpty() &&
                     mViewModel.mSearchDirectionDestinationData != null
                 ) {
+                    hideViews(ivCloseDestination, ivCloseDirection)
                     mViewModel.mSearchDirectionDestinationData?.let { it1 ->
                         showCurrentLocationDestinationRoute(
                             it1,
@@ -4426,6 +4456,7 @@ class ExploreFragment :
                         .isNotEmpty() &&
                     mViewModel.mSearchDirectionOriginData != null
                 ) {
+                    hideViews(ivCloseDestination, ivCloseDirection)
                     mViewModel.mSearchDirectionOriginData?.let { it1 ->
                         showCurrentLocationOriginRoute(
                             it1,
@@ -5075,18 +5106,20 @@ class ExploreFragment :
     }
 
     // update search ui
-    @SuppressLint("NotifyDataSetChanged")
-    private fun updateDirectionSearchUI(isSearchText: Boolean = false) {
+    private fun updateDirectionSearchUI(isSearchText: Boolean = false, isFromDestination: Boolean) {
+        if (mViewModel.run { mIsDirectionDataSet || mIsSwapClicked || mIsDirectionDataSetNew }) return
+
         mBinding.bottomSheetDirectionSearch.apply {
+            val closeIcon = if (isFromDestination) ivCloseDestination else ivCloseDirection
+            closeIcon.visibility = if(!isSearchText) View.VISIBLE else View.GONE
+
             if (isSearchText) {
                 hideViews(
                     rvSearchPlacesDirection,
                     rvSearchPlacesSuggestionDirection,
                     clSearchLoaderDirectionSearch.root,
                 )
-                mPlaceList.clear()
-                mAdapterDirection?.notifyDataSetChanged()
-                mSearchPlacesDirectionSuggestionAdapter?.notifyDataSetChanged()
+                notifyDirectionAdapters()
             }
         }
     }
@@ -5107,6 +5140,8 @@ class ExploreFragment :
                         override fun placeClick(position: Int) {
                             if (checkInternetConnection()) {
                                 mViewModel.mIsDirectionDataSet = true
+                                ivCloseDirection.hide()
+                                ivCloseDestination.hide()
                                 setPlaceData(position)
                                 notifyDirectionAdapters()
                             }
@@ -5149,13 +5184,15 @@ class ExploreFragment :
                                     delay(CLICK_DEBOUNCE_ENABLE)
                                     mViewModel.mIsDirectionDataSet = false
                                 }
-                                if (mPlaceList[position].placeId.isNullOrEmpty() && !mPlaceList[position].queryId.isNullOrEmpty()) {
+                                if (mPlaceList[position].placeId. isNullOrEmpty() && !mPlaceList[position].queryId.isNullOrEmpty()) {
                                     mPlaceList[position].queryId?.let {
                                         mViewModel.searchPlaceIndexForText(
                                             queryId = it
                                         )
                                     }
                                 } else {
+                                    ivCloseDirection.hide()
+                                    ivCloseDestination.hide()
                                     setPlaceData(position)
                                 }
                                 notifyDirectionAdapters()
