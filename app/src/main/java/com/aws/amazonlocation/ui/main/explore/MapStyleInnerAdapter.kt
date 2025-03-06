@@ -26,10 +26,14 @@ class MapStyleInnerAdapter(
                 ivChecked.setImageResource(data.image)
                 if (data.isSelected) {
                     cardMapImage.strokeWidth = 4
-                    tvStyleName.setTextColor(ContextCompat.getColor(tvStyleName.context, R.color.color_primary_green))
+                    tvStyleName.setTextColor(
+                        ContextCompat.getColor(tvStyleName.context, R.color.color_primary_green)
+                    )
                 } else {
                     cardMapImage.strokeWidth = 0
-                    tvStyleName.setTextColor(ContextCompat.getColor(tvStyleName.context, R.color.color_medium_black))
+                    tvStyleName.setTextColor(
+                        ContextCompat.getColor(tvStyleName.context, R.color.color_medium_black)
+                    )
                 }
                 cardMapImage.contentDescription = getDescription(adapterPosition)
                 cardMapImage.setOnClickListener {

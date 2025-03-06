@@ -8,14 +8,14 @@ import com.aws.amazonlocation.data.repository.LocationSearchImp
 import com.aws.amazonlocation.domain.repository.AuthRepository
 import com.aws.amazonlocation.domain.repository.GeofenceRepository
 import com.aws.amazonlocation.domain.repository.LocationSearchRepository
+import com.aws.amazonlocation.utils.BottomSheetHelper
+import com.aws.amazonlocation.utils.MapHelper
+import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.providers.GeofenceProvider
 import com.aws.amazonlocation.utils.providers.LocationProvider
 import com.aws.amazonlocation.utils.providers.PlacesProvider
 import com.aws.amazonlocation.utils.providers.RoutesProvider
 import com.aws.amazonlocation.utils.providers.TrackingProvider
-import com.aws.amazonlocation.utils.BottomSheetHelper
-import com.aws.amazonlocation.utils.MapHelper
-import com.aws.amazonlocation.utils.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,7 +52,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun getPlacesProvider(mMapHelper: MapHelper,mPreferenceManager: PreferenceManager) =
+    fun getPlacesProvider(mMapHelper: MapHelper, mPreferenceManager: PreferenceManager) =
         PlacesProvider(mMapHelper, mPreferenceManager)
 
     @Provides
@@ -76,9 +76,18 @@ object AppModule {
         mPlacesProvider: PlacesProvider,
         mRoutesProvider: RoutesProvider,
         mGeofenceProvider: GeofenceProvider,
-        mTrackingProvider: TrackingProvider,
+        mTrackingProvider: TrackingProvider
     ): AuthRepository =
-        AuthImp(RemoteDataSourceImpl(appContext, mLocationHelper, mPlacesProvider, mRoutesProvider, mGeofenceProvider, mTrackingProvider))
+        AuthImp(
+            RemoteDataSourceImpl(
+                appContext,
+                mLocationHelper,
+                mPlacesProvider,
+                mRoutesProvider,
+                mGeofenceProvider,
+                mTrackingProvider
+            )
+        )
 
     @Provides
     @Singleton
@@ -88,9 +97,18 @@ object AppModule {
         mPlacesProvider: PlacesProvider,
         mRoutesProvider: RoutesProvider,
         mGeofenceProvider: GeofenceProvider,
-        mTrackingProvider: TrackingProvider,
+        mTrackingProvider: TrackingProvider
     ): LocationSearchRepository =
-        LocationSearchImp(RemoteDataSourceImpl(appContext, mLocationProvider, mPlacesProvider, mRoutesProvider, mGeofenceProvider, mTrackingProvider))
+        LocationSearchImp(
+            RemoteDataSourceImpl(
+                appContext,
+                mLocationProvider,
+                mPlacesProvider,
+                mRoutesProvider,
+                mGeofenceProvider,
+                mTrackingProvider
+            )
+        )
 
     @Provides
     @Singleton
@@ -100,7 +118,16 @@ object AppModule {
         mPlacesProvider: PlacesProvider,
         mRoutesProvider: RoutesProvider,
         mGeofenceProvider: GeofenceProvider,
-        mTrackingProvider: TrackingProvider,
+        mTrackingProvider: TrackingProvider
     ): GeofenceRepository =
-        GeofenceImp(RemoteDataSourceImpl(appContext, mLocationProvider, mPlacesProvider, mRoutesProvider, mGeofenceProvider, mTrackingProvider))
+        GeofenceImp(
+            RemoteDataSourceImpl(
+                appContext,
+                mLocationProvider,
+                mPlacesProvider,
+                mRoutesProvider,
+                mGeofenceProvider,
+                mTrackingProvider
+            )
+        )
 }
