@@ -241,7 +241,7 @@ fun getPoliticalData(context: Context): ArrayList<PoliticalData> {
             countryCode = context.getString(R.string.flag_mar),
         ),
         PoliticalData(
-            countryName = context.getString(R.string.label_ps),
+            countryName = context.getString(R.string.label_pse),
             description = context.getString(R.string.description_ps),
             countryCode = context.getString(R.string.flag_ps),
         ),
