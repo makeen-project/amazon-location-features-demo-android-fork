@@ -5383,7 +5383,7 @@ class ExploreFragment :
                                     delay(CLICK_DEBOUNCE_ENABLE)
                                     mViewModel.mIsDirectionDataSet = false
                                 }
-                                if (mPlaceList[position].placeId. isNullOrEmpty() && !mPlaceList[position].queryId.isNullOrEmpty()) {
+                                if (mPlaceList[position].placeId.isNullOrEmpty() && !mPlaceList[position].queryId.isNullOrEmpty()) {
                                     mPlaceList[position].queryId?.let {
                                         mViewModel.searchPlaceIndexForText(
                                             queryId = it
