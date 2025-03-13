@@ -165,6 +165,8 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -4564,6 +4566,28 @@ class ExploreFragment :
             it.cardDirection.hide()
             it.cardNavigation.show()
         }
+    }
+
+    fun hideGeofence() {
+        mBinding.cardGeofenceMap.hide()
+        val defaultShapeAppearance =
+            ShapeAppearanceModel
+                .builder()
+                .build()
+        mBinding.cardMap.shapeAppearanceModel = defaultShapeAppearance
+        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_8).toFloat()
+    }
+
+    fun showGeofence() {
+        mBinding.cardGeofenceMap.show()
+        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_0).toFloat()
+        val shapeAppearanceModel =
+            ShapeAppearanceModel
+                .builder()
+                .setTopLeftCorner(CornerFamily.ROUNDED, 16f)
+                .setTopRightCorner(CornerFamily.ROUNDED, 16f)
+                .build()
+        mBinding.cardMap.shapeAppearanceModel = shapeAppearanceModel
     }
 
     fun hideDirectionAndCurrentLocationIcon() {

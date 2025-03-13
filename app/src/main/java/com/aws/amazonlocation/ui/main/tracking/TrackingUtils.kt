@@ -62,7 +62,7 @@ class TrackingUtils(
 
     fun showTrackingBottomSheet() {
         clickListener()
-        mBottomSheetTrackingBehavior?.isHideable = false
+        mBottomSheetTrackingBehavior?.isHideable = true
         mBottomSheetTrackingBehavior?.isDraggable = false
         mBottomSheetTrackingBehavior?.isFitToContents = false
         mBinding.clTrackerGeofence.context?.let {
@@ -92,7 +92,7 @@ class TrackingUtils(
         mBinding.apply {
             mBottomSheetTrackingBehavior = BottomSheetBehavior.from(root)
             mBottomSheetTrackingBehavior?.isHideable = true
-            mBottomSheetTrackingBehavior?.isDraggable = true
+            mBottomSheetTrackingBehavior?.isDraggable = false
             mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             mBottomSheetTrackingBehavior?.isFitToContents = false
             mBottomSheetTrackingBehavior?.halfExpandedRatio = 0.58f
