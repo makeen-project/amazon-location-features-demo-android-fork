@@ -37,23 +37,14 @@ class SimulationStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 )
             tracking?.perform(click())
 
-//            val btnTryTracker =
-//                waitForView(
-//                    allOf(
-//                        withId(R.id.btn_try_tracker),
-//                        isDisplayed()
-//                    )
-//                )
-//            btnTryTracker?.perform(click())
-
-            val labelStartSimulation =
+            val btnTryTracker =
                 waitForView(
                     allOf(
-                        withText(mActivityRule.activity.getString(R.string.label_start_simulation)),
+                        withId(R.id.btn_start_simulation),
                         isDisplayed()
                     )
                 )
-            labelStartSimulation?.perform(click())
+            btnTryTracker?.perform(click())
 
             swipeUp()
 
