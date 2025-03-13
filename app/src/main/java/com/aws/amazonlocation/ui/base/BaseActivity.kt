@@ -18,7 +18,6 @@ import aws.sdk.kotlin.services.location.model.LocationException
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.ui.main.geofence.GeofenceUtils
 import com.aws.amazonlocation.ui.main.simulation.SimulationUtils
 import com.aws.amazonlocation.ui.main.tracking.TrackingUtils
 import com.aws.amazonlocation.utils.BottomSheetHelper
@@ -47,8 +46,6 @@ open class BaseActivity : AppCompatActivity() {
 
     @Inject
     lateinit var mPreferenceManager: PreferenceManager
-
-    var mGeofenceUtils: GeofenceUtils? = null
 
     var mTrackingUtils: TrackingUtils? = null
     var mSimulationUtils: SimulationUtils? = null
@@ -88,7 +85,6 @@ open class BaseActivity : AppCompatActivity() {
 
             val policy = ThreadPolicy.Builder().permitAll().build()
             StrictMode.setThreadPolicy(policy)
-            mGeofenceUtils = GeofenceUtils()
 
             val preference = PreferenceManager(applicationContext)
             mTrackingUtils = TrackingUtils(preference, this@BaseActivity, mLocationProvider)

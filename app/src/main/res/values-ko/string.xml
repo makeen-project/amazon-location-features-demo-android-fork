@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon 위치</string>
-  <string name="menu_explore">둘러보기</string>
+  <string name="menu_navigate">탐색</string>
   <string name="menu_tracking">트래커</string>
-  <string name="menu_geofence">지오펜스</string>
   <string name="menu_setting">설정</string>
   <string name="menu_more">에 대해</string>
-  <string name="maybe_later">아마도 후에</string>
   <string name="terms_condition">약관 &amp; 조건</string>
   <string name="help">도움말</string>
   <string name="location_permission_is_required">위치 허가 입니다 필수</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">이동</string>
   <string name="label_search_starting_point">검색 시작 포인트</string>
   <string name="exit">출구</string>
-  <string name="add_geo_fence_1">추가 a 지오펜스 에 얻다 통지 언제 당신의 장치 가 들어갑니다 또는 가 종료됩니다 그것을</string>
   <string name="label_map_style">지도 스타일</string>
   <string name="map_style">지도 스타일</string>
-  <string name="label_enable_tracking_detail">활성화 그 특색 의지 허용 당신 에 선로 당신의 장치 과 얻다 통지 언제 그 장치 가 들어갑니다 또는 가 종료됩니다 어떤 의 당신의 지오펜스.</string>
   <string name="label_not_tracking_your_activity">아니요 추적 당신의 장치 위치</string>
   <string name="label_start_tracking">시작 트래킹</string>
   <string name="label_stop_tracking">그만 트래킹</string>

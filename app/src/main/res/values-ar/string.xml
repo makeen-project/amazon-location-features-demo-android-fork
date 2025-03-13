@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon الموقع</string>
-  <string name="menu_explore">اكتشف</string>
+  <string name="menu_navigate">انتقل</string>
   <string name="menu_tracking">أجهزة التتبع</string>
-  <string name="menu_geofence">الأسوار الجغرافية</string>
   <string name="menu_setting">إعدادات</string>
   <string name="menu_more">حول</string>
-  <string name="maybe_later">ربما في وقت لاحق</string>
   <string name="terms_condition">الشروط &amp; الشروط</string>
   <string name="help">المساعدة</string>
   <string name="location_permission_is_required">الموقع تصريح هو مطلوب</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">اذهب</string>
   <string name="label_search_starting_point">ابحث بدء نقطة</string>
   <string name="exit">الخروج</string>
-  <string name="add_geo_fence_1">إضافة أ السياج الجغرافي إلى أصبح أخطر متى ك آلة يدخل أو مخارج هي</string>
   <string name="label_map_style">خريطة أسلوب</string>
   <string name="map_style">خريطة طراز</string>
-  <string name="label_enable_tracking_detail">التمكين ال ميزة سوف سمح أنت إلى يتابع ك آلة و أصبح أخطر متى ال آلة يدخل أو مخارج أي من ك الأسوار الجغرافية.</string>
   <string name="label_not_tracking_your_activity">لا تتبع ك آلة موقع</string>
   <string name="label_start_tracking">ابدأ التتبع</string>
   <string name="label_stop_tracking">توقف التتبع</string>

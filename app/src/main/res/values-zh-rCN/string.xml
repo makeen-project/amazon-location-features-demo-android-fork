@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon 地点</string>
-  <string name="menu_explore">探索</string>
+  <string name="menu_navigate">导航</string>
   <string name="menu_tracking">追踪器</string>
-  <string name="menu_geofence">地理围栏</string>
   <string name="menu_setting">设置</string>
   <string name="menu_more">关于</string>
-  <string name="maybe_later">也许 后来</string>
   <string name="terms_condition">条款 &amp; 条件</string>
   <string name="help">帮帮我</string>
   <string name="location_permission_is_required">地点 许可 是 必填项</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">走</string>
   <string name="label_search_starting_point">搜寻 开始 点</string>
   <string name="exit">退出</string>
-  <string name="add_geo_fence_1">添加 一个 geofence 到 得到 已通知 什么时候 您的 设备 进入 要么 退出 它</string>
   <string name="label_map_style">地图 风格</string>
   <string name="map_style">地图 风格</string>
-  <string name="label_enable_tracking_detail">正在启用 这 功能 将 允许 你 到 跟踪 您的 设备 和 得到 已通知 什么时候 这 设备 进入 要么 退出 任何 的 您的 地理围栏。</string>
   <string name="label_not_tracking_your_activity">不是 追踪 您的 设备 位置</string>
   <string name="label_start_tracking">开始 追踪</string>
   <string name="label_stop_tracking">停下来 追踪</string>

@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Ubicación</string>
-  <string name="menu_explore">Explora</string>
+  <string name="menu_navigate">Navegar por</string>
   <string name="menu_tracking">Rastreadores</string>
-  <string name="menu_geofence">Geofences</string>
   <string name="menu_setting">Ajustes</string>
   <string name="menu_more">Acerca de</string>
-  <string name="maybe_later">Tal vez luego</string>
   <string name="terms_condition">Términos y Condiciones</string>
   <string name="help">Ayuda</string>
   <string name="location_permission_is_required">Ubicación permiso es Necesario</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">Ve</string>
   <string name="label_search_starting_point">Buscar empezando punto</string>
   <string name="exit">Salir</string>
-  <string name="add_geo_fence_1">Añadir un geofence a conseguir notificadas cuando vuestro dispositivo entra o salidas eso</string>
   <string name="label_map_style">Mapa Estilo</string>
   <string name="map_style">Mapa estilo</string>
-  <string name="label_enable_tracking_detail">Habilitando la rasgo voluntad permitir tú a pista vuestro dispositivo y conseguir notificadas cuando la dispositivo entra o salidas ninguna de vuestro geofences.</string>
   <string name="label_not_tracking_your_activity">No rastreo vuestro dispositivo ubicación</string>
   <string name="label_start_tracking">Comenzar Rastreo</string>
   <string name="label_stop_tracking">Parar Rastreo</string>

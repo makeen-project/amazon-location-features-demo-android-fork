@@ -233,10 +233,9 @@ class MainActivity :
                         mBottomSheetHelper.collapseNavigatingSheet()
                     } else if (mBottomSheetHelper.isDirectionSearchExpandedOrHalfExpand()) {
                         mBottomSheetHelper.collapseDirectionSearch()
-                    } else if (mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true) {
-                        mGeofenceUtils?.collapseGeofenceList()
                     } else if (mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true) {
-                        mTrackingUtils?.collapseTracking()
+                        mNavController.navigate(R.id.explore_fragment)
+                        moveToExploreScreen()
                     } else {
                         if (isEnabled) {
                             isEnabled = false
@@ -354,8 +353,8 @@ class MainActivity :
         }
     }
 
-    fun geofenceClick() {
-        mBinding.bottomNavigationMain.selectedItemId = R.id.menu_geofence
+    fun trackingClick() {
+        mBinding.bottomNavigationMain.selectedItemId = R.id.menu_tracking
     }
 
     private fun setSimulationIotPolicy() {
@@ -419,22 +418,10 @@ class MainActivity :
                         mNavController.navigate(R.id.explore_fragment)
                     }
 
-                    mGeofenceUtils?.hideAllGeofenceBottomSheet()
-
                     hideSearchSheet(fragment)
                     if (mTrackingUtils?.isTrackingSheetHidden() == true) {
                         showTrackingPreview(fragment)
                     }
-                    showAmazonLogo()
-                }
-
-                R.id.menu_geofence -> {
-                    val fragment = mNavHostFragment.childFragmentManager.fragments[0]
-                    if (fragment !is ExploreFragment) {
-                        mNavController.navigate(R.id.explore_fragment)
-                    }
-                    mTrackingUtils?.hideTrackingBottomSheet()
-                    hideSearchAndShowGeofence(fragment)
                     showAmazonLogo()
                 }
 
@@ -472,16 +459,6 @@ class MainActivity :
         }
     }
 
-    private fun hideSearchAndShowGeofence(fragment: Fragment) {
-        lifecycleScope.launch {
-            if (fragment !is ExploreFragment) {
-                delay(DELAY_FOR_FRAGMENT_LOAD) // Need delay for showing bottomsheet after fragment load
-            }
-            mBottomSheetHelper.hideSearchBottomSheet(true)
-            mGeofenceUtils?.showGeofenceBeforeLogin()
-        }
-    }
-
     private fun hideSearchSheet(fragment: Fragment?) {
         mBottomSheetHelper.hideSearchBottomSheet(true)
         if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
@@ -514,7 +491,6 @@ class MainActivity :
         if (!isTablet && fragment is ExploreFragment) {
             fragment.hideMapStyleSheet()
         }
-        mGeofenceUtils?.hideAllGeofenceBottomSheet()
         mTrackingUtils?.hideTrackingBottomSheet()
         mSimulationUtils?.hideSimulationBottomSheet()
     }
@@ -592,7 +568,6 @@ class MainActivity :
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {
                 fragment.showDirectionAndCurrentLocationIcon()
-                fragment.showGeofence()
             }
         }
     }
@@ -602,7 +577,6 @@ class MainActivity :
             val fragment = mNavHostFragment.childFragmentManager.fragments[0]
             if (fragment is ExploreFragment) {
                 fragment.showSimulationTop()
-                fragment.hideGeofence()
             }
         }
     }

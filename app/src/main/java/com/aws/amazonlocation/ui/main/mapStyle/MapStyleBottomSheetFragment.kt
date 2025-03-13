@@ -168,19 +168,12 @@ class MapStyleBottomSheetFragment(
             mBaseActivity.mTrackingUtils?.isTrackingSheetCollapsed()
                 ?.let {
                     if (!bottomSheetHelper.isDirectionSearchSheetVisible() && !bottomSheetHelper.isDirectionSheetVisible()) {
-                        if (!it && mBaseActivity.mGeofenceUtils?.isGeofenceSheetCollapsed() != null) {
-                            mBaseActivity.mGeofenceUtils?.isGeofenceSheetCollapsed()
-                                ?.let { it1 ->
-                                    if (!it1) {
-                                        if (mBaseActivity.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
-                                            bottomSheetHelper.hideSearchBottomSheet(false)
-                                        } else {
-                                            mBaseActivity.mSimulationUtils?.setSimulationDraggable()
-                                        }
-                                    } else {
-                                        mBaseActivity.bottomNavigationVisibility(true)
-                                    }
-                                }
+                        if (!it) {
+                            if (mBaseActivity.mSimulationUtils?.isSimulationBottomSheetVisible() != true) {
+                                bottomSheetHelper.hideSearchBottomSheet(false)
+                            } else {
+                                mBaseActivity.mSimulationUtils?.setSimulationDraggable()
+                            }
                         } else {
                             mBaseActivity.bottomNavigationVisibility(true)
                         }
@@ -547,13 +540,6 @@ class MapStyleBottomSheetFragment(
             return false
         }
         return behaviour!!.state == BottomSheetBehavior.STATE_HALF_EXPANDED || behaviour!!.state == BottomSheetBehavior.STATE_EXPANDED
-    }
-    fun expandMapStyleSheet() {
-        if (behaviour == null) {
-            return
-        }
-        behaviour?.state = BottomSheetBehavior.STATE_EXPANDED
-        bottomSheetHelper.hideSearchBottomSheet(true)
     }
 
     fun setImageIcon(logoResId: Int) {

@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Standort</string>
-  <string name="menu_explore">Erkunden</string>
+  <string name="menu_navigate">Navigieren</string>
   <string name="menu_tracking">Tracker</string>
-  <string name="menu_geofence">Geofences</string>
   <string name="menu_setting">Einstellungen</string>
   <string name="menu_more">Über</string>
-  <string name="maybe_later">Vielleicht später</string>
   <string name="terms_condition">Bedingungen &amp; Bedingungen</string>
   <string name="help">Hilfe</string>
   <string name="location_permission_is_required">Standort Genehmigung ist Erforderlich</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">Geh</string>
   <string name="label_search_starting_point">Suche beginnend Punkt</string>
   <string name="exit">Ausfahrt</string>
-  <string name="add_geo_fence_1">Hinzufügen ein Geofence zu erhalten benachrichtigt wenn dein Gerät Eingaben oder Ausgänge es</string>
   <string name="label_map_style">Karte Stil</string>
   <string name="map_style">Karte Stil</string>
-  <string name="label_enable_tracking_detail">Aktivieren die Merkmal Testament ermöglichen Sie zu Spur dein Gerät und erhalten benachrichtigt wenn die Gerät Eingaben oder Ausgänge irgendein von dein Geofences.</string>
   <string name="label_not_tracking_your_activity">Nicht Verfolgung dein Gerät Standort</string>
   <string name="label_start_tracking">Starte Nachverfolgung</string>
   <string name="label_stop_tracking">Stopp Nachverfolgung</string>

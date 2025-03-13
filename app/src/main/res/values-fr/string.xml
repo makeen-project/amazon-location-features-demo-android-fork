@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Emplacement</string>
-  <string name="menu_explore">Explorez</string>
+  <string name="menu_navigate">Naviguer</string>
   <string name="menu_tracking">Traceurs</string>
-  <string name="menu_geofence">Géofences</string>
   <string name="menu_setting">Réglages</string>
   <string name="menu_more">À propos</string>
-  <string name="maybe_later">Peut-être plus tard</string>
   <string name="terms_condition">Termes et Conditions</string>
   <string name="help">Aide</string>
   <string name="location_permission_is_required">Emplacement autorisation est Obligatoire</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">Allez</string>
   <string name="label_search_starting_point">Rechercher commençant point</string>
   <string name="exit">Sortir</string>
-  <string name="add_geo_fence_1">Ajouter un géofence pour obtenir informé quand votre appareil entre ou sorties il</string>
   <string name="label_map_style">Carte Style</string>
   <string name="map_style">Carte style</string>
-  <string name="label_enable_tracking_detail">Activation le fonctionnalité volonté permettre vous pour piste votre appareil et obtenir informé quand le appareil entre ou sorties n\'importe quel de votre géofences.</string>
   <string name="label_not_tracking_your_activity">Non suivi votre appareil emplacement</string>
   <string name="label_start_tracking">Démarrer Suivi</string>
   <string name="label_stop_tracking">Arrête Suivi</string>

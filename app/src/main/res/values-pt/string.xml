@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon Localização</string>
-  <string name="menu_explore">Explorar</string>
+  <string name="menu_navigate">Navegar</string>
   <string name="menu_tracking">Rastreadores</string>
-  <string name="menu_geofence">Geofences</string>
   <string name="menu_setting">Configurações</string>
   <string name="menu_more">Sobre</string>
-  <string name="maybe_later">Talvez posteriormente</string>
   <string name="terms_condition">Termos &amp; Condições</string>
   <string name="help">Socorro</string>
   <string name="location_permission_is_required">Localização permissão é Obrigatório</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">Vá</string>
   <string name="label_search_starting_point">Pesquisar iniciando ponto</string>
   <string name="exit">Saída</string>
-  <string name="add_geo_fence_1">Adicionar uma cerca geográfica para obter notificado quando seu dispositivo entra ou saídas isso</string>
   <string name="label_map_style">Mapa Estilo</string>
   <string name="map_style">Mapa estilizar</string>
-  <string name="label_enable_tracking_detail">Habilitando a recurso vai autorizar você para rastreamento seu dispositivo e obter notificado quando a dispositivo entra ou saídas qualquer do seu cercas geográficas.</string>
   <string name="label_not_tracking_your_activity">Não rastreamento seu dispositivo localização</string>
   <string name="label_start_tracking">Iniciar Monitoramento</string>
   <string name="label_stop_tracking">Pare Monitoramento</string>

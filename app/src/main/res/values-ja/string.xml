@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon ロケーション</string>
-  <string name="menu_explore">探索</string>
+  <string name="menu_navigate">ナビゲート</string>
   <string name="menu_tracking">トラッカー</string>
-  <string name="menu_geofence">ジオフェンス</string>
   <string name="menu_setting">[設定]</string>
   <string name="menu_more">について</string>
-  <string name="maybe_later">たぶん 後</string>
   <string name="terms_condition">規約 &amp; 条件</string>
   <string name="help">ヘルプ</string>
   <string name="location_permission_is_required">ロケーション 許可 です 必須</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">行く</string>
   <string name="label_search_starting_point">検索 開始 ポイント</string>
   <string name="exit">出口</string>
-  <string name="add_geo_fence_1">[追加] ある ジオフェンス に 取得する 通知済み いつ きみの 端末 入る または 出る それ</string>
   <string name="label_map_style">マップ スタイル</string>
   <string name="map_style">マップ スタイル</string>
-  <string name="label_enable_tracking_detail">有効化 その 特徴 だろう 許す あなた に トラック きみの 端末 そして 取得する 通知済み いつ その 端末 入る または 出る 任意の の きみの ジオフェンス。</string>
   <string name="label_not_tracking_your_activity">ない 追跡 きみの 端末 ロケーション</string>
   <string name="label_start_tracking">開始 トラッキング</string>
   <string name="label_stop_tracking">ストップ トラッキング</string>

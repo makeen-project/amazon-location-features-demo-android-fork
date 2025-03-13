@@ -1,13 +1,11 @@
 <resources>
     <string name="app_name">Amazon Location</string>
     <!-- bottom navigation -->
-    <string name="menu_explore">Explore</string>
+    <string name="menu_navigate">Navigate</string>
     <string name="menu_tracking">Trackers</string>
-    <string name="menu_geofence">Geofences</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_more">About</string>
 
-    <string name="maybe_later">Maybe later</string>
     <string name="terms_condition">Terms &amp; Conditions</string>
     <string name="help">Help</string>
 
@@ -44,16 +42,12 @@
     <string name="label_search_starting_point">Search starting point</string>
     <string name="exit">Exit</string>
 
-    <!-- Geofencing text-->
-    <string name="add_geo_fence_1">Add a geofence to get notified when your device enters or exits it</string>
-
     <string name="label_map_style">Map Style</string>
     <string name="map_standard" translatable="false">Standard</string>
     <string name="map_monochrome" translatable="false">Monochrome</string>
     <string name="map_hybrid" translatable="false">Hybrid</string>
     <string name="map_satellite" translatable="false">Satellite</string>
     <string name="map_style">Map style</string>
-    <string name="label_enable_tracking_detail">Enabling the feature will allow you to track your device and get notified when the device enters or exits any of your geofences.</string>
     <string name="label_not_tracking_your_activity">Not tracking your device location</string>
     <string name="label_start_tracking">Start Tracking</string>
     <string name="label_stop_tracking">Stop Tracking</string>

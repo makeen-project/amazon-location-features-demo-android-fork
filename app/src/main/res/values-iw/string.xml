@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon מיקום</string>
-  <string name="menu_explore">חקור</string>
+  <string name="menu_navigate">נווט</string>
   <string name="menu_tracking">עוקבים</string>
-  <string name="menu_geofence">גיאופנס</string>
   <string name="menu_setting">הגדרות</string>
   <string name="menu_more">על אודות</string>
-  <string name="maybe_later">אולי יותר מאוחר</string>
   <string name="terms_condition">תנאים &amp; תנאים</string>
   <string name="help">עזרה</string>
   <string name="location_permission_is_required">מיקום רשות הווה חובה</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">ללכת</string>
   <string name="label_search_starting_point">חיפוש מתחיל נקודה</string>
   <string name="exit">יציאה</string>
-  <string name="add_geo_fence_1">הוסף א גיאופנס כדי לקבל הודיע כאשר שלך מכשיר נכנס או יוצא זה</string>
   <string name="label_map_style">מפה סגנון</string>
   <string name="map_style">מפה סגנון</string>
-  <string name="label_enable_tracking_detail">מאפשר ה מאפיין צוואה להתיר אתה כדי מסלול שלך מכשיר ו לקבל הודיע כאשר ה מכשיר נכנס או יוצא כלשהו של שלך גיאופנס.</string>
   <string name="label_not_tracking_your_activity">לא מעקב שלך מכשיר מקום</string>
   <string name="label_start_tracking">התחל מעקב</string>
   <string name="label_stop_tracking">עצור מעקב</string>

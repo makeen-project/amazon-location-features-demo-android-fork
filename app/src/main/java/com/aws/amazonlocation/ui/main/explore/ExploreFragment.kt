@@ -165,8 +165,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.Task
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -242,10 +240,8 @@ class ExploreFragment :
         mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.layoutParams.width =
             width
         mBinding.bottomSheetNavigationComplete.clPersistentBottomSheetNavigationComplete.requestLayout()
-        mBinding.bottomSheetTracking.clPersistentBottomSheet.layoutParams.width = width
-        mBinding.bottomSheetTracking.clPersistentBottomSheet.requestLayout()
-        mBinding.bottomSheetTrySimulation.clGeofenceListMain.layoutParams.width = width
-        mBinding.bottomSheetTrySimulation.clGeofenceListMain.requestLayout()
+        mBinding.bottomSheetTracking.clTrackerGeofence.layoutParams.width = width
+        mBinding.bottomSheetTracking.clTrackerGeofence.requestLayout()
         mBinding.bottomSheetAttribution.clMain.layoutParams.width = width
         mBinding.bottomSheetAttribution.clMain.requestLayout()
         val widthTimeDialog = resources.getDimensionPixelSize(R.dimen.navigation_top_dialog_size)
@@ -290,32 +286,29 @@ class ExploreFragment :
     }
 
     fun hideKeyBoard() {
-        mBaseActivity?.mGeofenceUtils?.let {
-            if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
-                mBinding.apply {
-                    bottomSheetDirectionSearch.apply {
-                        if (!cardListRoutesOption.isVisible) {
-                            viewKeyboardScroll.hide()
-                        }
-                        edtSearchDest.clearFocus()
-                        edtSearchDirection.clearFocus()
+        if (mBottomSheetHelper.isDirectionSearchSheetVisible()) {
+            mBinding.apply {
+                bottomSheetDirectionSearch.apply {
+                    if (!cardListRoutesOption.isVisible) {
+                        viewKeyboardScroll.hide()
                     }
+                    edtSearchDest.clearFocus()
+                    edtSearchDirection.clearFocus()
                 }
-            } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
-                mBinding.bottomSheetSearch.edtSearchPlaces.clearFocus()
-                if (mPlaceList.isNotEmpty()) {
-                    mBottomSheetHelper.halfExpandBottomSheet()
-                } else {
-                    mBottomSheetHelper.collapseSearchBottomSheet()
-                }
+            }
+        } else if (mBottomSheetHelper.isSearchPlaceSheetVisible()) {
+            mBinding.bottomSheetSearch.edtSearchPlaces.clearFocus()
+            if (mPlaceList.isNotEmpty()) {
+                mBottomSheetHelper.halfExpandBottomSheet()
             } else {
-                if (mBottomSheetHelper.isSearchSheetOpen) {
-                    mBottomSheetHelper.isSearchSheetOpen = false
-                    mBottomSheetHelper.halfExpandBottomSheet()
-                } else if (mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
-                    mBottomSheetHelper.hideSearchBottomSheet(false)
-                } else {
-                }
+                mBottomSheetHelper.collapseSearchBottomSheet()
+            }
+        } else {
+            if (mBottomSheetHelper.isSearchSheetOpen) {
+                mBottomSheetHelper.isSearchSheetOpen = false
+                mBottomSheetHelper.halfExpandBottomSheet()
+            } else if (mBottomSheetHelper.isSearchBottomSheetExpandedOrHalfExpand()) {
+                mBottomSheetHelper.hideSearchBottomSheet(false)
             }
         }
     }
@@ -352,10 +345,6 @@ class ExploreFragment :
                 mBinding.bottomSheetDirectionSearch,
                 this@ExploreFragment,
                 mBaseActivity
-            )
-            mBaseActivity?.mGeofenceUtils?.initTrySimulationView(
-                activity,
-                mBinding.bottomSheetTrySimulation
             )
 
             mBaseActivity?.mTrackingUtils?.initTrackingView(
@@ -2290,7 +2279,7 @@ class ExploreFragment :
                     if (mBottomSheetHelper.isDirectionSheetVisible()) {
                         bottomSheetDirection.ivDirectionCloseDirection.performClick()
                     }
-                    (activity as MainActivity).geofenceClick()
+                    (activity as MainActivity).trackingClick()
                     delay(DELAY_FOR_BOTTOM_SHEET_LOAD)
                     mBottomSheetHelper.hideSearchBottomSheet(true)
                 }
@@ -2327,10 +2316,6 @@ class ExploreFragment :
 
                     mBaseActivity?.mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true -> {
                         mBaseActivity?.mTrackingUtils?.collapseTracking()
-                    }
-
-                    mBaseActivity?.mGeofenceUtils?.isGeofenceListExpandedOrHalfExpand() == true -> {
-                        mBaseActivity?.mGeofenceUtils?.collapseGeofenceList()
                     }
                 }
             }
@@ -3098,12 +3083,6 @@ class ExploreFragment :
                 bottomSheetNavigationComplete.ivAmazonInfoNavigationComplete.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
-                bottomSheetTrySimulation.ivAmazonInfoGeofenceList?.setOnClickListener {
-                    setAttributionDataAndExpandSheet()
-                }
-                bottomSheetTracking.ivAmazonInfoTrackingSheet?.setOnClickListener {
-                    setAttributionDataAndExpandSheet()
-                }
                 bottomSheetTrackSimulation.ivAmazonInfoTrackingSheet.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
@@ -3630,8 +3609,7 @@ class ExploreFragment :
                     showViews(
                         cardDirection,
                         cardNavigation,
-                        cardMap,
-                        cardGeofenceMap
+                        cardMap
                     )
                     clearNavigationExitData()
                 }
@@ -4588,28 +4566,6 @@ class ExploreFragment :
         }
     }
 
-    fun hideGeofence() {
-        mBinding.cardGeofenceMap.hide()
-        val defaultShapeAppearance =
-            ShapeAppearanceModel
-                .builder()
-                .build()
-        mBinding.cardMap.shapeAppearanceModel = defaultShapeAppearance
-        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_8).toFloat()
-    }
-
-    fun showGeofence() {
-        mBinding.cardGeofenceMap.show()
-        mBinding.cardMap.radius = resources.getDimensionPixelSize(R.dimen.dp_0).toFloat()
-        val shapeAppearanceModel =
-            ShapeAppearanceModel
-                .builder()
-                .setTopLeftCorner(CornerFamily.ROUNDED, 16f)
-                .setTopRightCorner(CornerFamily.ROUNDED, 16f)
-                .build()
-        mBinding.cardMap.shapeAppearanceModel = shapeAppearanceModel
-    }
-
     fun hideDirectionAndCurrentLocationIcon() {
         hideViews(
             mBinding.cardDirection,
@@ -4643,10 +4599,8 @@ class ExploreFragment :
                 mBinding.cardMap
             )
             if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true &&
-                mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true &&
-                mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true
+                mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true
             ) {
-                mBinding.cardGeofenceMap.show()
                 mBaseActivity?.isTablet?.let {
                     if (!it) {
                         mBinding.cardDirection.show()
@@ -4659,8 +4613,7 @@ class ExploreFragment :
             if (!mapStyleBottomSheetFragment?.isVisible!! &&
                 (
                     mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true &&
-                        mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true &&
-                        mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true
+                        mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true
                     )
             ) {
                 mBaseActivity?.bottomNavigationVisibility(true)
@@ -4671,8 +4624,7 @@ class ExploreFragment :
             mMapHelper.moveCameraToLocation(mMapHelper.getBestAvailableLocation())
             mBaseActivity?.isTablet?.let {
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true ||
-                    mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true ||
-                    mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked == true
+                    mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked == true
                 ) {
                     return@let
                 }
@@ -5631,10 +5583,8 @@ class ExploreFragment :
                         cardMap
                     )
                     if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true &&
-                        mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true &&
-                        mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true
+                        mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true
                     ) {
-                        cardGeofenceMap.show()
                         mBaseActivity?.isTablet?.let {
                             if (!it) {
                                 cardDirection.show()
@@ -5646,8 +5596,7 @@ class ExploreFragment :
             }
             clearNavigationData()
             if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() != true &&
-                mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true &&
-                mBaseActivity?.mGeofenceUtils?.isChangeDataProviderClicked != true
+                mBaseActivity?.mTrackingUtils?.isChangeDataProviderClicked != true
             ) {
                 if (activity is MainActivity) {
                     (activity as MainActivity).moveToExploreScreen()
@@ -5820,8 +5769,6 @@ class ExploreFragment :
         mBinding.bottomSheetNavigationComplete.imgAmazonLogoNavigationComplete.setImageResource(
             logoResId
         )
-        mBinding.bottomSheetTrySimulation.imgAmazonLogoGeofenceList?.setImageResource(logoResId)
-        mBinding.bottomSheetTracking.imgAmazonLogoTrackingSheet?.setImageResource(logoResId)
         mBaseActivity?.mSimulationUtils?.setImageIcon(logoResId)
         if (mapStyleBottomSheetFragment != null && mapStyleBottomSheetFragment?.isVisible == true) {
             mapStyleBottomSheetFragment?.setImageIcon(logoResId)

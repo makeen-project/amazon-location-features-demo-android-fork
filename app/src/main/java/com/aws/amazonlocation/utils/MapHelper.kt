@@ -1159,8 +1159,6 @@ class MapHelper(
                 ivTracker.show()
                 ivOrigin.hide()
             }
-
-            else -> {}
         }
         if (!isFromMapClick) {
             data?.let { searchData ->

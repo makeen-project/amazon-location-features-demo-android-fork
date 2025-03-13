@@ -1,12 +1,10 @@
 <?xml version="1.0"?>
 <resources>
   <string name="app_name">Amazon लोकेशन</string>
-  <string name="menu_explore">एक्सप्लोर</string>
+  <string name="menu_navigate">नेविगेट</string>
   <string name="menu_tracking">ट्रैकर्स</string>
-  <string name="menu_geofence">जियोफेंस</string>
   <string name="menu_setting">सेटिंग</string>
   <string name="menu_more">के बारे में</string>
-  <string name="maybe_later">हो सकता है बाद में</string>
   <string name="terms_condition">शर्तें &amp; शर्तेँ</string>
   <string name="help">मदद</string>
   <string name="location_permission_is_required">लोकेशन अनुमति है ज़रूरी</string>
@@ -33,10 +31,8 @@
   <string name="btn_go">जाओ</string>
   <string name="label_search_starting_point">खोजें शुरुआत में बिंदु</string>
   <string name="exit">बाहर निकलें</string>
-  <string name="add_geo_fence_1">जोड़ें एक जियोफेंस को मिलता है अधिसूचित किया तब तुम्हारा डिवाइस प्रवेश करती है या बाहर निकलता है इस</string>
   <string name="label_map_style">नक्शा स्टाइल</string>
   <string name="map_style">नक्शा अंदाज</string>
-  <string name="label_enable_tracking_detail">सक्षम करना यह विशेषता होगा अनुमति देना आप को ट्रैक तुम्हारा डिवाइस और मिलता है अधिसूचित किया तब यह डिवाइस प्रवेश करती है या बाहर निकलता है किसी भी का तुम्हारा geofences।</string>
   <string name="label_not_tracking_your_activity">नहीं नज़र रखना तुम्हारा डिवाइस स्थान</string>
   <string name="label_start_tracking">शुरू करें ट्रैकिंग</string>
   <string name="label_stop_tracking">रुकें ट्रैकिंग</string>

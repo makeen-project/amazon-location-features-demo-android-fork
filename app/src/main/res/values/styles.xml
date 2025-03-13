@@ -113,12 +113,6 @@
         <item name="android:fontFamily">@font/amazon_ember_bold</item>
     </style>
 
-    <style name="SP20InterRegularMediumBlack1TextStyle">
-        <item name="android:textSize">@dimen/sp_20</item>
-        <item name="android:textColor">@color/color_medium_black_1</item>
-        <item name="android:fontFamily">@font/inter_regular</item>
-    </style>
-
     <style name="SP20InterSemiBoldMediumBlack1TextStyle">
         <item name="android:textSize">@dimen/sp_20</item>
         <item name="android:textColor">@color/color_medium_black_1</item>

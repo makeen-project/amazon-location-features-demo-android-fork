@@ -8,7 +8,6 @@
     <dimen name="welcome_screen_height">720dp</dimen>
     <dimen name="sign_in_required_width">400dp</dimen>
     <dimen name="map_style_height">720dp</dimen>
-    <dimen name="simulation_height">820dp</dimen>
     <bool name="is_tablet">true</bool>
     <bool name="is_large_tablet">true</bool>
 </resources>
