@@ -2,7 +2,15 @@ package com.aws.amazonlocation.utils.units
 
 import android.content.Context
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
+import com.aws.amazonlocation.mock.UNIT_METRICS_I_INPUT_1
+import com.aws.amazonlocation.mock.UNIT_METRICS_I_INPUT_2
+import com.aws.amazonlocation.mock.UNIT_METRICS_I_OUTPUT_2
+import com.aws.amazonlocation.mock.UNIT_METRICS_I_OUTPUT_3
+import com.aws.amazonlocation.mock.UNIT_METRICS_M_INPUT_1
+import com.aws.amazonlocation.mock.UNIT_METRICS_M_INPUT_2
+import com.aws.amazonlocation.mock.UNIT_METRICS_M_OUTPUT_2
+import com.aws.amazonlocation.mock.UNIT_METRICS_M_OUTPUT_3
 import com.aws.amazonlocation.utils.Units
 import org.junit.Assert
 import org.junit.Test
@@ -14,6 +22,7 @@ import org.robolectric.RuntimeEnvironment
 class UnitsGetMetricsNewTest : BaseTest() {
 
     private val context: Context = RuntimeEnvironment.getApplication().applicationContext
+
     @Test
     fun getMetricsSuccess() {
         var result = Units.getMetrics(context, UNIT_METRICS_M_INPUT_1, true)

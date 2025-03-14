@@ -41,9 +41,8 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
-import com.aws.amazonlocation.domain.`interface`.CloudFormationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import java.util.Locale
 import java.util.regex.Pattern
 import kotlinx.coroutines.channels.awaitClose
@@ -138,54 +137,6 @@ fun Activity.makeTransparentStatusBar() {
     }
 }
 
-fun changeConditionPrivacyColor(conditionPrivacy: AppCompatTextView) {
-    val mContext = conditionPrivacy.context
-    val mSpannableString = SpannableString(conditionPrivacy.text.toString())
-    val mCondition =
-        Pattern.compile(
-            mContext.resources.getString(R.string.condition_of_use).lowercase(Locale.ROOT)
-        )
-    val mPrivacy =
-        Pattern.compile(
-            mContext.resources.getString(R.string.privacy_notice).lowercase(Locale.ROOT)
-        )
-    val mConditionOfUse =
-        mCondition.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
-    val mPrivacyNotice = mPrivacy.matcher(conditionPrivacy.text.toString().lowercase(Locale.ROOT))
-    while (mConditionOfUse.find()) {
-        mSpannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    mContext,
-                    R.color.color_primary_green
-                )
-            ),
-            mConditionOfUse.start(),
-            mConditionOfUse.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-
-    while (mPrivacyNotice.find()) {
-        mSpannableString.setSpan(
-            ForegroundColorSpan(
-                ContextCompat.getColor(
-                    mContext,
-                    R.color.color_primary_green
-                )
-            ),
-            mPrivacyNotice.start(),
-            mPrivacyNotice.end(),
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-    }
-    conditionPrivacy.setText(
-        mSpannableString,
-        TextView.BufferType.SPANNABLE
-    )
-    conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
-}
-
 @CheckResult
 fun EditText.textChanges(): Flow<CharSequence?> {
     return callbackFlow {
@@ -224,7 +175,9 @@ fun Activity.hideKeyboard() {
 @ExcludeFromJacocoGeneratedReport
 fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
     val context = termsOfUse.context
-    val spannableString = SpannableString(termsOfUse.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString = SpannableString(
+        termsOfUse.text.toString().replace(STRING_REPLACE_KEY, "")
+    )
     if (termsOfUse.text.contains(STRING_REPLACE_KEY)) {
         val text = termsOfUse.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -283,7 +236,9 @@ fun changeTermsAndDescriptionFirstTextColor(termsOfUse: AppCompatTextView) {
 
 fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
     val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
+    val spannableString = SpannableString(
+        conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "")
+    )
     if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
         val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
         val condition =
@@ -345,121 +300,6 @@ fun changeTermsAndConditionColor(conditionPrivacy: AppCompatTextView) {
             TextView.BufferType.SPANNABLE
         )
         conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
-    }
-}
-
-fun changeClickHereColor(
-    conditionPrivacy: AppCompatTextView,
-    mCloudFormationClickHereInterface: CloudFormationInterface
-) {
-    val context = conditionPrivacy.context
-    val spannableString = SpannableString(conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, ""))
-    if (conditionPrivacy.text.contains(STRING_REPLACE_KEY)) {
-        val text = conditionPrivacy.text.split(STRING_REPLACE_KEY)[1]
-        val condition =
-            Pattern.compile(
-                text.lowercase()
-            )
-        val clickHere = condition.matcher(
-            conditionPrivacy.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT)
-        )
-        while (clickHere.find()) {
-            spannableString.setSpan(
-                object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        when (conditionPrivacy.text.toString()) {
-                            context.resources.getString(R.string.how_to_connect_1_1).replace(STRING_REPLACE_KEY, "") -> {
-                                mCloudFormationClickHereInterface.clickHere(BuildConfig.CLOUD_FORMATION_URL)
-                            }
-                            context.resources.getString(R.string.label_connected_title_1).replace(STRING_REPLACE_KEY, "") -> {
-                                mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_FORMATION_REMOVE_URL)
-                            }
-                        }
-                    }
-
-                    override fun updateDrawState(ds: TextPaint) {
-                        super.updateDrawState(ds)
-                        ds.isUnderlineText = false
-                    }
-                },
-                clickHere.start(),
-                clickHere.end(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannableString.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.color_primary_green
-                    )
-                ),
-                clickHere.start(),
-                clickHere.end(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        conditionPrivacy.setText(
-            spannableString,
-            TextView.BufferType.SPANNABLE
-        )
-        conditionPrivacy.movementMethod = LinkMovementMethod.getInstance()
-    }
-}
-
-fun changeLearnMoreColor(
-    learnMore: AppCompatTextView,
-    mCloudFormationClickHereInterface: CloudFormationInterface
-) {
-    val context = learnMore.context
-    val spannableString = SpannableString(learnMore.text.toString().replace(STRING_REPLACE_KEY, ""))
-    if (learnMore.text.contains(STRING_REPLACE_KEY)) {
-        val text = learnMore.text.split(STRING_REPLACE_KEY)[1]
-        val condition =
-            Pattern.compile(
-                text.lowercase()
-            )
-        val clickHere = condition.matcher(
-            learnMore.text.toString().replace(STRING_REPLACE_KEY, "").lowercase(Locale.ROOT)
-        )
-        while (clickHere.find()) {
-            spannableString.setSpan(
-                object : ClickableSpan() {
-                    override fun onClick(widget: View) {
-                        mCloudFormationClickHereInterface.clickHere(Credentials.CLOUD_INFORMATION_LEARN_MORE)
-                    }
-
-                    override fun updateDrawState(ds: TextPaint) {
-                        super.updateDrawState(ds)
-                        ds.isUnderlineText = true
-                    }
-                },
-                clickHere.start(),
-                clickHere.end(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannableString.setSpan(
-                ForegroundColorSpan(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.color_primary_green
-                    )
-                ),
-                clickHere.start(),
-                clickHere.end(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannableString.setSpan(
-                StyleSpan(Typeface.BOLD),
-                clickHere.start(),
-                clickHere.end(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-        }
-        learnMore.setText(
-            spannableString,
-            TextView.BufferType.SPANNABLE
-        )
-        learnMore.movementMethod = LinkMovementMethod.getInstance()
     }
 }
 

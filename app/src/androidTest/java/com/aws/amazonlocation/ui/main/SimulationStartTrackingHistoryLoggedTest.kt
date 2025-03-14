@@ -32,35 +32,19 @@ class SimulationStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             tracking?.perform(click())
-
-            waitForView(
-                allOf(
-                    withId(R.id.cl_enable_tracking),
-                    isDisplayed(),
-                ),
-            )
 
             val btnTryTracker =
                 waitForView(
                     allOf(
-                        withId(R.id.btn_try_tracker),
-                        isDisplayed(),
-                    ),
+                        withId(R.id.btn_start_simulation),
+                        isDisplayed()
+                    )
                 )
             btnTryTracker?.perform(click())
-
-            val labelStartSimulation =
-                waitForView(
-                    allOf(
-                        withText(mActivityRule.activity.getString(R.string.label_start_simulation)),
-                        isDisplayed(),
-                    ),
-                )
-            labelStartSimulation?.perform(click())
 
             swipeUp()
 
@@ -70,8 +54,8 @@ class SimulationStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 waitForView(
                     allOf(
                         withId(R.id.iv_back_arrow_change_route),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             ivBackArrowChangeRoute?.perform(click())
 
@@ -79,8 +63,8 @@ class SimulationStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                 allOf(
                     withId(R.id.rv_tracking_simulation),
                     isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
+                    hasMinimumChildCount(1)
+                )
             )
 
             val rvTrackingSimulation =
@@ -88,14 +72,14 @@ class SimulationStartTrackingHistoryLoggedTest : BaseTestMainActivity() {
                     allOf(
                         withId(R.id.rv_tracking_simulation),
                         isDisplayed(),
-                        hasMinimumChildCount(1),
-                    ),
+                        hasMinimumChildCount(1)
+                    )
                 )
             rvTrackingSimulation?.check { view, _ ->
                 if (view is RecyclerView) {
                     Assert.assertTrue(
                         TEST_FAILED_NO_TRACKING_HISTORY,
-                        (view.adapter?.itemCount ?: 0) > itemCount,
+                        (view.adapter?.itemCount ?: 0) > itemCount
                     )
                 } else {
                     Assert.fail(TEST_FAILED_NO_TRACKING_HISTORY)

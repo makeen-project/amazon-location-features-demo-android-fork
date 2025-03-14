@@ -5,7 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.data.response.PoliticalData
 import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED
-import com.aws.amazonlocation.ui.main.map_style.MapStyleViewModel
+import com.aws.amazonlocation.ui.main.mapStyle.MapStyleViewModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Rule
@@ -51,9 +51,9 @@ class MapStyleVMSetPoliticalListData : BaseTest() {
         Assert.assertTrue(
             TEST_FAILED_DUE_TO_INCORRECT_NO_OF_PROVIDERS_LOADED,
             mMapStyleViewModel.mPoliticalData.last().countryName == testPoliticalData.countryName &&
-                    mMapStyleViewModel.mPoliticalData.last().description == testPoliticalData.description&&
-                    mMapStyleViewModel.mPoliticalData.last().countryCode == testPoliticalData.countryCode&&
-                    mMapStyleViewModel.mPoliticalData.last().isSelected == testPoliticalData.isSelected
+                mMapStyleViewModel.mPoliticalData.last().description == testPoliticalData.description &&
+                mMapStyleViewModel.mPoliticalData.last().countryCode == testPoliticalData.countryCode &&
+                mMapStyleViewModel.mPoliticalData.last().isSelected == testPoliticalData.isSelected
         )
 
         val result = mMapStyleViewModel.searchPoliticalData("test")

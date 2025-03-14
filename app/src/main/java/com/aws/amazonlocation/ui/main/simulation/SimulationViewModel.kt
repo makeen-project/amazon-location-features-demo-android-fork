@@ -9,25 +9,24 @@ import com.aws.amazonlocation.data.response.SimulationGeofenceData
 import com.aws.amazonlocation.data.response.UpdateBatchLocationResponse
 import com.aws.amazonlocation.domain.`interface`.BatchLocationUpdateInterface
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
-import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
+import com.aws.amazonlocation.domain.usecase.SimulationUseCase
 import com.aws.amazonlocation.utils.ExcludeFromJacocoGeneratedReport
 import com.aws.amazonlocation.utils.simulationCollectionName
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.util.Date
-import javax.inject.Inject
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 // SPDX-License-Identifier: MIT-0
 @HiltViewModel
 class SimulationViewModel @Inject constructor(
-    private var mGetGeofenceUseCase: GeofenceUseCase
+    private var mGetGeofenceUseCase: SimulationUseCase
 ) :
     ViewModel() {
 
@@ -71,7 +70,14 @@ class SimulationViewModel @Inject constructor(
                                 )
                             }
                         } else {
-                            _getGeofenceList.trySend(HandleResult.Success(SimulationGeofenceData(collectionName, geofenceData.geofenceList)))
+                            _getGeofenceList.trySend(
+                                HandleResult.Success(
+                                    SimulationGeofenceData(
+                                        collectionName,
+                                        geofenceData.geofenceList
+                                    )
+                                )
+                            )
                         }
                     }
                 }

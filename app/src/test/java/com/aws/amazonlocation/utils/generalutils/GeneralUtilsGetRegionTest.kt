@@ -1,7 +1,13 @@
 package com.aws.amazonlocation.utils.generalutils
 
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.GET_REGION_COUNTRY
+import com.aws.amazonlocation.mock.GET_REGION_EMPTY
+import com.aws.amazonlocation.mock.GET_REGION_REGION
+import com.aws.amazonlocation.mock.GET_REGION_REGION_COUNTRY
+import com.aws.amazonlocation.mock.GET_REGION_SUBREGION
+import com.aws.amazonlocation.mock.GET_REGION_SUBREGION_COUNTRY
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.getRegion
 import org.junit.Assert
 import org.junit.Test

@@ -3,8 +3,15 @@ package com.aws.amazonlocation.ui.main
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import com.aws.amazonlocation.*
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.aws.amazonlocation.BaseTestMainActivity
+import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED
+import com.aws.amazonlocation.TEST_FAILED_NAVIGATION_TAB_SETTINGS_NOT_SELECTED
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -36,8 +43,8 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
                 allOf(
                     withText(settingsTabText),
                     isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
 
             if (!bottomNavigation.menu.findItem(R.id.menu_settings).isChecked) {
@@ -46,7 +53,6 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
 
             onView(withId(R.id.cl_map_style)).check(matches(isDisplayed()))
             onView(withId(R.id.cl_route_option)).check(matches(isDisplayed()))
-            onView(withId(R.id.cl_aws_cloudformation)).check(matches(isDisplayed()))
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

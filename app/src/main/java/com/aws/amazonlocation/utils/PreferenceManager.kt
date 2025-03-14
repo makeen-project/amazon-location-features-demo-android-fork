@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.aws.amazonlocation.data.enum.AuthEnum
 
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
@@ -104,7 +103,6 @@ class PreferenceManager(private val appContext: Context) {
         setValue(KEY_POOL_ID, "")
         setValue(KEY_USER_POOL_ID, "")
         setValue(KEY_USER_POOL_CLIENT_ID, "")
-        setValue(KEY_CLOUD_FORMATION_STATUS, AuthEnum.DEFAULT.name)
         setValue(KEY_USER_REGION, "")
         setValue(KEY_USER_DOMAIN, "")
     }

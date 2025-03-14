@@ -50,48 +50,48 @@ class BottomSheetHelper {
         activity.hideKeyboard()
 
         mBottomSheetSearchPlaces.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        mBaseActivity?.bottomNavigationVisibility(true)
-                        isSearchSheetOpen = false
-                        activity.hideKeyboard()
-                        fragment.clearKeyboardFocus()
-                        view.imgAmazonLogoSearchSheet.alpha = 1f
-                        view.ivAmazonInfoSearchSheet.alpha = 1f
-                        view.tvSearchCancel?.hide()
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            mBaseActivity?.bottomNavigationVisibility(true)
+                            isSearchSheetOpen = false
+                            activity.hideKeyboard()
+                            fragment.clearKeyboardFocus()
+                            view.imgAmazonLogoSearchSheet.alpha = 1f
+                            view.ivAmazonInfoSearchSheet.alpha = 1f
+                            view.tvSearchCancel?.hide()
+                        }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            mBaseActivity?.bottomNavigationVisibility(false)
+                            view.imgAmazonLogoSearchSheet.alpha = 0f
+                            view.ivAmazonInfoSearchSheet.alpha = 0f
+                            isSearchSheetOpen = true
+                            view.tvSearchCancel?.show()
+                            view.edtSearchPlaces.requestFocus()
+                            activity.showKeyboard()
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+                        }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            mBaseActivity?.bottomNavigationVisibility(false)
+                            view.imgAmazonLogoSearchSheet.alpha = 1f
+                            view.ivAmazonInfoSearchSheet.alpha = 1f
+                            view.tvSearchCancel?.show()
+                            isSearchSheetOpen = true
+                            activity.hideKeyboard()
+                            fragment.clearKeyboardFocus()
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            view.tvSearchCancel?.hide()
+                        }
+                        BottomSheetBehavior.STATE_SETTLING -> {}
                     }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        mBaseActivity?.bottomNavigationVisibility(false)
-                        view.imgAmazonLogoSearchSheet.alpha = 0f
-                        view.ivAmazonInfoSearchSheet.alpha = 0f
-                        isSearchSheetOpen = true
-                        view.tvSearchCancel?.show()
-                        view.edtSearchPlaces.requestFocus()
-                        activity.showKeyboard()
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        mBaseActivity?.bottomNavigationVisibility(false)
-                        view.imgAmazonLogoSearchSheet.alpha = 1f
-                        view.ivAmazonInfoSearchSheet.alpha = 1f
-                        view.tvSearchCancel?.show()
-                        isSearchSheetOpen = true
-                        activity.hideKeyboard()
-                        fragment.clearKeyboardFocus()
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                        view.tvSearchCancel?.hide()
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {}
                 }
-            }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
     }
 
     fun isSearchBottomSheetExpandedOrHalfExpand(): Boolean {
@@ -150,36 +150,36 @@ class BottomSheetHelper {
             }
         }
         mBottomSheetDirectionsSearch.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        mBaseActivity?.bottomNavigationVisibility(false)
-                        setBottomSheetDirectionSearchData(view, mBaseActivity)
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        mBaseActivity?.bottomNavigationVisibility(false)
-                        view.imgAmazonLogoDirectionSearchSheet.alpha = 0f
-                        view.ivAmazonInfoDirectionSearchSheet.alpha = 0f
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        mBaseActivity?.bottomNavigationVisibility(false)
-                        exploreFragment.changeDirectionCardMargin(175.px)
-                        mBottomSheetDirectionsSearch.isHideable = false
-                        setBottomSheetDirectionSearchData(view, mBaseActivity)
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            mBaseActivity?.bottomNavigationVisibility(false)
+                            setBottomSheetDirectionSearchData(view, mBaseActivity)
+                        }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            mBaseActivity?.bottomNavigationVisibility(false)
+                            view.imgAmazonLogoDirectionSearchSheet.alpha = 0f
+                            view.ivAmazonInfoDirectionSearchSheet.alpha = 0f
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+                        }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            mBaseActivity?.bottomNavigationVisibility(false)
+                            exploreFragment.changeDirectionCardMargin(175.px)
+                            mBottomSheetDirectionsSearch.isHideable = false
+                            setBottomSheetDirectionSearchData(view, mBaseActivity)
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                        }
+                        BottomSheetBehavior.STATE_SETTLING -> {
+                        }
                     }
                 }
-            }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
     }
 
     private fun setBottomSheetDirectionSearchData(
@@ -203,36 +203,36 @@ class BottomSheetHelper {
         mNavigationBottomSheet.isFitToContents = false
 
         mNavigationBottomSheet.addBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        view.cardNavigationLocation.alpha = 1f
-                        view.ivAmazonInfoNavigation.alpha = 1f
-                        view.imgAmazonLogoNavigation.alpha = 1f
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        view.cardNavigationLocation.alpha = 0f
-                        view.ivAmazonInfoNavigation.alpha = 0f
-                        view.imgAmazonLogoNavigation.alpha = 0f
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                        view.cardNavigationLocation.alpha = 1f
-                        view.ivAmazonInfoNavigation.alpha = 1f
-                        view.imgAmazonLogoNavigation.alpha = 1f
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
+                BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_COLLAPSED -> {
+                            view.cardNavigationLocation.alpha = 1f
+                            view.ivAmazonInfoNavigation.alpha = 1f
+                            view.imgAmazonLogoNavigation.alpha = 1f
+                        }
+                        BottomSheetBehavior.STATE_EXPANDED -> {
+                            view.cardNavigationLocation.alpha = 0f
+                            view.ivAmazonInfoNavigation.alpha = 0f
+                            view.imgAmazonLogoNavigation.alpha = 0f
+                        }
+                        BottomSheetBehavior.STATE_DRAGGING -> {
+                        }
+                        BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                            view.cardNavigationLocation.alpha = 1f
+                            view.ivAmazonInfoNavigation.alpha = 1f
+                            view.imgAmazonLogoNavigation.alpha = 1f
+                        }
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                        }
+                        BottomSheetBehavior.STATE_SETTLING -> {
+                        }
                     }
                 }
-            }
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            }
-        })
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
     }
 
     // set direction bottom sheet
@@ -319,7 +319,6 @@ class BottomSheetHelper {
     }
 
     fun collapseSearchBottomSheet() {
-        exportFragment?.setUserProfile()
         mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -334,20 +333,25 @@ class BottomSheetHelper {
 
     fun hideSearchBottomSheet(isHide: Boolean) {
         if (!isHide) {
-            exportFragment?.setUserProfile()
             mBottomSheetSearchPlaces.isHideable = false
             if (context != null) {
                 context?.let {
                     val isTablet = it.resources.getBoolean(R.bool.is_tablet)
                     if (isTablet) {
-                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
+                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(
+                            R.dimen.dp_150
+                        )
                     } else {
-                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_98)
+                        mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(
+                            R.dimen.dp_98
+                        )
                     }
                 }
             } else {
                 context?.let {
-                    mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_98)
+                    mBottomSheetSearchPlaces.peekHeight = it.resources.getDimensionPixelSize(
+                        R.dimen.dp_98
+                    )
                 }
             }
             mBottomSheetSearchPlaces.state = BottomSheetBehavior.STATE_COLLAPSED

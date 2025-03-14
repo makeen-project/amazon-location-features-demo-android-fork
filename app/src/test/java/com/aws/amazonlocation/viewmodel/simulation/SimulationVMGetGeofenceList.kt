@@ -7,8 +7,13 @@ import com.aws.amazonlocation.data.common.HandleResult
 import com.aws.amazonlocation.data.datasource.RemoteDataSourceImpl
 import com.aws.amazonlocation.data.repository.GeofenceImp
 import com.aws.amazonlocation.domain.`interface`.GeofenceAPIInterface
-import com.aws.amazonlocation.domain.usecase.GeofenceUseCase
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.domain.usecase.SimulationUseCase
+import com.aws.amazonlocation.mock.MOCK_ERROR
+import com.aws.amazonlocation.mock.Responses
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_ERROR_MESSAGE
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_STATE_NOT_ERROR
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_STATE_NOT_LOADING
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_STATE_NOT_SUCCESS
 import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
 import com.aws.amazonlocation.utils.GeofenceCons
 import com.aws.amazonlocation.utils.simulationCollectionName
@@ -33,7 +38,7 @@ class SimulationVMGetGeofenceList : BaseTest() {
 
     private lateinit var geofenceImp: GeofenceImp
 
-    private lateinit var geofenceUseCase: GeofenceUseCase
+    private lateinit var geofenceUseCase: SimulationUseCase
 
     private lateinit var simulationViewModel: SimulationViewModel
 
@@ -41,7 +46,7 @@ class SimulationVMGetGeofenceList : BaseTest() {
         super.setUp()
 
         geofenceImp = GeofenceImp(mRemoteDataSourceImpl)
-        geofenceUseCase = GeofenceUseCase(geofenceImp)
+        geofenceUseCase = SimulationUseCase(geofenceImp)
         simulationViewModel = SimulationViewModel(geofenceUseCase)
     }
 

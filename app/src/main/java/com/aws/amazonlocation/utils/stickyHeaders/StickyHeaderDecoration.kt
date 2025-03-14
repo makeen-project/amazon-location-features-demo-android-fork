@@ -143,11 +143,11 @@ class StickyHeaderDecoration<T : RecyclerView.ViewHolder>(
         if (layoutPos == ITEM_AT_TOP && nextChildPosition != RecyclerView.NO_POSITION) {
             val nextChild = parent.getChildAt(nextChildPosition)
             val offset = (nextChild?.y ?: 0f) - (
-                    headerHeight + getHeaderItemHeight(
-                        nextChildPosition,
-                        parent
-                    )
-                    )
+                headerHeight + getHeaderItemHeight(
+                    nextChildPosition,
+                    parent
+                )
+                )
             if (offset < 0) return offset
         }
 
