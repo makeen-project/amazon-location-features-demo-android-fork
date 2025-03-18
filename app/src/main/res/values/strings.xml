@@ -4,7 +4,7 @@
     <string name="menu_navigate">Navigate</string>
     <string name="menu_tracking">Trackers</string>
     <string name="menu_setting">Settings</string>
-    <string name="menu_more">About</string>
+    <string name="menu_more">More</string>
 
     <string name="terms_condition">Terms &amp; Conditions</string>
     <string name="help">Help</string>
@@ -96,7 +96,7 @@
     <string name="label_try_trackers_amp_geofences_simulation"><![CDATA[Try Trackers & Geofences simulation]]></string>
     <string name="label_simulation">Simulation</string>
     <string name="label_trackers_and_geofences">Trackers and Geofences</string>
-    <string name="label_des">Enter the tracking simulation to view the path across Vancouver streets that crosses geofences</string>
+    <string name="label_des">Enter the Trackers simulation to view the path across Vancouver streets that crosses Geofences</string>
     <string name="label_trackers_simulation">Trackers</string>
     <string name="label_visualize_your_location_history_on_the_map">Visualize your location history on the map</string>
     <string name="label_geofences_simulation">Geofences</string>
