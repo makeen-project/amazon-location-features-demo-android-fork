@@ -38,6 +38,7 @@ import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.textChanges
 import kotlin.math.ceil
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -389,7 +390,6 @@ class MapStyleFragment : BaseFragment() {
         mMapStyleAdapter?.notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun init() {
         setColumnCount()
         layoutManager.spanCount = columnCount
@@ -408,7 +408,7 @@ class MapStyleFragment : BaseFragment() {
         return ceil(calculatedColumn).toInt()
     }
 
-    @OptIn(kotlinx.coroutines.FlowPreview::class)
+    @OptIn(FlowPreview::class)
     @SuppressLint("NotifyDataSetChanged")
     private fun clickListener() {
         mBinding.apply {
