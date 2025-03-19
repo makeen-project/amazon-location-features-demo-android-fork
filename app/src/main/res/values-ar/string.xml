@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">جرب أجهزة التتبع &amp; الأسوار الجغرافية محاكاة</string>
   <string name="label_simulation">محاكاة</string>
   <string name="label_trackers_and_geofences">أجهزة التتبع و الأسوار الجغرافية</string>
-  <string name="label_des">ادخل إلى محاكاة Trackers لعرض المسار عبر شوارع فانكوفر التي تعبر الأسوار الجغرافية</string>
+  <string name="label_des">ادخل إلى محاكاة أجهزة التتبع لعرض المسار عبر شوارع فانكوفر التي تعبر الأسوار الجغرافية</string>
   <string name="label_trackers_simulation">أجهزة التتبع</string>
   <string name="label_visualize_your_location_history_on_the_map">تصور ك موقع التاريخ في ال خريطة</string>
   <string name="label_geofences_simulation">الأسوار الجغرافية</string>
