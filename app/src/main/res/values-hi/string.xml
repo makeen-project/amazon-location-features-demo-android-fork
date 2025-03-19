@@ -4,7 +4,7 @@
   <string name="menu_navigate">नेविगेट</string>
   <string name="menu_tracking">ट्रैकर्स</string>
   <string name="menu_setting">सेटिंग</string>
-  <string name="menu_more">के बारे में</string>
+  <string name="menu_more">अधिक</string>
   <string name="terms_condition">शर्तें &amp; शर्तेँ</string>
   <string name="help">मदद</string>
   <string name="location_permission_is_required">लोकेशन अनुमति है ज़रूरी</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">ट्राई करें ट्रैकर्स &amp; जियोफेंस अनुकरण</string>
   <string name="label_simulation">सिमुलेशन</string>
   <string name="label_trackers_and_geofences">ट्रैकर्स और जियोफेंस</string>
-  <string name="label_des">दर्ज करें यह नज़र रखना अनुकरण को राय यह रास्ता भर में वैंकूवर सड़कों कि पार geofences</string>
+  <string name="label_des">वैंकूवर की सड़कों पर जियोफेंस को पार करने वाले मार्ग को देखने के लिए ट्रैकर्स सिमुलेशन में प्रवेश करें</string>
   <string name="label_trackers_simulation">ट्रैकर्स</string>
   <string name="label_visualize_your_location_history_on_the_map">कल्पना करें तुम्हारा स्थान इतिहास के ऊपर यह नक्शा</string>
   <string name="label_geofences_simulation">जियोफेंस</string>

@@ -4,7 +4,7 @@
   <string name="menu_navigate">導航</string>
   <string name="menu_tracking">追蹤器</string>
   <string name="menu_setting">設定</string>
-  <string name="menu_more">關於</string>
+  <string name="menu_more">更多的</string>
   <string name="terms_condition">條款 &amp; 條件</string>
   <string name="help">幫助</string>
   <string name="location_permission_is_required">位置 允許 是 需要</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">嘗試 追蹤器 &amp; 地理圍欄 模擬</string>
   <string name="label_simulation">模擬</string>
   <string name="label_trackers_and_geofences">追蹤器 和 地理圍欄</string>
-  <string name="label_des">輸入 該 追蹤 模擬 至 檢視 該 路徑 橫過 溫哥華 街道 那個 十字架 地理圍欄</string>
+  <string name="label_des">進入追蹤器模擬，查看穿越地理圍欄的溫哥華街道的路徑</string>
   <string name="label_trackers_simulation">追蹤器</string>
   <string name="label_visualize_your_location_history_on_the_map">可視化 你的 地點 歷史 上 該 地圖</string>
   <string name="label_geofences_simulation">地理圍欄</string>

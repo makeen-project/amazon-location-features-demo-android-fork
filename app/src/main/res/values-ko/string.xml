@@ -4,7 +4,7 @@
   <string name="menu_navigate">탐색</string>
   <string name="menu_tracking">트래커</string>
   <string name="menu_setting">설정</string>
-  <string name="menu_more">에 대해</string>
+  <string name="menu_more">더</string>
   <string name="terms_condition">약관 &amp; 조건</string>
   <string name="help">도움말</string>
   <string name="location_permission_is_required">위치 허가 입니다 필수</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">시도해 보세요 트래커 &amp; 지오펜스 시뮬레이션</string>
   <string name="label_simulation">시뮬레이션</string>
   <string name="label_trackers_and_geofences">트래커 과 지오펜스</string>
-  <string name="label_des">들어가기 그 추적 시뮬레이션 에 전망 그 통로 건너서 밴쿠버 거리 그 십자가 지오펜스</string>
+  <string name="label_des">지오펜스를 가로지르는 밴쿠버 거리의 경로를 보려면 Trackers 시뮬레이션을 시작하세요.</string>
   <string name="label_trackers_simulation">트래커</string>
   <string name="label_visualize_your_location_history_on_the_map">시각화하기 당신의 위치 역사 ...에 그 지도</string>
   <string name="label_geofences_simulation">지오펜스</string>

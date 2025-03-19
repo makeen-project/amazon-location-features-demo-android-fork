@@ -4,7 +4,7 @@
   <string name="menu_navigate">נווט</string>
   <string name="menu_tracking">עוקבים</string>
   <string name="menu_setting">הגדרות</string>
-  <string name="menu_more">על אודות</string>
+  <string name="menu_more">יוֹתֵר</string>
   <string name="terms_condition">תנאים &amp; תנאים</string>
   <string name="help">עזרה</string>
   <string name="location_permission_is_required">מיקום רשות הווה חובה</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">נסה עוקבים &amp; גיאופנס הדמייה</string>
   <string name="label_simulation">סימולציה</string>
   <string name="label_trackers_and_geofences">עוקבים ו גיאופנס</string>
-  <string name="label_des">הזן ה מעקב הדמייה כדי מבט ה שביל מעבר ונקובר רחובות ש צלבים גיאופנס</string>
+  <string name="label_des">היכנסו להדמיית Trackers כדי לראות את השביל על פני רחובות ונקובר שחוצה Geofences</string>
   <string name="label_trackers_simulation">עוקבים</string>
   <string name="label_visualize_your_location_history_on_the_map">דמיינו שלך מקום דברי הימים על ה מפה</string>
   <string name="label_geofences_simulation">גיאופנס</string>

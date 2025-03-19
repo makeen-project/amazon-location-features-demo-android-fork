@@ -4,7 +4,7 @@
   <string name="menu_navigate">导航</string>
   <string name="menu_tracking">追踪器</string>
   <string name="menu_setting">设置</string>
-  <string name="menu_more">关于</string>
+  <string name="menu_more">更多的</string>
   <string name="terms_condition">条款 &amp; 条件</string>
   <string name="help">帮帮我</string>
   <string name="location_permission_is_required">地点 许可 是 必填项</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">试试 追踪器 &amp; 地理围栏 模拟</string>
   <string name="label_simulation">模拟</string>
   <string name="label_trackers_and_geofences">追踪器 和 地理围栏</string>
-  <string name="label_des">输入 这 追踪 模拟 到 观点 这 路径 横过 温哥华 街道 那个 十字架 地理围栏</string>
+  <string name="label_des">进入追踪器模拟，查看穿越地理围栏的温哥华街道的路径</string>
   <string name="label_trackers_simulation">追踪器</string>
   <string name="label_visualize_your_location_history_on_the_map">可视化 您的 位置 历史 上 这 地图</string>
   <string name="label_geofences_simulation">地理围栏</string>
