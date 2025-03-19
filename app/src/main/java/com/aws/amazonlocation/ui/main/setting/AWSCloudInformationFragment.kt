@@ -76,7 +76,7 @@ class AWSCloudInformationFragment :
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = FragmentAwsCloudInformationBinding.inflate(layoutInflater)
         return mBinding.root
@@ -84,7 +84,7 @@ class AWSCloudInformationFragment :
 
     override fun onViewCreated(
         view: View,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -96,7 +96,10 @@ class AWSCloudInformationFragment :
         val propertiesAws = listOf(
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
-        (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STOPPED, propertiesAws)
+        (activity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.AWS_ACCOUNT_CONNECTION_STOPPED,
+            propertiesAws
+        )
     }
     private fun init() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
@@ -129,11 +132,11 @@ class AWSCloudInformationFragment :
                     startActivity(
                         Intent(
                             context,
-                            WebViewActivity::class.java,
-                        ).putExtra(KEY_URL, url),
+                            WebViewActivity::class.java
+                        ).putExtra(KEY_URL, url)
                     )
                 }
-            },
+            }
         )
         changeTermsAndConditionColor(mBinding.tvTermsCondition)
         setSpinnerData()
@@ -147,11 +150,11 @@ class AWSCloudInformationFragment :
         }
         val propertiesAws =
             listOf(
-                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS),
+                Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
             )
         (activity as MainActivity).analyticsUtils?.recordEvent(
             EventType.SIGN_OUT_SUCCESSFUL,
-            propertiesAws,
+            propertiesAws
         )
         init()
         showError(getString(R.string.sign_out_successfully))
@@ -172,7 +175,7 @@ class AWSCloudInformationFragment :
                         parent: AdapterView<*>,
                         view: View?,
                         position: Int,
-                        id: Long,
+                        id: Long
                     ) {
                         adapter.setSelection(position)
                         selectedRegion = regionMapList[parent.getItemAtPosition(position)]
@@ -274,7 +277,10 @@ class AWSCloudInformationFragment :
                 val propertiesAws = listOf(
                     Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
                 )
-                (activity as MainActivity).analyticsUtils?.recordEvent(EventType.SIGN_IN_STARTED, propertiesAws)
+                (activity as MainActivity).analyticsUtils?.recordEvent(
+                    EventType.SIGN_IN_STARTED,
+                    propertiesAws
+                )
                 (activity as MainActivity).openSignIn()
             }
 
@@ -305,13 +311,17 @@ class AWSCloudInformationFragment :
     private fun validateAWSAccountData() {
         CoroutineScope(Dispatchers.IO).launch {
             if (!validateIdentityPoolId(mIdentityPoolId, regionData)) {
-                (activity as MainActivity).showError(getString(R.string.label_enter_identity_pool_id))
+                (activity as MainActivity).showError(
+                    getString(R.string.label_enter_identity_pool_id)
+                )
                 awsConnectionFailed()
             } else if (mUserDomain.isNullOrEmpty()) {
                 (activity as MainActivity).showError(getString(R.string.label_enter_domain))
                 awsConnectionFailed()
             } else if (!validateUserPoolClientId(mUserPoolClientId)) {
-                (activity as MainActivity).showError(getString(R.string.label_enter_user_pool_client_id))
+                (activity as MainActivity).showError(
+                    getString(R.string.label_enter_user_pool_client_id)
+                )
                 awsConnectionFailed()
             } else if (!validateUserPoolId(mUserPoolId)) {
                 (activity as MainActivity).showError(getString(R.string.label_enter_user_pool_id))
@@ -329,36 +339,42 @@ class AWSCloudInformationFragment :
         val propertiesAws = listOf(
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
-        (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_FAILED, propertiesAws)
+        (activity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.AWS_ACCOUNT_CONNECTION_FAILED,
+            propertiesAws
+        )
     }
 
     private fun storeDataAndRestartApp() {
         val propertiesAws = listOf(
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
         )
-        (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL, propertiesAws)
+        (activity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL,
+            propertiesAws
+        )
         mPreferenceManager.setValue(IS_LOCATION_TRACKING_ENABLE, true)
         mPreferenceManager.setValue(
             KEY_CLOUD_FORMATION_STATUS,
-            AuthEnum.AWS_CONNECTED.name,
+            AuthEnum.AWS_CONNECTED.name
         )
 
         mPreferenceManager.setValue(
             KEY_RE_START_APP,
-            true,
+            true
         )
 
         mIdentityPoolId?.let { identityPId ->
             mPreferenceManager.setValue(
                 KEY_POOL_ID,
-                identityPId,
+                identityPId
             )
 
             identityPId.split(":").let { splitStringList ->
                 splitStringList[0].let { region ->
                     mPreferenceManager.setValue(
                         KEY_USER_REGION,
-                        region,
+                        region
                     )
                 }
             }
@@ -367,32 +383,32 @@ class AWSCloudInformationFragment :
             val domainToSave = Units.sanitizeUrl(uDomain)
             mPreferenceManager.setValue(
                 KEY_USER_DOMAIN,
-                domainToSave,
+                domainToSave
             )
         }
 
         mUserPoolClientId?.let { uPoolClientId ->
             mPreferenceManager.setValue(
                 KEY_USER_POOL_CLIENT_ID,
-                uPoolClientId,
+                uPoolClientId
             )
         }
         mUserPoolId?.let { uPoolId ->
             mPreferenceManager.setValue(
                 KEY_USER_POOL_ID,
-                uPoolId,
+                uPoolId
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
             val webSocketUrlToSave = Units.sanitizeUrl(webSocketUrl)
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrlToSave,
+                webSocketUrlToSave
             )
         }
         mPreferenceManager.setValue(KEY_TAB_ENUM, TabEnum.TAB_EXPLORE.name)
         (activity as MainActivity).initClient()
-        if ((activity as MainActivity).isTablet){
+        if ((activity as MainActivity).isTablet) {
             (activity as MainActivity).refreshSettings()
         }
         (activity as MainActivity).runOnUiThread {
@@ -403,8 +419,8 @@ class AWSCloudInformationFragment :
     private fun cloudFormationValidation() {
         mBinding.apply {
             if (edtIdentityPoolId.text
-                    .toString()
-                    .isNotEmpty() &&
+                .toString()
+                .isNotEmpty() &&
                 edtUserDomain.text
                     .toString()
                     .isNotEmpty() &&
@@ -432,8 +448,8 @@ class AWSCloudInformationFragment :
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(urlToPass),
-                    ),
+                        Uri.parse(urlToPass)
+                    )
                 )
             }
         }
@@ -452,7 +468,7 @@ class AWSCloudInformationFragment :
 
     override fun logout(
         dialog: DialogInterface,
-        isDisconnectFromAWSRequired: Boolean,
+        isDisconnectFromAWSRequired: Boolean
     ) {
         this.isDisconnectFromAWSRequired = isDisconnectFromAWSRequired
         (activity as MainActivity).openSignOut()

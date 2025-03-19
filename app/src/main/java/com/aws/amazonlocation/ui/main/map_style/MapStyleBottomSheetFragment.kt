@@ -54,14 +54,15 @@ class MapStyleBottomSheetFragment(
     private val mViewModel: ExploreViewModel,
     private val mBaseActivity: BaseActivity? = null,
     private val bottomSheetHelper: BottomSheetHelper,
-    private val mapInterface: MapInterface,
+    private val mapInterface: MapInterface
 ) : BottomSheetDialogFragment() {
-    private var behaviour: BottomSheetBehavior<FrameLayout>?= null
+    private var behaviour: BottomSheetBehavior<FrameLayout>? = null
     private lateinit var mBinding: BottomSheetMapStyleBinding
 
     private var mMapStyleAdapter: MapStyleAdapter? = null
     private var mPoliticalAdapter: PoliticalAdapter? = null
     private var mMapLanguageAdapter: MapLanguageAdapter? = null
+
     @Inject
     lateinit var mPreferenceManager: PreferenceManager
 
@@ -69,7 +70,7 @@ class MapStyleBottomSheetFragment(
         super.onCreate(savedInstanceState)
         setStyle(
             STYLE_NORMAL,
-            R.style.CustomBottomSheetDialogTheme,
+            R.style.CustomBottomSheetDialogTheme
         )
     }
 
@@ -77,64 +78,72 @@ class MapStyleBottomSheetFragment(
         val dialog = BottomSheetDialog(requireContext(), theme)
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
-            val parentLayout = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet) as? FrameLayout
+            val parentLayout = bottomSheetDialog.findViewById<View>(
+                com.google.android.material.R.id.design_bottom_sheet
+            ) as? FrameLayout
             parentLayout?.let { layout ->
                 val colorScheme = mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
                 var logoResId =
                     when (colorScheme) {
-                        ATTRIBUTE_LIGHT,
+                        ATTRIBUTE_LIGHT
                         -> R.drawable.ic_amazon_logo_on_light
 
-                        ATTRIBUTE_DARK,
+                        ATTRIBUTE_DARK
                         -> R.drawable.ic_amazon_logo_on_dark
 
                         else -> R.drawable.ic_amazon_logo_on_light
                     }
                 val mapStyleName =
-                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                    mPreferenceManager.getValue(
+                        KEY_MAP_STYLE_NAME,
+                        getString(R.string.map_standard)
+                    )
                         ?: getString(R.string.map_standard)
-                if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(R.string.map_hybrid)) {
+                if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(
+                        R.string.map_hybrid
+                    )
+                ) {
                     logoResId = R.drawable.ic_amazon_logo_on_dark
                 }
                 setImageIcon(logoResId)
                 behaviour = BottomSheetBehavior.from(layout)
                 behaviour?.addBottomSheetCallback(object :
-                    BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, newState: Int) {
-                        when (newState) {
-                            BottomSheetBehavior.STATE_COLLAPSED -> {
-                                mBinding.imgAmazonLogoMapStyle?.alpha = 1f
-                                mBinding.ivAmazonInfoMapStyle?.alpha = 1f
-                                bottomSheetHelper.directionSheetDraggable(false)
-                            }
-                            BottomSheetBehavior.STATE_EXPANDED -> {
-                                mBinding.imgAmazonLogoMapStyle?.alpha = 0f
-                                mBinding.ivAmazonInfoMapStyle?.alpha = 0f
-                                bottomSheetHelper.directionSheetDraggable(false)
-                            }
-                            BottomSheetBehavior.STATE_DRAGGING -> {
-                            }
-                            BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-                                mBinding.imgAmazonLogoMapStyle?.alpha = 1f
-                                mBinding.ivAmazonInfoMapStyle?.alpha = 1f
-                                if (isMapStyleExpandedOrHalfExpand() && bottomSheetHelper.isDirectionSearchSheetVisible()) {
-                                    bottomSheetHelper.collapseDirectionSearch()
+                        BottomSheetBehavior.BottomSheetCallback() {
+                        override fun onStateChanged(bottomSheet: View, newState: Int) {
+                            when (newState) {
+                                BottomSheetBehavior.STATE_COLLAPSED -> {
+                                    mBinding.imgAmazonLogoMapStyle?.alpha = 1f
+                                    mBinding.ivAmazonInfoMapStyle?.alpha = 1f
+                                    bottomSheetHelper.directionSheetDraggable(false)
                                 }
-                                bottomSheetHelper.hideSearchBottomSheet(true)
-                                bottomSheetHelper.directionSheetDraggable(false)
-                                activity?.hideKeyboard()
-                            }
-                            BottomSheetBehavior.STATE_HIDDEN -> {
-                                mapStyleHide()
-                            }
-                            BottomSheetBehavior.STATE_SETTLING -> {
+                                BottomSheetBehavior.STATE_EXPANDED -> {
+                                    mBinding.imgAmazonLogoMapStyle?.alpha = 0f
+                                    mBinding.ivAmazonInfoMapStyle?.alpha = 0f
+                                    bottomSheetHelper.directionSheetDraggable(false)
+                                }
+                                BottomSheetBehavior.STATE_DRAGGING -> {
+                                }
+                                BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                                    mBinding.imgAmazonLogoMapStyle?.alpha = 1f
+                                    mBinding.ivAmazonInfoMapStyle?.alpha = 1f
+                                    if (isMapStyleExpandedOrHalfExpand() && bottomSheetHelper.isDirectionSearchSheetVisible()) {
+                                        bottomSheetHelper.collapseDirectionSearch()
+                                    }
+                                    bottomSheetHelper.hideSearchBottomSheet(true)
+                                    bottomSheetHelper.directionSheetDraggable(false)
+                                    activity?.hideKeyboard()
+                                }
+                                BottomSheetBehavior.STATE_HIDDEN -> {
+                                    mapStyleHide()
+                                }
+                                BottomSheetBehavior.STATE_SETTLING -> {
+                                }
                             }
                         }
-                    }
 
-                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                    }
-                })
+                        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        }
+                    })
                 behaviour?.isDraggable = mBaseActivity?.isTablet != true
                 setupFullHeight(layout)
             }
@@ -195,7 +204,7 @@ class MapStyleBottomSheetFragment(
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = BottomSheetMapStyleBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -203,7 +212,7 @@ class MapStyleBottomSheetFragment(
 
     override fun onViewCreated(
         view: View,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -214,13 +223,14 @@ class MapStyleBottomSheetFragment(
         super.onDestroy()
     }
 
+    @OptIn(kotlinx.coroutines.FlowPreview::class)
     @SuppressLint("NotifyDataSetChanged")
     private fun init() {
         mBinding.apply {
             val languageCode = getLanguageCode()
             val isRtl =
                 languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
-            val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
+            var selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
             selectedCountry.takeIf { it.isNotEmpty() }?.let { country ->
                 mViewModel.mPoliticalSearchData.find { it.countryName == country }?.let {
                     it.isSelected = true
@@ -230,9 +240,10 @@ class MapStyleBottomSheetFragment(
                             append(". ")
                             append(it.description)
                         }
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        setTextColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
-
                 }
             }
             if (selectedCountry.isEmpty()) {
@@ -256,7 +267,7 @@ class MapStyleBottomSheetFragment(
                         mPoliticalAdapter?.notifyDataSetChanged()
                         applyFilter()
                     }
-                },
+                }
             )
             rvPoliticalView.adapter = mPoliticalAdapter
 
@@ -265,13 +276,14 @@ class MapStyleBottomSheetFragment(
                 mViewModel.mMapLanguageData.find { it.value == language }?.let {
                     it.isSelected = true
                     tvMapLanguageDescription.apply {
-                        text = buildString{
+                        text = buildString {
                             append(it.label)
                             append(context.getString(R.string.label_is_selected))
                         }
-                        setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        setTextColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
-
                 }
             }
             if (selectedMapLanguage.isEmpty()) {
@@ -291,22 +303,30 @@ class MapStyleBottomSheetFragment(
                         mMapLanguageAdapter?.notifyDataSetChanged()
                         applyLanguage()
                     }
-                },
+                }
             )
             rvMapLanguage.adapter = mMapLanguageAdapter
 
             rvMapStyle.apply {
                 mViewModel.setMapListData(context)
                 val mapStyleName =
-                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                    mPreferenceManager.getValue(
+                        KEY_MAP_STYLE_NAME,
+                        getString(R.string.map_standard)
+                    )
                         ?: getString(R.string.map_standard)
                 val colorScheme = mPreferenceManager.getValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT) ?: ATTRIBUTE_LIGHT
-                toggleMode.check(if(colorScheme == ATTRIBUTE_LIGHT) R.id.btn_light else R.id.btn_dark)
+                toggleMode.check(
+                    if (colorScheme == ATTRIBUTE_LIGHT) R.id.btn_light else R.id.btn_dark
+                )
                 mViewModel.mStyleList.forEach {
                     it.isSelected = true
                     it.mapInnerData?.forEach { mapStyleInnerData ->
                         if (mapStyleInnerData.mapName.equals(mapStyleName)) {
-                            if (mapStyleInnerData.mapName == getString(R.string.map_satellite) || mapStyleInnerData.mapName == getString(R.string.map_hybrid)) {
+                            if (mapStyleInnerData.mapName == getString(R.string.map_satellite) || mapStyleInnerData.mapName == getString(
+                                    R.string.map_hybrid
+                                )
+                            ) {
                                 disableToggle()
                             } else {
                                 enableToggle()
@@ -332,13 +352,13 @@ class MapStyleBottomSheetFragment(
                         object : MapStyleAdapter.MapInterface {
                             override fun mapStyleClick(
                                 position: Int,
-                                innerPosition: Int,
+                                innerPosition: Int
                             ) {
                                 if (position != -1 && innerPosition != -1) {
                                     mapInterface.mapStyleClick(position, innerPosition)
                                 }
                             }
-                        },
+                        }
                     )
                 this.adapter = mMapStyleAdapter
             }
@@ -350,7 +370,7 @@ class MapStyleBottomSheetFragment(
                 tvMapStyle.text = getString(R.string.label_map_style)
                 showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                 hideViews(clSearchPolitical, ivBack)
-                val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
+                selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                 clearSelectionAndSetOriginalData(selectedCountry)
                 mapStyleShowList()
                 if (mBaseActivity?.mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
@@ -365,17 +385,22 @@ class MapStyleBottomSheetFragment(
                         if (isChecked) {
                             mPreferenceManager.setValue(KEY_COLOR_SCHEMES, ATTRIBUTE_LIGHT)
                             val mapStyleNameDisplay =
-                                mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                                mPreferenceManager.getValue(
+                                    KEY_MAP_STYLE_NAME,
+                                    getString(R.string.map_standard)
+                                )
                                     ?: getString(R.string.map_standard)
                             mapInterface.mapColorScheme(ATTRIBUTE_LIGHT, mapStyleNameDisplay)
-
                         }
                     }
                     R.id.btn_dark -> {
                         if (isChecked) {
                             mPreferenceManager.setValue(KEY_COLOR_SCHEMES, ATTRIBUTE_DARK)
                             val mapStyleNameDisplay =
-                                mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                                mPreferenceManager.getValue(
+                                    KEY_MAP_STYLE_NAME,
+                                    getString(R.string.map_standard)
+                                )
                                     ?: getString(R.string.map_standard)
                             mapInterface.mapColorScheme(ATTRIBUTE_DARK, mapStyleNameDisplay)
                         }
@@ -384,7 +409,10 @@ class MapStyleBottomSheetFragment(
             }
             clPoliticalView.setOnClickListener {
                 val mapStyleName =
-                    mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
+                    mPreferenceManager.getValue(
+                        KEY_MAP_STYLE_NAME,
+                        getString(R.string.map_standard)
+                    )
                         ?: getString(R.string.map_standard)
                 if (mapStyleName == getString(R.string.map_satellite)) return@setOnClickListener
                 tvMapStyle.text = getString(R.string.label_political_view)
@@ -402,7 +430,7 @@ class MapStyleBottomSheetFragment(
                 tvMapStyle.text = getString(R.string.label_map_style)
                 showViews(rvMapStyle, cardColorScheme, clPoliticalView, clMapLanguage)
                 hideViews(clSearchPolitical, cardMapLanguage, ivBack)
-                val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
+                selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
                 clearSelectionAndSetOriginalData(selectedCountry)
             }
             etSearchCountry
@@ -410,7 +438,7 @@ class MapStyleBottomSheetFragment(
                 .debounce(DELAY_300)
                 .onEach { text ->
                     tilSearch.isEndIconVisible = !text.isNullOrEmpty()
-                    val result =  mViewModel.searchPoliticalData(text.toString())
+                    val result = mViewModel.searchPoliticalData(text.toString())
                     if (result.isEmpty()) {
                         layoutNoDataFoundPolitical.root.show()
                         mViewModel.mPoliticalData.clear()
@@ -434,6 +462,7 @@ class MapStyleBottomSheetFragment(
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun clearSelectionAndSetOriginalData(selectedCountry: String) {
         mViewModel.mPoliticalData.forEach {
             it.isSelected = false
@@ -453,7 +482,10 @@ class MapStyleBottomSheetFragment(
 
     private fun BottomSheetMapStyleBinding.applyFilter() {
         val selectedItem = mViewModel.mPoliticalData.find { it.isSelected }
-        if (selectedItem != null && selectedItem.countryName != getString(R.string.label_no_political_view)) {
+        if (selectedItem != null && selectedItem.countryName != getString(
+                R.string.label_no_political_view
+            )
+        ) {
             mPreferenceManager.setValue(KEY_POLITICAL_VIEW, selectedItem.countryName)
             tvPoliticalDescription.apply {
                 text = buildString {
@@ -541,7 +573,10 @@ class MapStyleBottomSheetFragment(
         val mapStyleName =
             mPreferenceManager.getValue(KEY_MAP_STYLE_NAME, getString(R.string.map_standard))
                 ?: getString(R.string.map_standard)
-        if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(R.string.map_hybrid)) {
+        if (mapStyleName == getString(R.string.map_satellite) || mapStyleName == getString(
+                R.string.map_hybrid
+            )
+        ) {
             disableToggle()
         } else {
             enableToggle()
@@ -555,8 +590,8 @@ class MapStyleBottomSheetFragment(
                 setTextColor(
                     ContextCompat.getColor(
                         requireContext(),
-                        R.color.color_hint_text,
-                    ),
+                        R.color.color_hint_text
+                    )
                 )
             }
             mViewModel.mPoliticalSearchData.forEach {

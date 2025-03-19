@@ -54,7 +54,12 @@ class SimulationListAdapter :
                 ivSimulation.show()
                 ivNavigationIcon.invisible()
                 val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_4)
-                clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+                clNavigationItem.setPadding(
+                    clNavigationItem.paddingLeft,
+                    padding,
+                    clNavigationItem.paddingRight,
+                    padding
+                )
             } else {
                 tvBusStop.hide()
                 tvLatLng.setTextColor(
@@ -66,7 +71,12 @@ class SimulationListAdapter :
                 ivSimulation.hide()
                 ivNavigationIcon.show()
                 val padding = tvLatLng.context.resources.getDimensionPixelSize(R.dimen.dp_14)
-                clNavigationItem.setPadding(clNavigationItem.paddingLeft, padding, clNavigationItem.paddingRight, padding)
+                clNavigationItem.setPadding(
+                    clNavigationItem.paddingLeft,
+                    padding,
+                    clNavigationItem.paddingRight,
+                    padding
+                )
             }
             when (adapterPosition) {
                 0 -> {
