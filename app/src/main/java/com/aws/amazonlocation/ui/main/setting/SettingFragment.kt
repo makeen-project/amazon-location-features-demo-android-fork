@@ -94,8 +94,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                 addToBackStack = false
             )
             mBinding.apply {
-                clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                clUnitSystem.setBackgroundColor(
+                    ContextCompat.getColor(requireContext(), R.color.color_view)
+                )
+                ivUnitSystem.setColorFilter(
+                    ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                )
             }
             (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.UNITS)
         }
@@ -107,13 +111,17 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             if (!mAuthStatus.isNullOrEmpty()) {
                 when (mAuthStatus) {
                     AuthEnum.SIGNED_IN.name -> {
-                        ivDisconnect.setImageDrawable(ContextCompat.getDrawable(ivDisconnect.context, R.drawable.icon_log_out))
+                        ivDisconnect.setImageDrawable(
+                            ContextCompat.getDrawable(ivDisconnect.context, R.drawable.icon_log_out)
+                        )
                         tvDisconnect.text = getText(R.string.label_sign_out)
                         clDisconnect.show()
                         clRegion.hide()
                     }
                     AuthEnum.AWS_CONNECTED.name -> {
-                        ivDisconnect.setImageDrawable(ContextCompat.getDrawable(ivDisconnect.context, R.drawable.ic_plug))
+                        ivDisconnect.setImageDrawable(
+                            ContextCompat.getDrawable(ivDisconnect.context, R.drawable.ic_plug)
+                        )
                         tvDisconnect.text = getString(R.string.label_disconnect)
                         clDisconnect.show()
                         clRegion.hide()
@@ -216,8 +224,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     )
                     mBinding.apply {
                         setDefaultSelection()
-                        clUnitSystem.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivUnitSystem.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        clUnitSystem.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_view)
+                        )
+                        ivUnitSystem.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
                 } else {
                     findNavController().navigate(R.id.unit_system_fragment)
@@ -235,8 +247,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     )
                     mBinding.apply {
                         setDefaultSelection()
-                        clMapStyle.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivMapStyle.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        clMapStyle.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_view)
+                        )
+                        ivMapStyle.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
                 } else {
                     findNavController().navigate(R.id.map_style_fragment)
@@ -254,14 +270,20 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     )
                     mBinding.apply {
                         setDefaultSelection()
-                        clRouteOption.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivRouteOption.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        clRouteOption.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_view)
+                        )
+                        ivRouteOption.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
                 } else {
                     findNavController().navigate(R.id.route_option_fragment)
                 }
                 (activity as MainActivity).exitScreen()
-                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS)
+                (activity as MainActivity).setSelectedScreen(
+                    AnalyticsAttributeValue.DEFAULT_ROUTE_OPTIONS
+                )
             }
             clAwsCloudformation.setOnClickListener {
                 if (isTablet) {
@@ -274,18 +296,27 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     )
                     mBinding.apply {
                         setDefaultSelection()
-                        clAwsCloudformation.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivAwsCloudFormation.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        clAwsCloudformation.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_view)
+                        )
+                        ivAwsCloudFormation.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
                 } else {
                     findNavController().navigate(R.id.aws_cloud_information_fragment)
                 }
                 (activity as MainActivity).exitScreen()
-                (activity as MainActivity).setSelectedScreen(AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT)
+                (activity as MainActivity).setSelectedScreen(
+                    AnalyticsAttributeValue.CONNECT_YOUR_AWS_ACCOUNT
+                )
                 val propertiesAws = listOf(
                     Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
                 )
-                (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
+                (activity as MainActivity).analyticsUtils?.recordEvent(
+                    EventType.AWS_ACCOUNT_CONNECTION_STARTED,
+                    propertiesAws
+                )
             }
             clLanguage.setOnClickListener {
                 if (isTablet) {
@@ -297,8 +328,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     )
                     mBinding.apply {
                         setDefaultSelection()
-                        clLanguage.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivLanguage.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        clLanguage.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_view)
+                        )
+                        ivLanguage.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
                 } else {
                     findNavController().navigate(R.id.language_fragment)
@@ -316,8 +351,12 @@ class SettingFragment : BaseFragment(), SignOutInterface {
                     )
                     mBinding.apply {
                         setDefaultSelection()
-                        clRegion.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_view))
-                        ivRegion.setColorFilter(ContextCompat.getColor(requireContext(), R.color.color_primary_green))
+                        clRegion.setBackgroundColor(
+                            ContextCompat.getColor(requireContext(), R.color.color_view)
+                        )
+                        ivRegion.setColorFilter(
+                            ContextCompat.getColor(requireContext(), R.color.color_primary_green)
+                        )
                     }
                 } else {
                     findNavController().navigate(R.id.region_fragment)
@@ -376,7 +415,10 @@ class SettingFragment : BaseFragment(), SignOutInterface {
             val propertiesAws = listOf(
                 Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.SETTINGS)
             )
-            (activity as MainActivity).analyticsUtils?.recordEvent(EventType.SIGN_OUT_SUCCESSFUL, propertiesAws)
+            (activity as MainActivity).analyticsUtils?.recordEvent(
+                EventType.SIGN_OUT_SUCCESSFUL,
+                propertiesAws
+            )
             showError(getString(R.string.sign_out_successfully))
         }
         init()

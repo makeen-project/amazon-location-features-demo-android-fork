@@ -26,23 +26,23 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
                 MapStyleInnerData(
                     context.getString(R.string.map_standard),
                     false,
-                    R.drawable.standard_light,
+                    R.drawable.standard_light
                 ),
                 MapStyleInnerData(
                     context.getString(R.string.map_monochrome),
                     false,
-                    R.drawable.monochrome,
+                    R.drawable.monochrome
                 ),
                 MapStyleInnerData(
                     context.getString(R.string.map_hybrid),
                     false,
-                    R.drawable.hybrid,
+                    R.drawable.hybrid
                 ),
                 MapStyleInnerData(
                     context.getString(R.string.map_satellite),
                     false,
-                    R.drawable.satellite,
-                ),
+                    R.drawable.satellite
+                )
             )
         mStyleList.clear()
 
@@ -51,8 +51,8 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
                 MapStyleData(
                     styleNameDisplay = "",
                     isSelected = false,
-                    mapInnerData = items,
-                ),
+                    mapInnerData = items
+                )
             )
     }
 
@@ -65,9 +65,11 @@ class MapStyleViewModel @Inject constructor() : ViewModel() {
     }
 
     fun searchPoliticalData(query: String): ArrayList<PoliticalData> {
-        return ArrayList(mPoliticalSearchData.filter {
-            it.countryName.contains(query, ignoreCase = true)
-        })
+        return ArrayList(
+            mPoliticalSearchData.filter {
+                it.countryName.contains(query, ignoreCase = true)
+            }
+        )
     }
 
     fun setMapLanguageData(context: Context) {
