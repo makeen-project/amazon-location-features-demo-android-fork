@@ -16,7 +16,7 @@ class WebViewActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        changeStatusBarColor(isLightStatusBar = true,android.R.color.white)
+        changeStatusBarColor(isLightStatusBar = true, android.R.color.white)
         mBinding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         intent?.getStringExtra(KEY_URL)?.let { mBinding.webView.loadUrl(it) }
