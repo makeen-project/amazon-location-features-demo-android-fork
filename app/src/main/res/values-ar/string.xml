@@ -4,7 +4,7 @@
   <string name="menu_navigate">انتقل</string>
   <string name="menu_tracking">أجهزة التتبع</string>
   <string name="menu_setting">إعدادات</string>
-  <string name="menu_more">حول</string>
+  <string name="menu_more">أكثر</string>
   <string name="terms_condition">الشروط &amp; الشروط</string>
   <string name="help">المساعدة</string>
   <string name="location_permission_is_required">الموقع تصريح هو مطلوب</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">جرب أجهزة التتبع &amp; الأسوار الجغرافية محاكاة</string>
   <string name="label_simulation">محاكاة</string>
   <string name="label_trackers_and_geofences">أجهزة التتبع و الأسوار الجغرافية</string>
-  <string name="label_des">أدخل ال تتبع محاكاة إلى منظر ال مسار عبر فانكوفر الشوارع أن الصلبان الأسوار الجغرافية</string>
+  <string name="label_des">ادخل إلى محاكاة أجهزة التتبع لعرض المسار عبر شوارع فانكوفر التي تعبر الأسوار الجغرافية</string>
   <string name="label_trackers_simulation">أجهزة التتبع</string>
   <string name="label_visualize_your_location_history_on_the_map">تصور ك موقع التاريخ في ال خريطة</string>
   <string name="label_geofences_simulation">الأسوار الجغرافية</string>

@@ -31,6 +31,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.CheckResult
+import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +40,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import com.aws.amazonlocation.BuildConfig
 import com.aws.amazonlocation.R
 import com.aws.amazonlocation.ui.main.MainActivity
@@ -134,6 +136,21 @@ fun Activity.makeTransparentStatusBar() {
             // passed down to descendant views.
             WindowInsetsCompat.CONSUMED
         }
+    }
+}
+
+@Suppress("Deprecation")
+fun Activity.changeStatusBarColor(isLightStatusBar: Boolean, @ColorRes color: Int) {
+    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.isAppearanceLightStatusBars = isLightStatusBar
+        window.statusBarColor = ContextCompat.getColor(this, color)
+    } else {
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+        insetsController.isAppearanceLightStatusBars = isLightStatusBar
+        window.decorView.setBackgroundColor(ContextCompat.getColor(this, color))
+        window.insetsController?.hide(android.view.WindowInsets.Type.statusBars())
+        window.insetsController?.show(android.view.WindowInsets.Type.statusBars())
     }
 }
 

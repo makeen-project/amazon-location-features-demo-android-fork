@@ -4,7 +4,7 @@
   <string name="menu_navigate">Navigieren</string>
   <string name="menu_tracking">Tracker</string>
   <string name="menu_setting">Einstellungen</string>
-  <string name="menu_more">Über</string>
+  <string name="menu_more">Mehr</string>
   <string name="terms_condition">Bedingungen &amp; Bedingungen</string>
   <string name="help">Hilfe</string>
   <string name="location_permission_is_required">Standort Genehmigung ist Erforderlich</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">Versuche Tracker &amp; Geofences Simulation</string>
   <string name="label_simulation">Simulation</string>
   <string name="label_trackers_and_geofences">Tracker und Geofences</string>
-  <string name="label_des">Geben Sie ein die Verfolgung Simulation zu anzeigen die Pfad quer Vancouver Straßen Das Kreuze Geofences</string>
+  <string name="label_des">Starten Sie die Tracker-Simulation, um den Weg durch die Straßen von Vancouver anzuzeigen, der Geofences kreuzt</string>
   <string name="label_trackers_simulation">Tracker</string>
   <string name="label_visualize_your_location_history_on_the_map">Visualisieren dein Standort Geschichte auf die Karte</string>
   <string name="label_geofences_simulation">Geofences</string>

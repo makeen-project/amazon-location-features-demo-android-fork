@@ -4,7 +4,7 @@
   <string name="menu_navigate">Naviguer</string>
   <string name="menu_tracking">Traceurs</string>
   <string name="menu_setting">Réglages</string>
-  <string name="menu_more">À propos</string>
+  <string name="menu_more">Plus</string>
   <string name="terms_condition">Termes et Conditions</string>
   <string name="help">Aide</string>
   <string name="location_permission_is_required">Emplacement autorisation est Obligatoire</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">Essayer Traceurs et Géofences simulation</string>
   <string name="label_simulation">Simulation</string>
   <string name="label_trackers_and_geofences">Traceurs et Géofences</string>
-  <string name="label_des">Entrez le suivi simulation pour voir le chemin à travers Vancouver rues cette croix géofences</string>
+  <string name="label_des">Entrez dans la simulation Trackers pour visualiser le chemin à travers les rues de Vancouver qui traverse les géorepérages</string>
   <string name="label_trackers_simulation">Traceurs</string>
   <string name="label_visualize_your_location_history_on_the_map">Visualisez votre emplacement l\'histoire sur le carte</string>
   <string name="label_geofences_simulation">Géofences</string>

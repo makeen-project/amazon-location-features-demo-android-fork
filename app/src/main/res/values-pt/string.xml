@@ -4,7 +4,7 @@
   <string name="menu_navigate">Navegar</string>
   <string name="menu_tracking">Rastreadores</string>
   <string name="menu_setting">Configurações</string>
-  <string name="menu_more">Sobre</string>
+  <string name="menu_more">Mais</string>
   <string name="terms_condition">Termos &amp; Condições</string>
   <string name="help">Socorro</string>
   <string name="location_permission_is_required">Localização permissão é Obrigatório</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">Experimente Rastreadores &amp; Geofences simulação</string>
   <string name="label_simulation">Simulação</string>
   <string name="label_trackers_and_geofences">Rastreadores e Geofences</string>
-  <string name="label_des">Entrar a rastreamento simulação para olhar a caminho através Vancouver ruas que cruzes cercas geográficas</string>
+  <string name="label_des">Entre na simulação do Trackers para visualizar o caminho pelas ruas de Vancouver que cruzam as Geofences</string>
   <string name="label_trackers_simulation">Rastreadores</string>
   <string name="label_visualize_your_location_history_on_the_map">Visualize seu localização histórico em a mapa</string>
   <string name="label_geofences_simulation">Geofences</string>

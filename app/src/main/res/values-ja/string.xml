@@ -4,7 +4,7 @@
   <string name="menu_navigate">ナビゲート</string>
   <string name="menu_tracking">トラッカー</string>
   <string name="menu_setting">[設定]</string>
-  <string name="menu_more">について</string>
+  <string name="menu_more">もっと</string>
   <string name="terms_condition">規約 &amp; 条件</string>
   <string name="help">ヘルプ</string>
   <string name="location_permission_is_required">ロケーション 許可 です 必須</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">やってみる トラッカー &amp; ジオフェンス シミュレーション</string>
   <string name="label_simulation">シミュレーション</string>
   <string name="label_trackers_and_geofences">トラッカー そして ジオフェンス</string>
-  <string name="label_des">[入力] その 追跡 シミュレーション に 見る その 道 に渡って バンクーバー 通り それを 十字架 ジオフェンス</string>
+  <string name="label_des">トラッカーシミュレーションに入り、ジオフェンスを横切るバンクーバーの通りの経路を表示します。</string>
   <string name="label_trackers_simulation">トラッカー</string>
   <string name="label_visualize_your_location_history_on_the_map">ビジュアライズ きみの ロケーション 歴史 オン その 地図</string>
   <string name="label_geofences_simulation">ジオフェンス</string>

@@ -4,7 +4,7 @@
   <string name="menu_navigate">Navigare</string>
   <string name="menu_tracking">Localizzatori</string>
   <string name="menu_setting">Impostazioni</string>
-  <string name="menu_more">Informazioni su</string>
+  <string name="menu_more">Di più</string>
    <string name="terms_condition">Termini &amp; Condizioni</string>
   <string name="help">Aiuto</string>
   <string name="location_permission_is_required">Posizione autorizzazione è Richiesto</string>
@@ -81,7 +81,7 @@
   <string name="label_try_trackers_amp_geofences_simulation">Prova Localizzatori &amp; Geofence simulazione</string>
   <string name="label_simulation">Simulazione</string>
   <string name="label_trackers_and_geofences">Localizzatori e Geofence</string>
-  <string name="label_des">Entra lo tracciamento simulazione a vista lo sentiero attraverso Vancouver strade che attraversa geofence</string>
+  <string name="label_des">Accedi alla simulazione Trackers per visualizzare il percorso attraverso le strade di Vancouver che attraversa le recinzioni geografiche</string>
   <string name="label_trackers_simulation">Localizzatori</string>
   <string name="label_visualize_your_location_history_on_the_map">Visualizza tuo posizione storia sul lo mappa</string>
   <string name="label_geofences_simulation">Geofence</string>

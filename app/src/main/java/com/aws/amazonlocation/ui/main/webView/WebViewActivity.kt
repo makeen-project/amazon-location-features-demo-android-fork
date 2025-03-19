@@ -5,24 +5,20 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsControllerCompat
+import androidx.appcompat.app.AppCompatActivity
 import com.aws.amazonlocation.databinding.ActivityWebViewBinding
-import com.aws.amazonlocation.ui.base.BaseActivity
 import com.aws.amazonlocation.utils.KEY_URL
+import com.aws.amazonlocation.utils.changeStatusBarColor
 
-class WebViewActivity : BaseActivity() {
+class WebViewActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivityWebViewBinding
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        changeStatusBarColor(isLightStatusBar = true, android.R.color.white)
         mBinding = ActivityWebViewBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.isAppearanceLightStatusBars = true
-        controller.isAppearanceLightNavigationBars = true
         intent?.getStringExtra(KEY_URL)?.let { mBinding.webView.loadUrl(it) }
         val webSettings = mBinding.webView.settings
         webSettings.domStorageEnabled = true
