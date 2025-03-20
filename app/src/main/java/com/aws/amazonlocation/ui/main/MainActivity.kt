@@ -3,6 +3,7 @@ package com.aws.amazonlocation.ui.main
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
@@ -44,6 +45,7 @@ import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
 import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
 import com.aws.amazonlocation.utils.NetworkConnectivityObserveInterface
 import com.aws.amazonlocation.utils.SETTING_FRAGMENT
+import com.aws.amazonlocation.utils.SimulationDialogInterface
 import com.aws.amazonlocation.utils.Units.checkInternetConnection
 import com.aws.amazonlocation.utils.VERSION_FRAGMENT
 import com.aws.amazonlocation.utils.analytics.AnalyticsUtils
@@ -57,6 +59,7 @@ import com.aws.amazonlocation.utils.requiredFields
 import com.aws.amazonlocation.utils.setLocale
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
+import com.aws.amazonlocation.utils.simulationExit
 import com.aws.amazonlocation.utils.simulationFields
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -236,6 +239,17 @@ class MainActivity :
                     } else if (mTrackingUtils?.isTrackingExpandedOrHalfExpand() == true) {
                         mNavController.navigate(R.id.explore_fragment)
                         moveToExploreScreen()
+                    } else if (mSimulationUtils?.isSimulationBottomSheetVisible() == true) {
+                        simulationExit(
+                            object : SimulationDialogInterface {
+                                override fun onExitClick(dialog: DialogInterface) {
+                                    if (fragment is ExploreFragment) {
+                                        fragment.hideSimulationTop()
+                                    }
+                                    hideSimulationSheet()
+                                }
+                            }
+                        )
                     } else {
                         if (isEnabled) {
                             isEnabled = false

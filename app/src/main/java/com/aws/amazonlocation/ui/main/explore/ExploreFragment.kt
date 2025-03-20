@@ -3466,6 +3466,11 @@ class ExploreFragment :
         }
     }
 
+    fun hideSimulationTop() {
+        mBinding.apply {
+            cardSimulationPopup.hide()
+        }
+    }
     fun checkMapLoaded(): Boolean = !mBinding.groupMapLoad.isVisible
 
     fun isMapStyleExpandedOrHalfExpand(): Boolean = mapStyleBottomSheetFragment?.isMapStyleExpandedOrHalfExpand() ?: false
