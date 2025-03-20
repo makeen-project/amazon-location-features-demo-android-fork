@@ -24,7 +24,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_simulation_bg"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_290"
+                android:layout_marginTop="@dimen/dp_16"
                 android:src="@drawable/ic_simulation_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -38,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/label_simulation"
                 android:textAlignment="center"
-                android:layout_marginTop="@dimen/dp_290"
+                android:layout_marginTop="@dimen/dp_240"
                 android:textColor="@color/color_hint_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
