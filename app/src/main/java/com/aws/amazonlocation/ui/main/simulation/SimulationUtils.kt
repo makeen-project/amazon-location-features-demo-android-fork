@@ -30,7 +30,6 @@ import com.aws.amazonlocation.domain.`interface`.SimulationInterface
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
-import com.aws.amazonlocation.utils.providers.LocationProvider
 import com.aws.amazonlocation.utils.CLICK_DEBOUNCE_ENABLE
 import com.aws.amazonlocation.utils.DELAY_PROCESS_1000
 import com.aws.amazonlocation.utils.DELAY_SIMULATION_2000
@@ -65,6 +64,7 @@ import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.notificationData
+import com.aws.amazonlocation.utils.providers.LocationProvider
 import com.aws.amazonlocation.utils.regionDisplayName
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
@@ -233,7 +233,9 @@ class SimulationUtils(
                                 )
                             )
                             withContext(Dispatchers.Main) {
-                                simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
+                                simulationTrackingListAdapter?.submitList(
+                                    simulationHistoryData.toMutableList()
+                                )
                             }
                         }
                         delay(DELAY_SIMULATION_2000)
@@ -250,9 +252,9 @@ class SimulationUtils(
             mGeofenceList[position].forEachIndexed { index, data ->
                 data.geometry?.circle?.center?.let { doubles ->
                     val latLng = LatLng(
-                            doubles[1],
-                            doubles[0]
-                        )
+                        doubles[1],
+                        doubles[0]
+                    )
                     setDefaultIconWithGeofence("$position$index")
                     mLatLngList.add(latLng)
                     data.geometry?.circle?.radius?.let {
@@ -270,9 +272,15 @@ class SimulationUtils(
     private fun removeGeofenceWithPosition(position: Int) {
         if (mGeofenceList.isNotEmpty()) {
             mGeofenceList[position].forEachIndexed { index, _ ->
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$position$index")
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$position$index")
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$position$index")
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$position$index"
+                )
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$position$index"
+                )
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$position$index"
+                )
             }
         }
     }
@@ -415,7 +423,10 @@ class SimulationUtils(
             position.add(latLng.latitude)
             mActivity?.let {
                 if (checkInternetConnection(it.applicationContext)) {
-                    simulationInterface?.evaluateGeofence(simulationCollectionName[busIndex], position)
+                    simulationInterface?.evaluateGeofence(
+                        simulationCollectionName[busIndex],
+                        position
+                    )
                 }
             }
 
@@ -583,7 +594,9 @@ class SimulationUtils(
 
             // Update the source's GeoJSON to draw a new fill circle
             val polygonCircleSource =
-                style.getSourceAs<GeoJsonSource>(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index)
+                style.getSourceAs<GeoJsonSource>(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index
+                )
             polygonCircleSource?.setGeoJson(
                 Polygon.fromOuterInner(
                     LineString.fromLngLats(pointList)
@@ -635,7 +648,9 @@ class SimulationUtils(
                                         selectedTrackerIndex
                                     )
                                 )
-                                simulationTrackingListAdapter?.submitList(simulationHistoryData.toMutableList())
+                                simulationTrackingListAdapter?.submitList(
+                                    simulationHistoryData.toMutableList()
+                                )
                             }
                             if (isLocationStartNeeded) {
                                 mIsLocationUpdateEnable = true
@@ -647,7 +662,10 @@ class SimulationUtils(
                         Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
                         Pair(AnalyticsAttribute.BUS_NAME, selectedData)
                     )
-                    (activity as MainActivity).analyticsUtils?.recordEvent(EventType.CHANGE_BUS_TRACKING_HISTORY, properties)
+                    (activity as MainActivity).analyticsUtils?.recordEvent(
+                        EventType.CHANGE_BUS_TRACKING_HISTORY,
+                        properties
+                    )
                     tvChangeRoute.text =
                         buildString {
                             append(selectedData.split(" ")[0])
@@ -668,7 +686,11 @@ class SimulationUtils(
     private fun setDefaultIconWithGeofence(index: String) {
         mMapLibreMap?.getStyle { style ->
             if (style.getSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index) == null) {
-                style.addSource(GeoJsonSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index))
+                style.addSource(
+                    GeoJsonSource(
+                        GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + index
+                    )
+                )
             }
             initPolygonCircleFillLayer(index)
         }
@@ -790,7 +812,7 @@ class SimulationUtils(
         mIsLocationUpdateEnable = false
         if (mqttClient != null) {
             try {
-                mqttClient?.unsubscribe("${identityId}/${TRACKER}", MQTT_CONNECT_TIME_OUT)
+                mqttClient?.unsubscribe("$identityId/$TRACKER", MQTT_CONNECT_TIME_OUT)
             } catch (_: Exception) {
             }
 
@@ -823,7 +845,12 @@ class SimulationUtils(
         val credentials = createCredentialsProvider(mLocationProvider.getCredentials())
         val webSocketUrl = getSimulationWebSocketUrl(defaultIdentityPoolId)
         if (webSocketUrl == "null") return
-        mqttClient = AWSIotMqttClient(webSocketUrl, identityId, credentials, defaultIdentityPoolId.split(":")[0])
+        mqttClient = AWSIotMqttClient(
+            webSocketUrl,
+            identityId,
+            credentials,
+            defaultIdentityPoolId.split(":")[0]
+        )
 
         try {
             mqttClient?.connect(MQTT_CONNECT_TIME_OUT, false)
@@ -841,12 +868,16 @@ class SimulationUtils(
     }
 
     private fun createCredentialsProvider(credentials: Credentials?): CredentialsProvider {
-        if (credentials?.accessKeyId == null || credentials.sessionToken == null) throw Exception("Credentials not found")
+        if (credentials?.accessKeyId == null || credentials.sessionToken == null) {
+            throw Exception(
+                "Credentials not found"
+            )
+        }
         return StaticCredentialsProvider(
             com.amazonaws.services.iot.client.auth.Credentials(
                 credentials.accessKeyId,
                 credentials.secretKey,
-                credentials.sessionToken,
+                credentials.sessionToken
             )
         )
     }
@@ -895,7 +926,10 @@ class SimulationUtils(
             val properties = listOf(
                 Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION)
             )
-            (activity as MainActivity).analyticsUtils?.recordEvent(EventType.START_TRACKING, properties)
+            (activity as MainActivity).analyticsUtils?.recordEvent(
+                EventType.START_TRACKING,
+                properties
+            )
         }
     }
     private fun subscribeTopic(identityId: String) {
@@ -912,11 +946,13 @@ class SimulationUtils(
                             mFragmentActivity?.let {
                                 if (notificationData.trackerEventType.equals(ENTER, true)) {
                                     subTitle = "${it.getString(R.string.label_bus)} ${
-                                        notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
+                                    notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(
+                                        2
+                                    )
                                     }: ${it.getString(R.string.label_entered)} ${notificationData.stopName} ${
-                                        it.getString(
-                                            R.string.label_geofence
-                                        )
+                                    it.getString(
+                                        R.string.label_geofence
+                                    )
                                     }"
                                     routeData?.forEachIndexed { index, routeSimulationDataItem ->
                                         if (routeSimulationDataItem.geofenceCollection == notificationData.geofenceCollection) {
@@ -931,11 +967,13 @@ class SimulationUtils(
                                     }
                                 } else {
                                     subTitle = "${it.getString(R.string.label_bus)} ${
-                                        notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(2)
+                                    notificationData.geofenceId?.split("-")?.get(0)?.split("_")?.get(
+                                        2
+                                    )
                                     }: ${it.getString(R.string.label_exited)} ${notificationData.stopName} ${
-                                        it.getString(
-                                            R.string.label_geofence
-                                        )
+                                    it.getString(
+                                        R.string.label_geofence
+                                    )
                                     }"
                                 }
                             }
@@ -1013,10 +1051,16 @@ class SimulationUtils(
                                 addMarkerSimulation(activity, position, data)
                             }
                             val properties = listOf(
-                                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
+                                Pair(
+                                    AnalyticsAttribute.SCREEN_NAME,
+                                    AnalyticsAttributeValue.SIMULATION
+                                ),
                                 Pair(AnalyticsAttribute.BUS_NAME, notificationData[position].name)
                             )
-                            (activity as MainActivity).analyticsUtils?.recordEvent(EventType.ENABLE_NOTIFICATION, properties)
+                            (activity as MainActivity).analyticsUtils?.recordEvent(
+                                EventType.ENABLE_NOTIFICATION,
+                                properties
+                            )
                         } else {
                             val needToStart = mIsLocationUpdateEnable
                             mIsLocationUpdateEnable = false
@@ -1032,10 +1076,16 @@ class SimulationUtils(
                                 }
                             }
                             val properties = listOf(
-                                Pair(AnalyticsAttribute.SCREEN_NAME, AnalyticsAttributeValue.SIMULATION),
+                                Pair(
+                                    AnalyticsAttribute.SCREEN_NAME,
+                                    AnalyticsAttributeValue.SIMULATION
+                                ),
                                 Pair(AnalyticsAttribute.BUS_NAME, notificationData[position].name)
                             )
-                            activity.analyticsUtils?.recordEvent(EventType.DISABLE_NOTIFICATION, properties)
+                            activity.analyticsUtils?.recordEvent(
+                                EventType.DISABLE_NOTIFICATION,
+                                properties
+                            )
                         }
                         zoomCamera()
                     }
@@ -1062,7 +1112,13 @@ class SimulationUtils(
             tvRouteNotificationsName.text = buildString {
                 append(totalCount)
                 append(" ")
-                if (totalCount > 1) append(tvRouteNotificationsName.context.getString(R.string.routes_active)) else append(tvRouteNotificationsName.context.getString(R.string.route_active))
+                if (totalCount > 1) {
+                    append(
+                        tvRouteNotificationsName.context.getString(R.string.routes_active)
+                    )
+                } else {
+                    append(tvRouteNotificationsName.context.getString(R.string.route_active))
+                }
             }
         }
     }
@@ -1173,9 +1229,15 @@ class SimulationUtils(
         }
         mGeofenceList.forEachIndexed { index, data ->
             data.forEachIndexed { indexInner, _ ->
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner")
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner")
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner")
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index$indexInner"
+                )
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index$indexInner"
+                )
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index$indexInner"
+                )
             }
         }
         mGeofenceList.clear()

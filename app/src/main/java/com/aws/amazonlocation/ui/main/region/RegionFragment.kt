@@ -47,7 +47,10 @@ class RegionFragment : BaseFragment() {
     private fun init() {
         mBinding.apply {
             val mRegionList = arrayListOf<RegionResponse>()
-            val selectedRegion = mPreferenceManager.getValue(KEY_SELECTED_REGION, regionDisplayName[0])
+            val selectedRegion = mPreferenceManager.getValue(
+                KEY_SELECTED_REGION,
+                regionDisplayName[0]
+            )
             regionDisplayName.forEach {
                 mRegionList.add(RegionResponse(it, selectedRegion == it))
             }
