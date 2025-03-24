@@ -59,7 +59,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class CloudFormationBottomSheetFragment(
     private val mTabEnum: TabEnum,
-    private val mCloudFormationInterface: CloudFormationInterface,
+    private val mCloudFormationInterface: CloudFormationInterface
 ) : BottomSheetDialogFragment() {
     private lateinit var mBinding: BottomSheetCloudFormationBinding
 
@@ -79,17 +79,23 @@ class CloudFormationBottomSheetFragment(
         super.onCreate(savedInstanceState)
         setStyle(
             STYLE_NORMAL,
-            R.style.CustomBottomSheetDialogTheme,
+            R.style.CustomBottomSheetDialogTheme
         )
 
         val propertiesAws = getPairValue()
-        (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STARTED, propertiesAws)
+        (activity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.AWS_ACCOUNT_CONNECTION_STARTED,
+            propertiesAws
+        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
         val propertiesAws = getPairValue()
-        (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_STOPPED, propertiesAws)
+        (activity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.AWS_ACCOUNT_CONNECTION_STOPPED,
+            propertiesAws
+        )
     }
 
     private fun getPairValue(): List<Pair<String, String>> {
@@ -108,7 +114,7 @@ class CloudFormationBottomSheetFragment(
                 }
             }
         return listOf(
-            Pair(AnalyticsAttribute.TRIGGERED_BY, analyticsValue),
+            Pair(AnalyticsAttribute.TRIGGERED_BY, analyticsValue)
         )
     }
 
@@ -117,7 +123,9 @@ class CloudFormationBottomSheetFragment(
         dialog.setOnShowListener {
             val bottomSheetDialog = it as BottomSheetDialog
             val parentLayout =
-                bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+                bottomSheetDialog.findViewById<View>(
+                    com.google.android.material.R.id.design_bottom_sheet
+                )
             parentLayout?.let { layout ->
                 val behaviour = BottomSheetBehavior.from(layout)
                 behaviour.isDraggable = false
@@ -137,7 +145,7 @@ class CloudFormationBottomSheetFragment(
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         mBinding = BottomSheetCloudFormationBinding.inflate(inflater, container, false)
         return mBinding.root
@@ -153,7 +161,7 @@ class CloudFormationBottomSheetFragment(
 
     override fun onViewCreated(
         view: View,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
         dialog?.setOnKeyListener { _, keyCode, _ ->
@@ -175,11 +183,11 @@ class CloudFormationBottomSheetFragment(
                     startActivity(
                         Intent(
                             context,
-                            WebViewActivity::class.java,
-                        ).putExtra(KEY_URL, url),
+                            WebViewActivity::class.java
+                        ).putExtra(KEY_URL, url)
                     )
                 }
-            },
+            }
         )
         clickListener()
         cloudFormationValidation()
@@ -201,7 +209,7 @@ class CloudFormationBottomSheetFragment(
                         parent: AdapterView<*>,
                         view: View?,
                         position: Int,
-                        id: Long,
+                        id: Long
                     ) {
                         adapter.setSelection(position)
                         selectedRegion = regionMapList[parent.getItemAtPosition(position)]
@@ -269,7 +277,7 @@ class CloudFormationBottomSheetFragment(
                         tvAwsCloudFormationRequired.alpha = 1f
                         viewScroll.alpha = 1f
                     }
-                },
+                }
             )
         }
     }
@@ -278,17 +286,23 @@ class CloudFormationBottomSheetFragment(
         lifecycleScope.launch {
             mPreferenceManager.setValue(
                 KEY_CLOUD_FORMATION_STATUS,
-                AuthEnum.AWS_CONNECTED.name,
+                AuthEnum.AWS_CONNECTED.name
             )
             val propertiesAws = getPairValue()
-            (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL, propertiesAws)
+            (activity as MainActivity).analyticsUtils?.recordEvent(
+                EventType.AWS_ACCOUNT_CONNECTION_SUCCESSFUL,
+                propertiesAws
+            )
             storeDataInPreference()
         }
     }
 
     private fun awsConnectionFailed() {
         val propertiesAws = getPairValue()
-        (activity as MainActivity).analyticsUtils?.recordEvent(EventType.AWS_ACCOUNT_CONNECTION_FAILED, propertiesAws)
+        (activity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.AWS_ACCOUNT_CONNECTION_FAILED,
+            propertiesAws
+        )
     }
 
     private fun validateAWSAccountData() {
@@ -320,7 +334,7 @@ class CloudFormationBottomSheetFragment(
                 Snackbar.make(
                     it.decorView,
                     error,
-                    Snackbar.LENGTH_SHORT,
+                    Snackbar.LENGTH_SHORT
                 )
             }
         val textView =
@@ -359,14 +373,14 @@ class CloudFormationBottomSheetFragment(
         mIdentityPoolId?.let { identityPId ->
             mPreferenceManager.setValue(
                 KEY_POOL_ID,
-                identityPId,
+                identityPId
             )
 
             identityPId.split(":").let { splitStringList ->
                 splitStringList[0].let { region ->
                     mPreferenceManager.setValue(
                         KEY_USER_REGION,
-                        region,
+                        region
                     )
                 }
             }
@@ -375,27 +389,27 @@ class CloudFormationBottomSheetFragment(
             val domainToSave = sanitizeUrl(uDomain)
             mPreferenceManager.setValue(
                 KEY_USER_DOMAIN,
-                domainToSave,
+                domainToSave
             )
         }
 
         mUserPoolClientId?.let { uPoolClientId ->
             mPreferenceManager.setValue(
                 KEY_USER_POOL_CLIENT_ID,
-                uPoolClientId,
+                uPoolClientId
             )
         }
         mUserPoolId?.let { uPoolId ->
             mPreferenceManager.setValue(
                 KEY_USER_POOL_ID,
-                uPoolId,
+                uPoolId
             )
         }
         mWebSocketUrl?.let { webSocketUrl ->
             val webSocketUrlToSave = sanitizeUrl(webSocketUrl)
             mPreferenceManager.setValue(
                 WEB_SOCKET_URL,
-                webSocketUrlToSave,
+                webSocketUrlToSave
             )
         }
         dismiss()
@@ -410,8 +424,8 @@ class CloudFormationBottomSheetFragment(
                 startActivity(
                     Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(urlToPass),
-                    ),
+                        Uri.parse(urlToPass)
+                    )
                 )
             }
         }

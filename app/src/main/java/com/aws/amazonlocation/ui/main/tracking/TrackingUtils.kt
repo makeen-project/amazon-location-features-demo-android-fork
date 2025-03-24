@@ -167,9 +167,13 @@ class TrackingUtils(
                 }
                 mBindingTracking?.clEnableTracking?.context?.let {
                     if ((activity as MainActivity).isTablet) {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(
+                            R.dimen.dp_150
+                        )
                     } else {
-                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_110)
+                        mBottomSheetTrackingBehavior?.peekHeight = it.resources.getDimensionPixelSize(
+                            R.dimen.dp_110
+                        )
                     }
                     mBottomSheetTrackingBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
                 }
@@ -369,7 +373,12 @@ class TrackingUtils(
             ""
         )
         val credentials = createCredentialsProvider(mLocationProvider.getCredentials())
-        mqttClient = AWSIotMqttClient(mPreferenceManager?.getValue(WEB_SOCKET_URL, ""), identityId, credentials, regionData)
+        mqttClient = AWSIotMqttClient(
+            mPreferenceManager?.getValue(WEB_SOCKET_URL, ""),
+            identityId,
+            credentials,
+            regionData
+        )
 
         try {
             mqttClient?.connect()
@@ -387,12 +396,16 @@ class TrackingUtils(
     }
 
     private fun createCredentialsProvider(credentials: Credentials?): CredentialsProvider {
-        if (credentials?.accessKeyId == null || credentials.sessionToken == null) throw Exception("Credentials not found")
+        if (credentials?.accessKeyId == null || credentials.sessionToken == null) {
+            throw Exception(
+                "Credentials not found"
+            )
+        }
         return StaticCredentialsProvider(
             com.amazonaws.services.iot.client.auth.Credentials(
                 credentials.accessKeyId,
                 credentials.secretKey,
-                credentials.sessionToken,
+                credentials.sessionToken
             )
         )
     }
@@ -444,23 +457,41 @@ class TrackingUtils(
                             val geofenceName = jsonObject.get("geofenceId").asString
                             val subTitle = if (type.equals("ENTER", true)) {
                                 val propertiesAws = listOf(
-                                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                                    Pair(
+                                        AnalyticsAttribute.TRIGGERED_BY,
+                                        AnalyticsAttributeValue.TRACKERS
+                                    ),
                                     Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
-                                    Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.ENTER)
+                                    Pair(
+                                        AnalyticsAttribute.EVENT_TYPE,
+                                        AnalyticsAttributeValue.ENTER
+                                    )
                                 )
-                                (activity as MainActivity).analyticsUtils?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
+                                (activity as MainActivity).analyticsUtils?.recordEvent(
+                                    EventType.GEO_EVENT_TRIGGERED,
+                                    propertiesAws
+                                )
                                 "${mFragmentActivity?.getString(R.string.label_tracker_entered)} $geofenceName"
                             } else {
                                 val propertiesAws = listOf(
-                                    Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.TRACKERS),
+                                    Pair(
+                                        AnalyticsAttribute.TRIGGERED_BY,
+                                        AnalyticsAttributeValue.TRACKERS
+                                    ),
                                     Pair(AnalyticsAttribute.GEOFENCE_ID, geofenceName),
-                                    Pair(AnalyticsAttribute.EVENT_TYPE, AnalyticsAttributeValue.EXIT)
+                                    Pair(
+                                        AnalyticsAttribute.EVENT_TYPE,
+                                        AnalyticsAttributeValue.EXIT
+                                    )
                                 )
-                                (activity as MainActivity).analyticsUtils?.recordEvent(EventType.GEO_EVENT_TRIGGERED, propertiesAws)
+                                (activity as MainActivity).analyticsUtils?.recordEvent(
+                                    EventType.GEO_EVENT_TRIGGERED,
+                                    propertiesAws
+                                )
                                 "${mFragmentActivity?.getString(R.string.label_tracker_exited)} $geofenceName"
                             }
-                            activity?.runOnUiThread {
-                                activity?.messageDialog(
+                            activity.runOnUiThread {
+                                activity.messageDialog(
                                     title = geofenceName,
                                     subTitle = subTitle,
                                     false,
@@ -548,8 +579,12 @@ class TrackingUtils(
             }
             mGeofenceList.forEachIndexed { index, _ ->
                 mMapLibreMap?.style?.removeLayer(GeofenceCons.CIRCLE_CENTER_LAYER_ID + "$index")
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index")
-                mMapLibreMap?.style?.removeLayer(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index")
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_ID + "$index"
+                )
+                mMapLibreMap?.style?.removeLayer(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"
+                )
             }
             trackingHistoryData.clear()
             if (adapter != null) {
@@ -695,7 +730,9 @@ class TrackingUtils(
                     imageId++
                     if (devicePositionList.size > (index + 1)) {
                         val isNextToday =
-                            DateUtils.isToday(devicePositionList[index + 1].sampleTime.epochMilliseconds)
+                            DateUtils.isToday(
+                                devicePositionList[index + 1].sampleTime.epochMilliseconds
+                            )
                         if (!isNextToday) {
                             lastData = true
                         }
@@ -721,7 +758,9 @@ class TrackingUtils(
                     }
                     if (devicePositionList.size > (index + 1)) {
                         val nextDateString =
-                            checkAndSetDate(devicePositionList[index + 1].sampleTime.epochMilliseconds)
+                            checkAndSetDate(
+                                devicePositionList[index + 1].sampleTime.epochMilliseconds
+                            )
                         if (nextDateString != dateString) {
                             lastData = true
                         }
@@ -732,7 +771,8 @@ class TrackingUtils(
                         headerIdsToRemove.add("layerId$headerId")
                         sourceIdsToRemove.add("sourceId$headerId")
                         mMapHelper?.addLine(
-                            coordinates,true
+                            coordinates,
+                            true
                         )
                         setCameraZoomLevel()
                         coordinates.clear()
@@ -1008,8 +1048,15 @@ class TrackingUtils(
 
     private fun setDefaultIconWithGeofence(index: Int) {
         mMapLibreMap?.getStyle { style ->
-            if (style.getSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index") == null) {
-                style.addSource(GeoJsonSource(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"))
+            if (style.getSource(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"
+                ) == null
+            ) {
+                style.addSource(
+                    GeoJsonSource(
+                        GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"
+                    )
+                )
             }
             initPolygonCircleFillLayer(index)
         }
@@ -1068,7 +1115,9 @@ class TrackingUtils(
 
             // Update the source's GeoJSON to draw a new fill circle
             val polygonCircleSource =
-                style.getSourceAs<GeoJsonSource>(GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index")
+                style.getSourceAs<GeoJsonSource>(
+                    GeofenceCons.TURF_CALCULATION_FILL_LAYER_GEO_JSON_SOURCE_ID + "$index"
+                )
             polygonCircleSource?.setGeoJson(
                 Polygon.fromOuterInner(
                     LineString.fromLngLats(pointList)
