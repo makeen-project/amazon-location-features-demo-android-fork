@@ -25,10 +25,30 @@ import com.aws.amazonlocation.ui.main.explore.SearchPlacesAdapter
 import com.aws.amazonlocation.ui.main.explore.SearchPlacesSuggestionAdapter
 import com.aws.amazonlocation.ui.main.simulation.SimulationBottomSheetFragment
 import com.aws.amazonlocation.ui.main.welcome.WelcomeBottomSheetFragment
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.AnalyticsAttribute
+import com.aws.amazonlocation.utils.AnalyticsAttributeValue
+import com.aws.amazonlocation.utils.ConnectivityObserveInterface
+import com.aws.amazonlocation.utils.DELAY_300
 import com.aws.amazonlocation.utils.Durations.DEFAULT_RADIUS
+import com.aws.amazonlocation.utils.EventType
+import com.aws.amazonlocation.utils.GEOFENCE_NAME_REG_EXP
 import com.aws.amazonlocation.utils.GeofenceCons.GEOFENCE_COLLECTION
+import com.aws.amazonlocation.utils.GeofenceDeleteInterface
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_ARABIC
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW
+import com.aws.amazonlocation.utils.LANGUAGE_CODE_HEBREW_1
+import com.aws.amazonlocation.utils.MapHelper
+import com.aws.amazonlocation.utils.NetworkConnectivityObserveInterface
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.utils.geofenceDeleteDialog
 import com.aws.amazonlocation.utils.geofence_helper.GeofenceHelper
+import com.aws.amazonlocation.utils.getLanguageCode
+import com.aws.amazonlocation.utils.hide
+import com.aws.amazonlocation.utils.hideKeyboard
+import com.aws.amazonlocation.utils.hideViews
+import com.aws.amazonlocation.utils.isInternetAvailable
+import com.aws.amazonlocation.utils.show
+import com.aws.amazonlocation.utils.showViews
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import java.text.DecimalFormat
 import java.util.regex.Pattern
@@ -189,7 +209,9 @@ class GeofenceUtils {
                                     addGeofenceAndClearData(geofenceName)
                                 } else {
                                     showErrorMessage(
-                                        mActivity?.resources?.getString(R.string.geofence_name_exists)
+                                        mActivity?.resources?.getString(
+                                            R.string.geofence_name_exists
+                                        )
                                             .toString()
                                     )
                                 }
@@ -349,7 +371,10 @@ class GeofenceUtils {
                     val propertiesAws = listOf(
                         Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
                     )
-                    (mActivity as MainActivity).analyticsUtils?.recordEvent(EventType.GEOFENCE_CREATION_STARTED, propertiesAws)
+                    (mActivity as MainActivity).analyticsUtils?.recordEvent(
+                        EventType.GEOFENCE_CREATION_STARTED,
+                        propertiesAws
+                    )
                     mGeofenceInterface?.hideShowBottomNavigationBar(
                         true,
                         GeofenceBottomSheetEnum.EMPTY_GEOFENCE_BOTTOM_SHEET
@@ -369,7 +394,10 @@ class GeofenceUtils {
                         val propertiesAws = listOf(
                             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES)
                         )
-                        (mActivity as MainActivity).analyticsUtils?.recordEvent(EventType.GEOFENCE_CREATION_STARTED, propertiesAws)
+                        (mActivity as MainActivity).analyticsUtils?.recordEvent(
+                            EventType.GEOFENCE_CREATION_STARTED,
+                            propertiesAws
+                        )
                         mGeofenceInterface?.hideShowBottomNavigationBar(
                             true,
                             GeofenceBottomSheetEnum.NONE
@@ -465,7 +493,10 @@ class GeofenceUtils {
             Pair(AnalyticsAttribute.TRIGGERED_BY, AnalyticsAttributeValue.GEOFENCES),
             Pair(AnalyticsAttribute.GEOFENCE_ID, data.geofenceId)
         )
-        (mActivity as MainActivity).analyticsUtils?.recordEvent(EventType.GEOFENCE_ITEM_SELECTED, propertiesAws)
+        (mActivity as MainActivity).analyticsUtils?.recordEvent(
+            EventType.GEOFENCE_ITEM_SELECTED,
+            propertiesAws
+        )
         mGeofenceInterface?.hideShowBottomNavigationBar(true, GeofenceBottomSheetEnum.NONE)
         data.geometry?.circle?.let {
             val latLng = LatLng(it.center[1], it.center[0])
@@ -549,9 +580,13 @@ class GeofenceUtils {
         }
         mBindingGeofenceList?.clGeofenceList?.context?.let {
             if ((mActivity as MainActivity).isTablet) {
-                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_150)
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(
+                    R.dimen.dp_150
+                )
             } else {
-                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(R.dimen.dp_110)
+                mBottomSheetGeofenceListBehavior?.peekHeight = it.resources.getDimensionPixelSize(
+                    R.dimen.dp_110
+                )
             }
             mBottomSheetGeofenceListBehavior?.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         }
@@ -571,8 +606,12 @@ class GeofenceUtils {
         }
         mBindingGeofenceList?.btnTryGeofence?.hide()
         mBindingGeofenceList?.tvEnableGeofence?.text = mActivity?.getString(R.string.add_geofence)
-        mBindingGeofenceList?.btnAddGeofence?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.color_primary_green))
-        mBindingGeofenceList?.tvEnableGeofence?.setTextColor(ContextCompat.getColor(context, R.color.white))
+        mBindingGeofenceList?.btnAddGeofence?.setCardBackgroundColor(
+            ContextCompat.getColor(context, R.color.color_primary_green)
+        )
+        mBindingGeofenceList?.tvEnableGeofence?.setTextColor(
+            ContextCompat.getColor(context, R.color.white)
+        )
         connectivityObserver = NetworkConnectivityObserveInterface(context)
         connectivityObserver?.observer()?.onEach {
             when (it) {
@@ -725,12 +764,16 @@ class GeofenceUtils {
 
     fun disableLiveLocationMarker(context: Context) {
         mBindingAddGeofence?.cardGeofenceLiveLocation?.isEnabled = false
-        mBindingAddGeofence?.cardGeofenceLiveLocation?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.btn_go_disable))
+        mBindingAddGeofence?.cardGeofenceLiveLocation?.setCardBackgroundColor(
+            ContextCompat.getColor(context, R.color.btn_go_disable)
+        )
     }
 
     fun enableLiveLocationMarker(context: Context) {
         mBindingAddGeofence?.cardGeofenceLiveLocation?.isEnabled = true
-        mBindingAddGeofence?.cardGeofenceLiveLocation?.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white))
+        mBindingAddGeofence?.cardGeofenceLiveLocation?.setCardBackgroundColor(
+            ContextCompat.getColor(context, R.color.white)
+        )
     }
 
     fun getLatLngStr(latLng: LatLng): String {
