@@ -2,6 +2,8 @@ package com.aws.amazonlocation.ui.main.simulation
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -551,16 +553,19 @@ class SimulationUtils(
                             BottomSheetBehavior.STATE_COLLAPSED -> {
                                 imgAmazonLogoTrackingSheet.alpha = 1f
                                 ivAmazonInfoTrackingSheet.alpha = 1f
+                                resetConstraintsToOriginal()
                             }
                             BottomSheetBehavior.STATE_EXPANDED -> {
                                 imgAmazonLogoTrackingSheet.alpha = 0f
                                 ivAmazonInfoTrackingSheet.alpha = 0f
+                                resetConstraintsToOriginal()
                             }
                             BottomSheetBehavior.STATE_DRAGGING -> {
                             }
                             BottomSheetBehavior.STATE_HALF_EXPANDED -> {
                                 imgAmazonLogoTrackingSheet.alpha = 1f
                                 ivAmazonInfoTrackingSheet.alpha = 1f
+                                updateConstraintForHalfExpanded()
                             }
                             BottomSheetBehavior.STATE_HIDDEN -> {}
                             BottomSheetBehavior.STATE_SETTLING -> {}
@@ -584,6 +589,26 @@ class SimulationUtils(
                 }
             }
         }
+    }
+
+    private fun updateConstraintForHalfExpanded() {
+        val layoutParams = simulationBinding?.clList?.layoutParams as? ConstraintLayout.LayoutParams ?: return
+        layoutParams.height = getHalfScreenHeight()
+        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+        simulationBinding?.clList?.layoutParams = layoutParams
+        simulationBinding?.clList?.requestLayout()
+    }
+
+    private fun resetConstraintsToOriginal() {
+        val layoutParams = simulationBinding?.clList?.layoutParams as? ConstraintLayout.LayoutParams ?: return
+        layoutParams.height = ConstraintLayout.LayoutParams.MATCH_CONSTRAINT
+        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        simulationBinding?.clList?.layoutParams = layoutParams
+        simulationBinding?.clList?.requestLayout()
+    }
+
+    private fun getHalfScreenHeight(): Int {
+        return (Resources.getSystem().displayMetrics.heightPixels / 2)
     }
 
     private fun drawSimulationPolygonCircle(circleCenter: Point, radius: Int, index: String) {
@@ -1095,10 +1120,33 @@ class SimulationUtils(
         simulationBinding?.rvRouteNotifications?.adapter = simulationNotificationAdapter
         simulationBinding?.rvRouteNotifications?.layoutManager = notificationLayoutManager
 
+        listOf(
+            simulationBinding?.nsvSimulation,
+            simulationBinding?.rvRouteNotifications,
+            simulationBinding?.rvTrackingSimulation
+        ).forEach { setupTouchListener(it) }
+
         val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
         simulationTrackingListAdapter = SimulationListAdapter()
         simulationBinding?.rvTrackingSimulation?.adapter = simulationTrackingListAdapter
         simulationBinding?.rvTrackingSimulation?.layoutManager = layoutManager
+    }
+
+    private fun setupTouchListener(view: View?) {
+        view?.setOnTouchListener { v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    if (mBottomSheetSimulationBehavior?.state == BottomSheetBehavior.STATE_HALF_EXPANDED) {
+                        mBottomSheetSimulationBehavior?.isDraggable = false
+                    }
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    mBottomSheetSimulationBehavior?.isDraggable = true
+                    v.performClick()
+                }
+            }
+            false
+        }
     }
 
     private fun setSelectedNotificationCount() {
