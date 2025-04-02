@@ -24,6 +24,6 @@ import org.junit.runners.Suite
     GeofenceEditTest::class,
     GeofenceDeleteTest::class,
     SettingSignOutTest::class,
-    SettingAWSDisconnectingTest::class,
+    SettingAWSDisconnectingTest::class
 )
 class AWSGeofenceAndConnectionTestSuite
