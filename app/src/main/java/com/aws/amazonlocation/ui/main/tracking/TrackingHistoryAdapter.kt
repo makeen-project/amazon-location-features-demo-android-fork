@@ -135,7 +135,13 @@ class TrackingHistoryAdapter :
     }
 
     override fun getHeaderId(position: Int) =
-        if (position > currentList.size || position < 0 || currentList.size == 0) -1L else getItem(position).headerId.toLong()
+        if (position > currentList.size || position < 0 || currentList.size == 0) {
+            -1L
+        } else {
+            getItem(
+                position
+            ).headerId.toLong()
+        }
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return HeaderViewHolder.from(parent = parent)
