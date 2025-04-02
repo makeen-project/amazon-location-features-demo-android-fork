@@ -42,20 +42,20 @@ class GeofenceAddTest : BaseTestMainActivity() {
             onView(
                 allOf(
                     withId(R.id.card_geofence_map),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.cl_search_loader_geofence_list),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
             if (onView(withId(R.id.cl_empty_geofence_list))
-                    .check(matches(isDisplayed()))
-                    .runCatching { true }
-                    .getOrDefault(false)
+                .check(matches(isDisplayed()))
+                .runCatching { true }
+                .getOrDefault(false)
             ) {
                 onView(withId(R.id.btn_add_geofence)).perform(click())
             } else {
@@ -64,7 +64,7 @@ class GeofenceAddTest : BaseTestMainActivity() {
             waitForView(CoreMatchers.allOf(withId(R.id.edt_add_geofence_search), isDisplayed()))
             onView(withId(R.id.edt_add_geofence_search)).perform(
                 clearText(),
-                typeText(TEST_WORD_SHYAMAL_CROSS_ROAD),
+                typeText(TEST_WORD_SHYAMAL_CROSS_ROAD)
             )
 
             val rvGeofenceSearchPlaces =
@@ -72,8 +72,8 @@ class GeofenceAddTest : BaseTestMainActivity() {
                     CoreMatchers.allOf(
                         withId(R.id.rv_geofence_search_places_suggestion),
                         isDisplayed(),
-                        hasMinimumChildCount(1),
-                    ),
+                        hasMinimumChildCount(1)
+                    )
                 )
 
             var itemCount = 0
@@ -88,16 +88,16 @@ class GeofenceAddTest : BaseTestMainActivity() {
                 onView(withId(R.id.rv_geofence_search_places_suggestion)).perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         0,
-                        click(),
-                    ),
+                        click()
+                    )
                 )
             }
             val seekbar =
                 waitForView(
                     CoreMatchers.allOf(
                         withId(R.id.seekbar_geofence_radius),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
 
             seekbar?.check { view, _ ->
@@ -111,22 +111,22 @@ class GeofenceAddTest : BaseTestMainActivity() {
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.btn_add_geofence_save),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.rv_geofence),
                     isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
+                    hasMinimumChildCount(1)
+                )
             )
 
             onView(withId(R.id.rv_geofence)).perform(
                 RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
-                    hasDescendant(withText(geofenceName)),
-                ),
+                    hasDescendant(withText(geofenceName))
+                )
             )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")

@@ -37,15 +37,15 @@ class GeofenceDeleteTest : BaseTestMainActivity() {
             onView(
                 allOf(
                     withId(R.id.card_geofence_map),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             ).perform(click())
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.cl_search_loader_geofence_list),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
             createOrGetGeoFence()
@@ -62,8 +62,8 @@ class GeofenceDeleteTest : BaseTestMainActivity() {
                 CoreMatchers.allOf(
                     withId(R.id.rv_geofence),
                     isDisplayed(),
-                    hasMinimumChildCount(1),
-                ),
+                    hasMinimumChildCount(1)
+                )
             )
         rv?.check { view, _ ->
             if (view is RecyclerView) {
@@ -83,18 +83,18 @@ class GeofenceDeleteTest : BaseTestMainActivity() {
         onView(withId(R.id.rv_geofence)).perform(
             RecyclerViewActions.actionOnItem<RecyclerView.ViewHolder>(
                 hasDescendant(
-                    withText(geofenceName),
+                    withText(geofenceName)
                 ),
-                clickOnViewChild(R.id.iv_delete_geofence),
-            ),
+                clickOnViewChild(R.id.iv_delete_geofence)
+            )
         )
         onView(withText(mActivityRule.activity.getString(R.string.ok))).perform(click())
 
         waitForView(
             CoreMatchers.allOf(
                 withText(mActivityRule.activity.getString(R.string.add_geofence)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )
     }
 }

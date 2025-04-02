@@ -6,10 +6,21 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.*
-import com.aws.amazonlocation.*
+import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.aws.amazonlocation.BaseTestMainActivity
+import com.aws.amazonlocation.R
+import com.aws.amazonlocation.TEST_FAILED_COUNTRY
+import com.aws.amazonlocation.TEST_WORD_RUS
+import com.aws.amazonlocation.checkLocationPermission
 import com.aws.amazonlocation.di.AppModule
-import com.aws.amazonlocation.utils.*
+import com.aws.amazonlocation.utils.IS_APP_FIRST_TIME_OPENED
+import com.aws.amazonlocation.utils.KEY_MAP_NAME
+import com.aws.amazonlocation.utils.KEY_MAP_STYLE_NAME
+import com.aws.amazonlocation.utils.PreferenceManager
+import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
@@ -49,8 +60,8 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.description_rus)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )
 
         val rbCountry =
@@ -61,8 +72,8 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
             waitForView(
                 allOf(
                     withId(R.id.tv_political_description),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
 
         tvPoliticalDescription?.check { view, _ ->
@@ -77,15 +88,15 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
             AllOf.allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             AllOf.allOf(
                 withId(R.id.cl_map_style),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
     }
 }
