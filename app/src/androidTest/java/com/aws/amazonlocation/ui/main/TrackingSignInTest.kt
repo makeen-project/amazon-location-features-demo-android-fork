@@ -32,15 +32,15 @@ class TrackingSignInTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_tracking)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.sign_in)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )?.perform(click())
 
         waitForView(allOf(withId(R.id.sign_in_web_view), isDisplayed()))
@@ -66,8 +66,8 @@ class TrackingSignInTest : BaseTestMainActivity() {
         waitForView(
             allOf(
                 withText(mActivityRule.activity.getString(R.string.label_start_tracking)),
-                isDisplayed(),
-            ),
+                isDisplayed()
+            )
         )
     }
 }
