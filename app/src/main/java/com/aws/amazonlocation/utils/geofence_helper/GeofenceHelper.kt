@@ -93,7 +93,11 @@ class GeofenceHelper(
             val symbolLatLng = annotation?.latLng
             symbolLatLng?.let {
                 if (it.longitude > mLastClickPoint.longitude()) {
-                    val distance = TurfMeasurement.distance(mLastClickPoint, fromLngLat(annotation.latLng.longitude, mLastClickPoint.latitude()), mCircleUnit)
+                    val distance = TurfMeasurement.distance(
+                        mLastClickPoint,
+                        fromLngLat(annotation.latLng.longitude, mLastClickPoint.latitude()),
+                        mCircleUnit
+                    )
                     if (distance >= GEOFENCE_MIN_RADIUS) {
                         mSeekBar?.progress = distance.toInt()
                     } else {
@@ -106,9 +110,16 @@ class GeofenceHelper(
         override fun onAnnotationDragFinished(annotation: Symbol?) {
             annotation?.let {
                 mSeekBar?.progress?.let { progress ->
-                    TurfMeasurement.destination(mLastClickPoint, progress.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
+                    TurfMeasurement.destination(
+                        mLastClickPoint,
+                        progress.toDouble(),
+                        CIRCLE_DRAGGABLE_BEARING,
+                        mCircleUnit
+                    ).let {
                         if (annotation.latLng.longitude != it.longitude() && annotation.latLng.latitude != it.latitude()) {
-                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))
+                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(
+                                LatLng(it.latitude(), it.longitude())
+                            )
                         }
                     }
                 }
@@ -178,8 +189,15 @@ class GeofenceHelper(
                 ) {
                     adjustRadius(seekBar?.progress)
                     if (fromUser) {
-                        TurfMeasurement.destination(mLastClickPoint, progress.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
-                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))
+                        TurfMeasurement.destination(
+                            mLastClickPoint,
+                            progress.toDouble(),
+                            CIRCLE_DRAGGABLE_BEARING,
+                            mCircleUnit
+                        ).let {
+                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(
+                                LatLng(it.latitude(), it.longitude())
+                            )
                         }
                     }
                 }
@@ -194,8 +212,15 @@ class GeofenceHelper(
                         if (dragMarkerRadius < GEOFENCE_MIN_RADIUS) {
                             dragMarkerRadius = GEOFENCE_MIN_RADIUS
                         }
-                        TurfMeasurement.destination(mLastClickPoint, dragMarkerRadius.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit).let {
-                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(it.latitude(), it.longitude()))
+                        TurfMeasurement.destination(
+                            mLastClickPoint,
+                            dragMarkerRadius.toDouble(),
+                            CIRCLE_DRAGGABLE_BEARING,
+                            mCircleUnit
+                        ).let {
+                            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(
+                                LatLng(it.latitude(), it.longitude())
+                            )
                         }
                     }
                 }
@@ -275,7 +300,12 @@ class GeofenceHelper(
             )
         } else {
             style.getSourceAs<GeoJsonSource>(CIRCLE_DRAGGABLE_VISIBLE_SOURCE_ID)?.apply {
-                val pt = TurfMeasurement.destination(point, radius.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit)
+                val pt = TurfMeasurement.destination(
+                    point,
+                    radius.toDouble(),
+                    CIRCLE_DRAGGABLE_BEARING,
+                    mCircleUnit
+                )
                 setGeoJson(pt)
             }
         }
@@ -288,8 +318,16 @@ class GeofenceHelper(
     }
 
     private fun addInvisibleDraggablePoint(point: Point, radius: Int) {
-        val pt = TurfMeasurement.destination(point, radius.toDouble(), CIRCLE_DRAGGABLE_BEARING, mCircleUnit)
-        mGeofenceMapLatLngInterface?.addInvisibleDraggableMarker(LatLng(pt.latitude(), pt.longitude()), invisibleMarkerDragListener)
+        val pt = TurfMeasurement.destination(
+            point,
+            radius.toDouble(),
+            CIRCLE_DRAGGABLE_BEARING,
+            mCircleUnit
+        )
+        mGeofenceMapLatLngInterface?.addInvisibleDraggableMarker(
+            LatLng(pt.latitude(), pt.longitude()),
+            invisibleMarkerDragListener
+        )
     }
 
     /**
@@ -407,7 +445,9 @@ class GeofenceHelper(
     private fun upDateSeekbarText(radius: Int) {
         val isMetric = Units.isMetric(mPrefrenceManager?.getValue(KEY_UNIT_SYSTEM, ""))
         val seekbarText: String = if (isMetric) {
-            Units.getMetricsNew(mAppContext, radius.toDouble(),
+            Units.getMetricsNew(
+                mAppContext,
+                radius.toDouble(),
                 isMetric = true,
                 isMeterToFeetNeeded = false
             )
@@ -431,8 +471,15 @@ class GeofenceHelper(
     private fun updateInvisibleDraggableMarker(center: LatLng) {
         val radius = mSeekBar?.progress?.toDouble()
         radius?.let {
-            val point = TurfMeasurement.destination(fromLngLat(center.longitude, center.latitude), it, CIRCLE_DRAGGABLE_BEARING, mCircleUnit)
-            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(LatLng(point.latitude(), point.longitude()))
+            val point = TurfMeasurement.destination(
+                fromLngLat(center.longitude, center.latitude),
+                it,
+                CIRCLE_DRAGGABLE_BEARING,
+                mCircleUnit
+            )
+            mGeofenceMapLatLngInterface?.updateInvisibleDraggableMarker(
+                LatLng(point.latitude(), point.longitude())
+            )
         }
     }
 
