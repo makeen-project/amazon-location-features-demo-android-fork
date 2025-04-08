@@ -32,7 +32,7 @@ import org.maplibre.geojson.Point
 
 class PlacesProvider(
     private var mMapHelper: MapHelper,
-    private var mPreferenceManager: PreferenceManager,
+    private var mPreferenceManager: PreferenceManager
 ) {
     private var apiError = "Please try again later"
 
@@ -41,7 +41,7 @@ class PlacesProvider(
         lng: Double?,
         text: String,
         mBaseActivity: BaseActivity?,
-        getPlaceClient: GeoPlacesClient?,
+        getPlaceClient: GeoPlacesClient?
     ): SuggestResponse? =
         try {
             val request =
@@ -66,7 +66,7 @@ class PlacesProvider(
         lng: Double?,
         searchText: String,
         mBaseActivity: BaseActivity?,
-        getPlaceClient: GeoPlacesClient?,
+        getPlaceClient: GeoPlacesClient?
     ): SearchSuggestionResponse {
         try {
             val liveLocation = mMapHelper.getLiveLocation()
@@ -82,7 +82,7 @@ class PlacesProvider(
                         lng = mLatLng?.longitude,
                         lat = mLatLng?.latitude,
                         mBaseActivity,
-                        getPlaceClient,
+                        getPlaceClient
                     )
                 response =
                     SearchSuggestionResponse(
@@ -96,12 +96,12 @@ class PlacesProvider(
                         lng = lng,
                         text = searchText,
                         mBaseActivity,
-                        getPlaceClient,
+                        getPlaceClient
                     )
                 response =
                     SearchSuggestionResponse(
                         text = searchText,
-                        maxResults = suggestResponse?.resultItems?.size,
+                        maxResults = suggestResponse?.resultItems?.size
                     )
             }
 
@@ -118,7 +118,9 @@ class PlacesProvider(
                             Point.fromLngLat(position[0], position[1]),
                             TurfConstants.UNIT_METRES
                         )
-                    } else it.distance.toDouble()
+                    } else {
+                        it.distance.toDouble()
+                    }
 
                     val mSearchSuggestionData: SearchSuggestionData =
                         if (it.placeId.isNotEmpty()) {
@@ -127,7 +129,7 @@ class PlacesProvider(
                                 text = it.address?.label,
                                 amazonLocationAddress = it.address,
                                 distance = distance,
-                                position = listOf(position[0], position[1]),
+                                position = listOf(position[0], position[1])
                             )
                         } else {
                             SearchSuggestionData(text = it.address?.label)
@@ -144,7 +146,9 @@ class PlacesProvider(
                                 Point.fromLngLat(position[0], position[1]),
                                 TurfConstants.UNIT_METRES
                             )
-                        } else it.place!!.distance.toDouble()
+                        } else {
+                            it.place!!.distance.toDouble()
+                        }
 
                         if (!it.place?.placeId.isNullOrEmpty()) {
                             mList.add(
@@ -154,13 +158,13 @@ class PlacesProvider(
                                     text = it.place?.address?.label,
                                     amazonLocationAddress = it.place?.address,
                                     distance = distance,
-                                    position = listOf(position[0], position[1]),
-                                ),
+                                    position = listOf(position[0], position[1])
+                                )
                             )
                         } else {
                             it.query?.let { query ->
                                 mList.add(
-                                    SearchSuggestionData(text = it.title, queryId = query.queryId),
+                                    SearchSuggestionData(text = it.title, queryId = query.queryId)
                                 )
                             }
                         }
@@ -168,7 +172,7 @@ class PlacesProvider(
                 } else {
                     it.query?.let { query ->
                         mList.add(
-                            SearchSuggestionData(text = it.title, queryId = query.queryId),
+                            SearchSuggestionData(text = it.title, queryId = query.queryId)
                         )
                     }
                 }
@@ -178,7 +182,7 @@ class PlacesProvider(
         } catch (e: Exception) {
             mBaseActivity?.handleException(e, apiError)
             return SearchSuggestionResponse(
-                error = apiError,
+                error = apiError
             )
         }
     }
@@ -186,7 +190,7 @@ class PlacesProvider(
     private fun addMarkerBasedOnLatLng(
         mResponse: SearchSuggestionResponse,
         searchText: String,
-        mList: ArrayList<SearchSuggestionData>,
+        mList: ArrayList<SearchSuggestionData>
     ) {
         val mLatLng = validateLatLng(searchText.trim())
         if (mLatLng != null) {
@@ -201,7 +205,7 @@ class PlacesProvider(
                     text = mResponse.text,
                     isPlaceIndexForPosition = true,
                     amazonLocationAddress = place,
-                    position = listOf(mLatLng.longitude, mLatLng.latitude),
+                    position = listOf(mLatLng.longitude, mLatLng.latitude)
                 )
             mList.add(response)
         }
@@ -213,7 +217,7 @@ class PlacesProvider(
         mText: String?,
         queryId: String?,
         mBaseActivity: BaseActivity?,
-        getPlaceClient: GeoPlacesClient?,
+        getPlaceClient: GeoPlacesClient?
     ): SearchSuggestionResponse? =
         try {
             val liveLocation = mMapHelper.getLiveLocation()
@@ -241,7 +245,7 @@ class PlacesProvider(
                 SearchSuggestionResponse(
                     text = text,
                     maxResults = response?.resultItems?.size,
-                    error = null,
+                    error = null
                 )
 
             val mList = ArrayList<SearchSuggestionData>()
@@ -256,7 +260,9 @@ class PlacesProvider(
                                 Point.fromLngLat(it[0], it[1]),
                                 TurfConstants.UNIT_METRES
                             )
-                        } else result.distance.toDouble()
+                        } else {
+                            result.distance.toDouble()
+                        }
                         val placeData =
                             SearchSuggestionData(
                                 placeId = result.placeId,
@@ -264,7 +270,7 @@ class PlacesProvider(
                                 amazonLocationAddress = result.address,
                                 text = result.title,
                                 position = listOf(it[0], it[1]),
-                                distance = distance,
+                                distance = distance
                             )
                         mList.add(placeData)
                     }
@@ -280,7 +286,7 @@ class PlacesProvider(
     suspend fun getPlace(
         placeId: String,
         mBaseActivity: BaseActivity?,
-        getPlaceClient: GeoPlacesClient?,
+        getPlaceClient: GeoPlacesClient?
     ): aws.sdk.kotlin.services.geoplaces.model.GetPlaceResponse? =
         try {
             val request =
@@ -303,7 +309,7 @@ class PlacesProvider(
         lng: Double?,
         lat: Double?,
         mBaseActivity: BaseActivity?,
-        getPlaceClient: GeoPlacesClient?,
+        getPlaceClient: GeoPlacesClient?
     ): ReverseGeocodeResponse? =
         try {
             val request =
@@ -327,7 +333,7 @@ class PlacesProvider(
         lat: Double?,
         lng: Double?,
         mBaseActivity: BaseActivity?,
-        getPlaceClient: GeoPlacesClient?,
+        getPlaceClient: GeoPlacesClient?
     ): ReverseGeocodeResponse? =
         try {
             val request =
@@ -348,7 +354,7 @@ class PlacesProvider(
     fun getDistance(
         liveLocation: LatLng?,
         destinationLat: Double,
-        destinationLng: Double,
+        destinationLng: Double
     ): Double? {
         var distance: Double? = null
         if (liveLocation?.latitude != null) {
@@ -363,9 +369,9 @@ class PlacesProvider(
             distance =
                 if (isMetric(
                         mPreferenceManager.getValue(
-                            KEY_UNIT_SYSTEM,
-                            "",
-                        ),
+                                KEY_UNIT_SYSTEM,
+                                ""
+                            )
                     )
                 ) {
                     distanceMeters

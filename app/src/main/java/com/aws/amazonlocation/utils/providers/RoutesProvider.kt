@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class RoutesProvider(
-    private var mPreferenceManager: PreferenceManager,
+    private var mPreferenceManager: PreferenceManager
 ) {
     suspend fun calculateRoute(
         latDeparture: Double?,
@@ -31,7 +31,7 @@ class RoutesProvider(
         travelMode: String?,
         time: String? = null,
         mBaseActivity: BaseActivity?,
-        getRoutesClient: GeoRoutesClient?,
+        getRoutesClient: GeoRoutesClient?
     ): CalculateRoutesResponse? =
         try {
             val isMetric = isMetric(mPreferenceManager.getValue(KEY_UNIT_SYSTEM, "Automatic"))
@@ -90,7 +90,7 @@ class RoutesProvider(
                     legAdditionalFeatures =
                         listOf(
                             RouteLegAdditionalFeature.TravelStepInstructions,
-                            RouteLegAdditionalFeature.Summary,
+                            RouteLegAdditionalFeature.Summary
                         )
                 }
 
