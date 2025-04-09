@@ -16,8 +16,8 @@ android {
         applicationId "com.aws.amazonlocation"
         minSdk 24
         targetSdk 35
-        versionCode 44
-        versionName "1.1.0"
+        versionCode 45
+        versionName "1.1.1"
         testInstrumentationRunner "com.aws.amazonlocation.AmazonLocationRunner"
         buildConfigField 'String', 'ATTRIBUTION_LEARN_MORE_HERE_URL',
                 "\"https://legal.here.com/en-gb/terms/general-content-supplier-terms-and-notices\""
