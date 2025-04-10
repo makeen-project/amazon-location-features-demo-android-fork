@@ -56,7 +56,8 @@ class GeofenceProvider {
     suspend fun getGeofenceList(
         collectionName: String,
         locationClient: LocationClient?,
-        mBaseActivity: BaseActivity?): GeofenceData =
+        mBaseActivity: BaseActivity?
+    ): GeofenceData =
         try {
             val request =
                 aws.sdk.kotlin.services.location.model.ListGeofencesRequest {
@@ -70,7 +71,7 @@ class GeofenceProvider {
 
             GeofenceData(
                 geofenceList = ArrayList(response?.entries ?: emptyList()),
-                message = null,
+                message = null
             )
         } catch (e: Exception) {
             e.printStackTrace()
