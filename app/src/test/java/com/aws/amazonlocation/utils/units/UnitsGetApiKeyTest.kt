@@ -2,7 +2,7 @@ package com.aws.amazonlocation.utils.units
 
 import com.aws.amazonlocation.BaseTest
 import com.aws.amazonlocation.BuildConfig
-import com.aws.amazonlocation.mock.*
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_DATA
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.KEY_SELECTED_REGION
 import com.aws.amazonlocation.utils.PreferenceManager
@@ -20,6 +20,7 @@ class UnitsGetApiKeyTest : BaseTest() {
     private val context = RuntimeEnvironment.getApplication().applicationContext
 
     private val preferenceManager = PreferenceManager(context)
+
     @Test
     fun getApiKeySuccess() {
         var result = Units.getApiKey(preferenceManager)
@@ -31,10 +32,16 @@ class UnitsGetApiKeyTest : BaseTest() {
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.API_KEY_US_EAST)
         preferenceManager.setValue(KEY_NEAREST_REGION, regionList[1])
         result = Units.getApiKey(preferenceManager)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.API_KEY_EU_CENTRAL)
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_DATA,
+            result == BuildConfig.API_KEY_EU_CENTRAL
+        )
         preferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[1])
         result = Units.getApiKey(preferenceManager)
-        Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.API_KEY_EU_CENTRAL)
+        Assert.assertTrue(
+            TEST_FAILED_DUE_TO_INCORRECT_DATA,
+            result == BuildConfig.API_KEY_EU_CENTRAL
+        )
         preferenceManager.setValue(KEY_SELECTED_REGION, regionDisplayName[2])
         result = Units.getApiKey(preferenceManager)
         Assert.assertTrue(TEST_FAILED_DUE_TO_INCORRECT_DATA, result == BuildConfig.API_KEY_US_EAST)

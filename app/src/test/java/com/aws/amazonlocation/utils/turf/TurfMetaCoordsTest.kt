@@ -29,7 +29,8 @@ class TurfMetaCoordsTest {
                     Point.fromLngLat(
                         TEST_DATA_LNG,
                         TEST_DATA_LAT
-                    ), Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
+                    ),
+                    Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
                 )
             )
         )
@@ -44,7 +45,8 @@ class TurfMetaCoordsTest {
                     Point.fromLngLat(
                         TEST_DATA_LNG,
                         TEST_DATA_LAT
-                    ), Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
+                    ),
+                    Point.fromLngLat(TEST_DATA_LNG, TEST_DATA_LAT)
                 )
             )
         )
@@ -71,7 +73,8 @@ class TurfMetaCoordsTest {
                         )
                     )
                 )
-            ), true
+            ),
+            true
         )
         Assert.assertTrue(pointList.isNotEmpty())
     }
