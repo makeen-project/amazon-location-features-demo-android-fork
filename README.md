@@ -9,6 +9,8 @@ Once configured, you can build and run the app locally or execute automated test
 
 The app supports the following map styles: `Standard`, `Monochrome`, `Hybrid` and `Satellite`
 
+In addition, the app supports multiple map languages and political views, allowing users to customize the display according to their preferences or regional context.
+
 Overall, this repo will help you get started with location-based features on Android using Amazon Location Services.
 
 Please refer to the [AWS Geospatial repository](https://github.com/aws-geospatial/) for other demo apps, including [iOS](https://github.com/aws-geospatial/amazon-location-features-demo-ios), [React](https://github.com/aws-geospatial/amazon-location-samples-react), and [web](https://github.com/aws-geospatial/amazon-location-features-demo-web), as well as additional resources.
@@ -56,6 +58,7 @@ Create *`custom.properties`* file inside the project root folder and add the det
 | API_KEY_US_EAST                      | API key from us-east-1 region                          |
 | SIMULATION_WEB_SOCKET_URL            | Simulation WebSocketUrl                                |
 | SIMULATION_WEB_SOCKET_URL_EU         | Simulation WebSocketUrl from eu-west-1 region          |
+| ANALYTICS_IDENTITY_POOL_ID           | IdentityPoolId for Analytics                           |
 | ANALYTICS_APP_ID                     | AnalyticsAppId                                         |
 | IDENTITY_POOL_ID                     | IdentityPoolId                                         |
 | USER_DOMAIN                          | UserDomain                                             |
@@ -73,6 +76,7 @@ API_KEY_US_EAST=xx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 API_KEY_EU_CENTRAL=xx.xxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 SIMULATION_WEB_SOCKET_URL=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
 SIMULATION_WEB_SOCKET_URL_EU=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
+ANALYTICS_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 ANALYTICS_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
