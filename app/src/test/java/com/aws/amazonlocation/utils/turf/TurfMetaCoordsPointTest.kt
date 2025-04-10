@@ -26,7 +26,8 @@ class TurfMetaCoordsPointTest {
                         )
                     )
                 )
-            ), false
+            ),
+            false
         )
         Assert.assertTrue(pointList.isNotEmpty())
     }
