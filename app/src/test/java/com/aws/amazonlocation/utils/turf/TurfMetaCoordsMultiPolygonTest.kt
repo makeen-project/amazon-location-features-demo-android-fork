@@ -26,7 +26,8 @@ class TurfMetaCoordsMultiPolygonTest {
                         )
                     )
                 )
-            ), true
+            ),
+            true
         )
         Assert.assertTrue(pointList.isNotEmpty())
     }
@@ -44,7 +45,8 @@ class TurfMetaCoordsMultiPolygonTest {
                         )
                     )
                 )
-            ), false
+            ),
+            false
         )
         Assert.assertTrue(pointList.isNotEmpty())
     }
