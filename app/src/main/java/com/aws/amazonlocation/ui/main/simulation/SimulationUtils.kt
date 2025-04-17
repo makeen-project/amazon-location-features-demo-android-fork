@@ -2,6 +2,7 @@ package com.aws.amazonlocation.ui.main.simulation
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.view.MotionEvent
 import android.view.View
@@ -78,6 +79,7 @@ import com.aws.amazonlocation.utils.simulationLonWest
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import java.util.Date
+import java.util.Locale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -104,6 +106,7 @@ class SimulationUtils(
     val activity: Activity?,
     val mLocationProvider: LocationProvider
 ) {
+    private lateinit var defaultLocale: Locale
     private var routeData: ArrayList<RouteSimulationDataItem>? = null
     private var isCoroutineStarted: Boolean = false
     private var notificationId: Int = 1
@@ -576,6 +579,15 @@ class SimulationUtils(
                     }
                 })
 
+            defaultLocale = Locale.getDefault()
+            if (defaultLocale.language == LANGUAGE_CODE_ARABIC) {
+                val config = Configuration()
+                config.setLocale(Locale.ENGLISH)
+                Locale.setDefault(Locale.ENGLISH)
+                activity?.resources?.configuration?.setLocale(Locale.ENGLISH)
+                activity?.createConfigurationContext(config)
+            }
+
             initClick()
             initAdapter()
             setSpinnerData()
@@ -870,14 +882,13 @@ class SimulationUtils(
         val credentials = createCredentialsProvider(mLocationProvider.getCredentials())
         val webSocketUrl = getSimulationWebSocketUrl(defaultIdentityPoolId)
         if (webSocketUrl == "null") return
-        mqttClient = AWSIotMqttClient(
-            webSocketUrl,
-            identityId,
-            credentials,
-            defaultIdentityPoolId.split(":")[0]
-        )
-
         try {
+            mqttClient = AWSIotMqttClient(
+                webSocketUrl,
+                identityId,
+                credentials,
+                defaultIdentityPoolId.split(":")[0]
+            )
             mqttClient?.connect(MQTT_CONNECT_TIME_OUT, false)
             mIsLocationUpdateEnable = true
             startTracking()
@@ -1062,6 +1073,7 @@ class SimulationUtils(
         val notificationLayoutManager = LinearLayoutManager(mActivity?.applicationContext)
         simulationNotificationAdapter = SimulationNotificationAdapter(
             notificationData,
+            defaultLocale,
             object : SimulationNotificationAdapter.NotificationInterface {
                 override fun click(position: Int, isSelected: Boolean) {
                     notificationData[position].isSelected = isSelected
@@ -1127,7 +1139,7 @@ class SimulationUtils(
         ).forEach { setupTouchListener(it) }
 
         val layoutManager = LinearLayoutManager(mActivity?.applicationContext)
-        simulationTrackingListAdapter = SimulationListAdapter()
+        simulationTrackingListAdapter = SimulationListAdapter(defaultLocale)
         simulationBinding?.rvTrackingSimulation?.adapter = simulationTrackingListAdapter
         simulationBinding?.rvTrackingSimulation?.layoutManager = layoutManager
     }
@@ -1236,6 +1248,13 @@ class SimulationUtils(
     }
 
     fun hideSimulationBottomSheet() {
+        if (defaultLocale.language == LANGUAGE_CODE_ARABIC) {
+            val config = Configuration()
+            config.setLocale(defaultLocale)
+            Locale.setDefault(defaultLocale)
+            activity?.resources?.configuration?.setLocale(defaultLocale)
+            activity?.createConfigurationContext(config)
+        }
         mMapLibreMap?.removeViewBounds()
         simulationBinding?.apply {
             closeTrackingCard()
