@@ -21,8 +21,8 @@ import com.aws.amazonlocation.utils.SEARCH_MAX_SUGGESTION_RESULT
 import com.aws.amazonlocation.utils.Units.getApiKey
 import com.aws.amazonlocation.utils.Units.isMetric
 import com.aws.amazonlocation.utils.Units.meterToFeet
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeasurement
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfConstants
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfMeasurement
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.validateLatLng
 import kotlinx.coroutines.Dispatchers

@@ -1,12 +1,9 @@
 package com.aws.amazonlocation
 
-import android.content.Context
-import android.content.Intent
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.aws.amazonlocation.ui.main.MainActivity
-import com.aws.amazonlocation.utils.retry_rule.RetryTestRule
-import com.aws.amazonlocation.utils.screenshot_rule.ScreenshotTakingRule
+import com.aws.amazonlocation.utils.retryRule.RetryTestRule
+import com.aws.amazonlocation.utils.screenshotRule.ScreenshotTakingRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.junit.After
 import org.junit.Before
@@ -40,8 +37,6 @@ abstract class BaseTestMainActivity {
 
     @Before
     open fun before() {
-        val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
-        context.sendBroadcast(Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS))
         mActivityRule.launchActivity(null)
     }
 

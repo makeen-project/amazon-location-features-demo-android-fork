@@ -38,24 +38,24 @@ class CheckRouteSearchCloseIconTest : BaseTestMainActivity() {
                 waitForView(
                     CoreMatchers.allOf(
                         withId(R.id.edt_search_dest),
-                        isDisplayed(),
-                    ),
+                        isDisplayed()
+                    )
                 )
             edtSearchDest?.perform(
                 click(),
-                replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD),
+                replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD)
             )
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.iv_close_destination),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )?.perform(click())
 
             edtSearchDest?.perform(
                 click(),
-                replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD),
+                replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD)
             )
 
             val rvSearchPlaces =
@@ -63,21 +63,21 @@ class CheckRouteSearchCloseIconTest : BaseTestMainActivity() {
                     CoreMatchers.allOf(
                         withId(R.id.rv_search_places_suggestion_direction),
                         isDisplayed(),
-                        hasMinimumChildCount(1),
-                    ),
+                        hasMinimumChildCount(1)
+                    )
                 )
             rvSearchPlaces?.perform(
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                     0,
-                    click(),
-                ),
+                    click()
+                )
             )
 
             waitForView(
                 CoreMatchers.allOf(
                     withId(R.id.card_drive_go),
-                    isDisplayed(),
-                ),
+                    isDisplayed()
+                )
             )
         } catch (e: Exception) {
             Assert.fail(TEST_FAILED)
