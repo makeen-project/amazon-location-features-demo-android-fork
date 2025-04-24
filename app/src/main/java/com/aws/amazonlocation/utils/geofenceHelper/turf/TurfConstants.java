@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.geofence_helper.turf;
+package com.aws.amazonlocation.utils.geofenceHelper.turf;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

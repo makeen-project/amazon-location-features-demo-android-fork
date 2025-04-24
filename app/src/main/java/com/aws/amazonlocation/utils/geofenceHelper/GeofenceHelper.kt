@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.geofence_helper
+package com.aws.amazonlocation.utils.geofenceHelper
 
 import android.content.Context
 import android.widget.SeekBar
@@ -30,10 +30,10 @@ import com.aws.amazonlocation.utils.KEY_UNIT_SYSTEM
 import com.aws.amazonlocation.utils.MapCameraZoom
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.Units
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants.UNIT_METRES
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeasurement
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfConstants.UNIT_METRES
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfMeasurement
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfMeta
+import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfTransformation
 import org.maplibre.android.camera.CameraPosition
 import org.maplibre.android.camera.CameraUpdateFactory
 import org.maplibre.android.geometry.LatLng

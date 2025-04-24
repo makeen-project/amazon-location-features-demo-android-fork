@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.map_style
+package com.aws.amazonlocation.ui.main.mapStyle
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
