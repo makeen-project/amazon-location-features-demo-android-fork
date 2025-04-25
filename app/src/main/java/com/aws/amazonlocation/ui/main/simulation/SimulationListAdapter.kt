@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SimulationListAdapter(private val defaultLocale: Locale) :
+class SimulationListAdapter(private val defaultLocale: Locale?) :
     ListAdapter<SimulationHistoryData, SimulationListAdapter.ItemViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -50,7 +50,7 @@ class SimulationListAdapter(private val defaultLocale: Locale) :
                 tvTime.text = date
             }
             if (item.isBusStopData) {
-                if (defaultLocale.language == LANGUAGE_CODE_ARABIC) {
+                if (defaultLocale?.language == LANGUAGE_CODE_ARABIC) {
                     tvBusStop.textDirection = View.TEXT_DIRECTION_RTL
                 }
                 tvBusStop.show()

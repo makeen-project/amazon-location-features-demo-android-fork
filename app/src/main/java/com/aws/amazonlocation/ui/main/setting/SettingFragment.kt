@@ -95,7 +95,7 @@ class SettingFragment : BaseFragment() {
     private fun init() {
         mAuthStatus = mPreferenceManager.getValue(KEY_CLOUD_FORMATION_STATUS, "")
         mBinding.apply {
-            setSelectedLanguage(getLanguageCode())
+            setSelectedLanguage(getLanguageCode(requireContext()))
         }
     }
 

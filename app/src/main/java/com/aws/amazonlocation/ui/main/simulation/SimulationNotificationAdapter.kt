@@ -15,7 +15,7 @@ import java.util.Locale
 // SPDX-License-Identifier: MIT-0
 class SimulationNotificationAdapter(
     private val notificationData: ArrayList<NotificationData>,
-    private val defaultLocale: Locale,
+    private val defaultLocale: Locale?,
     var notificationInterface: NotificationInterface
 ) :
     RecyclerView.Adapter<SimulationNotificationAdapter.SearchPlaceVH>() {
@@ -24,7 +24,7 @@ class SimulationNotificationAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: NotificationData) {
             binding.apply {
-                if (defaultLocale.language == LANGUAGE_CODE_ARABIC) {
+                if (defaultLocale?.language == LANGUAGE_CODE_ARABIC) {
                     tvBusName.textDirection = View.TEXT_DIRECTION_RTL
                 }
                 tvBusName.text = data.name

@@ -1,5 +1,6 @@
 package com.aws.amazonlocation.ui.base
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -24,6 +25,7 @@ import com.aws.amazonlocation.utils.BottomSheetHelper
 import com.aws.amazonlocation.utils.KEY_LOCATION_PERMISSION
 import com.aws.amazonlocation.utils.KEY_NEAREST_REGION
 import com.aws.amazonlocation.utils.LatencyChecker
+import com.aws.amazonlocation.utils.LocaleHelper
 import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.RESTART_DELAY
 import com.aws.amazonlocation.utils.Units
@@ -222,5 +224,10 @@ open class BaseActivity : AppCompatActivity() {
             delay(RESTART_DELAY)
             restartApplication()
         }
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        val updatedContext = LocaleHelper.attachBaseContext(newBase)
+        super.attachBaseContext(updatedContext)
     }
 }

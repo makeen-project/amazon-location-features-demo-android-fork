@@ -166,7 +166,7 @@ class MapStyleFragment : BaseFragment() {
                 )
             rvMapStyle.adapter = mMapStyleAdapter
 
-            val languageCode = getLanguageCode()
+            val languageCode = getLanguageCode(requireContext())
             val isRtl =
                 languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
             val selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""
