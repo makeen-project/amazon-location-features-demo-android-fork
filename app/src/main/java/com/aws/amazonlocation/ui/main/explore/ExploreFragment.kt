@@ -266,7 +266,7 @@ class ExploreFragment :
 
     private fun checkRtl() {
         if ((activity as MainActivity).isTablet) {
-            val languageCode = getLanguageCode()
+            val languageCode = getLanguageCode(requireContext())
             val isRtl =
                 languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
             if (isRtl) {

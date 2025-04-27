@@ -220,7 +220,7 @@ class MapStyleBottomSheetFragment(
     @SuppressLint("NotifyDataSetChanged")
     private fun init() {
         mBinding.apply {
-            val languageCode = getLanguageCode()
+            val languageCode = getLanguageCode(requireContext())
             val isRtl =
                 languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
             var selectedCountry = mPreferenceManager.getValue(KEY_POLITICAL_VIEW, "") ?: ""

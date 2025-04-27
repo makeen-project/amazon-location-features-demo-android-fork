@@ -1,8 +1,7 @@
 package com.aws.amazonlocation.utils
 
 import android.content.Context
-import android.content.res.Configuration
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import aws.sdk.kotlin.services.cognitoidentity.CognitoIdentityClient
 import aws.sdk.kotlin.services.cognitoidentity.model.GetIdRequest
 import aws.sdk.kotlin.services.cognitoidentity.model.ResourceNotFoundException
@@ -135,20 +134,9 @@ fun validateUserPoolClientId(mUserPoolClientId: String?): Boolean {
     return matcher.matches()
 }
 
-fun setLocale(languageCode: String, context: Context) {
-    val locale = Locale(languageCode)
-    Locale.setDefault(locale)
-    val config: Configuration = context.resources.configuration
-    config.setLocale(locale)
-    config.setLayoutDirection(locale)
-}
-
-fun getLanguageCode(): String? {
-    val appLanguage = AppCompatDelegate.getApplicationLocales()
-    val languageCode = appLanguage.toLanguageTags().ifEmpty {
-        Locale.getDefault().language
-    }
-    return languageCode
+fun getLanguageCode(context: Context): String {
+    val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+    return prefs.getString(SELECTED_LANGUAGE, LANGUAGE_CODE_ENGLISH) ?: LANGUAGE_CODE_ENGLISH
 }
 
 fun formatToDisplayTime(utcOffsetTime: String, outputDateFormat: String): String {

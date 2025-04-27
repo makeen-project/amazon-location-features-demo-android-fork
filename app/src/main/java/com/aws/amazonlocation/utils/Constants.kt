@@ -8,6 +8,7 @@ import com.google.android.gms.location.Priority
 
 // SPDX-License-Identifier: MIT-0
 
+const val SELECTED_LANGUAGE = "Locale.Helper.Selected.Language"
 const val KEY_BOARD_HEIGHT = 500
 const val KEY_LOCATION_PERMISSION = "location_permission"
 const val SEARCH_MAX_RESULT = 15

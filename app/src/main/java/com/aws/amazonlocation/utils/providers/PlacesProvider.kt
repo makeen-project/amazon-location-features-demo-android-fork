@@ -47,7 +47,9 @@ class PlacesProvider(
             val request =
                 SuggestRequest {
                     this.queryText = text
-                    this.language = getLanguageCode()
+                    if (mBaseActivity != null) {
+                        this.language = getLanguageCode(mBaseActivity.applicationContext)
+                    }
                     this.maxResults = SEARCH_MAX_SUGGESTION_RESULT
                     this.biasPosition = listOf(lng ?: 0.0, lat ?: 0.0)
                     this.additionalFeatures = listOf(SuggestAdditionalFeature.fromValue("Core"))
@@ -225,7 +227,9 @@ class PlacesProvider(
                 SearchTextRequest {
                     if (mText != null) this.queryText = mText
                     if (queryId != null) this.queryId = queryId
-                    if (mText != null) this.language = getLanguageCode()
+                    if (mText != null) if (mBaseActivity != null) {
+                        this.language = getLanguageCode(mBaseActivity.applicationContext)
+                    }
                     if (mText != null) this.maxResults = SEARCH_MAX_RESULT
                     if (queryId.isNullOrEmpty()) this.biasPosition = listOfNotNull(lng, lat)
                 }
@@ -294,7 +298,9 @@ class PlacesProvider(
                     this.additionalFeatures = listOf(GetPlaceAdditionalFeature.Contact)
                     this.key = getApiKey(mPreferenceManager)
                     this.placeId = placeId
-                    this.language = getLanguageCode()
+                    if (mBaseActivity != null) {
+                        this.language = getLanguageCode(mBaseActivity.applicationContext)
+                    }
                 }
 
             withContext(Dispatchers.IO) {
@@ -314,7 +320,9 @@ class PlacesProvider(
         try {
             val request =
                 ReverseGeocodeRequest {
-                    this.language = getLanguageCode()
+                    if (mBaseActivity != null) {
+                        this.language = getLanguageCode(mBaseActivity.applicationContext)
+                    }
                     this.queryPosition = listOfNotNull(lng, lat)
                     this.maxResults = SEARCH_MAX_SUGGESTION_RESULT
                 }
@@ -338,7 +346,9 @@ class PlacesProvider(
         try {
             val request =
                 ReverseGeocodeRequest {
-                    this.language = getLanguageCode()
+                    if (mBaseActivity != null) {
+                        this.language = getLanguageCode(mBaseActivity.applicationContext)
+                    }
                     this.queryPosition = listOfNotNull(lng, lat)
                     this.maxResults = 1
                 }

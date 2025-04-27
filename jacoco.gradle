@@ -63,6 +63,7 @@ ext.excludes = [
         '**/*KeyBoardUtils*',
         '**/*AmazonLocationApp*',
         '**/*NavigationData*',
+        '**/*LocaleHelper*',
         // butterKnife
         '**/*$ViewInjector*.*',
         '**/*$ViewBinder*.*',

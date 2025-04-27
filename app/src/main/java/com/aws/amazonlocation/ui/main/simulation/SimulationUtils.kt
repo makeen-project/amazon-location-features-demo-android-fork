@@ -2,7 +2,6 @@ package com.aws.amazonlocation.ui.main.simulation
 
 import android.app.Activity
 import android.content.Context
-import android.content.res.Configuration
 import android.content.res.Resources
 import android.view.MotionEvent
 import android.view.View
@@ -106,7 +105,7 @@ class SimulationUtils(
     val activity: Activity?,
     val mLocationProvider: LocationProvider
 ) {
-    private lateinit var defaultLocale: Locale
+    private var defaultLocale: Locale? = null
     private var routeData: ArrayList<RouteSimulationDataItem>? = null
     private var isCoroutineStarted: Boolean = false
     private var notificationId: Int = 1
@@ -580,12 +579,8 @@ class SimulationUtils(
                 })
 
             defaultLocale = Locale.getDefault()
-            if (defaultLocale.language == LANGUAGE_CODE_ARABIC) {
-                val config = Configuration()
-                config.setLocale(Locale.ENGLISH)
+            if (defaultLocale?.language == LANGUAGE_CODE_ARABIC) {
                 Locale.setDefault(Locale.ENGLISH)
-                activity?.resources?.configuration?.setLocale(Locale.ENGLISH)
-                activity?.createConfigurationContext(config)
             }
 
             initClick()
@@ -593,7 +588,7 @@ class SimulationUtils(
             setSpinnerData()
             setSelectedNotificationCount()
             if ((activity as MainActivity).isTablet) {
-                val languageCode = getLanguageCode()
+                val languageCode = getLanguageCode(activity)
                 val isRtl =
                     languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
                 if (isRtl) {
@@ -1184,6 +1179,7 @@ class SimulationUtils(
     }
 
     fun isSimulationBottomSheetVisible(): Boolean {
+        if (mBottomSheetSimulationBehavior == null) return false
         return mBottomSheetSimulationBehavior?.state != BottomSheetBehavior.STATE_HIDDEN
     }
 
@@ -1248,12 +1244,8 @@ class SimulationUtils(
     }
 
     fun hideSimulationBottomSheet() {
-        if (defaultLocale.language == LANGUAGE_CODE_ARABIC) {
-            val config = Configuration()
-            config.setLocale(defaultLocale)
-            Locale.setDefault(defaultLocale)
-            activity?.resources?.configuration?.setLocale(defaultLocale)
-            activity?.createConfigurationContext(config)
+        if (defaultLocale?.language == LANGUAGE_CODE_ARABIC) {
+            defaultLocale?.let { Locale.setDefault(it) }
         }
         mMapLibreMap?.removeViewBounds()
         simulationBinding?.apply {

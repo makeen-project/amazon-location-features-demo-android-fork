@@ -29,7 +29,6 @@ import com.aws.amazonlocation.utils.ABOUT_FRAGMENT
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.ConnectivityObserveInterface
-import com.aws.amazonlocation.utils.DELAY_LANGUAGE_3000
 import com.aws.amazonlocation.utils.Durations.DELAY_FOR_FRAGMENT_LOAD
 import com.aws.amazonlocation.utils.EventType
 import com.aws.amazonlocation.utils.IOT_POLICY_UN_AUTH
@@ -56,7 +55,6 @@ import com.aws.amazonlocation.utils.hideViews
 import com.aws.amazonlocation.utils.invisible
 import com.aws.amazonlocation.utils.makeTransparentStatusBar
 import com.aws.amazonlocation.utils.requiredFields
-import com.aws.amazonlocation.utils.setLocale
 import com.aws.amazonlocation.utils.show
 import com.aws.amazonlocation.utils.showViews
 import com.aws.amazonlocation.utils.simulationExit
@@ -192,11 +190,6 @@ class MainActivity :
                 }
             }
         )
-        lifecycleScope.launch {
-            delay(DELAY_LANGUAGE_3000)
-            val languageCode = getLanguageCode()
-            languageCode?.let { setLocale(it, applicationContext) }
-        }
         addBackPressCallBack()
     }
 
@@ -287,7 +280,7 @@ class MainActivity :
 
     private fun checkRtl() {
         if (isTablet) {
-            val languageCode = getLanguageCode()
+            val languageCode = getLanguageCode(this)
             val isRtl =
                 languageCode == LANGUAGE_CODE_ARABIC || languageCode == LANGUAGE_CODE_HEBREW || languageCode == LANGUAGE_CODE_HEBREW_1
             if (isRtl) {
