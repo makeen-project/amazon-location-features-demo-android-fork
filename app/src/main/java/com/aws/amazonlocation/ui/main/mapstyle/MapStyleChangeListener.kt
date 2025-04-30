@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.mapStyle
+package com.aws.amazonlocation.ui.main.mapstyle
 
 interface MapStyleChangeListener {
 

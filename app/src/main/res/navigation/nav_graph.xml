@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/map_style_fragment"
-        android:name="com.aws.amazonlocation.ui.main.mapStyle.MapStyleFragment"
+        android:name="com.aws.amazonlocation.ui.main.mapstyle.MapStyleFragment"
         android:label="MapStyleFragment"
         tools:layout="@layout/fragment_map_style" />
 

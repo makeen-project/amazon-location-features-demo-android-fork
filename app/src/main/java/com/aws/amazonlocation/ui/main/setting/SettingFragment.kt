@@ -15,7 +15,7 @@ import com.aws.amazonlocation.databinding.FragmentSettingBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.language.LanguageFragment
-import com.aws.amazonlocation.ui.main.mapStyle.MapStyleFragment
+import com.aws.amazonlocation.ui.main.mapstyle.MapStyleFragment
 import com.aws.amazonlocation.ui.main.region.RegionFragment
 import com.aws.amazonlocation.ui.main.routeoption.RouteOptionFragment
 import com.aws.amazonlocation.ui.main.unitsystem.UnitSystemFragment
