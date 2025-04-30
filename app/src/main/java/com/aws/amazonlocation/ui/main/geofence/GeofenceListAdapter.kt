@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aws.sdk.kotlin.services.location.model.ListGeofenceResponseEntry
 import com.aws.amazonlocation.databinding.ItemGeofenceListBinding
-import com.aws.amazonlocation.utils.geofenceHelper.GeofenceHelper
+import com.aws.amazonlocation.utils.geofence.GeofenceHelper
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.show
 

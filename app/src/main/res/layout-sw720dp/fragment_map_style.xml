@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/cl_map_style_main"
     android:fillViewport="true"
-    tools:context=".ui.main.mapStyle.MapStyleFragment">
+    tools:context=".ui.main.mapstyle.MapStyleFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

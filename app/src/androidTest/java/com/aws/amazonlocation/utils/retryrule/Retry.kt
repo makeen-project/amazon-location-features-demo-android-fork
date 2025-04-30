@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.retryRule
+package com.aws.amazonlocation.utils.retryrule
 
 @Retention(AnnotationRetention.RUNTIME)
 annotation class Retry

@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.termsCondition
+package com.aws.amazonlocation.ui.main.termscondition
 
 import android.os.Bundle
 import android.view.LayoutInflater
