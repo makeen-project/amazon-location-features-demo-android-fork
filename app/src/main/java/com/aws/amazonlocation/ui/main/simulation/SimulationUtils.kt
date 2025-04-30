@@ -57,9 +57,9 @@ import com.aws.amazonlocation.utils.Units
 import com.aws.amazonlocation.utils.Units.checkInternetConnection
 import com.aws.amazonlocation.utils.Units.getSimulationWebSocketUrl
 import com.aws.amazonlocation.utils.Units.readRouteData
-import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfConstants
-import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfMeta
-import com.aws.amazonlocation.utils.geofenceHelper.turf.TurfTransformation
+import com.aws.amazonlocation.utils.geofence.turf.TurfConstants
+import com.aws.amazonlocation.utils.geofence.turf.TurfMeta
+import com.aws.amazonlocation.utils.geofence.turf.TurfTransformation
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.hideViews

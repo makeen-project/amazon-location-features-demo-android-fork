@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.screenshotRule
+package com.aws.amazonlocation.utils.screenshotrule
 
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description

@@ -17,8 +17,8 @@ import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.language.LanguageFragment
 import com.aws.amazonlocation.ui.main.mapStyle.MapStyleFragment
 import com.aws.amazonlocation.ui.main.region.RegionFragment
-import com.aws.amazonlocation.ui.main.routeOption.RouteOptionFragment
-import com.aws.amazonlocation.ui.main.unitSystem.UnitSystemFragment
+import com.aws.amazonlocation.ui.main.routeoption.RouteOptionFragment
+import com.aws.amazonlocation.ui.main.unitsystem.UnitSystemFragment
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface

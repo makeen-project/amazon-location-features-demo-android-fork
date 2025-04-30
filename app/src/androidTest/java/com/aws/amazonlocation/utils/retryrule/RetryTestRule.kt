@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.retryRule
+package com.aws.amazonlocation.utils.retryrule
 
 import android.util.Log
 import org.junit.rules.TestRule

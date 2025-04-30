@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.screenshotRule
+package com.aws.amazonlocation.utils.screenshotrule
 
 import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
