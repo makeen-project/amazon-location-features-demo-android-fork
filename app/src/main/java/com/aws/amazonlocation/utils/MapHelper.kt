@@ -292,12 +292,16 @@ class MapHelper(
                 longitude
             )
         mMapLibreMap?.getStyle { style ->
-            ContextCompat.getDrawable(activity.baseContext, R.drawable.ic_direction_marker)?.let {
-                style.addImage(
-                    name,
-                    it
+            style.addImage(
+                name,
+                convertLayoutToBitmap(
+                    activity,
+                    markerType,
+                    null,
+                    isDirectionIcon = true
                 )
-            }
+            )
+
             mSymbolManager?.textAllowOverlap = false
             mSymbolManager?.iconAllowOverlap = true
             mSymbolManager?.iconIgnorePlacement = false
@@ -1121,7 +1125,8 @@ class MapHelper(
         markerEnum: MarkerEnum = MarkerEnum.NONE,
         data: SearchSuggestionData? = null,
         markerName: String? = null,
-        isFromMapClick: Boolean = false
+        isFromMapClick: Boolean = false,
+        isDirectionIcon: Boolean = false
     ): Bitmap {
         val viewGroup: ViewGroup? = null
         val view = context.layoutInflater.inflate(R.layout.layout_map_custom_marker, viewGroup)
@@ -1182,6 +1187,9 @@ class MapHelper(
         }
         markerName?.let {
             tvAddress.setText(it)
+        }
+        if (isDirectionIcon) {
+            tvAddress.hide()
         }
         llMain.measure(
             View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),

@@ -29,51 +29,42 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
+
     @Test
     fun showGoButtonClickLiveNavigationTest() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val sourceEdt = waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(click())
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(click())
 
-            val clMyLocation =
-                waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
-            clMyLocation?.perform(click())
+            waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
+                ?.perform(click())
 
-            val destinationEdt = waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
-            destinationEdt?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
 
-            val suggestionListRv =
-                waitForView(
-                    allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
-            suggestionListRv?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            val btnCarGo =
-                waitForView(
-                    allOf(
-                        withId(R.id.card_drive_go),
-                        hasDescendant(
-                            withText(GO)
-                        ),
-                        isDisplayed()
-                    )
+            waitForView(
+                allOf(
+                    withId(R.id.card_drive_go),
+                    hasDescendant(withText(GO)),
+                    isDisplayed()
                 )
-            btnCarGo?.perform(click())
+            )?.perform(click())
 
             Espresso.closeSoftKeyboard()
 
@@ -88,8 +79,10 @@ class CheckGoButtonClickLiveNavigationTest : BaseTestMainActivity() {
             waitForView(allOf(withId(R.id.btn_exit), isDisplayed())) {
                 Assert.fail("$TEST_FAILED button exit not visible")
             }
+
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
+

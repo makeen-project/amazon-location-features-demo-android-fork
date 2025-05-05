@@ -29,16 +29,16 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
+
     @Test
     fun showSearchNonExistingResultTest() {
         try {
             checkLocationPermission()
-            val edtSearch =
-                onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
-            edtSearch.perform(click())
-            onView(withId(R.id.edt_search_places)).perform(
-                replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD)
-            )
+
+            onView(withId(R.id.edt_search_places))
+                .check(matches(isDisplayed()))
+                .perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
+
             val rvSearchPlaceSuggestion =
                 waitForView(
                     allOf(
@@ -47,6 +47,7 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
                         hasMinimumChildCount(1)
                     )
                 )
+
             var itemCount = 0
             rvSearchPlaceSuggestion?.check { view, _ ->
                 if (view is RecyclerView) {
@@ -55,32 +56,23 @@ class SearchAddressExactMatchPOICardLocationTest : BaseTestMainActivity() {
                     Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
                 }
             }
-            if (itemCount >= 0) {
-                onView(withId(R.id.rv_search_places_suggestion))
-                    .check(matches(hasDescendant(withText(TEST_WORD_SHYAMAL_CROSS_ROAD))))
 
-                onView(withId(R.id.rv_search_places_suggestion))
-                    .perform(
-                        RecyclerViewActions.actionOnItem<ViewHolder>(
-                            hasDescendant(
-                                withText(TEST_WORD_SHYAMAL_CROSS_ROAD)
-                            ),
-                            click()
-                        )
-                    )
+            Assert.assertTrue(TEST_FAILED_NO_SEARCH_RESULT, itemCount > 0)
 
-                waitForView(
-                    allOf(
-                        withId(R.id.btn_direction),
-                        isDisplayed()
+            onView(withId(R.id.rv_search_places_suggestion))
+                .check(matches(hasDescendant(withText(TEST_WORD_SHYAMAL_CROSS_ROAD))))
+                .perform(
+                    RecyclerViewActions.actionOnItem<ViewHolder>(
+                        hasDescendant(withText(TEST_WORD_SHYAMAL_CROSS_ROAD)),
+                        click()
                     )
                 )
-                waitForView(allOf(withId(R.id.tv_direction_distance), isDisplayed()))
-            } else {
-                Assert.fail(TEST_FAILED_NO_SEARCH_RESULT)
-            }
+
+            waitForView(allOf(withId(R.id.btn_direction), isDisplayed()))
+            waitForView(allOf(withId(R.id.tv_direction_distance), isDisplayed()))
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
+

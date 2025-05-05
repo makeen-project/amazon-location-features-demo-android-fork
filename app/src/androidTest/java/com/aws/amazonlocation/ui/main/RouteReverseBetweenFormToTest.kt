@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -24,106 +25,75 @@ import com.google.android.material.textfield.TextInputEditText
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class RouteReverseBetweenFormToTest : BaseTestMainActivity() {
+
     @Test
     fun showRouteReverseBetweenFormToTest() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val sourceEdt =
-                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(click())
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(click())
 
-            val clMyLocation =
-                waitForView(CoreMatchers.allOf(withText(R.string.label_my_location), isDisplayed()))
-            clMyLocation?.perform(click())
+            waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
+                ?.perform(click())
 
-            val destinationEdt =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.edt_search_dest),
-                        isDisplayed()
-                    )
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
+
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
-            destinationEdt?.perform(click(), ViewActions.replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
-
-            val suggestionListRv =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListRv?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
             waitForView(
-                CoreMatchers.allOf(
+                allOf(
                     withId(R.id.card_drive_go),
-                    hasDescendant(
-                        withText(GO)
-                    ),
+                    hasDescendant(withText(GO)),
                     isDisplayed()
                 )
             )
 
-            val originText = StringBuilder()
-            val destinationText = StringBuilder()
-            val swappedOriginText = StringBuilder()
-            val swappedDestinationText = StringBuilder()
+            val originText = getEditTextText(R.id.edt_search_direction)
+            val destinationText = getEditTextText(R.id.edt_search_dest)
 
-            onView(withId(R.id.edt_search_direction)).check { view, _ ->
-                if (view is TextInputEditText) {
-                    originText.append(view.text.toString().trim())
-                }
-            }
+            waitForView(allOf(withId(R.id.iv_swap_location), isDisplayed()))
+                ?.perform(click())
 
-            onView(withId(R.id.edt_search_dest)).check { view, _ ->
-                if (view is TextInputEditText) {
-                    destinationText.append(view.text.toString().trim())
-                }
-            }
+            val swappedOriginText = getEditTextText(R.id.edt_search_direction)
+            val swappedDestinationText = getEditTextText(R.id.edt_search_dest)
 
-            val swapBtn =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.iv_swap_location),
-                        isDisplayed()
-                    )
-                )
-            swapBtn?.perform(click())
-
-            onView(withId(R.id.edt_search_dest)).check { view, _ ->
-                if (view is TextInputEditText) {
-                    swappedDestinationText.append(view.text.toString().trim())
-                }
-            }
-
-            onView(withId(R.id.edt_search_direction)).check { view, _ ->
-                if (view is TextInputEditText) {
-                    swappedOriginText.append(view.text.toString().trim())
-                }
-            }
             Assert.assertTrue(
                 TEST_FAILED_INVALID_ORIGIN_OR_DESTINATION_TEXT,
-                originText.toString() == swappedDestinationText.toString() && destinationText.toString() == swappedOriginText.toString()
+                originText == swappedDestinationText && destinationText == swappedOriginText
             )
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
+    }
+
+    private fun getEditTextText(id: Int): String {
+        val result = StringBuilder()
+        onView(withId(id)).check { view, _ ->
+            if (view is TextInputEditText) {
+                result.append(view.text?.toString()?.trim())
+            }
+        }
+        return result.toString()
     }
 }

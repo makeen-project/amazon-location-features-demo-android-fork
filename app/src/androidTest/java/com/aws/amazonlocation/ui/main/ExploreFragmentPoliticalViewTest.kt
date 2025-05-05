@@ -1,11 +1,14 @@
 package com.aws.amazonlocation.ui.main
 
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -26,6 +29,9 @@ import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Description
+import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 import org.hamcrest.core.AllOf
 import org.junit.Assert
 import org.junit.Test
@@ -61,6 +67,13 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
             onView(withId(R.id.et_search_country)).perform(replaceText(TEST_WORD_ARG))
 
             waitForView(
+                allOf(
+                    withId(R.id.rv_political_view),
+                    isDisplayed(),
+                    hasExactChildCount(1)
+                )
+            )
+            waitForView(
                 AllOf.allOf(
                     withText(mActivityRule.activity.getString(R.string.description_arg)),
                     isDisplayed()
@@ -85,6 +98,18 @@ class ExploreFragmentPoliticalViewTest : BaseTestMainActivity() {
             }
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
+        }
+    }
+
+    fun hasExactChildCount(expectedCount: Int): Matcher<View> {
+        return object : TypeSafeMatcher<View>() {
+            override fun describeTo(description: Description) {
+                description.appendText("has exactly $expectedCount children")
+            }
+
+            override fun matchesSafely(view: View): Boolean {
+                return (view as? ViewGroup)?.childCount == expectedCount
+            }
         }
     }
 

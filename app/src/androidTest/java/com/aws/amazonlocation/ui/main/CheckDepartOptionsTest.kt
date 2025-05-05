@@ -26,6 +26,7 @@ import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
 
@@ -38,119 +39,71 @@ class CheckDepartOptionsTest : BaseTestMainActivity() {
         try {
             checkLocationPermission()
 
-            val cardDirection =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirection.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val edtSearchDirection = waitForView(
-                CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed())
-            )
-            edtSearchDirection?.perform(replaceText(TEST_WORD_AUBURN_SYDNEY))
-
-            var rvSearchPlaces = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1)
-                )
-            )
-            rvSearchPlaces?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
-
-            val edtSearchDest = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.edt_search_dest),
-                    isDisplayed()
-                )
-            )
-            edtSearchDest?.perform(
-                click(),
-                replaceText(TEST_WORD_MANLY_BEACH_SYDNEY)
-            )
-
-            rvSearchPlaces = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.rv_search_places_suggestion_direction),
-                    isDisplayed(),
-                    hasMinimumChildCount(1)
-                )
-            )
-            rvSearchPlaces?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(replaceText(TEST_WORD_AUBURN_SYDNEY))
 
             waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    isDisplayed()
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            val cardDepartOptions = waitForView(
-                CoreMatchers.allOf(
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_MANLY_BEACH_SYDNEY))
+
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
+                )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+            )
+
+            waitForView(allOf(withId(R.id.card_drive_go), isDisplayed()))
+
+            waitForView(
+                allOf(
                     withId(R.id.card_depart_options),
                     withEffectiveVisibility(Visibility.VISIBLE)
                 )
-            )
-            cardDepartOptions?.perform(click())
+            )?.perform(click())
 
-            val clArriveBy = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.cl_arrive_by),
-                    isDisplayed()
-                )
-            )
-            clArriveBy?.perform(click())
+            waitForView(allOf(withId(R.id.cl_arrive_by), isDisplayed()))
+                ?.perform(click())
 
-            waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    isDisplayed()
-                )
-            )
+            waitForView(allOf(withId(R.id.card_drive_go), isDisplayed()))
 
-            val tvDepartOptions = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.tv_depart_options),
-                    isDisplayed()
-                )
-            )
-            tvDepartOptions?.check { view, _ ->
-                if (view is AppCompatTextView) {
+            waitForView(allOf(withId(R.id.tv_depart_options), isDisplayed()))
+                ?.check { view, _ ->
+                    val textView = view as? AppCompatTextView
                     Assert.assertTrue(
                         TEST_FAILED_DUE_TO_WORD_MISMATCHED,
-                        view.text.contains(TEST_WORD_ARRIVE, true)
+                        textView?.text?.contains(TEST_WORD_ARRIVE, true) == true
                     )
-                } else {
-                    Assert.fail(TEST_FAILED)
                 }
-            }
 
-            val tvDriveLeaveTime = waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.tv_drive_leave_time),
-                    isDisplayed()
-                )
-            )
-            tvDriveLeaveTime?.check { view, _ ->
-                if (view is AppCompatTextView) {
+            waitForView(allOf(withId(R.id.tv_drive_leave_time), isDisplayed()))
+                ?.check { view, _ ->
+                    val textView = view as? AppCompatTextView
                     Assert.assertTrue(
                         TEST_FAILED_DUE_TO_WORD_MISMATCHED,
-                        view.text.contains(TEST_WORD_LEAVE_AT, true)
+                        textView?.text?.contains(TEST_WORD_LEAVE_AT, true) == true
                     )
-                } else {
-                    Assert.fail(TEST_FAILED)
                 }
-            }
+
         } catch (e: Exception) {
             Assert.fail(TEST_FAILED)
         }
     }
 }
+

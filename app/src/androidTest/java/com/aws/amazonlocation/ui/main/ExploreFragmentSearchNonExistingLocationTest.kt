@@ -26,9 +26,7 @@ class ExploreFragmentSearchNonExistingLocationTest : BaseTestMainActivity() {
         try {
             checkLocationPermission()
 
-            val edtSearch =
-                onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
-            edtSearch.perform(click())
+            onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed())).perform(click())
             onView(withId(R.id.edt_search_places)).perform(typeText(" "))
             waitForView(allOf(withId(R.id.tv_no_matching_found), isDisplayed()))
         } catch (e: Exception) {

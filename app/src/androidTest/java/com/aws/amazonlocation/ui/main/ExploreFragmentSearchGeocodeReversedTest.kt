@@ -33,7 +33,7 @@ class ExploreFragmentSearchGeocodeReversedTest : BaseTestMainActivity() {
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
             edtSearch.perform(click())
-            onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_GEOCODE_1))
+            edtSearch.perform(replaceText(TEST_GEOCODE_1))
 
             val rvSearchPlaceSuggestion =
                 waitForView(

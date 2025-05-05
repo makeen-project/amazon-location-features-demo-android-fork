@@ -31,9 +31,7 @@ class ExploreFragmentSearchByCategoriesTest : BaseTestMainActivity() {
         try {
             checkLocationPermission()
 
-            val edtSearch =
-                onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
-            edtSearch.perform(click())
+            onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed())).perform(click())
             onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_WORD_SCHOOL))
 
             val rvSearchPlaceSuggestion =

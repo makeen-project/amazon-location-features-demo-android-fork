@@ -27,68 +27,42 @@ class ExploreFragmentMaxZoomInOutTest : BaseTestMainActivity() {
 
     @Test
     fun testMapZoomOut() {
-        try {
-            checkLocationPermission()
-            var mapbox: MapLibreMap? = null
-
-            val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
-            mapView.getMapAsync {
-                mapbox = it
-            }
-            var beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            var isMaxZoomInReach = false
-            while (!isMaxZoomInReach) {
-                val map =
-                    uiDevice.findObject(
-                        UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView")
-                    )
-                if (map.exists()) {
-                    map.pinchIn(50, 15)
-                }
-                if (beforeZoomLevel != null) {
-                    mapbox?.cameraPosition?.zoom?.let {
-                        if (beforeZoomLevel == it) {
-                            isMaxZoomInReach = true
-                        } else {
-                            isMaxZoomInReach = false
-                            beforeZoomLevel = mapbox?.cameraPosition?.zoom
-                        }
-                    }
-                }
-            }
-            Assert.assertTrue(TEST_FAILED_MAX_ZOOM_NOT_REACHED, isMaxZoomInReach)
-        } catch (e: Exception) {
-            Assert.fail("$TEST_FAILED ${e.message}")
+        performZoomUntilMaxReached(isZoomIn = true) {
+            val map = uiDevice.findObject(
+                UiSelector().resourceId("${BuildConfig.APPLICATION_ID}:id/mapView")
+            )
+            if (map.exists()) map.pinchIn(50, 15)
         }
     }
 
     @Test
     fun testMaxZoomDoubleTap() {
+        performZoomUntilMaxReached(isZoomIn = false) {
+            onView(withId(R.id.mapView)).perform(ViewActions.doubleClick())
+        }
+    }
+
+    private fun performZoomUntilMaxReached(isZoomIn: Boolean, zoomAction: () -> Unit) {
         try {
             checkLocationPermission()
             var mapbox: MapLibreMap? = null
-
             val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
-            mapView.getMapAsync {
-                mapbox = it
-            }
-            var beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            var isMaxZoomInReach = false
-            while (!isMaxZoomInReach) {
-                onView(withId(R.id.mapView)).perform(ViewActions.doubleClick())
+            mapView.getMapAsync { mapbox = it }
 
-                if (beforeZoomLevel != null) {
-                    mapbox?.cameraPosition?.zoom?.let {
-                        if (beforeZoomLevel == it) {
-                            isMaxZoomInReach = true
-                        } else {
-                            isMaxZoomInReach = false
-                            beforeZoomLevel = mapbox?.cameraPosition?.zoom
-                        }
-                    }
+            var beforeZoomLevel = mapbox?.cameraPosition?.zoom
+            var isMaxZoomReached = false
+
+            while (!isMaxZoomReached) {
+                zoomAction()
+                val currentZoomLevel = mapbox?.cameraPosition?.zoom
+
+                if (beforeZoomLevel != null && currentZoomLevel != null) {
+                    isMaxZoomReached = beforeZoomLevel == currentZoomLevel
+                    beforeZoomLevel = currentZoomLevel
                 }
             }
-            Assert.assertTrue(TEST_FAILED_MAX_ZOOM_NOT_REACHED, isMaxZoomInReach)
+
+            Assert.assertTrue(TEST_FAILED_MAX_ZOOM_NOT_REACHED, isMaxZoomReached)
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

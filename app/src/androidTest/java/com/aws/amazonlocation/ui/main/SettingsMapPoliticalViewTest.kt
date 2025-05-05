@@ -48,13 +48,8 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
 
         goToMapStyles()
 
-        val clPoliticalView =
-            onView(withId(R.id.cl_political_view)).check(matches(isDisplayed()))
-        clPoliticalView.perform(click())
-
-        val etSearchCountry =
-            onView(withId(R.id.et_search_country)).check(matches(isDisplayed()))
-        etSearchCountry.perform(click())
+        onView(withId(R.id.cl_political_view)).check(matches(isDisplayed())).perform(click())
+        onView(withId(R.id.et_search_country)).check(matches(isDisplayed())).perform(click())
         onView(withId(R.id.et_search_country)).perform(replaceText(TEST_WORD_RUS))
 
         waitForView(
@@ -64,9 +59,7 @@ class SettingsMapPoliticalViewTest : BaseTestMainActivity() {
             )
         )
 
-        val rbCountry =
-            onView(withId(R.id.rb_country)).check(matches(isDisplayed()))
-        rbCountry.perform(click())
+        waitForView(withId(R.id.rb_country))?.check(matches(isDisplayed()))?.perform(click())
 
         val tvPoliticalDescription =
             waitForView(

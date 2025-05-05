@@ -6,6 +6,7 @@ import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.ViewInteraction
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
@@ -99,31 +100,28 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
 
 fun waitForView(
     matcher: Matcher<View>,
-    waitTime: Long = DELAY_3000,
-    maxCount: Int = 60,
+    retryDelayMs: Long = 100,
+    timeoutMs: Long = 10000,
     onNotFound: (() -> Unit)? = null
 ): ViewInteraction? {
-    var count = 0
-    var found = false
-    var interaction: ViewInteraction? = null
-    var exception: Exception? = null
-    while (!found) {
-        interaction = Espresso.onView(
-            matcher
-        ).check { view, noViewFoundException ->
-            exception = noViewFoundException
-            found = exception == null && view != null
-            Thread.sleep(waitTime)
+    val startTime = System.currentTimeMillis()
+    var lastError: Exception? = null
+
+    do {
+        try {
+            val interaction = Espresso.onView(matcher)
+            interaction.check(matches(isDisplayed()))
+            return interaction
+        } catch (e: Exception) {
+            lastError = e
+            Thread.sleep(retryDelayMs)
         }
-        if (!found && maxCount <= ++count) {
-            if (onNotFound == null) {
-                throw java.lang.Exception("$TEST_FAILED - Max count reached", exception)
-            } else {
-                onNotFound()
-            }
-            break
-        }
-        if (!found) interaction = null
+    } while (System.currentTimeMillis() - startTime < timeoutMs)
+
+    if (onNotFound == null) {
+        throw Exception("$TEST_FAILED - Timeout after ${timeoutMs}ms", lastError)
+    } else {
+        onNotFound()
     }
-    return interaction
+    return null
 }

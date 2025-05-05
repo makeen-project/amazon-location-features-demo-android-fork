@@ -23,9 +23,10 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsFragmentContentTest : BaseTestMainActivity() {
+
     private lateinit var bottomNavigation: BottomNavigationView
 
-    @Throws(java.lang.Exception::class)
+    @Throws(Exception::class)
     override fun before() {
         super.before()
         val activity: MainActivity = mActivityRule.activity
@@ -37,8 +38,8 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
         try {
             checkLocationPermission()
 
+            // Tap on the Settings tab
             val settingsTabText = mActivityRule.activity.getString(R.string.menu_setting)
-
             onView(
                 allOf(
                     withText(settingsTabText),
@@ -47,10 +48,12 @@ class SettingsFragmentContentTest : BaseTestMainActivity() {
                 )
             ).perform(click())
 
+            // Verify Settings tab is selected
             if (!bottomNavigation.menu.findItem(R.id.menu_settings).isChecked) {
                 Assert.fail(TEST_FAILED_NAVIGATION_TAB_SETTINGS_NOT_SELECTED)
             }
 
+            // Check if the content is displayed
             onView(withId(R.id.cl_map_style)).check(matches(isDisplayed()))
             onView(withId(R.id.cl_route_option)).check(matches(isDisplayed()))
         } catch (e: Exception) {

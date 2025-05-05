@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -29,64 +30,47 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckRouteUserEnterMyLocationTest : BaseTestMainActivity() {
+
     @Test
     fun showRouteUserEnterMyLocationTest() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val sourceEdt = waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(click())
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(click())
 
-            val clMyLocation =
-                waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
-            clMyLocation?.perform(click())
+            waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
+                ?.perform(click())
 
-            val destinationEdt =
-                waitForView(
-                    allOf(
-                        withId(R.id.edt_search_dest),
-                        isDisplayed()
-                    )
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_SHYAMAL))
+
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
-            destinationEdt?.perform(click(), ViewActions.replaceText(TEST_WORD_SHYAMAL))
-
-            val suggestionListRv =
-                waitForView(
-                    allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListRv?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            // btnCarGo
             waitForView(
                 allOf(
                     withId(R.id.card_drive_go),
-                    hasDescendant(
-                        withText(GO)
-                    ),
+                    hasDescendant(withText(GO)),
                     isDisplayed()
                 )
             )
 
-            // sourceTest
             waitForView(
                 allOf(
                     withId(R.id.edt_search_direction),
-                    withText(
-                        MY_LOCATION
-                    ),
+                    withText(MY_LOCATION),
                     isDisplayed()
                 )
             )
@@ -95,3 +79,4 @@ class CheckRouteUserEnterMyLocationTest : BaseTestMainActivity() {
         }
     }
 }
+

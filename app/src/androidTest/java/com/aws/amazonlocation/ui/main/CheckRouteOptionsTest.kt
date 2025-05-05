@@ -21,100 +21,66 @@ import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckRouteOptionsTest : BaseTestMainActivity() {
+
     @Test
     fun showCheckRouteOptionsTest() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val sourceEdt =
-                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(replaceText(TEST_WORD_AUBURN_SYDNEY))
-
-            val suggestionListRv =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListRv?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
-
-            val destinationEdt =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.edt_search_dest),
-                        isDisplayed()
-                    )
-                )
-            destinationEdt?.perform(
-                click(),
-                replaceText(TEST_WORD_MANLY_BEACH_SYDNEY)
-            )
-
-            val suggestionListDestRv =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListDestRv?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(replaceText(TEST_WORD_AUBURN_SYDNEY))
 
             waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    isDisplayed()
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            val cardRoutingOption =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.card_routing_option),
-                        withEffectiveVisibility(Visibility.VISIBLE)
-                    )
-                )
-            cardRoutingOption?.perform(click())
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_MANLY_BEACH_SYDNEY))
 
-            val switchAvoidTolls =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.switch_avoid_tools),
-                        isDisplayed()
-                    )
-                )
-            switchAvoidTolls?.perform(click())
             waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    isDisplayed()
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
+
+            waitForView(allOf(withId(R.id.card_drive_go), isDisplayed()))
+
+            waitForView(
+                allOf(
+                    withId(R.id.card_routing_option),
+                    withEffectiveVisibility(Visibility.VISIBLE)
+                )
+            )?.perform(click())
+
+            waitForView(allOf(withId(R.id.switch_avoid_tools), isDisplayed()))
+                ?.perform(click())
+
+            waitForView(allOf(withId(R.id.card_drive_go), isDisplayed()))
+
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
+

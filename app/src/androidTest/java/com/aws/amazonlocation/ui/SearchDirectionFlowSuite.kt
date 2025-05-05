@@ -19,6 +19,7 @@ import org.junit.runners.Suite
 
 @RunWith(Suite::class)
 @Suite.SuiteClasses(
+    RouteReverseBetweenFormToTest::class,
     ExploreFragmentSearchLocationByGeocodeTest::class,
     ExploreFragmentSearchNonExistingLocationTest::class,
     SearchAddressExactMatchPOICardLocationTest::class,
@@ -31,7 +32,6 @@ import org.junit.runners.Suite
     CheckDepartOptionsTest::class,
     ChangeMultipleDepartOptionsTest::class,
     CheckRouteUserEnterMyLocationTest::class,
-    RouteOptionShowingTest::class,
-    RouteReverseBetweenFormToTest::class
+    RouteOptionShowingTest::class
 )
 class SearchDirectionFlowSuite

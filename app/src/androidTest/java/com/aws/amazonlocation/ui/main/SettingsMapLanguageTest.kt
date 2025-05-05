@@ -26,61 +26,41 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class SettingsMapLanguageTest : BaseTestMainActivity() {
+
     private lateinit var preferenceManager: PreferenceManager
 
-    @Throws(java.lang.Exception::class)
     override fun before() {
-        preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
-        preferenceManager.setValue(IS_APP_FIRST_TIME_OPENED, true)
+        preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext()).apply {
+            setValue(IS_APP_FIRST_TIME_OPENED, true)
+        }
         super.before()
     }
 
     @Test
-    fun testSettingsMapPoliticalViewTest() {
+    fun testSettingsMapLanguageChange() {
         checkLocationPermission()
-
         goToMapStyles()
 
-        waitForView(
-            AllOf.allOf(
-                withId(R.id.cl_map_language),
-                isDisplayed()
-            )
-        )?.perform(click())
+        waitForView(withId(R.id.cl_map_language))?.perform(click())
 
-        val language =
-            waitForView(allOf(withText(TEST_WORD_LANGUAGE_BO), isDisplayed()))
-        language?.perform(click())
+        waitForView(withText(TEST_WORD_LANGUAGE_BO))?.perform(click())
 
-        val tvMapLanguageDescription =
-            waitForView(
-                allOf(
-                    withId(R.id.tv_map_language_description),
-                    isDisplayed()
-                )
-            )
-
-        tvMapLanguageDescription?.check { view, _ ->
-            if (view is AppCompatTextView) {
-                Assert.assertTrue(TEST_FAILED_LANGUAGE, view.text.contains(TEST_WORD_LANGUAGE_BO))
-            }
+        waitForView(withId(R.id.tv_map_language_description))?.check { view, _ ->
+            val text = (view as? AppCompatTextView)?.text?.toString().orEmpty()
+            Assert.assertTrue(TEST_FAILED_LANGUAGE, text.contains(TEST_WORD_LANGUAGE_BO))
         }
     }
 
     private fun goToMapStyles() {
         waitForView(
-            AllOf.allOf(
+            allOf(
                 withText(mActivityRule.activity.getString(R.string.menu_setting)),
                 isDescendantOfA(withId(R.id.bottom_navigation_main)),
                 isDisplayed()
             )
         )?.perform(click())
 
-        waitForView(
-            AllOf.allOf(
-                withId(R.id.cl_map_style),
-                isDisplayed()
-            )
-        )?.perform(click())
+        waitForView(withId(R.id.cl_map_style))?.perform(click())
     }
 }
+
