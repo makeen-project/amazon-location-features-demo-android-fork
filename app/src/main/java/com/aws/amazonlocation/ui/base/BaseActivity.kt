@@ -220,7 +220,6 @@ open class BaseActivity : AppCompatActivity() {
     fun restartAppWithClearData() {
         lifecycleScope.launch {
             mLocationProvider.clearCredentials()
-            mPreferenceManager.setDefaultConfig()
             delay(RESTART_DELAY)
             restartApplication()
         }

@@ -41,22 +41,10 @@ android {
                 "\"${customConfig.getProperty("DEFAULT_IDENTITY_POOL_ID")}\""
         buildConfigField 'String', 'DEFAULT_REGION',
                 "\"${customConfig.getProperty("DEFAULT_REGION")}\""
-        buildConfigField 'String', 'IDENTITY_POOL_ID',
-                "\"${customConfig.getProperty("IDENTITY_POOL_ID")}\""
-        buildConfigField 'String', 'USER_DOMAIN', "\"${customConfig.getProperty("USER_DOMAIN")}\""
-        buildConfigField 'String', 'USER_POOL_CLIENT_ID',
-                "\"${customConfig.getProperty("USER_POOL_CLIENT_ID")}\""
-        buildConfigField 'String', 'USER_POOL_ID', "\"${customConfig.getProperty("USER_POOL_ID")}\""
-        buildConfigField 'String', 'WEB_SOCKET_URL',
-                "\"${customConfig.getProperty("WEB_SOCKET_URL")}\""
         buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL',
                 "\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL")}\""
         buildConfigField 'String', 'SIMULATION_WEB_SOCKET_URL_EU',
                 "\"${customConfig.getProperty("SIMULATION_WEB_SOCKET_URL_EU")}\""
-        buildConfigField 'String', 'USER_LOGIN_NAME',
-                "\"${customConfig.getProperty("USER_LOGIN_NAME")}\""
-        buildConfigField 'String', 'USER_LOGIN_PASSWORD',
-                "\"${customConfig.getProperty("USER_LOGIN_PASSWORD")}\""
         buildConfigField 'String', 'ANALYTICS_IDENTITY_POOL_ID',
                 "\"${customConfig.getProperty("ANALYTICS_IDENTITY_POOL_ID")}\""
         buildConfigField 'String', 'ANALYTICS_APP_ID',
