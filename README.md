@@ -35,12 +35,6 @@ Below are the requirements for development, running and testing.
     - `IdentityPoolId` value will be added to `custom.properties` file against `DEFAULT_IDENTITY_POOL_ID_EU`.
     - `WebSocketUrl` value will be added to `custom.properties` file against `SIMULATION_WEB_SOCKET_URL_EU`.
 4. After adding all above details in `custom.properties` file in Android studio then open `Build -> Clean project` after this run project.
-5. Run the [AWS CloudFormation template](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/create?stackName=amazon-location-resources-setup&templateURL=https://amazon-location-resources-setup.s3.amazonaws.com/dev/main-cf-template.yaml) or use the template from `/extra/main-cf-template.yaml` using your own AWS account and get below data.
-    - `IdentityPoolId` value will be added to `custom.properties` file against `IDENTITY_POOL_ID`.
-    - `UserDomain` value will be added to `custom.properties` file against `USER_DOMAIN`.
-    - `UserPoolClientId` value will be added to `custom.properties` file against `USER_POOL_CLIENT_ID`.
-    - `UserPoolId` value will be added to `custom.properties` file against `USER_POOL_ID`.
-    - `WebSocketUrl` value will be added to `custom.properties` file against `WEB_SOCKET_URL`.
 
 Follow this [Document](https://location.aws.com/demo/help) for detailed info to create & configure a new AWS CloudFormation template.
 
@@ -60,11 +54,6 @@ Create *`custom.properties`* file inside the project root folder and add the det
 | SIMULATION_WEB_SOCKET_URL_EU         | Simulation WebSocketUrl from eu-west-1 region          |
 | ANALYTICS_IDENTITY_POOL_ID           | IdentityPoolId for Analytics                           |
 | ANALYTICS_APP_ID                     | AnalyticsAppId                                         |
-| IDENTITY_POOL_ID                     | IdentityPoolId                                         |
-| USER_DOMAIN                          | UserDomain                                             |
-| USER_POOL_CLIENT_ID                  | UserPoolClientId                                       |
-| USER_POOL_ID                         | UserPoolId                                             |
-| WEB_SOCKET_URL                       | WebSocketUrl                                           |
 
 #### For Build (Required for building and running the app)
 
@@ -78,18 +67,6 @@ SIMULATION_WEB_SOCKET_URL=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
 SIMULATION_WEB_SOCKET_URL_EU=xxxxxxxxxxxx-xxx.xxx.xx-xxxx-x.xxxxxxxxxx.com
 ANALYTICS_IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
 ANALYTICS_APP_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-```
-
-#### Optional values to add after above if you want to run tests locally. (This can be a different stack only for testing)
-
-```
-IDENTITY_POOL_ID=xx-xxxx-x:xxxx-xxxx-xxxx-xxxx
-USER_DOMAIN=https://xxxxxxxxxxxx.xxxx.xx-xxxx-x.amazoncognito.com
-USER_POOL_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
-USER_POOL_ID=xx-xxxx-x_xxxxxxxxx
-WEB_SOCKET_URL=xx....x-xxx.iot.xx-xxxx-x.amazonaws.com
-USER_LOGIN_NAME=<aws username>
-USER_LOGIN_PASSWORD=<aws password>
 ```
 
 ## Run Locally

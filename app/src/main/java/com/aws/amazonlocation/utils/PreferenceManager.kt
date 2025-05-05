@@ -98,12 +98,4 @@ class PreferenceManager(private val appContext: Context) {
     fun removeValue(key: String) {
         mSharedPreferences.edit().remove(key).apply()
     }
-
-    fun setDefaultConfig() {
-        setValue(KEY_POOL_ID, "")
-        setValue(KEY_USER_POOL_ID, "")
-        setValue(KEY_USER_POOL_CLIENT_ID, "")
-        setValue(KEY_USER_REGION, "")
-        setValue(KEY_USER_DOMAIN, "")
-    }
 }
