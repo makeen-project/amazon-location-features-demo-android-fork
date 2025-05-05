@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.utils.geofence_helper.turf;
+package com.aws.amazonlocation.utils.geofence.turf;
 
 import com.google.gson.JsonObject;
 
@@ -12,8 +12,8 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import static com.aws.amazonlocation.utils.geofence_helper.turf.TurfConversion.degreesToRadians;
-import static com.aws.amazonlocation.utils.geofence_helper.turf.TurfConversion.radiansToDegrees;
+import static com.aws.amazonlocation.utils.geofence.turf.TurfConversion.degreesToRadians;
+import static com.aws.amazonlocation.utils.geofence.turf.TurfConversion.radiansToDegrees;
 
 /**
  * Class contains an assortment of methods used to calculate measurements such as bearing,

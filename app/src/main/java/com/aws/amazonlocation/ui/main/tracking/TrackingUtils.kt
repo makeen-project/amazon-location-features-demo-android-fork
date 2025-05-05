@@ -50,9 +50,9 @@ import com.aws.amazonlocation.utils.PreferenceManager
 import com.aws.amazonlocation.utils.TIME_OUT
 import com.aws.amazonlocation.utils.WEB_SOCKET_URL
 import com.aws.amazonlocation.utils.deleteTrackingDataDialog
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfConstants
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfMeta
-import com.aws.amazonlocation.utils.geofence_helper.turf.TurfTransformation
+import com.aws.amazonlocation.utils.geofence.turf.TurfConstants
+import com.aws.amazonlocation.utils.geofence.turf.TurfMeta
+import com.aws.amazonlocation.utils.geofence.turf.TurfTransformation
 import com.aws.amazonlocation.utils.getLanguageCode
 import com.aws.amazonlocation.utils.hide
 import com.aws.amazonlocation.utils.messageDialog

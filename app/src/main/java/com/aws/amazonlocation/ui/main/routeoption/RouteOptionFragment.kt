@@ -1,4 +1,4 @@
-package com.aws.amazonlocation.ui.main.route_option
+package com.aws.amazonlocation.ui.main.routeoption
 
 import android.os.Bundle
 import android.view.LayoutInflater

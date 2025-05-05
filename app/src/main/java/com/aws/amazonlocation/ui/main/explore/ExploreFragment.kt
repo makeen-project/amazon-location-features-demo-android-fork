@@ -73,11 +73,11 @@ import com.aws.amazonlocation.domain.`interface`.UpdateTrackingInterface
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.geofence.GeofenceViewModel
-import com.aws.amazonlocation.ui.main.map_style.MapStyleBottomSheetFragment
-import com.aws.amazonlocation.ui.main.map_style.MapStyleChangeListener
+import com.aws.amazonlocation.ui.main.mapstyle.MapStyleBottomSheetFragment
+import com.aws.amazonlocation.ui.main.mapstyle.MapStyleChangeListener
 import com.aws.amazonlocation.ui.main.simulation.SimulationViewModel
 import com.aws.amazonlocation.ui.main.tracking.TrackingViewModel
-import com.aws.amazonlocation.ui.main.web_view.WebViewActivity
+import com.aws.amazonlocation.ui.main.webView.WebViewActivity
 import com.aws.amazonlocation.utils.ATTRIBUTE_DARK
 import com.aws.amazonlocation.utils.ATTRIBUTE_LIGHT
 import com.aws.amazonlocation.utils.AnalyticsAttribute
@@ -3341,8 +3341,11 @@ class ExploreFragment :
                     ivCloseDestination.visibility = if (hasFocus && !edtSearchDest.text.isNullOrEmpty()) View.VISIBLE else View.GONE
                     if (hasFocus) {
                         mViewModel.isDataSearchForDestination = true
-                    } else if (edtSearchDest.text.toString() == getString(R.string.label_my_location) ||
-                        (!rvSearchPlacesDirection.isVisible && !rvSearchPlacesSuggestionDirection.isVisible)) {
+                    } else if (edtSearchDest.text.toString() == getString(
+                            R.string.label_my_location
+                        ) ||
+                        (!rvSearchPlacesDirection.isVisible && !rvSearchPlacesSuggestionDirection.isVisible)
+                    ) {
                         ivCloseDestination.hide()
                     }
                 }
@@ -3351,8 +3354,11 @@ class ExploreFragment :
 
                     if (hasFocus) {
                         mViewModel.isDataSearchForDestination = false
-                    } else if (edtSearchDirection.text.toString() == getString(R.string.label_my_location) ||
-                        (!rvSearchPlacesDirection.isVisible && !rvSearchPlacesSuggestionDirection.isVisible)) {
+                    } else if (edtSearchDirection.text.toString() == getString(
+                            R.string.label_my_location
+                        ) ||
+                        (!rvSearchPlacesDirection.isVisible && !rvSearchPlacesSuggestionDirection.isVisible)
+                    ) {
                         ivCloseDirection.hide()
                     }
                 }
@@ -3622,7 +3628,7 @@ class ExploreFragment :
                 }
                 bottomSheetDirectionSearch.ivAmazonInfoDirectionSearchSheet.setOnClickListener {
                     setAttributionDataAndExpandSheet()
-            }
+                }
                 bottomSheetDirection.ivAmazonInfoDirection?.setOnClickListener {
                     setAttributionDataAndExpandSheet()
                 }
@@ -3681,7 +3687,7 @@ class ExploreFragment :
                 hideViews(
                     bottomSheetDirectionSearch.rvSearchPlacesDirection,
                     bottomSheetDirectionSearch.rvSearchPlacesSuggestionDirection,
-                    bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root,
+                    bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root
                 )
                 notifyDirectionAdapters()
             }
@@ -3691,7 +3697,7 @@ class ExploreFragment :
                 hideViews(
                     bottomSheetDirectionSearch.rvSearchPlacesDirection,
                     bottomSheetDirectionSearch.rvSearchPlacesSuggestionDirection,
-                    bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root,
+                    bottomSheetDirectionSearch.clSearchLoaderDirectionSearch.root
                 )
                 notifyDirectionAdapters()
             }
@@ -5310,7 +5316,7 @@ class ExploreFragment :
 
         mBinding.bottomSheetDirectionSearch.apply {
             val closeIcon = if (isFromDestination) ivCloseDestination else ivCloseDirection
-            closeIcon.visibility = if(!isSearchText) View.VISIBLE else View.GONE
+            closeIcon.visibility = if (!isSearchText) View.VISIBLE else View.GONE
 
             if (isSearchText) {
                 hideViews(

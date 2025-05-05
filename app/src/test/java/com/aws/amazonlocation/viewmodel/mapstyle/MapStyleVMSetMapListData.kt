@@ -3,8 +3,8 @@ package com.aws.amazonlocation.viewmodel.mapstyle
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.aws.amazonlocation.BaseTest
-import com.aws.amazonlocation.mock.*
-import com.aws.amazonlocation.ui.main.map_style.MapStyleViewModel
+import com.aws.amazonlocation.mock.TEST_FAILED_DUE_TO_INCORRECT_NO_OF_STYLES_LOADED_FOR_STANDARD
+import com.aws.amazonlocation.ui.main.mapstyle.MapStyleViewModel
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Rule

@@ -15,10 +15,10 @@ import com.aws.amazonlocation.databinding.FragmentSettingBinding
 import com.aws.amazonlocation.ui.base.BaseFragment
 import com.aws.amazonlocation.ui.main.MainActivity
 import com.aws.amazonlocation.ui.main.language.LanguageFragment
-import com.aws.amazonlocation.ui.main.map_style.MapStyleFragment
+import com.aws.amazonlocation.ui.main.mapstyle.MapStyleFragment
 import com.aws.amazonlocation.ui.main.region.RegionFragment
-import com.aws.amazonlocation.ui.main.route_option.RouteOptionFragment
-import com.aws.amazonlocation.ui.main.unit_system.UnitSystemFragment
+import com.aws.amazonlocation.ui.main.routeoption.RouteOptionFragment
+import com.aws.amazonlocation.ui.main.unitsystem.UnitSystemFragment
 import com.aws.amazonlocation.utils.AnalyticsAttribute
 import com.aws.amazonlocation.utils.AnalyticsAttributeValue
 import com.aws.amazonlocation.utils.DisconnectAWSInterface
