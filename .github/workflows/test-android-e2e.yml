@@ -2,7 +2,9 @@ name: Run E2E Tests for Android
 
 on:
   workflow_dispatch:
-
+  push:
+    branches:
+      - ALS-2104
 jobs:
   test-android:
     name: Test Android
