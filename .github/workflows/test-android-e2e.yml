@@ -8,7 +8,7 @@ on:
 jobs:
   test-android:
     name: Test Android
-    runs-on: macos-15
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@v3
@@ -44,9 +44,9 @@ jobs:
       - name: Run E2E Tests on Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
-          target: google_apis
-          profile: pixel_5
+          api-level: 29
+          target: playstore
+          profile: Nexus 6
           avd-name: test
           disable-animations: true
           emulator-boot-timeout: 1200
