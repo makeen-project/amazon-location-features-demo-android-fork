@@ -23,29 +23,27 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentSearchLocationByAddressTest : BaseTestMainActivity() {
+
     @Test
     fun showSearchLocationByAddressTest() {
         try {
             checkLocationPermission()
 
-            val edtSearch =
-                onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
-            edtSearch.perform(click())
-            onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_ADDRESS))
-            waitForView(
+            val edtSearch = onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
+            edtSearch.perform(click(), replaceText(TEST_ADDRESS))
+
+            val suggestionList = waitForView(
                 allOf(
                     withId(R.id.rv_search_places_suggestion),
                     isDisplayed(),
                     hasMinimumChildCount(1)
                 )
             )
-            onView(withId(R.id.rv_search_places_suggestion)).check(
-                matches(
-                    hasMinimumChildCount(1)
-                )
-            )
+
+            suggestionList?.check(matches(hasMinimumChildCount(1)))
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
+

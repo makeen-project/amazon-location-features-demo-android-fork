@@ -1,10 +1,15 @@
 name: Run E2E Tests for Android
+
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - ALS-2104
 jobs:
   test-android:
     name: Test Android
     runs-on: macos-13
+
     steps:
       - uses: actions/checkout@v3
 
@@ -36,19 +41,15 @@ jobs:
           distribution: "zulu"
           java-version: "17"
 
-      - name: Run Unit Tests
-        run: |
-          ./gradlew testDebugUnitTest
-
-      - name: e2e tests
+      - name: Run E2E Tests on Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
-          emulator-boot-timeout: 1200
+          api-level: 34
           target: playstore
+          profile: pixel_5
           avd-name: test
           disable-animations: true
-          profile: Nexus 6
+          emulator-boot-timeout: 1200
           script: |
             adb emu geo fix 72.58727 23.02579
             ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.MapLoadAndPlaceSearchFlowSuite

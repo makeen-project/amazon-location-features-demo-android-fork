@@ -28,40 +28,42 @@ import org.maplibre.android.maps.MapView
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
+
+    private fun getMapInstance(): MapLibreMap? {
+        var mapbox: MapLibreMap? = null
+        val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
+        mapView.getMapAsync { mapbox = it }
+        return mapbox
+    }
+
+    private fun validateZoomChange(beforeZoom: Double?, afterZoom: Double?, shouldIncrease: Boolean) {
+        if (beforeZoom != null && afterZoom != null) {
+            val zoomChanged = if (shouldIncrease) afterZoom > beforeZoom else afterZoom < beforeZoom
+            Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, zoomChanged)
+        } else {
+            Assert.fail(TEST_FAILED_ZOOM_LEVEL)
+        }
+    }
+
     @Test
     @Retry
     fun testMapZoomIn() {
         try {
             checkLocationPermission()
-            var mapbox: MapLibreMap? = null
+            waitForView(allOf(withId(R.id.mapView), isDisplayed()))
+            val mapbox = getMapInstance()
+            val beforeZoom = mapbox?.cameraPosition?.zoom
 
-            val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
-            mapView.getMapAsync {
-                mapbox = it
-            }
-            val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             onView(withId(R.id.mapView)).perform(
-                pinchOut(),
-                pinchOut(),
-                pinchOut(),
-                pinchOut(),
-                pinchOut(),
-                pinchOut()
+                pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut(), pinchOut()
             )
-            if (beforeZoomLevel != null) {
-                waitUntil(DELAY_3000, 25) {
-                    mapbox?.cameraPosition?.zoom?.let {
-                        beforeZoomLevel < it
-                    }
-                }
+
+            waitUntil(DELAY_3000, 25) {
+                mapbox?.cameraPosition?.zoom?.let { beforeZoom != null && it > beforeZoom }
             }
-            if (beforeZoomLevel != null) {
-                mapbox?.cameraPosition?.zoom?.let {
-                    Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
-                }
-            } else {
-                Assert.fail(TEST_FAILED_ZOOM_LEVEL)
-            }
+
+            val afterZoom = mapbox?.cameraPosition?.zoom
+            validateZoomChange(beforeZoom, afterZoom, shouldIncrease = true)
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
@@ -72,35 +74,20 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
     fun testMapZoomOut() {
         try {
             checkLocationPermission()
-            var mapbox: MapLibreMap? = null
+            waitForView(allOf(withId(R.id.mapView), isDisplayed()))
+            val mapbox = getMapInstance()
+            val beforeZoom = mapbox?.cameraPosition?.zoom
 
-            val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
-            mapView.getMapAsync {
-                mapbox = it
-            }
-            val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
             onView(withId(R.id.mapView)).perform(
-                pinchIn(),
-                pinchIn(),
-                pinchIn(),
-                pinchIn(),
-                pinchIn(),
-                pinchIn()
+                pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn(), pinchIn()
             )
-            if (beforeZoomLevel != null) {
-                waitUntil(DELAY_3000, 25) {
-                    mapbox?.cameraPosition?.zoom?.let {
-                        beforeZoomLevel > it
-                    }
-                }
+
+            waitUntil(DELAY_3000, 25) {
+                mapbox?.cameraPosition?.zoom?.let { beforeZoom != null && it < beforeZoom }
             }
-            if (beforeZoomLevel != null) {
-                mapbox?.cameraPosition?.zoom?.let {
-                    Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel > it)
-                }
-            } else {
-                Assert.fail(TEST_FAILED_ZOOM_LEVEL)
-            }
+
+            val afterZoom = mapbox?.cameraPosition?.zoom
+            validateZoomChange(beforeZoom, afterZoom, shouldIncrease = false)
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
@@ -111,34 +98,20 @@ class ExploreFragmentMapZoomInOutTest : BaseTestMainActivity() {
     fun testMapZoomDoubleTap() {
         try {
             checkLocationPermission()
-            var mapbox: MapLibreMap? = null
-            waitForView(
-                allOf(
-                    withId((R.id.mapView)),
-                    isDisplayed()
-                )
-            )
-            val mapView = mActivityRule.activity.findViewById<MapView>(R.id.mapView)
-            mapView.getMapAsync {
-                mapbox = it
-            }
-            val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
-            onView(withId(R.id.mapView)).perform(doubleTap(), doubleTap(), doubleTap(), doubleTap())
+            waitForView(allOf(withId(R.id.mapView), isDisplayed()))
+            val mapbox = getMapInstance()
+            val beforeZoom = mapbox?.cameraPosition?.zoom
 
-            if (beforeZoomLevel != null) {
-                waitUntil(DELAY_3000, 25) {
-                    mapbox?.cameraPosition?.zoom?.let {
-                        beforeZoomLevel < it
-                    }
-                }
+            onView(withId(R.id.mapView)).perform(
+                doubleTap(), doubleTap(), doubleTap(), doubleTap()
+            )
+
+            waitUntil(DELAY_3000, 25) {
+                mapbox?.cameraPosition?.zoom?.let { beforeZoom != null && it > beforeZoom }
             }
-            if (beforeZoomLevel != null) {
-                mapbox?.cameraPosition?.zoom?.let {
-                    Assert.assertTrue(TEST_FAILED_ZOOM_LEVEL_NOT_CHANGED, beforeZoomLevel < it)
-                }
-            } else {
-                Assert.fail(TEST_FAILED_ZOOM_LEVEL)
-            }
+
+            val afterZoom = mapbox?.cameraPosition?.zoom
+            validateZoomChange(beforeZoom, afterZoom, shouldIncrease = true)
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }

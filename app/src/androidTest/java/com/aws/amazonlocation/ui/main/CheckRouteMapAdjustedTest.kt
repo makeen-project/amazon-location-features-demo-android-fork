@@ -42,14 +42,13 @@ class CheckRouteMapAdjustedTest : BaseTestMainActivity() {
             }
             val beforeZoomLevel: Double? = mapbox?.cameraPosition?.zoom
 
-            val cardDirectionTest =
-                waitForView(
+            waitForView(
                     allOf(
                         withId((R.id.card_direction)),
                         isDisplayed()
                     )
-                )
-            cardDirectionTest?.perform(click())
+                )?.perform(click())
+
             waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))?.perform(
                 ViewActions.replaceText(
                     TEST_WORD_AUBURN_SYDNEY

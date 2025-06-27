@@ -1,6 +1,5 @@
 package com.aws.amazonlocation.ui.main
 
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -33,14 +32,9 @@ class ExploreFragmentMapLocateMeButtonTest : BaseTestMainActivity() {
             mapView.getMapAsync {
                 mapbox = it
             }
-            Espresso.onView(withId(R.id.mapView)).perform(swipeLeft())
+            waitForView(allOf(withId(R.id.mapView), isDisplayed()))?.perform(swipeLeft())
+            waitForView(allOf(withId(R.id.card_navigation), isDisplayed()))?.perform(click())
 
-            waitForView(
-                allOf(
-                    withId(R.id.card_navigation),
-                    isDisplayed()
-                )
-            )?.perform(click())
             Assert.assertTrue(
                 TEST_FAILED_LOCATION_COMPONENT_NOT_ACTIVATED_OR_ENABLED,
                 mapbox?.locationComponent?.isLocationComponentActivated == true &&

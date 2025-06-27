@@ -22,7 +22,7 @@ import com.aws.amazonlocation.di.AppModule
 import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert
 import org.junit.Test
@@ -30,97 +30,66 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class CheckRouteEstimatedTimeAndDistanceTest : BaseTestMainActivity() {
+
     @Test
     fun showRouteEstimatedTimeAndDistanceTest() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val sourceEdt =
-                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(click(), replaceText(TEST_WORD_CLOVERDALE_PERTH))
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_CLOVERDALE_PERTH))
 
-            val suggestionListRvSrc =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListRvSrc?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
-
-            val destinationEdt =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.edt_search_dest),
-                        isDisplayed()
-                    )
-                )
-            destinationEdt?.perform(click(), replaceText(TEST_WORD_KEWDALE_PERTH))
-
-            val suggestionListRvDest =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListRvDest?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
-
-            // btnCarGo
             waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    withEffectiveVisibility(Visibility.VISIBLE)
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            // btnWalkGo
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_KEWDALE_PERTH))
+
             waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_walk_go),
-                    withEffectiveVisibility(Visibility.VISIBLE)
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            // btnTruckGo
-            waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_truck_go),
-                    withEffectiveVisibility(Visibility.VISIBLE)
-                )
-            )
+            // Wait for all GO cards to be visible
+            listOf(
+                R.id.card_drive_go,
+                R.id.card_walk_go,
+                R.id.card_truck_go
+            ).forEach { id ->
+                waitForView(allOf(withId(id), withEffectiveVisibility(Visibility.VISIBLE)))
+            }
 
-            val tvDriveDistance = onView(withId(R.id.tv_drive_distance))
-            val tvDriveMinute = onView(withId(R.id.tv_drive_minute))
-            val tvWalkDistance = onView(withId(R.id.tv_walk_distance))
-            val tvWalkMinute = onView(withId(R.id.tv_walk_minute))
-            val tvTruckDistance = onView(withId(R.id.tv_truck_distance))
-            val tvTruckMinute = onView(withId(R.id.tv_truck_minute))
+            // Validate non-empty values for distance and minute labels
+            listOf(
+                R.id.tv_drive_distance,
+                R.id.tv_drive_minute,
+                R.id.tv_walk_distance,
+                R.id.tv_walk_minute,
+                R.id.tv_truck_distance,
+                R.id.tv_truck_minute
+            ).forEach { id ->
+                onView(withId(id)).check(matches(not(withText(""))))
+            }
 
-            tvDriveDistance.check(matches(not(withText(""))))
-            tvDriveMinute.check(matches(not(withText(""))))
-            tvWalkDistance.check(matches(not(withText(""))))
-            tvWalkMinute.check(matches(not(withText(""))))
-            tvTruckDistance.check(matches(not(withText(""))))
-            tvTruckMinute.check(matches(not(withText(""))))
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
+

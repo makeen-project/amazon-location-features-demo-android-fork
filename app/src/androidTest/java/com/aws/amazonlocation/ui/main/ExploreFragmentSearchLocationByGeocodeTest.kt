@@ -5,6 +5,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -31,10 +32,9 @@ class ExploreFragmentSearchLocationByGeocodeTest : BaseTestMainActivity() {
         try {
             checkLocationPermission()
 
-            val edtSearch =
-                onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
-            edtSearch.perform(click())
-            onView(withId(R.id.edt_search_places)).perform(replaceText(TEST_GEOCODE))
+            onView(withId(R.id.edt_search_places))
+                .check(matches(isDisplayed()))
+                .perform(click(), replaceText(TEST_GEOCODE))
             val rvSearchPlaceSuggestion =
                 waitForView(
                     allOf(

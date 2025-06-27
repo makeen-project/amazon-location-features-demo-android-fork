@@ -38,7 +38,7 @@ class SearchContactInfoPOICardTest : BaseTestMainActivity() {
             val edtSearch =
                 onView(withId(R.id.edt_search_places)).check(matches(isDisplayed()))
             edtSearch.perform(click())
-            onView(withId(R.id.edt_search_places)).perform(
+            edtSearch.perform(
                 replaceText(
                     TEST_WORD_DOMINO_PIZZA_VEJALPUR
                 )

@@ -45,31 +45,17 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
     @Test
     fun showMapFunctionWithoutAwsLoginTest() {
         checkLocationPermission()
-        waitForView(
-            allOf(
-                withId((R.id.mapView)),
-                isDisplayed()
-            )
-        )
-        onView(withId(R.id.mapView)).perform(swipeLeft())
+        waitForView(withId(R.id.mapView))?.perform(swipeLeft())
+
         val btnCardMap =
-            onView(withId(R.id.card_map)).check(ViewAssertions.matches(isDisplayed()))
+            waitForView(withId(R.id.card_map))?.check(ViewAssertions.matches(isDisplayed()))
         btnCardMap?.perform(click())
 
-        waitForView(
-            allOf(
-                withText(mActivityRule.activity.getString(R.string.map_monochrome)),
-                isDisplayed()
-            )
-        )?.perform(click())
+        waitForView(allOf(withText(R.string.map_monochrome), isDisplayed()))
+            ?.perform(click())
+        onView(withId(R.id.iv_map_style_close)).perform(click())
 
-        val ivMapStyleClose =
-            onView(withId(R.id.iv_map_style_close)).check(ViewAssertions.matches(isDisplayed()))
-        ivMapStyleClose?.perform(click())
-
-        val edtSearch =
-            onView(withId(R.id.edt_search_places)).check(ViewAssertions.matches(isDisplayed()))
-        edtSearch?.perform(click())
+        waitForView(withId(R.id.edt_search_places))?.check(ViewAssertions.matches(isDisplayed()))?.perform(click())
         onView(withId(R.id.edt_search_places))?.perform(replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
         val rvSearchPlaceSuggestion =
             waitForView(
@@ -89,36 +75,12 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
         }
 
         if (itemCount > 0) {
-            onView(withId(R.id.rv_search_places_suggestion))?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
+            onView(withId(R.id.rv_search_places_suggestion)).perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
-            waitForView(
-                allOf(
-                    withId(R.id.tv_direction_time),
-                    isDisplayed()
-                )
-            )
-
-            val btnDirection =
-                waitForView(
-                    allOf(
-                        withId(R.id.btn_direction),
-                        isDisplayed()
-                    )
-                )
-            btnDirection?.perform(click())
-
-            val cardDriveGo =
-                waitForView(
-                    allOf(
-                        withId(R.id.card_drive_go),
-                        isDisplayed()
-                    )
-                )
-            cardDriveGo?.perform(click())
+            waitForView(allOf(withId(R.id.tv_direction_time), isDisplayed()))
+            waitForView(withId(R.id.btn_direction))?.perform(click())
+            waitForView(withId(R.id.card_drive_go))?.perform(click())
 
             waitForView(
                 allOf(

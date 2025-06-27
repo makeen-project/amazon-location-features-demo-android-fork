@@ -30,14 +30,16 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
+
     private lateinit var preferenceManager: PreferenceManager
 
-    @Throws(java.lang.Exception::class)
     override fun before() {
         preferenceManager = PreferenceManager(ApplicationProvider.getApplicationContext())
-        preferenceManager.setValue(IS_APP_FIRST_TIME_OPENED, true)
-        preferenceManager.removeValue(KEY_MAP_NAME)
-        preferenceManager.removeValue(KEY_MAP_STYLE_NAME)
+        with(preferenceManager) {
+            setValue(IS_APP_FIRST_TIME_OPENED, true)
+            removeValue(KEY_MAP_NAME)
+            removeValue(KEY_MAP_STYLE_NAME)
+        }
         super.before()
     }
 
@@ -45,42 +47,35 @@ class ExploreFragmentChangeStyleTest : BaseTestMainActivity() {
     fun testMapStyleChange() {
         try {
             checkLocationPermission()
-
             goToMapStyles()
 
-            waitForView(allOf(withContentDescription(MAP_1), isDisplayed()))?.perform(click())
-            waitForView(allOf(withContentDescription(MAP_2), isDisplayed()))?.perform(click())
-            waitForView(allOf(withContentDescription(MAP_3), isDisplayed()))?.perform(click())
-            waitForView(allOf(withContentDescription(MAP_4), isDisplayed()))?.perform(click())
+            val mapStyles = listOf(MAP_1, MAP_2, MAP_3, MAP_4)
+            mapStyles.forEach { mapContentDescription ->
+                waitForView(
+                    allOf(withContentDescription(mapContentDescription), isDisplayed())
+                )?.perform(click())
+            }
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 
     private fun goToMapStyles() {
-        val cardMap = waitForView(allOf(withId(R.id.card_map), isDisplayed()))
-        cardMap?.perform(click())
+        waitForView(allOf(withId(R.id.card_map), isDisplayed()))?.perform(click())
         swipeUp()
     }
 
-    private fun swipeUp(): UiDevice? {
-        // Get the screen dimensions
-        val screenHeight =
-            getInstrumentation()
-                .targetContext.resources.displayMetrics.heightPixels
-
-        // Set the starting point for the swipe (bottom-center of the screen)
-        val startX =
-            getInstrumentation()
-                .targetContext.resources.displayMetrics.widthPixels / 2f
-        val startY = screenHeight - 100 // Offset from the bottom of the screen
-
-        // Set the ending point for the swipe (top-center of the screen)
-        val endY = 100 // Offset from the top of the screen
-
-        // Perform the swipe action
+    private fun swipeUp(): UiDevice {
+        val context = getInstrumentation().targetContext
+        val dm = context.resources.displayMetrics
         val uiDevice = UiDevice.getInstance(getInstrumentation())
-        uiDevice.swipe(startX.toInt(), startY, startX.toInt(), endY, 10)
+
+        val startX = dm.widthPixels / 2
+        val startY = dm.heightPixels - 100
+        val endY = 100
+
+        uiDevice.swipe(startX, startY, startX, endY, 10)
         return uiDevice
     }
 }
+

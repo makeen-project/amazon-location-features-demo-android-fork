@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.Visibility
@@ -24,91 +25,67 @@ import com.aws.amazonlocation.waitForView
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers
+import org.hamcrest.CoreMatchers.allOf
 import org.junit.Assert
 import org.junit.Test
 
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class RouteOptionShowingTest : BaseTestMainActivity() {
+
     @Test
     fun showRouteOptionShowingTest() {
         try {
             checkLocationPermission()
 
-            val cardDirectionTest =
-                onView(withId(R.id.card_direction)).check(matches(isDisplayed()))
-            cardDirectionTest.perform(click())
+            onView(withId(R.id.card_direction))
+                .check(matches(isDisplayed()))
+                .perform(click())
 
-            val sourceEdt =
-                waitForView(CoreMatchers.allOf(withId(R.id.edt_search_direction), isDisplayed()))
-            sourceEdt?.perform(click())
+            waitForView(allOf(withId(R.id.edt_search_direction), isDisplayed()))
+                ?.perform(click())
 
-            val clMyLocation =
-                waitForView(CoreMatchers.allOf(withText(R.string.label_my_location), isDisplayed()))
-            clMyLocation?.perform(click())
+            waitForView(allOf(withText(R.string.label_my_location), isDisplayed()))
+                ?.perform(click())
 
-            val destinationEdt =
+            waitForView(allOf(withId(R.id.edt_search_dest), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
+
+            waitForView(
+                allOf(
+                    withId(R.id.rv_search_places_suggestion_direction),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
+                )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
+            )
+
+            listOf(
+                R.id.card_drive_go,
+                R.id.card_walk_go,
+                R.id.card_truck_go
+            ).forEach {
                 waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.edt_search_dest),
-                        isDisplayed()
+                    allOf(
+                        withId(it),
+                        hasDescendant(withText(GO)),
+                        withEffectiveVisibility(Visibility.VISIBLE)
                     )
                 )
-            destinationEdt?.perform(click(), ViewActions.replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
+            }
 
-            val suggestionListRv =
-                waitForView(
-                    CoreMatchers.allOf(
-                        withId(R.id.rv_search_places_suggestion_direction),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            suggestionListRv?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
+            listOf(
+                R.id.cl_drive,
+                R.id.cl_walk,
+                R.id.cl_truck
+            ).forEach {
+                onView(withId(it)).check(matches(isDisplayed()))
+            }
 
-            // btnCarGo
-            waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_drive_go),
-                    hasDescendant(
-                        withText(GO)
-                    ),
-                    withEffectiveVisibility(Visibility.VISIBLE)
-                )
-            )
-
-            // btnWalkGo
-            waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_walk_go),
-                    hasDescendant(
-                        withText(GO)
-                    ),
-                    withEffectiveVisibility(Visibility.VISIBLE)
-                )
-            )
-
-            // btnTruckGo
-            waitForView(
-                CoreMatchers.allOf(
-                    withId(R.id.card_truck_go),
-                    hasDescendant(
-                        withText(GO)
-                    ),
-                    withEffectiveVisibility(Visibility.VISIBLE)
-                )
-            )
-
-            onView(withId(R.id.cl_drive)).check(matches(isDisplayed()))
-            onView(withId(R.id.cl_walk)).check(matches(isDisplayed()))
-            onView(withId(R.id.cl_truck)).check(matches(isDisplayed()))
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED ${e.message}")
         }
     }
 }
+

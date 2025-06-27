@@ -27,61 +27,40 @@ import org.junit.Test
 @UninstallModules(AppModule::class)
 @HiltAndroidTest
 class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
+
     @Test
     fun showLiveNavigationTest() {
         try {
             checkLocationPermission()
 
-            val edtSearch = waitForView(allOf(withId(R.id.edt_search_places), isDisplayed()))
-            edtSearch?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
+            waitForView(allOf(withId(R.id.edt_search_places), isDisplayed()))
+                ?.perform(click(), replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
 
-            val rvRecyclerView =
-                waitForView(
-                    allOf(
-                        withId(R.id.rv_search_places_suggestion),
-                        isDisplayed(),
-                        hasMinimumChildCount(1)
-                    )
-                )
-            rvRecyclerView?.perform(
-                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
-                    0,
-                    click()
-                )
-            )
-
-            // txtTime
             waitForView(
                 allOf(
-                    withId(R.id.tv_direction_distance),
-                    isDisplayed()
+                    withId(R.id.rv_search_places_suggestion),
+                    isDisplayed(),
+                    hasMinimumChildCount(1)
                 )
+            )?.perform(
+                RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
 
-            val btnDirection =
-                waitForView(
-                    allOf(
-                        withId(R.id.btn_direction),
-                        isDisplayed()
-                    )
-                )
-            btnDirection?.perform(click())
+            waitForView(allOf(withId(R.id.tv_direction_distance), isDisplayed()))
 
-            val btnCarGo =
-                waitForView(
-                    allOf(
-                        withId(R.id.card_drive_go),
-                        hasDescendant(
-                            withText(GO)
-                        ),
-                        isDisplayed()
-                    )
+            waitForView(allOf(withId(R.id.btn_direction), isDisplayed()))
+                ?.perform(click())
+
+            waitForView(
+                allOf(
+                    withId(R.id.card_drive_go),
+                    hasDescendant(withText(GO)),
+                    isDisplayed()
                 )
-            btnCarGo?.perform(click())
+            )?.perform(click())
 
             Espresso.closeSoftKeyboard()
 
-            // navListView
             waitForView(
                 allOf(
                     withId(R.id.rv_navigation_list),
@@ -89,6 +68,7 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
                     hasMinimumChildCount(1)
                 )
             )
+
         } catch (e: Exception) {
             Assert.fail("$TEST_FAILED_LIST ${e.message}")
         }
