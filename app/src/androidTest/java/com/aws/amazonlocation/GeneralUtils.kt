@@ -2,6 +2,7 @@ package com.aws.amazonlocation
 
 import android.content.Context
 import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
@@ -56,6 +57,7 @@ fun checkLocationPermission() {
     uiDevice.findObject(By.text(WHILE_USING_THE_APP))?.click()
     uiDevice.findObject(By.text(WHILE_USING_THE_APP_CAPS))?.click()
     uiDevice.findObject(By.text(WHILE_USING_THE_APP_ALLOW))?.click()
+    uiDevice.findObject(By.text(TURN_ON_LOCATION_ACCURACY))?.click()
     uiDevice.findObject(By.text(ALLOW))?.click()
     enableGPS(ApplicationProvider.getApplicationContext())
     waitForView(
@@ -98,29 +100,38 @@ fun waitUntil(waitTime: Long, maxCount: Int, condition: () -> Boolean?) {
     }
 }
 
+private const val TAG = "waitForView"
+
 fun waitForView(
     matcher: Matcher<View>,
-    retryDelayMs: Long = 100,
-    timeoutMs: Long = 10000,
     onNotFound: (() -> Unit)? = null
 ): ViewInteraction? {
-    val startTime = System.currentTimeMillis()
-    var lastError: Exception? = null
+    val retryDelayMs = 250L
+    val retryCount = 15
+    var lastError: Throwable? = null
+    var currentRetry = 0
 
     do {
         try {
             val interaction = Espresso.onView(matcher)
             interaction.check(matches(isDisplayed()))
             return interaction
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            val msg = "$TEST_FAILED - retrying. ${e.message} matcher: $matcher"
+            Log.e(TAG, msg, e)
             lastError = e
             Thread.sleep(retryDelayMs)
         }
-    } while (System.currentTimeMillis() - startTime < timeoutMs)
+        currentRetry++
+    } while (currentRetry < retryCount)
 
     if (onNotFound == null) {
-        throw Exception("$TEST_FAILED - Timeout after ${timeoutMs}ms", lastError)
+        throw Exception("$TEST_FAILED - Timeout after $retryCount retries", lastError)
     } else {
+        Log.e(
+            TAG,
+            "$TEST_FAILED - onNotFound. matcher: $matcher, retries: $retryCount"
+        )
         onNotFound()
     }
     return null
