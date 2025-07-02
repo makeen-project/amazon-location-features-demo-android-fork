@@ -33,11 +33,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          java-version: '21'
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Setup Config
         env:
@@ -47,7 +47,7 @@ jobs:
           base64 -d <<< ${{ env.custom_config }} > custom.properties
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build projects before running emulator
         run: ./gradlew packageDebugAndroidTest
