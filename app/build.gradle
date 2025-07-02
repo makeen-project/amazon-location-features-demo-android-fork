@@ -96,6 +96,7 @@ android {
         buildConfig true
     }
     testOptions {
+        animationsDisabled = true
         unitTests {
             includeAndroidResources = true
         }
