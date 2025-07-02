@@ -8,7 +8,7 @@ on:
 jobs:
   test-android:
     name: Test Android
-    runs-on: macos-15
+    runs-on: macos-13
 
     steps:
       - uses: actions/checkout@v3
@@ -45,8 +45,6 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
-          target: google_apis
-          arch: arm64-v8a
           avd-name: test
           disable-animations: true
           script: |
