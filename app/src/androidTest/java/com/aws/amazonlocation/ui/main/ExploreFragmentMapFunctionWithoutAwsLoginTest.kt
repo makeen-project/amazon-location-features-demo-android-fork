@@ -55,7 +55,8 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
             ?.perform(click())
         onView(withId(R.id.iv_map_style_close)).perform(click())
 
-        waitForView(withId(R.id.edt_search_places))?.check(ViewAssertions.matches(isDisplayed()))?.perform(click())
+        waitForView(withId(R.id.edt_search_places))?.check(ViewAssertions.matches(isDisplayed()))
+            ?.perform(click())
         onView(withId(R.id.edt_search_places))?.perform(replaceText(TEST_WORD_SHYAMAL_CROSS_ROAD))
         val rvSearchPlaceSuggestion =
             waitForView(
@@ -79,8 +80,11 @@ class ExploreFragmentMapFunctionWithoutAwsLoginTest : BaseTestMainActivity() {
                 RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())
             )
             waitForView(allOf(withId(R.id.tv_direction_time), isDisplayed()))
-            waitForView(withId(R.id.btn_direction))?.perform(click())
-            waitForView(withId(R.id.card_drive_go))?.perform(click())
+            waitForView(allOf(withId(R.id.btn_direction), isDisplayed()))
+                ?.perform(click())
+            waitForView(allOf(withId(R.id.card_scooter_go), isDisplayed()))
+            val goButton = waitForView(withId(R.id.card_drive_go))
+            goButton?.perform(click())
 
             waitForView(
                 allOf(

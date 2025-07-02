@@ -2,6 +2,7 @@ package com.aws.amazonlocation.ui.main
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -51,13 +52,10 @@ class ExploreFragmentLiveNavigationTest : BaseTestMainActivity() {
             waitForView(allOf(withId(R.id.btn_direction), isDisplayed()))
                 ?.perform(click())
 
-            waitForView(
-                allOf(
-                    withId(R.id.card_drive_go),
-                    hasDescendant(withText(GO)),
-                    isDisplayed()
-                )
-            )?.perform(click())
+            waitForView(allOf(withId(R.id.card_scooter_go), isDisplayed()))
+
+            val view = waitForView(withId(R.id.card_drive_go))
+            view?.perform(click())
 
             Espresso.closeSoftKeyboard()
 
