@@ -8,36 +8,21 @@ on:
 jobs:
   test-android:
     name: Test Android
-    runs-on: ubuntu-latest
-    timeout-minutes: 55
+    runs-on: macos-15
 
     steps:
-      - name: Delete unnecessary tools 🔧
-        uses: jlumbroso/free-disk-space@v1.3.1
-        with:
-          android: false # Keep Don't remove Android tools
-          tool-cache: true # Remove image tool cache - rm -rf "$AGENT_TOOLSDIRECTORY"
-          dotnet: true # rm -rf /usr/share/dotnet
-          haskell: true # rm -rf /opt/ghc...
-          swap-storage: true # rm -f /mnt/swapfile (4GiB)
-          docker-images: false # Takes 16s (`nowinandroid`), enable if needed in the future
-          large-packages: false # includes google-cloud-sdk and it's slow
+      - uses: actions/checkout@v3
 
-      - name: Enable KVM group perms
+      - name: Set up Ruby 3.3.5
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.5
+
+      - name: Setup Bundler
         run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-          ls /dev/kvm
-
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          distribution: "zulu"
-          java-version: "17"
+          bundle config --local path ./vendor/bundle
+          bundle config --local deployment true
+          bundle install
 
       - name: Setup Config
         env:
@@ -46,23 +31,25 @@ jobs:
         run: |
           base64 -d <<< ${{ env.custom_config }} > custom.properties
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Ensure config files exist
+        run: |
+          touch custom.properties
 
-      - name: Build projects before running emulator
-        run: ./gradlew packageDebugAndroidTest
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Run E2E Tests on Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
-          arch: x86_64
-          disable-animations: true
-          disk-size: 6000M
-          heap-size: 600M
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           target: google_apis
+          arch: x86_64
           avd-name: test
+          disable-animations: true
+          emulator-boot-timeout: 1200
           script: |
             adb emu geo fix 72.58727 23.02579
             ./gradlew app:connectedDebugAndroidTest -i -Pandroid.testInstrumentationRunnerArguments.class=com.aws.amazonlocation.ui.MapLoadAndPlaceSearchFlowSuite
